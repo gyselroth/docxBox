@@ -1,7 +1,7 @@
 docxBox
 =======
 
-Linux CLI tool for .DOCX (OpenXML) analysis and manipulation.
+Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 
 
 ## Table of contents
