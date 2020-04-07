@@ -1,5 +1,5 @@
 
-#include "app_commands.h"
+#include "app_command.h"
 
 namespace docxbox {
 
@@ -10,18 +10,18 @@ AppCommands::AppCommands(std::string argc): argc_(std::move(argc)) {
   resolved_ = Resolve();
 }
 
-AppCommands::Commands AppCommands::GetResolved() {
+AppCommands::Command AppCommands::GetResolved() {
   return resolved_;
 }
 
 /**
  * Resolve name of command string (1st argument) to related enum item (which allows e.g. switch)
  */
-AppCommands::Commands AppCommands::Resolve() {
+AppCommands::Command AppCommands::Resolve() {
   return ResolveCommandByName(argc_);
 }
 
-AppCommands::Commands AppCommands::ResolveCommandByName(const std::string &command) {
+AppCommands::Command AppCommands::ResolveCommandByName(const std::string &command) {
   if (command=="h" || command=="?") return Command_Help;
   if (command=="ls") return Command_List;
   if (command=="lsi") return Command_ListImages;

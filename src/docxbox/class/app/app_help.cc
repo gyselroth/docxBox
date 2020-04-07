@@ -15,7 +15,7 @@ bool AppHelp::PrintVersion() {
   return true;
 }
 
-bool AppHelp::PrintHelp(bool with_title, AppCommands::Commands command) {
+bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command) {
   switch (command) {
     case AppCommands::Command_Help:return PrintOverview(true);
 
@@ -228,7 +228,7 @@ bool AppHelp::PrintHelpOnZip() {
 void AppHelp::PrintUnknownArgumentMessage(const char *arg) {
   std::cout << "\nUnknown argument: \"" << arg << "\". Possible arguments are:\n";
 
-  PrintHelp(false, AppCommands::Commands::Command_Invalid);
+  PrintHelp(false, AppCommands::Command::Command_Invalid);
 }
 
 }; // namespace docxbox

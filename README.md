@@ -18,6 +18,9 @@ Linux CLI tool for .DOCX (OpenXML) analysis and manipulation.
     + [List images information as JSON](#list-images-information-as-json)
     + [List meta data](#list-meta-data)
     + [List meta data as JSON](#list-meta-data-as-json)
+    + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
+  * [Modify meta data](#modify-meta-data)
+      + [Modify existing (or add) single attribute](#modify-existing-or-add-single-attribute)
   * [Output plaintext](#output-plaintext)
     + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
     + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
@@ -49,7 +52,8 @@ Features
 * List files (and their attributes) in DOCX 
 * List fonts (and their metrics) referenced in DOCX 
 * List images contained in DOCX 
-* List meta data of DOCX 
+* List meta data of DOCX
+* Modify meta data of DOCX 
 * Replace images in DOCX
 * Unzip files from DOCX: all files, only media files
 * Zip files in given path into new DOCX
@@ -57,7 +61,6 @@ Features
 
 ### Planned Features
 
-* v0.0.1 Modify meta data of DOCX
 * v0.0.1: Replace occurrences of string(s) in DOCX text
 * v0.0.2: Generate and insert/replace more complex DOCX markup elements (merge-fields, tables)
 * v0.1.0: Batch process sequences of manipulation operations
@@ -117,7 +120,6 @@ or ````docxbox lsij foo.docx````
 #### List meta data
 
 Output meta data of given DOCX:  
-XML schema, language, revision, creator, lastModifiedBy, creation- print- and modification-date
 
 ````docxbox ls foo.docx --meta````  
 or ````docxbox ls foo.docx -m````  
@@ -130,6 +132,29 @@ or ````docxbox ls foo.docx -mj````
 or ````docxbox lsm foo.docx --json````  
 or ````docxbox lsm foo.docx -j````  
 or ````docxbox lsmj foo.docx````
+
+#### Reference: Recognized meta attributes
+
+* XML schema (````<Properties xmlns ...```` of app.xml) 
+* Title (``<dc:title>`` of core.xml)
+* Language (``<dc:language>`` of core.xml) 
+* Revision (``<cp:revision>`` of core.xml)
+* Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
+* Creation-, modification and print-date  
+  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml)
+
+### Modify meta data
+
+#### Modify existing (or add) single attribute
+
+* Change title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
+* Change creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
+* Change lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
+* Change revision attribute:       ````docxbox mm foo.docx revision 2````
+* Change lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
+* Change language attribute:       ````docxbox mm foo.docx language "en-US"````  
+* Change modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
+* Change creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
 
 
 ### Output plaintext

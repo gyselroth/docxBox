@@ -209,9 +209,13 @@ bool docx_archive::ListMeta(bool asJson) {
 
   auto file_list = docx_file.infolist();
 
-  auto *meta = new docx_meta(asJson);
+  auto *meta = new docx_meta(argc, argv);
 
-  if (asJson) std::cout << "[";
+  if (asJson) {
+    meta->SetOutputAsJson(true);
+
+    std::cout << "[";
+  }
 
   int index_app = 0;
   int index_core = 0;
@@ -240,6 +244,16 @@ bool docx_archive::ListMeta(bool asJson) {
   if (asJson) std::cout << "]";
 
   miniz_cpp_ext::RemoveExtract(path_extract, file_list);
+
+  return true;
+}
+
+bool docx_archive::ModifyMeta() {
+  auto *meta = new docx_meta(argc, argv);
+
+  if (!meta->AreModificationArgumentsValid()) return false;
+
+  // @todo implement attribute insertion/modification
 
   return true;
 }

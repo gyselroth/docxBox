@@ -21,8 +21,8 @@ add_executable(docxbox
         src/docxbox/main.cpp
 
         src/docxbox/class/app/app.cc
-        src/docxbox/class/app/app_arguments.cc
-        src/docxbox/class/app/app_commands.cc
+        src/docxbox/class/app/app_argument.cc
+        src/docxbox/class/app/app_command.cc
         src/docxbox/class/app/app_help.cc
         src/docxbox/class/app/app_help.h
         src/docxbox/class/docx/docx_archive.cc

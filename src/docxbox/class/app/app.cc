@@ -9,7 +9,7 @@ namespace docxbox {
 App::App(int argc, char **argv) {
   if (argc==1) {
     // No command given
-    AppHelp::PrintHelp(true, AppCommands::Commands::Command_Invalid);
+    AppHelp::PrintHelp(true, AppCommands::Command::Command_Invalid);
 
     return;
   }
@@ -21,7 +21,7 @@ App::App(int argc, char **argv) {
 }
 
 // Remap command + argument variations to rel. shorthand commands
-AppCommands::Commands App::PreProcess(AppArguments *arguments, AppCommands::Commands &command) const {
+AppCommands::Command App::PreProcess(AppArguments *arguments, AppCommands::Command &command) const {
   switch (command) {
     case AppCommands::Command_GetPlainText:
       if (arguments->Matches(3, "-s", "--segments")) return AppCommands::Command_GetPlainTextSegments;
@@ -78,7 +78,7 @@ bool App::Process() {
 
   auto arguments = new AppArguments(argc, argv);
 
-  AppCommands::Commands command = command_->GetResolved();
+  AppCommands::Command command = command_->GetResolved();
 
   // Preprocess: Remap command + argument(s) constellations to rel. shorthand commands
   if (argc > 2) command = PreProcess(arguments, command);
@@ -102,7 +102,7 @@ bool App::Process() {
     case AppCommands::Command_ListFontsAsJson:return docx_archive->ListFonts(true);
     case AppCommands::Command_ListMeta:return docx_archive->ListMeta(false);
     case AppCommands::Command_ListMetaAsJson:return docx_archive->ListMeta(true);
-    case AppCommands::Command_ModifyMeta:return false;
+    case AppCommands::Command_ModifyMeta:return docx_archive->ModifyMeta();
     case AppCommands::Command_ReplaceImage:return docx_archive->ReplaceImage();
     case AppCommands::Command_ReplaceText:return docx_archive->ReplaceText();
     case AppCommands::Command_Unzip:return docx_archive->Unzip();

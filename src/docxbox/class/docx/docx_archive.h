@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-#include "../app/app_arguments.h"
+#include "../app/app_argument.h"
 #include "docx_fontTable.h"
 #include "docx_meta.h"
 #include "docx_xml.h"
@@ -27,6 +27,9 @@ class docx_archive {
   bool ListMeta(bool asJson);
 
   bool GetText(bool newlineAtSegments);
+
+  bool ModifyMeta();
+
   bool ReplaceImage();
   bool ReplaceImages();
   bool ReplaceText();

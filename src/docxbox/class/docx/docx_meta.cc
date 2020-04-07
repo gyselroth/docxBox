@@ -2,8 +2,52 @@
 #include <iostream>
 #include "docx_meta.h"
 
-docx_meta::docx_meta(bool outputAsJson) {
-  this->outputAsJson = outputAsJson;
+docx_meta::docx_meta(int argc, char **argv) {
+  this->argc = argc;
+  this->argv = argv;
+}
+
+void docx_meta::SetOutputAsJson(bool output_as_json) {
+  outputAsJson = output_as_json;
+}
+
+docx_meta::Attribute docx_meta::ResolveAttributeByName(const std::string &attribute) {
+  if (attribute=="title") return Attribute_Title;
+  if (attribute=="language") return Attribute_Language;
+  if (attribute=="revision") return Attribute_Revision;
+  if (attribute=="creator") return Attribute_Creator;
+  if (attribute=="lastModifiedBy") return Attribute_LastModifiedBy;
+  if (attribute=="created") return Attribute_Created;
+  if (attribute=="modified") return Attribute_Modified;
+  if (attribute=="lastPrinted") return Attribute_LastPrinted;
+
+  return Attribute_Unknown;
+}
+
+bool docx_meta::AreModificationArgumentsValid() {
+  if (argc <= 3) {
+    std::cout << "Missing argument: Meta attribute to be set\n";
+
+    return false;
+  }
+
+  if (!IsSupportedAttribute(argv[3])) {
+    std::cout << "Invalid argument: Unknown or unsupported attribute: " << argv[3] << "\n";
+
+    return false;
+  }
+
+  if (argc <= 4) {
+    std::cout << "Missing argument: Value to set attribute to\n";
+
+    return false;
+  }
+
+  return true;
+}
+
+bool docx_meta::IsSupportedAttribute(const std::string& attribute) {
+  return Attribute_Unknown != ResolveAttributeByName(attribute);
 }
 
 void docx_meta::CollectFromAppXml(std::string path_app_xml_current, std::string app_xml) {
@@ -39,6 +83,7 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current, std::strin
       "</dcterms:created>"
   );
 
+  title = helper::String::GetSubStrBetween(core_xml, "<dc:title>", "</dc:title>");
   last_modified_by = helper::String::GetSubStrBetween(core_xml, "<cp:lastModifiedBy>", "</cp:lastModifiedBy>");
 
   date_modification = helper::String::GetSubStrBetween(
@@ -48,11 +93,8 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current, std::strin
   );
 
   last_printed = helper::String::GetSubStrBetween(core_xml, "<cp:lastPrinted>", "</cp:lastPrinted>");
-
   language = helper::String::GetSubStrBetween(core_xml, "<dc:language>", "</dc:language>");
-
   revision = helper::String::GetSubStrBetween(core_xml, "<cp:revision>", "</cp:revision>");
-
   creator = helper::String::GetSubStrBetween(core_xml, "<dc:creator>", "</dc:creator>");
 
   hasCollectedFromCoreXml = true;
