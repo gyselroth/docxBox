@@ -1,0 +1,31 @@
+language: cpp
+
+os:
+  - linux
+#  - osx
+
+compiler:
+  - gcc
+  - clang
+
+addons:
+  apt:
+    packages:
+      - cppcheck
+      - cmake
+      - gcc-7.4.0
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo add-apt-repository ppa:duggan/bats --yes; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq bats; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install build-essential; fi
+
+script:
+  - cmake CMakeLists.txt && make
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all ./src; fi
+
+after_success:
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./bin/linux/docxbox ; fi
+#  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
+#  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/ttt ; fi
