@@ -13,7 +13,7 @@ addons:
     packages:
       - cppcheck
       - cmake
-      - gcc-7.4.0
+      - gcc-4.9
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo add-apt-repository ppa:duggan/bats --yes; fi
@@ -28,4 +28,4 @@ script:
 after_success:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./bin/linux/docxbox ; fi
 #  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
-#  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/ttt ; fi
+#  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/docxbox ; fi
