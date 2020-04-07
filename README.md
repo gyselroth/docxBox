@@ -39,7 +39,6 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
 * [Changelog](#changelog)
-* [Roadmap](#roadmap)
 * [Bug Reporting and Feature Requests](#bug-reporting-and-feature-requests)
 * [Third Party References](#third-party-references)
 * [License](#license)
