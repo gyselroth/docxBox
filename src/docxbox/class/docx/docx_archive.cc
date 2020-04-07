@@ -210,6 +210,7 @@ bool docx_archive::ListMeta(bool as_json) {
   auto file_list = docx_file.infolist();
 
   auto *meta = new docx_meta(argc, argv);
+  meta->SetPathExtract(path_extract);
 
   if (as_json) {
     meta->SetOutputAsJson(true);
@@ -232,7 +233,8 @@ bool docx_archive::ListMeta(bool as_json) {
 
       ++index_app;
     } else if (helper::String::EndsWith(file_in_zip.filename, "core.xml")) {
-      meta->CollectFromCoreXml(file_in_zip.filename, helper::File::GetFileContents(path_file_absolute));
+      meta->LoadCoreXml(path_file_absolute);
+      meta->CollectFromCoreXml(file_in_zip.filename);
 
       ++index_core;
     }
@@ -251,11 +253,29 @@ bool docx_archive::ListMeta(bool as_json) {
 bool docx_archive::ModifyMeta() {
   auto *meta = new docx_meta(argc, argv);
 
-  if (!meta->AreModificationArgumentsValid()) return false;
+  if (!meta->InitModificationArguments()) return false;
 
-  // @todo implement attribute insertion/modification
+  if (!Unzip("-" + helper::File::GetTmpName())) return false;
 
-  return true;
+  meta->SetPathExtract(path_extract);
+
+  if (!meta->UpsertAttribute()) return false;
+
+  // Modifiable meta attributes are in docProps/core.xml
+  meta->SaveCoreXml();
+
+  std::string path_docx_out;
+
+  /*if (argc >= 6) {
+    // Result filename is given as argument
+    path_docx_out = helper::File::ResolvePath(path_working_directory, argv[5]);
+  } else {*/
+    // Overwrite original DOCX
+    helper::File::Remove(path_docx.c_str());
+    path_docx_out = path_docx;
+  /*}*/
+
+  return Zip(path_extract, path_docx_out);
 }
 
 // List contained images and their attributes and exif data
@@ -414,6 +434,7 @@ bool docx_archive::ReplaceImage() {
 
   std::string path_docx_out;
 
+  // @todo extract code from here until end of method (and its duplication) into reusable method
   if (argc >= 6) {
     // Result filename is given as argument
     path_docx_out = helper::File::ResolvePath(path_working_directory, argv[5]);
@@ -427,6 +448,7 @@ bool docx_archive::ReplaceImage() {
 }
 
 bool docx_archive::ReplaceImages() {
+  // @todo implement multiple images from JSON
   return false;
 }
 
