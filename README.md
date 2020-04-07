@@ -52,7 +52,7 @@ Features
 * List fonts (and their metrics) referenced in DOCX 
 * List images contained in DOCX 
 * List meta data of DOCX
-* Modify (and add) meta data of DOCX 
+* Modify meta data of DOCX 
 * Replace images in DOCX
 * Unzip files from DOCX: all files, only media files
 * Zip files in given path into new DOCX
