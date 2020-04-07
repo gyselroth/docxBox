@@ -111,7 +111,7 @@ or ````docxbox lsi foo.docx````
 ````docxbox ls foo.docx --images --json````  
 ````docxbox ls foo.docx -ij````  
 or ````docxbox lsi foo.docx --json````  
-or ````docxbox lsi foo.docx --j````  
+or ````docxbox lsi foo.docx -j````  
 or ````docxbox lsij foo.docx````
 
 #### List meta data
