@@ -39,8 +39,8 @@ class docx_meta {
   char **argv;
   bool outputAsJson = false;
 
-  bool hasCollectedFromAppXml = false;
-  bool hasCollectedFromCoreXml = false;
+  bool has_collected_from_app_xml = false;
+  bool has_collected_from_core_xml = false;
 
   std::string path_app_xml;
   std::string path_core_xml;

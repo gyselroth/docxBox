@@ -21,12 +21,12 @@ class docx_archive {
   bool UnzipMedia();
   bool Zip(std::string path_directory = "", std::string path_docx_result = "");
 
-  bool ListFiles(bool asJson);
-  bool ListFonts(bool asJson);
-  bool ListImages(bool asJson);
-  bool ListMeta(bool asJson);
+  bool ListFiles(bool as_json);
+  bool ListFonts(bool as_json);
+  bool ListImages(bool as_json);
+  bool ListMeta(bool as_json);
 
-  bool GetText(bool newlineAtSegments);
+  bool GetText(bool newline_at_segments);
 
   bool ModifyMeta();
 

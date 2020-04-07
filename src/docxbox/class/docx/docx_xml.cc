@@ -15,7 +15,7 @@ bool docx_xml::IsXmlFileContainingText(std::string filename) {
       && !helper::String::EndsWith(filename, "webSettings.xml");
 }
 
-std::string docx_xml::GetTextFromXmlFile(std::string path_xml, bool newlineAtSegments) {
+std::string docx_xml::GetTextFromXmlFile(std::string path_xml, bool newline_at_segments) {
   tinyxml2::XMLDocument doc;
 
   doc.LoadFile(path_xml.c_str());
@@ -23,12 +23,12 @@ std::string docx_xml::GetTextFromXmlFile(std::string path_xml, bool newlineAtSeg
   if(doc.ErrorID() != 0) return "";
 
   tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")->FirstChildElement("w:body");
-  GetChildNodesText(body, newlineAtSegments);
+  GetChildNodesText(body, newline_at_segments);
 
   return document_text;
 }
 
-void docx_xml::GetChildNodesText(tinyxml2::XMLElement *node, bool newlineAtSegments) {
+void docx_xml::GetChildNodesText(tinyxml2::XMLElement *node, bool newline_at_segments) {
   if (!node || node->NoChildren()) return;
 
   if (0 == strcmp(node->Value(), "w:p")) document_text += "\n";
@@ -56,14 +56,14 @@ void docx_xml::GetChildNodesText(tinyxml2::XMLElement *node, bool newlineAtSegme
           if (text) {
             document_text += text;
 
-            if (newlineAtSegments) document_text += "\n";
+            if (newline_at_segments) document_text += "\n";
           }
 
           continue;
       }
     }
 
-    GetChildNodesText(sub_node, newlineAtSegments);
+    GetChildNodesText(sub_node, newline_at_segments);
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 

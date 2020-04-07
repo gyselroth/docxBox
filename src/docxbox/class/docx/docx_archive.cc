@@ -124,7 +124,7 @@ void docx_archive::InitPathDocxByArgV(int index_path_argument) {
 }
 
 // Output paths of files (and directories) within DOCX file
-bool docx_archive::ListFiles(bool asJson) {
+bool docx_archive::ListFiles(bool as_json) {
   if (argc <= 2) {
     std::cout << "Missing argument: DOCX filename\n";
 
@@ -141,7 +141,7 @@ bool docx_archive::ListFiles(bool asJson) {
 
   miniz_cpp::zip_file docx_file(path_docx);
 
-  if (asJson) miniz_cpp_ext::PrintDirAsJson(docx_file);
+  if (as_json) miniz_cpp_ext::PrintDirAsJson(docx_file);
   else docx_file.printdir();
 
   return true;
@@ -202,7 +202,7 @@ bool docx_archive::UnzipMedia() {
 
 // Output meta data from within given DOCX file:
 // Creation date, revision, title, language, used fonts, contained media files
-bool docx_archive::ListMeta(bool asJson) {
+bool docx_archive::ListMeta(bool as_json) {
   if (!Unzip("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx);
@@ -211,7 +211,7 @@ bool docx_archive::ListMeta(bool asJson) {
 
   auto *meta = new docx_meta(argc, argv);
 
-  if (asJson) {
+  if (as_json) {
     meta->SetOutputAsJson(true);
 
     std::cout << "[";
@@ -241,7 +241,7 @@ bool docx_archive::ListMeta(bool asJson) {
   // Output anything that hasn't been yet
   meta->Output();
 
-  if (asJson) std::cout << "]";
+  if (as_json) std::cout << "]";
 
   miniz_cpp_ext::RemoveExtract(path_extract, file_list);
 
@@ -259,7 +259,7 @@ bool docx_archive::ModifyMeta() {
 }
 
 // List contained images and their attributes and exif data
-bool docx_archive::ListImages(bool asJson) {
+bool docx_archive::ListImages(bool as_json) {
   if (!Unzip("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx);
@@ -270,7 +270,7 @@ bool docx_archive::ListImages(bool asJson) {
 
   auto images = helper::File::ScanDir(path_extract.c_str());
 
-  if (asJson) std::cout << "[";
+  if (as_json) std::cout << "[";
 
   int index_image = 0;
 
@@ -279,7 +279,7 @@ bool docx_archive::ListImages(bool asJson) {
 
     std::string path_jpeg = path_extract + "/" + path_image;
 
-    if (asJson) {
+    if (as_json) {
       std::cout << (index_image > 0 ? "," : "") << "\"" << filename << "\"\n";
     } else std::cout << filename << "\n";
 
@@ -295,7 +295,7 @@ bool docx_archive::ListImages(bool asJson) {
     index_image++;
   }
 
-  if (asJson) std::cout << "]";
+  if (as_json) std::cout << "]";
   else std::cout << "\n";
 
   for (const auto& path_image : images) helper::File::Remove(path_image.c_str());
@@ -306,7 +306,7 @@ bool docx_archive::ListImages(bool asJson) {
 }
 
 // List referenced fonts and their metrics
-bool docx_archive::ListFonts(bool asJson) {
+bool docx_archive::ListFonts(bool as_json) {
   if (!Unzip("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx);
@@ -315,7 +315,7 @@ bool docx_archive::ListFonts(bool asJson) {
 
   auto *fontTable = new docx_fontTable();
 
-  if (asJson) std::cout << "[";
+  if (as_json) std::cout << "[";
 
   int index_font = 0;
 
@@ -328,7 +328,7 @@ bool docx_archive::ListFonts(bool asJson) {
     if (helper::String::EndsWith(file_in_zip.filename, "fontTable.xml")) {
       fontTable->CollectFontsMetrics(helper::File::GetFileContents(path_file_absolute));
 
-      if (asJson) {
+      if (as_json) {
         if (index_font > 0) std::cout << ",";
 
         fontTable->OutputAsJson(file_in_zip.filename);
@@ -340,14 +340,14 @@ bool docx_archive::ListFonts(bool asJson) {
     }
   }
 
-  if (asJson) std::cout << "]";
+  if (as_json) std::cout << "]";
 
   miniz_cpp_ext::RemoveExtract(path_extract, file_list);
 
   return true;
 }
 
-bool docx_archive::GetText(bool newlineAtSegments) {
+bool docx_archive::GetText(bool newline_at_segments) {
   if (!Unzip("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx);
@@ -362,7 +362,7 @@ bool docx_archive::GetText(bool newlineAtSegments) {
 
     parser->GetTextFromXmlFile(
         path_extract + "/" + file_in_zip.filename,
-        newlineAtSegments
+        newline_at_segments
     );
   }
 

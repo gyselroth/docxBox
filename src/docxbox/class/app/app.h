@@ -12,8 +12,6 @@
 #include "../docx/docx_archive.h"
 #include "../../config.h"
 
-#include "../../helper/helper_system.h"
-
 namespace docxbox {
 
 class App {

@@ -53,7 +53,7 @@ bool docx_meta::IsSupportedAttribute(const std::string& attribute) {
 void docx_meta::CollectFromAppXml(std::string path_app_xml_current, std::string app_xml) {
   // Attempt output after collecting meta data from app.xml and core.xml,
   // but when parsing the 2nd app.xml w/o having parsed a rel. core.xml: output prematurely
-  if (hasCollectedFromAppXml) Output();
+  if (has_collected_from_app_xml) Output();
 
   path_app_xml = std::move(path_app_xml_current);
 
@@ -65,15 +65,15 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current, std::string 
   std::vector<std::string> segments = helper::String::Explode(xml_schema, '/');
   helper::String::Replace(xml_schema, (std::string("/")+segments[segments.size()-1]).c_str(), "");
 
-  hasCollectedFromAppXml = true;
+  has_collected_from_app_xml = true;
 
-  if (hasCollectedFromAppXml && hasCollectedFromCoreXml) Output();
+  if (has_collected_from_app_xml && has_collected_from_core_xml) Output();
 }
 
 void docx_meta::CollectFromCoreXml(std::string path_core_xml_current, std::string core_xml) {
   // Attempt output after collecting meta data from app.xml and core.xml,
   // but when parsing the 2nd core.xml w/o having parsed a rel. app.xml: output prematurely
-  if (hasCollectedFromCoreXml) Output();
+  if (has_collected_from_core_xml) Output();
 
   path_core_xml = std::move(path_core_xml_current);
 
@@ -97,13 +97,13 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current, std::strin
   revision = helper::String::GetSubStrBetween(core_xml, "<cp:revision>", "</cp:revision>");
   creator = helper::String::GetSubStrBetween(core_xml, "<dc:creator>", "</dc:creator>");
 
-  hasCollectedFromCoreXml = true;
+  has_collected_from_core_xml = true;
 
-  if (hasCollectedFromAppXml && hasCollectedFromCoreXml) Output();
+  if (has_collected_from_app_xml && has_collected_from_core_xml) Output();
 }
 
 void docx_meta::Output() {
-  if (hasCollectedFromAppXml || hasCollectedFromCoreXml) {
+  if (has_collected_from_app_xml || has_collected_from_core_xml) {
     if (outputAsJson) OutputJson();
     else OutputPlain();
   }
@@ -113,14 +113,14 @@ void docx_meta::Output() {
 
 void docx_meta::OutputPlain() {
   std::cout
-      << (hasCollectedFromAppXml
+      << (has_collected_from_app_xml
           ? path_app_xml + ":\n"
             + helper::String::Repeat("-", path_app_xml.length() + 1) + "\n"
             + "XML Schema: " + xml_schema + "\n"
           : ""
       )
-      << (hasCollectedFromCoreXml
-          ? (hasCollectedFromAppXml ? "\n" : "")
+      << (has_collected_from_core_xml
+          ? (has_collected_from_app_xml ? "\n" : "")
             + path_core_xml + ":\n"
             + helper::String::Repeat("-", path_core_xml.length() + 1) + "\n"
             + "Created:        " + date_creation + "\n"
@@ -137,13 +137,13 @@ void docx_meta::OutputPlain() {
 void docx_meta::OutputJson() {
   std::cout
       << "["
-      << (hasCollectedFromAppXml
+      << (has_collected_from_app_xml
           ? R"({"app.xml": ")" + path_app_xml + "\","
             R"("schema": ")" + xml_schema + "\"}"
           : ""
       )
-      << (hasCollectedFromCoreXml
-          ? std::string(hasCollectedFromAppXml ? "," : "")
+      << (has_collected_from_core_xml
+          ? std::string(has_collected_from_app_xml ? "," : "")
             + R"({"core.xml": ")" + path_core_xml + "\","
             + R"("created":")" + date_creation + "\","
             + R"("language":")" + language + "\","
@@ -157,8 +157,8 @@ void docx_meta::OutputJson() {
 }
 
 void docx_meta::Clear() {
-  hasCollectedFromAppXml = false;
-  hasCollectedFromCoreXml = false;
+  has_collected_from_app_xml = false;
+  has_collected_from_core_xml = false;
 
   path_app_xml = "";
   path_core_xml = "";
