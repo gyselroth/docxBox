@@ -221,7 +221,7 @@ or ````docxbox uzm foo.docx````
 
 ````docxbox````  
 or ````docxbox h````    
-Outputs the docxBox's help text.
+Outputs docxBox's help text.
 
 ````docxbox h <command>```` Outputs more help on a given command.
 
