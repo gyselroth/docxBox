@@ -97,7 +97,7 @@ bool App::Process() {
     case AppCommands::Command_List:return docx_archive->ListFiles(false);
     case AppCommands::Command_ListAsJson:return docx_archive->ListFiles(true);
     case AppCommands::Command_ListImages:return docx_archive->ListImages(false);
-    case AppCommands::Command_ListImagesAsJson:return false;
+    case AppCommands::Command_ListImagesAsJson:return docx_archive->ListImages(true);
     case AppCommands::Command_ListFonts:return docx_archive->ListFonts(false);
     case AppCommands::Command_ListFontsAsJson:return docx_archive->ListFonts(true);
     case AppCommands::Command_ListMeta:return docx_archive->ListMeta(false);
