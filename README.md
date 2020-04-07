@@ -1,7 +1,7 @@
 docxBox
 =======
 
-Linux CLI tool for DOCX analysis and manipulation.
+Linux CLI tool for .DOCX (OpenXML) analysis and manipulation.
 
 
 ## Table of contents
@@ -234,6 +234,9 @@ If you find a bug or have an enhancement request, please file an issue on the gi
 
 Third Party References
 ----------------------
+
+Microsoft Office and Word are registered trademarks of Microsoft Corporation.
+
 
 docxBox was built using the following third party libraries and tools:
 
