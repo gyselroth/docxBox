@@ -145,7 +145,7 @@ or ````docxbox txt foo.docx -s````
 
 Outputs the text from document, w/ markup sections separated by newlines.
 This can be helpful to identify "segmented" sentences:
-Sentences which visually might appear as a unit, but are segmented into separate parent elements for formatting.
+Sentences which visually appear as a unit, but are segmented into separate XML parent elements for formatting.
 
 
 ### Replace images
