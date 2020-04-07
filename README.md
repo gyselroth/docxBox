@@ -145,7 +145,7 @@ or ````docxbox lsmj foo.docx````
 
 ### Modify meta data
 
-#### Modify existing (or add) single attribute
+#### Modify existing (or add) attribute
 
 * Change title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
 * Change creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  

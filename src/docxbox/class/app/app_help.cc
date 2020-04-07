@@ -34,7 +34,7 @@ bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command) {
     case AppCommands::Command_ListMeta:
     case AppCommands::Command_ListMetaAsJson:return PrintHelpOnListMeta(true);
 
-    case AppCommands::Command_ModifyMeta:return false;
+    case AppCommands::Command_ModifyMeta:return PrintHelpOnModifyMeta();
     case AppCommands::Command_ReplaceImage:return PrintHelpOnReplaceImage();
     case AppCommands::Command_ReplaceText:return false;
 
@@ -70,6 +70,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n  2. Manipulate DOCX document:"
             << "\n    rpi        - Replace image in DOCX"
             << "\n    rpt        - Replace text in DOCX"
+            << "\n    mm         - Modify or set meta attribute in DOCX"
             << "\n"
             << "\n  3. Convert DOCX:"
             << "\n    txt        - Output DOCX document as plaintext"
@@ -165,6 +166,22 @@ bool AppHelp::PrintHelpOnListMeta(bool with_title) {
                "  or: docxbox lsm foo.docx --json\n"
                "  or: docxbox ls foo.docx -mj\n"
                "  or: docxbox ls foo.docx --meta -- json\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnModifyMeta() {
+  std::cout << "Command: mm - Modify or set meta attribute in DOCX:\n"
+               "---------------------------------------------------\n"
+               "Examples for all supported attributes:\n"
+               "  docxbox mm foo.docx title \"Foo bar, baz\"\n"
+               "  docxbox mm foo.docx creator \"docxBox v0.0.1\"\n"
+               "  docxbox mm foo.docx lastModifiedBy \"docxBox v0.0.1\"\n"
+               "  docxbox mm foo.docx revision 2\n"
+               "  docxbox mm foo.docx lastPrinted \"2020-01-10T10:31:00Z\"\n"
+               "  docxbox mm foo.docx language \"en-US\"\n"
+               "  docxbox mm foo.docx modified \"2020-01-29T09:21:00Z\"\n"
+               "  docxbox mm foo.docx created \"2020-01-29T09:21:00Z\"\n\n";
 
   return true;
 }
