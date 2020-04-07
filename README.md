@@ -184,7 +184,7 @@ docxbox rpt foo.docx "[\"old\":\"new\",\"difficult\":\"easy\",\"dirty\":\"clean\
 #### Unzip only media files
 
 ````docxbox uz foo.docx --media````  
-or ````docxbox um foo.docx````
+or ````docxbox uzm foo.docx````
 
 
 ### Zip files into DOCX
