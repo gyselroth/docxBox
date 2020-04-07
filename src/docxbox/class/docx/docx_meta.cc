@@ -172,12 +172,57 @@ bool docx_meta::UpdateAttribute(Attribute attribute, const std::string& value) {
   }
 }
 
-bool docx_meta::InsertAttribute(Attribute attribute, std::string value) {
-  // @todo implement
+bool docx_meta::InsertAttribute(Attribute attribute, const std::string& value) {
+  EnsureIsLoadedCoreXml();
 
-  return true;
+  std::string replacement;
+
+  switch (attribute) {
+    case Attribute_Title:
+      replacement = kWordMlTitleLhs + value + kWordMlTitleRhs + kWordMlCorePropertiesRhs;
+      core_xml = helper::String::Replace(core_xml, kWordMlCorePropertiesRhs, replacement.c_str());
+
+      return true;
+    case Attribute_Language:
+      replacement = kWordMlLanguageLhs + value + kWordMlLanguageRhs + kWordMlCorePropertiesRhs;
+      core_xml = helper::String::Replace(core_xml, kWordMlCorePropertiesRhs, replacement.c_str());
+
+      return true;
+    case Attribute_Revision:
+      replacement = kWordMlRevisionLhs + value + kWordMlRevisionRhs + kWordMlCorePropertiesRhs;
+      core_xml = helper::String::Replace(core_xml, kWordMlCorePropertiesRhs, replacement.c_str());
+
+      return true;
+    case Attribute_Creator:
+      replacement = kWordMlCreatorLhs + value + kWordMlCreatorRhs + kWordMlCorePropertiesRhs;
+      core_xml = helper::String::Replace(core_xml, kWordMlCorePropertiesRhs, replacement.c_str());
+
+      return true;
+    case Attribute_LastModifiedBy:
+      replacement = kWordMlLastModifiedByLhs + value + kWordMlLastModifiedByRhs + kWordMlCorePropertiesRhs;
+      core_xml = helper::String::Replace(core_xml, kWordMlCorePropertiesRhs, replacement.c_str());
+
+      return true;
+    case Attribute_Created:
+      replacement = kWordMlCreatedLhs + value + kWordMlCreatedRhs + kWordMlCorePropertiesRhs;
+      core_xml = helper::String::Replace(core_xml, kWordMlCorePropertiesRhs, replacement.c_str());
+
+      return true;
+    case Attribute_Modified:
+      replacement = kWordMlModifiedLhs + value + kWordMlModifiedRhs + kWordMlCorePropertiesRhs;
+      core_xml = helper::String::Replace(core_xml, kWordMlCorePropertiesRhs, replacement.c_str());
+
+      return true;
+    case Attribute_LastPrinted:
+      replacement = kWordMlLastPrintedLhs + value + kWordMlLastPrintedRhs + kWordMlCorePropertiesRhs;
+      core_xml = helper::String::Replace(core_xml, kWordMlCorePropertiesRhs, replacement.c_str());
+
+      return true;
+    default:return false;
+  }
 }
 
+// Check whether core.xml of current DOCX contains given attribute
 bool docx_meta::AttributeExistsInCoreXml(Attribute attribute) {
   EnsureIsLoadedCoreXml();
 

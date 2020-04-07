@@ -35,6 +35,8 @@ static const char *const kWordMlRevisionRhs = "</cp:revision>";
 static const char *const kWordMlCreatorLhs = "<dc:creator>";
 static const char *const kWordMlCreatorRhs = "</dc:creator>";
 
+static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
+
 class docx_meta {
 
  public:
@@ -115,7 +117,7 @@ class docx_meta {
 
   bool AttributeExistsInCoreXml(Attribute attribute);
   bool UpdateAttribute(Attribute attribute, const std::string& value);
-  bool InsertAttribute(Attribute attribute, std::string value);
+  bool InsertAttribute(Attribute attribute, const std::string& value);
   void EnsureIsLoadedCoreXml();
 };
 
