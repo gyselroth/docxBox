@@ -23,6 +23,8 @@ add_executable(docxbox
         src/docxbox/class/app/app.cc
         src/docxbox/class/app/app_arguments.cc
         src/docxbox/class/app/app_commands.cc
+        src/docxbox/class/app/app_help.cc
+        src/docxbox/class/app/app_help.h
         src/docxbox/class/docx/docx_archive.cc
         src/docxbox/class/docx/docx_fontTable.cc
         src/docxbox/class/docx/docx_meta.cc
@@ -33,4 +35,4 @@ add_executable(docxbox
         src/docxbox/helper/helper_string.cc
         src/docxbox/helper/helper_numeric.cc
 
-        src/vendor/tinyxml2/tinyxml2.cpp src/docxbox/class/app/app_help.cc src/docxbox/class/app/app_help.h)
+        src/vendor/tinyxml2/tinyxml2.cpp)
