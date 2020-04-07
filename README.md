@@ -39,7 +39,6 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
 * [Changelog](#changelog)
-* [Roadmap](#roadmap)
 * [Bug Reporting and Feature Requests](#bug-reporting-and-feature-requests)
 * [Third Party References](#third-party-references)
 * [License](#license)
@@ -147,14 +146,14 @@ or ````docxbox lsmj foo.docx````
 
 #### Modify existing (or add) attribute
 
-* Change title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
-* Change creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
-* Change lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
-* Change revision attribute:       ````docxbox mm foo.docx revision 2````
-* Change lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
-* Change language attribute:       ````docxbox mm foo.docx language "en-US"````  
-* Change modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
-* Change creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
+* Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
+* Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
+* Set lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
+* Set revision attribute:       ````docxbox mm foo.docx revision 2````
+* Set lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
+* Set language attribute:       ````docxbox mm foo.docx language "en-US"````  
+* Set modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
+* Set creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
 
 
 ### Output plaintext
