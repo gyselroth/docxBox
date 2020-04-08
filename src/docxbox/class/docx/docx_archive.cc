@@ -138,6 +138,8 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
   path_docx_in = docxbox::AppArguments::ResolvePathFromArgument(path_working_directory, argc, argv, index_path_argument);
 
   if (!helper::File::FileExists(path_docx_in)) throw "Error - File not found: " + path_docx_in + "\n";
+
+  return true;
 }
 
 // Output paths of files (and directories) within DOCX file
