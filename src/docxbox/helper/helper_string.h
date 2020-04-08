@@ -23,6 +23,7 @@ extern bool StartsWith(const char *str, const char *prefix);
 extern bool Contains(std::string &haystack, const char *needle);
 
 extern std::string Replace(std::string &haystack, const char *needle, const char *replacement);
+extern void ReplaceAll(std::string &data, const std::string& toSearch, const std::string& replaceStr);
 
 // Get sub string between given surrounding left- and center-hand-side delimiters
 extern std::string GetSubStrBetween(std::string &str, const char *lhs, const char *rhs, unsigned long &offset);

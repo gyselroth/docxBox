@@ -25,19 +25,11 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
       + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
       + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
   * [Modify meta data](#modify-meta-data)
-      + [Modify existing (or add) attribute](#modify-existing-or-add-attribute)
   * [Replace images](#replace-images)
-    + [Replace image in DOCX](#replace-single-image-in-docx)
-    + [Replace image and save to new DOCX](#replace-single-image-and-save-to-new-docx)
   * [Replace text](#replace-text)
-    + [Replace all occurrences of string in DOCX text](#replace-all-occurrences-of-string-in-docx-text)
-    + [Replace all occurrences of multiple strings in DOCX text](#replace-all-occurrences-of-multiple-strings-in-docx-text)
-  * [Unzip DOCX](#unzip-docx)
-    + [Unzip all files](#unzip-all-files)
-    + [Unzip only media files](#unzip-only-media-files)
+  * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
-  * [Output docxBox help](#output-docxbox-help)  
-  * [Output docxBox version number](#output-docxbox-version-number)  
+  * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
 * [Changelog](#changelog)
@@ -56,13 +48,13 @@ Features
 * List meta data of DOCX
 * Modify meta data of DOCX 
 * Replace images in DOCX
+* Replace string in DOCX text
 * Unzip files from DOCX: all files, only media files
 * Zip files in given path into new DOCX
 
 
 ### Planned Features
 
-* v0.0.1: Replace occurrences of string(s) in DOCX text
 * v0.0.2: Generate and insert/replace more complex DOCX markup elements (merge-fields, tables)
 * v0.1.0: Batch process sequences of manipulation operations
 * v0.1.0: Add optional configuration options via environment vars
@@ -163,7 +155,7 @@ Sentences which visually appear as a unit, but are segmented into separate XML p
 
 ### Modify meta data
 
-#### Modify existing (or add) attribute
+DocxBox allows to modify existing attributes, or adds attributes if not present.
 
 * Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
 * Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
@@ -177,39 +169,26 @@ Sentences which visually appear as a unit, but are segmented into separate XML p
 
 ### Replace images
 
-#### Replace image in DOCX
-
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
 This overwrites the original DOCX with the modified document.
 
-#### Replace image and save to new DOCX
-
-````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg new.docx````
+````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg new.docx````  
+This creates a new file: new.docx
 
 
 ### Replace text
 
-#### Replace all occurrences of string in DOCX text
+Replace all (case-sensitive) occurrences of given string in DOCX text:
 
-````docxbox rpt foo.docx old new````
-
-#### Replace all occurrences of multiple strings in DOCX text
-
-Pass search and replacement tuples as escaped JSON
-
-````
-docxbox rpt foo.docx "[\"old\":\"new\",\"difficult\":\"easy\",\"dirty\":\"clean\"]"
-````
+````docxbox rpt foo.docx old new```` updates foo.docx  
+````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
 
-### Unzip DOCX
+### Unzip DOCX: Extract all files, or only media files
 
-#### Unzip all files
+Unzip all files: ````docxbox uz foo.docx````  
 
-````docxbox uz foo.docx````
-
-#### Unzip only media files
-
+Unzip only media files:  
 ````docxbox uz foo.docx --media````  
 or ````docxbox uz foo.docx -m````  
 or ````docxbox uzm foo.docx````
@@ -220,16 +199,13 @@ or ````docxbox uzm foo.docx````
 ````docxbox zip path/to/directory out.docx````
 
 
-### Output docxBox help
+### Output docxBox help or version number
 
 ````docxbox````  
 or ````docxbox h````    
 Outputs docxBox's help text.
 
-````docxbox h <command>```` Outputs more help on a given command.
-
-
-### Output docxBox version number
+````docxbox h <command>```` Outputs more help on a given command.  
 
 ````docxbox v```` Outputs the installed docxBox's version number.
 

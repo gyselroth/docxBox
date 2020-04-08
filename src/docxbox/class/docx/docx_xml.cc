@@ -76,23 +76,32 @@ void docx_xml::Output() {
 bool docx_xml::ReplaceStringInXml(const std::string& path_xml, std::string search, std::string replacement) {
   tinyxml2::XMLDocument doc;
 
+  std::string kPathXml = path_xml;
+  std::string xml = helper::File::GetFileContents(kPathXml);
+  if (!helper::String::Contains(xml, "w:document")
+      || !helper::String::Contains(xml, "w:body")) return false;
+
   doc.LoadFile(path_xml.c_str());
 
   if(doc.ErrorID() != 0) return "";
 
+  amount_replaced = 0;
+
   tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")->FirstChildElement("w:body");
 
-  ReplaceStringInChildNodesText(body, std::move(search), std::move(replacement));
+  ReplaceStringInChildNodesText(body, search, replacement);
 
-  std::cout << body->ToText();
+  if (amount_replaced > 0) doc.SaveFile(path_xml.c_str(), true); // @todo check rc
 
   return true;
 }
 
-void docx_xml::ReplaceStringInChildNodesText(tinyxml2::XMLElement *node, std::string search, std::string replacement) {
+void docx_xml::ReplaceStringInChildNodesText(
+    tinyxml2::XMLElement *node,
+    const std::string& search,
+    const std::string& replacement
+) {
   if (!node || node->NoChildren()) return;
-
-  //if (0 == strcmp(node->Value(), "w:p")) document_text += "\n";
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
 
@@ -106,24 +115,19 @@ void docx_xml::ReplaceStringInChildNodesText(tinyxml2::XMLElement *node, std::st
     if (value) {
       if (0 == strcmp(value, "w:instrText")) {
         continue;
-      } else if (0 == strcmp(value, "w:fldChar")) {
-        if (
-            0 == strcmp(
-                sub_node->Attribute("w:fldCharType"),
-                "begin"
-            )
-            ) {
-          //document_text += " ";
-        }
       } else if (0 == strcmp(value, "w:t")) {
-        const char *text = sub_node->GetText();
+        std::string text = sub_node->GetText();
 
-        if (text) {
-          sub_node->SetText("foo");
-          //document_text += text;
+        if (!text.empty()
+            && helper::String::Contains(text, search.c_str())
+        ) {
+          helper::String::ReplaceAll(text, search, replacement);
+          sub_node->SetText(text.c_str());
 
-          //if (newline_at_segments) document_text += "\n";
+          amount_replaced++;
         }
+
+        // @todo implement replacement of strings scattered over multiple xml tags (replace within first tag, set others empty)
 
         continue;
       }
