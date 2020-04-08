@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gyselroth/docxbox.svg?branch=master)](https://travis-ci.org/gyselroth/docxbox)
+
 docxBox
 =======
 
