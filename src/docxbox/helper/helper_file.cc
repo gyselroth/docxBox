@@ -98,14 +98,13 @@ std::string File::GetLastPathSegment(std::string path) {
 std::vector<std::string> File::ScanDir(const char *pathname) {
   struct dirent **namelist;
   int filecount;
-  int i;
 
   std::vector<std::string> files;
 
   filecount = scandir(pathname, &namelist, nullptr, alphasort);
 
   if (filecount > 0) {
-    for (i = 0; i < filecount; i++) {
+    for (int i = 0; i < filecount; i++) {
       std::string path_file;
 
       if (namelist[i]->d_name[0]!='.') {
