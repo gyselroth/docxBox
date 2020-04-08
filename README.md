@@ -176,7 +176,7 @@ Sentences which visually appear as a unit, but are segmented into separate XML p
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
 This overwrites the original DOCX with the modified document.
 
-````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg new.docx````
+````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg new.docx````  
 This creates a new file: new.docx
 
 
