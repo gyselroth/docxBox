@@ -66,7 +66,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    lsfj       - Output list of fonts in DOCX as JSON"
             << "\n    lsi        - Output list of images in DOCX"
             << "\n    lsij       - Output list of images in DOCX as JSON"
-            << "\n    lsm        - Output DOCX meta data"
+            << "\n    lsm        - Output DOCX meta of data"
             << "\n    lsmj       - Output DOCX meta data as JSON"
             << "\n"
             << "\n  2. Manipulate DOCX document:"
