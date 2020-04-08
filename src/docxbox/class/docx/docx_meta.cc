@@ -155,7 +155,7 @@ bool docx_meta::UpdateAttribute(Attribute attribute, const std::string& value) {
     case Attribute_LastPrinted:
       core_xml = helper::String::Replace(
           core_xml,
-          std::string(kWordMlLastPrintedLhs).append(SetTitleFromCoreXml()).c_str(),
+          std::string(kWordMlLastPrintedLhs).append(SetLastPrintedFromCoreXml()).c_str(),
           std::string(kWordMlLastPrintedLhs).append(value).c_str()
       );
 
