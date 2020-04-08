@@ -85,13 +85,19 @@ bool App::Process() {
 
   // Process
   switch (command) {
-    case AppCommands::Command_Help:
-      return AppHelp::PrintHelp(
-          true,
-          argc > 2
-            ? AppCommands::ResolveCommandByName(argv[2])
-            : AppCommands::Command_Invalid
-      );
+    case AppCommands::Command_Help: {
+      AppCommands::Command kCommand;
+      std::string command_identifier;
+
+      if (argc > 2) {
+        kCommand = AppCommands::ResolveCommandByName(argv[2]);
+        command_identifier = argv[2];
+      } else {
+        kCommand = AppCommands::Command_Invalid;
+      }
+
+      return AppHelp::PrintHelp(true, kCommand, command_identifier);
+    }
     case AppCommands::Command_GetPlainText:return docx_archive->GetText(false);
     case AppCommands::Command_GetPlainTextSegments:return docx_archive->GetText(true);
     case AppCommands::Command_List:return docx_archive->ListFiles(false);

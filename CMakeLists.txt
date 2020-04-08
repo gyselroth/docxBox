@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(docxbox)
 
-set (DOCXBOX_VERSION_MAJOR 0)
-set (DOCXBOX_VERSION_MINOR 0)
-set (DOCXBOX_VERSION_PATCH 1)
+set (VERSION_MAJOR "0")
+set (VERSION_MINOR "0")
+set (VERSION_PATCH "1")
 
 # configure config.h to be generated from config.h.in, with injected version number
 configure_file ("src/docxbox/config.h.in" "src/docxbox/config.h")

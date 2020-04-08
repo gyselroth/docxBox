@@ -17,7 +17,7 @@ bool AppHelp::PrintVersion() {
   return true;
 }
 
-bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command) {
+bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command, std::string command_identifier) {
   switch (command) {
     case AppCommands::Command_Help:return PrintOverview(true);
 
@@ -45,7 +45,14 @@ bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command) {
 
     case AppCommands::Command_Version:return PrintHelpOnVersion();
     case AppCommands::Command_Zip:return PrintHelpOnZip();
-    case AppCommands::Command_Invalid:return PrintOverview(with_title);
+    case AppCommands::Command_Invalid:
+      if (!command_identifier.empty()) {
+        std::cout << "Unknown command: " << command_identifier << ".\n\n";
+
+        with_title = true;
+      }
+
+      return PrintOverview(with_title);
   }
 
   std::cout << "\n\n";
@@ -54,10 +61,7 @@ bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command) {
 }
 
 bool AppHelp::PrintOverview(bool with_title) {
-  if (with_title) {
-    std::cout << "Usage: docxbox <command> [args]"
-              << "\n\nAvailable commands:";
-  }
+  if (with_title) std::cout << "Usage: docxbox <command> [args]" << "\n\nAvailable commands:";
 
   std::cout << "\n  1. List DOCX contents:"
             << "\n    ls         - Output list of files in DOCX"
@@ -259,7 +263,7 @@ bool AppHelp::PrintHelpOnZip() {
 }
 
 void AppHelp::PrintUnknownArgumentMessage(const char *arg) {
-  std::cout << "\nUnknown argument: \"" << arg << "\". Possible arguments are:\n";
+  std::cout << "Unknown argument: \"" << arg << "\". Possible arguments are:\n";
 
   PrintHelp(false, AppCommands::Command::Command_Invalid);
 }
