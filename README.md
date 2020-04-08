@@ -25,7 +25,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
       + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
       + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
   * [Modify meta data](#modify-meta-data)
-      + [Modify existing (or add) single attribute](#modify-existing-or-add-single-attribute)
+      + [Modify existing (or add) attribute](#modify-existing-or-add-attribute)
   * [Replace images](#replace-images)
     + [Replace image in DOCX](#replace-single-image-in-docx)
     + [Replace image and save to new DOCX](#replace-single-image-and-save-to-new-docx)
