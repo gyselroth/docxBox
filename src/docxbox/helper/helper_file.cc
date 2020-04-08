@@ -3,14 +3,6 @@
 
 namespace helper {
 
-bool File::IsFile(const std::string file_path) {
-  struct stat buffer;
-
-  stat(file_path.c_str(), &buffer);
-
-  return S_ISREG(buffer.st_mode);
-}
-
 bool File::IsDirectory(const std::string file_path) {
   struct stat buffer;
 

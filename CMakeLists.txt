@@ -29,7 +29,6 @@ add_executable(docxbox
         src/docxbox/class/docx/docx_meta.cc
         src/docxbox/class/docx/docx_xml.cc
         src/docxbox/helper/helper_file.cc
-        src/docxbox/helper/helper_image.cc
         src/docxbox/helper/helper_string.cc
         src/docxbox/helper/helper_numeric.cc
 

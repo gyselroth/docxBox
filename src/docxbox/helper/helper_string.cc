@@ -22,31 +22,6 @@ bool String::Contains(std::string &haystack, const char *needle) {
   return std::string::npos!=haystack.find(needle);
 }
 
-/**
- * Get amount of sub string occurrences
- */
-int String::GetSubStrCount(const char *str, const char *sub) {
-  auto length = static_cast<int>(strlen(sub));
-  if (length==0) return 0;
-
-  int count = 0;
-  for (str = strstr(str, sub); str; str = strstr(str + length, sub)) ++count;
-
-  return count;
-}
-
-std::string String::ReplaceFirstOccurrence(
-    const char *needle, const char *replacement, std::string &haystack) {
-  size_t needle_len = strlen(needle);
-  size_t index = haystack.find(needle, 0);
-
-  if (std::string::npos!=index)
-    haystack.replace(index, needle_len, replacement);
-
-  return haystack;
-}
-
-
 std::string String::Replace(std::string &haystack, const char *needle, const char *replacement) {
   size_t needle_len = strlen(needle);
 
@@ -54,20 +29,6 @@ std::string String::Replace(std::string &haystack, const char *needle, const cha
   index = haystack.find(needle, index);
   if (std::string::npos!=index) haystack.replace(index, needle_len, replacement);
 
-  return haystack;
-}
-
-std::string String::ReplaceAll(std::string &haystack, const char *needle, const char *replacement) {
-  size_t needle_len = strlen(needle);
-
-  size_t index = 0;
-  while (true) {
-    index = haystack.find(needle, index);
-    if (std::string::npos==index) break;
-
-    haystack.replace(index, needle_len, replacement);
-  }
-  // TODO ensure avoid endless looping (when e.g. replacing "a" by "aa")
   return haystack;
 }
 
@@ -99,14 +60,6 @@ std::string String::GetSubStrBetween(std::string &str, const char *lhs, const ch
   return GetSubStrBetween(str, lhs, rhs, offset);
 }
 
-std::string String::GetSubStrAfter(std::string &str, const char *delimiter, unsigned long pos) {
-  size_t offsetStart = str.find(delimiter, pos);
-
-  return std::string::npos!=offsetStart
-         ? str.substr(offsetStart+strlen(delimiter))
-         : "";
-}
-
 /**
  * Split given string by given character delimiter into vector of strings
  */
@@ -118,10 +71,6 @@ std::vector<std::string> String::Explode(std::string const &str, char delimiter)
     result.push_back(std::move(token));
 
   return result;
-}
-
-bool String::IsNumeric(char c) {
-  return c >= 48 && c <= 57;
 }
 
 /**
@@ -150,25 +99,6 @@ void String::RTrim(std::string &s) {
 void String::Trim(std::string &s) {
   LTrim(s);
   RTrim(s);
-}
-
-std::string String::ToLower(std::string s) {
-  std::transform(s.begin(), s.end(), s.begin(),
-                 [](unsigned char c) { return std::tolower(c); }
-  );
-
-  return s;
-}
-
-std::string String::ToUpper(std::string s) {
-
-  return s;
-}
-
-std::string String::UcFirst(std::string s) {
-  s[0] = static_cast<char>(std::toupper(s[0]));
-
-  return s;
 }
 
 unsigned long String::GetMaxLength(const std::vector<std::string>& strings) {

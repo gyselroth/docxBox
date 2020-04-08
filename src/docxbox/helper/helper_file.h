@@ -24,7 +24,6 @@
 namespace helper {
 namespace File {
 
-extern bool IsFile(const std::string file_path);
 extern bool IsDirectory(const std::string file_path);
 
 // Check whether given file exists
