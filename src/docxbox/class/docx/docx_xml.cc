@@ -129,11 +129,8 @@ void docx_xml::ReplaceStringInChildNodesText(
         if (!text.empty()
             && helper::String::Contains(text, search.c_str())
         ) {
-          // @todo add current replacement amount
-          helper::String::ReplaceAll(text, search, replacement);
+          amount_replaced += helper::String::ReplaceAll(text, search, replacement);
           sub_node->SetText(text.c_str());
-
-          amount_replaced++;
         }
 
         // @todo implement replacement of strings scattered over multiple xml tags (replace within first tag, set others empty)
