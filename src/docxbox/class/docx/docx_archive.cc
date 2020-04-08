@@ -135,7 +135,12 @@ docx_archive::docx_archive(int argc, char **argv) {
 
 // Setup path to DOCX file, absolute or relative from execution path, from given argument
 bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
-  path_docx_in = docxbox::AppArguments::ResolvePathFromArgument(path_working_directory, argc, argv, index_path_argument);
+  path_docx_in = docxbox::AppArguments::ResolvePathFromArgument(
+      path_working_directory,
+      argc,
+      argv,
+      index_path_argument
+  );
 
   if (!helper::File::FileExists(path_docx_in)) throw "Error - File not found: " + path_docx_in + "\n";
 
