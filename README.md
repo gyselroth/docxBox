@@ -182,7 +182,7 @@ This creates a new file: new.docx
 
 ### Replace text
 
-Replace all (case-insensitive) occurrences of given string in DOCX text:
+Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 ````docxbox rpt foo.docx old new```` updates foo.docx  
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
