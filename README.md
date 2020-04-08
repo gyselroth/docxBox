@@ -27,12 +27,9 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
   * [Modify meta data](#modify-meta-data)
   * [Replace images](#replace-images)
   * [Replace text](#replace-text)
-  * [Unzip DOCX](#unzip-docx)
-    + [Unzip all files](#unzip-all-files)
-    + [Unzip only media files](#unzip-only-media-files)
+  * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
-  * [Output docxBox help](#output-docxbox-help)  
-  * [Output docxBox version number](#output-docxbox-version-number)  
+  * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
 * [Changelog](#changelog)
@@ -187,14 +184,11 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
 
-### Unzip DOCX
+### Unzip DOCX: Extract all files, or only media files
 
-#### Unzip all files
+Unzip all files: ````docxbox uz foo.docx````  
 
-````docxbox uz foo.docx````
-
-#### Unzip only media files
-
+Unzip only media files:  
 ````docxbox uz foo.docx --media````  
 or ````docxbox uz foo.docx -m````  
 or ````docxbox uzm foo.docx````
@@ -205,16 +199,13 @@ or ````docxbox uzm foo.docx````
 ````docxbox zip path/to/directory out.docx````
 
 
-### Output docxBox help
+### Output docxBox help or version number
 
 ````docxbox````  
 or ````docxbox h````    
 Outputs docxBox's help text.
 
-````docxbox h <command>```` Outputs more help on a given command.
-
-
-### Output docxBox version number
+````docxbox h <command>```` Outputs more help on a given command.  
 
 ````docxbox v```` Outputs the installed docxBox's version number.
 
