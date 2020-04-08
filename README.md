@@ -21,11 +21,11 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
     + [List meta data](#list-meta-data)
     + [List meta data as JSON](#list-meta-data-as-json)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
+  * [Output plaintext](#output-plaintext)
+      + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
+      + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
   * [Modify meta data](#modify-meta-data)
       + [Modify existing (or add) single attribute](#modify-existing-or-add-single-attribute)
-  * [Output plaintext](#output-plaintext)
-    + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
-    + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
   * [Replace images](#replace-images)
     + [Replace image in DOCX](#replace-single-image-in-docx)
     + [Replace image and save to new DOCX](#replace-single-image-and-save-to-new-docx)
@@ -144,19 +144,6 @@ or ````docxbox lsmj foo.docx````
 * Creation-, modification and print-date  
   (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml)
 
-### Modify meta data
-
-#### Modify existing (or add) attribute
-
-* Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
-* Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
-* Set lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
-* Set revision attribute:       ````docxbox mm foo.docx revision 2````
-* Set lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
-* Set language attribute:       ````docxbox mm foo.docx language "en-US"````  
-* Set modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
-* Set creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
-
 
 ### Output plaintext
 
@@ -172,6 +159,20 @@ or ````docxbox txt foo.docx -s````
 Outputs the text from document, w/ markup sections separated by newlines.
 This can be helpful to identify "segmented" sentences:
 Sentences which visually appear as a unit, but are segmented into separate XML parent elements for formatting.
+
+
+### Modify meta data
+
+#### Modify existing (or add) attribute
+
+* Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
+* Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
+* Set lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
+* Set revision attribute:       ````docxbox mm foo.docx revision 2````
+* Set lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
+* Set language attribute:       ````docxbox mm foo.docx language "en-US"````  
+* Set modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
+* Set creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
 
 
 ### Replace images
