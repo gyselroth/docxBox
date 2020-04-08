@@ -32,6 +32,19 @@ std::string String::Replace(std::string &haystack, const char *needle, const cha
   return haystack;
 }
 
+void String::ReplaceAll(std::string &data, const std::string& toSearch, const std::string& replaceStr) {
+  // Get the first occurrence
+  size_t pos = data.find(toSearch);
+
+  // Repeat till end is reached
+  while( pos != std::string::npos) {
+    // Replace this occurrence of Sub String
+    data.replace(pos, toSearch.size(), replaceStr);
+    // Get the next occurrence from the current position
+    pos =data.find(toSearch, pos + replaceStr.size());
+  }
+}
+
 /**
  *  Get sub string between given surrounding left- and right-hand-side delimiters
  *

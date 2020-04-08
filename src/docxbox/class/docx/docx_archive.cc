@@ -507,10 +507,24 @@ bool docx_archive::ReplaceText() {
 
     std::string path_file_absolute = path_extract + "/" + file_in_zip.filename;
 
-    if (!parser->ReplaceStringInXml(path_file_absolute, search, replacement)) return false;
+    parser->ReplaceStringInXml(path_file_absolute, search, replacement);
   }
 
-  return true;
+  // @todo extract code from here until end of method (and its duplication) into reusable method
+  std::string path_docx_out;
+
+  if (argc >= 6) {
+    // Result filename is given as argument
+    path_docx_out = helper::File::ResolvePath(path_working_directory, argv[5]);
+  } else {
+    // Overwrite original DOCX
+    helper::File::Remove(path_docx_in.c_str());
+    path_docx_out = path_docx_in;
+  }
+
+  miniz_cpp_ext::RemoveExtract(path_extract, file_list);
+
+  return Zip(path_extract, path_docx_out);
 }
 
 // Zip files into given path into DOCX of given filename

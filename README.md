@@ -27,11 +27,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
   * [Modify meta data](#modify-meta-data)
       + [Modify existing (or add) attribute](#modify-existing-or-add-attribute)
   * [Replace images](#replace-images)
-    + [Replace image in DOCX](#replace-single-image-in-docx)
-    + [Replace image and save to new DOCX](#replace-single-image-and-save-to-new-docx)
   * [Replace text](#replace-text)
-    + [Replace all occurrences of string in DOCX text](#replace-all-occurrences-of-string-in-docx-text)
-    + [Replace all occurrences of multiple strings in DOCX text](#replace-all-occurrences-of-multiple-strings-in-docx-text)
   * [Unzip DOCX](#unzip-docx)
     + [Unzip all files](#unzip-all-files)
     + [Unzip only media files](#unzip-only-media-files)
@@ -56,13 +52,13 @@ Features
 * List meta data of DOCX
 * Modify meta data of DOCX 
 * Replace images in DOCX
+* Replace string in DOCX text
 * Unzip files from DOCX: all files, only media files
 * Zip files in given path into new DOCX
 
 
 ### Planned Features
 
-* v0.0.1: Replace occurrences of string(s) in DOCX text
 * v0.0.2: Generate and insert/replace more complex DOCX markup elements (merge-fields, tables)
 * v0.1.0: Batch process sequences of manipulation operations
 * v0.1.0: Add optional configuration options via environment vars
@@ -177,29 +173,19 @@ Sentences which visually appear as a unit, but are segmented into separate XML p
 
 ### Replace images
 
-#### Replace image in DOCX
-
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
 This overwrites the original DOCX with the modified document.
 
-#### Replace image and save to new DOCX
-
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg new.docx````
+This creates a new file: new.docx
 
 
 ### Replace text
 
-#### Replace all occurrences of string in DOCX text
+Replace all (case-insensitive) occurrences of given string in DOCX text:
 
-````docxbox rpt foo.docx old new````
-
-#### Replace all occurrences of multiple strings in DOCX text
-
-Pass search and replacement tuples as escaped JSON
-
-````
-docxbox rpt foo.docx "[\"old\":\"new\",\"difficult\":\"easy\",\"dirty\":\"clean\"]"
-````
+````docxbox rpt foo.docx old new```` updates foo.docx  
+````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
 
 ### Unzip DOCX

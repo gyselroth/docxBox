@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 
+#include "../../helper/helper_file.h"
 #include "../../helper/helper_string.h"
 
 #include "../../../vendor/tinyxml2/tinyxml2.h"
@@ -28,9 +29,11 @@ class docx_xml {
 
   std::string document_text;
 
+  int amount_replaced = 0;
+
   void GetChildNodesText(tinyxml2::XMLElement *node, bool newline_at_segments = false);
 
-  void ReplaceStringInChildNodesText(tinyxml2::XMLElement *node, std::string search, std::string replacement);
+  void ReplaceStringInChildNodesText(tinyxml2::XMLElement *node, const std::string& search, const std::string& replacement);
 };
 
 #endif //DOCXBOX_CLASS_DOCX_WORDPARSER_H
