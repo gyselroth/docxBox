@@ -455,6 +455,20 @@ bool docx_archive::ReplaceImages() {
 bool docx_archive::ReplaceText() {
   if (!Unzip("-" + helper::File::GetTmpName())) return false;
 
+  if (argc <= 3) {
+    std::cout << "Missing argument: string to be replaced\n";
+
+    return false;
+  }
+
+  if (argc <= 4) {
+    std::cout << "Missing argument: replacement string\n";
+
+    return false;
+  }
+
+  if (!Unzip("-" + helper::File::GetTmpName())) return false;
+
   miniz_cpp::zip_file docx_file(path_docx);
 
   auto file_list = docx_file.infolist();
