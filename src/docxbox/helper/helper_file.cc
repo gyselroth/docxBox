@@ -133,14 +133,13 @@ std::vector<std::string> File::ScanDirRecursive(
 ) {
   struct dirent **namelist;
   int filecount;
-  int i;
 
   bool do_remove_prefix = !remove_prefix.empty();
 
   filecount = scandir(pathname, &namelist, nullptr, alphasort);
 
   if (filecount > 0) {
-    for (i = 0; i < filecount; i++) {
+    for (int i = 0; i < filecount; i++) {
       std::string path_file;
 
       if (namelist[i]->d_name[0]!='.') {
