@@ -55,7 +55,7 @@ bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command) {
 
 bool AppHelp::PrintOverview(bool with_title) {
   if (with_title) {
-    std::cout << "\nUsage: docxbox <command> [args]"
+    std::cout << "Usage: docxbox <command> [args]"
               << "\n\nAvailable commands:";
   }
 
