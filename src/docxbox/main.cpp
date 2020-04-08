@@ -9,9 +9,12 @@ int main(int argc, char **argv) {
   // Process command arguments, display help if no valid command given
   auto *app = new docxbox::App(argc, argv);
 
-  if (argc > 1) app->Process();
+  bool success = true;
+
+  if (argc > 1) success = app->Process();
 
   delete app;
 
-  return 0;
+  // @todo return comprehensible bash error codes instead of 125 (="operation cancelled")
+  return success ? 0 : 125;
 }
