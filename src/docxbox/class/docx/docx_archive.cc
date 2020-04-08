@@ -340,12 +340,12 @@ bool docx_archive::ListFonts(bool as_json) {
   int index_font = 0;
 
   for (const auto& file_in_zip : file_list) {
-    const char *path_file_within_docx = file_in_zip.filename.c_str();
-
-    std::string path_file_absolute = path_extract + "/" + path_file_within_docx;
-
-    // Extract fonts data from all fontTable.xml files
     if (helper::String::EndsWith(file_in_zip.filename, "fontTable.xml")) {
+      // Extract fonts data from all fontTable.xml files
+      const char *path_file_within_docx = file_in_zip.filename.c_str();
+
+      std::string path_file_absolute = path_extract + "/" + path_file_within_docx;
+
       fontTable->CollectFontsMetrics(helper::File::GetFileContents(path_file_absolute));
 
       if (as_json) {
