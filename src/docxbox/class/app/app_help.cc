@@ -8,8 +8,10 @@ namespace docxbox {
 
 bool AppHelp::PrintVersion() {
   std::cout
-    << "docxBox"
-    << " version " << DOCXBOX_VERSION_MAJOR << "." << DOCXBOX_VERSION_MINOR << "." << DOCXBOX_VERSION_PATCH
+    << "docxBox" << " version "
+    << std::string(DOCXBOX_VERSION_MAJOR) << "."
+    << std::string(DOCXBOX_VERSION_MINOR) << "."
+    << std::string(DOCXBOX_VERSION_PATCH)
     << "\n";
 
   return true;

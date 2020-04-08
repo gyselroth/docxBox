@@ -1,19 +1,18 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
+#cmake_minimum_required(VERSION 3.14)
+
 project(docxbox)
 
-set (DOCXBOX_EXECUTABLE_NAME "docxbox")
 set (DOCXBOX_VERSION_MAJOR 0)
 set (DOCXBOX_VERSION_MINOR 0)
 set (DOCXBOX_VERSION_PATCH 1)
 
 # configure config.h to be generated from config.h.in, with injected version number
-configure_file (
-        "src/docxbox/config.h.in"
-        "src/docxbox/config.h")
+configure_file ("src/docxbox/config.h.in" "src/docxbox/config.h")
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin/linux)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin/linux)
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y -pedantic")
 
