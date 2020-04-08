@@ -119,6 +119,7 @@ void docx_xml::ReplaceStringInChildNodesText(tinyxml2::XMLElement *node, std::st
         const char *text = sub_node->GetText();
 
         if (text) {
+          sub_node->SetText("foo");
           //document_text += text;
 
           //if (newline_at_segments) document_text += "\n";

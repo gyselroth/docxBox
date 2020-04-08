@@ -105,7 +105,7 @@ bool App::Process() {
     case AppCommands::Command_ModifyMeta:return docx_archive->ModifyMeta();
     case AppCommands::Command_ReplaceImage:return docx_archive->ReplaceImage();
     case AppCommands::Command_ReplaceText:return docx_archive->ReplaceText();
-    case AppCommands::Command_Unzip:return docx_archive->Unzip();
+    case AppCommands::Command_Unzip:return docx_archive->UnzipDocx();
     case AppCommands::Command_UnzipMedia:return docx_archive->UnzipMedia();
     case AppCommands::Command_Version:return AppHelp::PrintVersion();
     case AppCommands::Command_Zip:return docx_archive->Zip();

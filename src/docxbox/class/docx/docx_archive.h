@@ -17,7 +17,7 @@ class docx_archive {
  public:
   docx_archive(int argc, char **argv);
 
-  bool Unzip(const std::string& directory_appendix = "");
+  bool UnzipDocx(const std::string& directory_appendix = "", bool ensure_is_docx = true);
   bool UnzipMedia();
   bool Zip(std::string path_directory = "", std::string path_docx_result = "");
 
@@ -40,10 +40,12 @@ class docx_archive {
 
   std::string path_working_directory;
 
-  std::string path_docx;
+  // DOCX to be read or manipulated
+  std::string path_docx_in;
+  // Directory containing extracted XML files of DOCX
   std::string path_extract;
 
-  void InitPathDocxByArgV(int index_path_argument);
+  bool InitPathDocxByArgV(int index_path_argument);
   void InitExtractionPath(const std::string &directory_appendix, const std::string &path_docx);
 };
 
