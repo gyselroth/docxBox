@@ -191,7 +191,10 @@ bool AppHelp::PrintHelpOnModifyMeta() {
 bool AppHelp::PrintHelpOnReplaceImage() {
   std::cout << "Command: rpi - Replace image in DOCX document:\n"
                "----------------------------------------------\n"
-               "  docxbox rpi foo.docx image1.jpeg images/replacement.jpeg\n\n";
+               "Replace image, update existing DOCX file:\n"
+               "  docxbox rpi foo.docx image1.jpeg images/replacement.jpeg\n\n"
+               "Replace image, save to new changed DOCX document:\n"
+               "  docxbox rpi foo.docx image1.jpeg images/replacement.jpeg new.docx\n\n";
 
   return true;
 }

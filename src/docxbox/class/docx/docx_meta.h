@@ -5,6 +5,7 @@
 #include <string>
 #include <utility>
 
+#include "../app/app_argument.h"
 #include "../../helper/helper_string.h"
 
 // wordMl meta-attribute tag-parts (left- and right-hand-side strings surrounding the value)
