@@ -25,7 +25,6 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
       + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
       + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
   * [Modify meta data](#modify-meta-data)
-      + [Modify existing (or add) attribute](#modify-existing-or-add-attribute)
   * [Replace images](#replace-images)
   * [Replace text](#replace-text)
   * [Unzip DOCX](#unzip-docx)
@@ -159,7 +158,7 @@ Sentences which visually appear as a unit, but are segmented into separate XML p
 
 ### Modify meta data
 
-#### Modify existing (or add) attribute
+DocxBox allows to modify existing attributes, or adds attributes if not present.
 
 * Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
 * Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
