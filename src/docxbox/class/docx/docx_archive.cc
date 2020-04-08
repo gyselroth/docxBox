@@ -142,11 +142,7 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
 
 // Output paths of files (and directories) within DOCX file
 bool docx_archive::ListFiles(bool as_json) {
-  if (argc <= 2) {
-    std::cout << "Missing argument: DOCX filename\n";
-
-    return false;
-  }
+  if (!docxbox::AppArguments::IsArgumentGiven(argc, 2, "DOCX filename")) return false;
 
   try {
     InitPathDocxByArgV(3);
@@ -176,11 +172,7 @@ void docx_archive::InitExtractionPath(const std::string &directory_appendix, con
 
 // Unzip all files of DOCX file
 bool docx_archive::UnzipDocx(const std::string& directory_appendix, bool ensure_is_docx) {
-  if (argc <= 2) {
-    std::cout << "Missing argument: filename of DOCX to unzip\n";
-
-    return false;
-  }
+  if (!docxbox::AppArguments::IsArgumentGiven(argc, 2, "Filename of DOCX to be extracted")) return false;
 
   try {
     InitPathDocxByArgV(3);
@@ -427,17 +419,9 @@ bool docx_archive::GetText(bool newline_at_segments) {
 bool docx_archive::ReplaceImage() {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
-  if (argc <= 3) {
-    std::cout << "Missing argument: filename of image to be replaced\n";
-
-    return false;
-  }
-
-  if (argc <= 4) {
-    std::cout << "Missing argument: filename of replacement image\n";
-
-    return false;
-  }
+  if (!docxbox::AppArguments::IsArgumentGiven(argc, 3, "Filename of image to be replaced")
+      || !docxbox::AppArguments::IsArgumentGiven(argc, 4, "Filename of replacement image")
+  ) return false;
 
   if (helper::String::StartsWith(argv[3], "[")) {
     // JSON array = multiple images
@@ -490,20 +474,11 @@ bool docx_archive::ReplaceImages() {
 bool docx_archive::ReplaceText() {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
-  if (argc <= 3) {
-    std::cout << "Missing argument: string to be replaced\n";
-
-    return false;
-  }
+  if (!docxbox::AppArguments::IsArgumentGiven(argc, 3, "String to be found (and replaced)")
+      || !docxbox::AppArguments::IsArgumentGiven(argc, 4, "Replacement string")
+  ) return false;
 
   std::string search = argv[3];
-
-  if (argc <= 4) {
-    std::cout << "Missing argument: replacement string\n";
-
-    return false;
-  }
-
   std::string replacement = argv[4];
 
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;

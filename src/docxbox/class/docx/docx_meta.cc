@@ -1,7 +1,7 @@
 
 #include <iostream>
+
 #include "docx_meta.h"
-#include "../../helper/helper_file.h"
 
 docx_meta::docx_meta(int argc, char **argv) {
   this->argc = argc;
@@ -66,11 +66,7 @@ docx_meta::Attribute docx_meta::ResolveAttributeByName(const std::string &attrib
 }
 
 bool docx_meta::InitModificationArguments() {
-  if (argc <= 3) {
-    std::cout << "Missing argument: Meta attribute to be set\n";
-
-    return false;
-  }
+  if (!docxbox::AppArguments::IsArgumentGiven(argc, 3, "Meta attribute to be set")) return false;
 
   attribute_ = ResolveAttributeByName(argv[3]);
 
@@ -80,11 +76,7 @@ bool docx_meta::InitModificationArguments() {
     return false;
   }
 
-  if (argc <= 4) {
-    std::cout << "Missing argument: Value to set attribute to\n";
-
-    return false;
-  }
+  if (!docxbox::AppArguments::IsArgumentGiven(argc, 4, "Value to set attribute to")) return false;
 
   value_ = argv[4];
 

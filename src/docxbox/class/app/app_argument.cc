@@ -23,6 +23,16 @@ std::string AppArguments::ResolvePathFromArgument(
   return helper::File::ResolvePath(pwd, argv[index_argument-1]);
 }
 
+bool AppArguments::IsArgumentGiven(int argc, int index, std::string argument_description) {
+  if (argc <= index) {
+    std::cout << "Missing argument: " << argument_description << "\n";
+
+    return false;
+  }
+
+  return true;
+}
+
 bool AppArguments::Matches(int offset_argument, const std::string& identifier) {
   return argc > offset_argument
       && 0 == strcmp(argv[offset_argument], identifier.c_str());
