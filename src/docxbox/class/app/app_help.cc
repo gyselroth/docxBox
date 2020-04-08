@@ -38,7 +38,7 @@ bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command) {
 
     case AppCommands::Command_ModifyMeta:return PrintHelpOnModifyMeta();
     case AppCommands::Command_ReplaceImage:return PrintHelpOnReplaceImage();
-    case AppCommands::Command_ReplaceText:return false;
+    case AppCommands::Command_ReplaceText:return PrintHelpOnReplaceText();
 
     case AppCommands::Command_Unzip:return PrintHelpOnUnzip(true);
     case AppCommands::Command_UnzipMedia:return PrintHelpOnUnzip(false);
@@ -192,6 +192,17 @@ bool AppHelp::PrintHelpOnReplaceImage() {
   std::cout << "Command: rpi - Replace image in DOCX document:\n"
                "----------------------------------------------\n"
                "  docxbox rpi foo.docx image1.jpeg images/replacement.jpeg\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnReplaceText() {
+  std::cout << "Command: rpt - Replace text in DOCX document:\n"
+               "----------------------------------------------\n"
+               "Replace all occurrences of \"old\" by \"new\", update existing DOCX file:\n"
+               "  docxbox rpt foo.docx old new\n\n"
+               "Replace all occurrences of \"old\" by \"new\", save to new DOCX file:\n"
+               "  docxbox rpt foo.docx old new new.docx\n\n";
 
   return true;
 }

@@ -23,6 +23,7 @@ class AppHelp {
   static bool PrintHelpOnListMeta(bool with_title = true);
   static bool PrintHelpOnModifyMeta();
   static bool PrintHelpOnReplaceImage();
+  static bool PrintHelpOnReplaceText();
   static bool PrintHelpOnGetPlainText();
   static bool PrintHelpOnUnzip(bool with_uz = true);
   static bool PrintHelpOnVersion();
