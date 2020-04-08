@@ -15,7 +15,7 @@ bool docx_xml::IsXmlFileContainingText(std::string filename) {
       && !helper::String::EndsWith(filename, "webSettings.xml");
 }
 
-std::string docx_xml::GetTextFromXmlFile(std::string path_xml, bool newline_at_segments) {
+std::string docx_xml::GetTextFromXmlFile(std::string path_xml, bool newline_at_segments = false) {
   tinyxml2::XMLDocument doc;
 
   doc.LoadFile(path_xml.c_str());
@@ -69,4 +69,12 @@ void docx_xml::GetChildNodesText(tinyxml2::XMLElement *node, bool newline_at_seg
 
 void docx_xml::Output() {
   std::cout << document_text;
+}
+
+bool docx_xml::ReplaceStringInXml(std::string path_xml) {
+  auto xml = GetTextFromXmlFile(path_xml);
+
+  // @todo implement
+
+  return true;
 }

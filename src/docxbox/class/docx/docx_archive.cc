@@ -461,11 +461,15 @@ bool docx_archive::ReplaceText() {
     return false;
   }
 
+  std::string needle = argv[3];
+
   if (argc <= 4) {
     std::cout << "Missing argument: replacement string\n";
 
     return false;
   }
+
+  std::string replacement = argv[4];
 
   if (!Unzip("-" + helper::File::GetTmpName())) return false;
 
@@ -480,7 +484,7 @@ bool docx_archive::ReplaceText() {
 
     std::string path_file_absolute = path_extract + "/" + file_in_zip.filename;
 
-    // @todo implement text replace
+    if (!parser->ReplaceStringInXml(path_file_absolute)) return false;
   }
 
   return true;

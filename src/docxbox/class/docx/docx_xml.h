@@ -20,6 +20,8 @@ class docx_xml {
 
   void Output();
 
+  bool ReplaceStringInXml(std::string path_xml);
+
  private:
   int argc;
   char **argv;
