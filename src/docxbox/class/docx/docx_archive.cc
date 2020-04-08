@@ -461,7 +461,7 @@ bool docx_archive::ReplaceText() {
     return false;
   }
 
-  std::string needle = argv[3];
+  std::string search = argv[3];
 
   if (argc <= 4) {
     std::cout << "Missing argument: replacement string\n";
@@ -484,7 +484,7 @@ bool docx_archive::ReplaceText() {
 
     std::string path_file_absolute = path_extract + "/" + file_in_zip.filename;
 
-    if (!parser->ReplaceStringInXml(path_file_absolute)) return false;
+    if (!parser->ReplaceStringInXml(path_file_absolute, search, replacement)) return false;
   }
 
   return true;
