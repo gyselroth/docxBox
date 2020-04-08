@@ -79,11 +79,11 @@ bool docx_xml::ReplaceStringInXml(const std::string& path_xml, std::string searc
   std::string kPathXml = path_xml;
   std::string xml = helper::File::GetFileContents(kPathXml);
   if (!helper::String::Contains(xml, "w:document")
-      || !helper::String::Contains(xml, "w:body")) return false;
+      || !helper::String::Contains(xml, "w:body")) return true;
 
   doc.LoadFile(path_xml.c_str());
 
-  if(doc.ErrorID() != 0) return "";
+  if(doc.ErrorID() != 0) return false;
 
   amount_replaced = 0;
 
@@ -91,7 +91,14 @@ bool docx_xml::ReplaceStringInXml(const std::string& path_xml, std::string searc
 
   ReplaceStringInChildNodesText(body, search, replacement);
 
-  if (amount_replaced > 0) doc.SaveFile(path_xml.c_str(), true); // @todo check rc
+  if (
+      amount_replaced > 0
+      && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+  ) {
+    std::cout << "Error - Failed saving: " << path_xml << "\n";
+
+    return false;
+  }
 
   return true;
 }
@@ -113,14 +120,16 @@ void docx_xml::ReplaceStringInChildNodesText(
     const char *value = sub_node->Value();
 
     if (value) {
-      if (0 == strcmp(value, "w:instrText")) {
-        continue;
-      } else if (0 == strcmp(value, "w:t")) {
+      if (
+          0 == strcmp(value, "w:t")
+          && sub_node->FirstChild() != nullptr
+      ) {
         std::string text = sub_node->GetText();
 
         if (!text.empty()
             && helper::String::Contains(text, search.c_str())
         ) {
+          // @todo add current replacement amount
           helper::String::ReplaceAll(text, search, replacement);
           sub_node->SetText(text.c_str());
 
@@ -129,6 +138,8 @@ void docx_xml::ReplaceStringInChildNodesText(
 
         // @todo implement replacement of strings scattered over multiple xml tags (replace within first tag, set others empty)
 
+        continue;
+      } else if (0 == strcmp(value, "w:instrText")) {
         continue;
       }
     }
