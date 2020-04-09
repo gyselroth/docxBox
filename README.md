@@ -8,8 +8,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 
 ## Table of contents
 
-* [Features](#features)
-  + [Planned features](#planned-features)
+* [Planned features](#planned-features)
 * [Commands](#commands)
   * [List files, referenced fonts, images, meta data](#list-files-and-directories-referenced-fonts-images-meta-data)
     + [Output list of files](#output-list-of-files)
@@ -22,8 +21,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
     + [List meta data as JSON](#list-meta-data-as-json)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
   * [Output plaintext](#output-plaintext)
-      + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
-      + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
+      + [Output plaintext segments](#output-plaintext-segments)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
       + [Replace images](#replace-images)
@@ -39,22 +37,8 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 * [License](#license)
 
 
-Features
---------
-
-* Output plaintext from DOCX
-* List files (and their attributes) in DOCX 
-* List fonts (and their metrics) referenced in DOCX 
-* List images contained in DOCX 
-* List meta data of DOCX
-* Modify meta data of DOCX 
-* Replace images in DOCX
-* Replace string in DOCX text
-* Unzip files from DOCX: all files, only media files
-* Zip files in given path into new DOCX
-
-
-### Planned Features
+Planned Features
+----------------
 
 * v0.0.2: Generate and insert/replace more complex DOCX markup elements (merge-fields, tables)
 * v0.1.0: Batch process sequences of manipulation operations
@@ -140,11 +124,9 @@ or ````docxbox lsmj foo.docx````
 
 ### Output plaintext
 
-#### Output plaintext from DOCX document
-
 ````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and footer)
 
-#### Output plaintext segments from DOCX document 
+#### Output plaintext segments 
 
 ````docxbox txt foo.docx --segments````   
 or ````docxbox txt foo.docx -s```` 
