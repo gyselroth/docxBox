@@ -27,6 +27,7 @@ std::string String::Replace(std::string &haystack, const char *needle, const cha
 
   size_t index = 0;
   index = haystack.find(needle, index);
+
   if (std::string::npos!=index) haystack.replace(index, needle_len, replacement);
 
   return haystack;

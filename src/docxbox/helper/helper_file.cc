@@ -147,9 +147,9 @@ std::vector<std::string> File::ScanDirRecursive(
         path_file  += "/";
         path_file  += namelist[i]->d_name;
 
-        if (IsDirectory(path_file))
+        if (IsDirectory(path_file)) {
           files = helper::File::ScanDirRecursive(path_file.c_str(), files, remove_prefix);
-        else {
+        } else {
           if (do_remove_prefix)
             path_file = helper::String::Replace(path_file, remove_prefix.c_str(), "");
 

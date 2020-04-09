@@ -18,97 +18,97 @@ void docx_fontTable::CollectFontsMetrics(std::string fontTable_xml) {
     if (font_xml.empty() || font_xml == "></w:fonts>") break;
 
     if (font_xml.size() > 3) {
-      font_names.push_back(helper::String::GetSubStrBetween(font_xml, ":name=\"", "\">"));
-      alt_names.push_back(helper::String::GetSubStrBetween(font_xml, ":altName w:val=\"", "\"/>"));
-      charsets.push_back(helper::String::GetSubStrBetween(font_xml, ":charset w:val=\"", "\"/>"));
-      families.push_back(helper::String::GetSubStrBetween(font_xml, ":family w:val=\"", "\"/>"));
-      pitches.push_back(helper::String::GetSubStrBetween(font_xml, ":pitch w:val=\"", "\"/>"));
+      font_names_.push_back(helper::String::GetSubStrBetween(font_xml, ":name=\"", "\">"));
+      alt_names_.push_back(helper::String::GetSubStrBetween(font_xml, ":altName w:val=\"", "\"/>"));
+      charsets_.push_back(helper::String::GetSubStrBetween(font_xml, ":charset w:val=\"", "\"/>"));
+      families_.push_back(helper::String::GetSubStrBetween(font_xml, ":family w:val=\"", "\"/>"));
+      pitches_.push_back(helper::String::GetSubStrBetween(font_xml, ":pitch w:val=\"", "\"/>"));
     }
 
-    amount_fonts++;
+    amount_fonts_++;
 
     offset += font_xml.length() - 1;
   }
 }
 
 void docx_fontTable::Clear() {
-  font_names.clear();
-  alt_names.clear();
-  charsets.clear();
-  families.clear();
-  pitches.clear();
+  font_names_.clear();
+  alt_names_.clear();
+  charsets_.clear();
+  families_.clear();
+  pitches_.clear();
 
-  amount_fonts = 0;
+  amount_fonts_ = 0;
 }
 
 void docx_fontTable::InitCliOutputPadding() {
-  max_len_font_name = helper::String::GetMaxLength(font_names);
-  max_len_alt_name = helper::String::GetMaxLength(alt_names);
-  max_len_charset = helper::String::GetMaxLength(charsets);
-  max_len_family = helper::String::GetMaxLength(families);
-  max_len_pitch = helper::String::GetMaxLength(pitches);
+  max_len_font_name_ = helper::String::GetMaxLength(font_names_);
+  max_len_alt_name_ = helper::String::GetMaxLength(alt_names_);
+  max_len_charset_ = helper::String::GetMaxLength(charsets_);
+  max_len_family_ = helper::String::GetMaxLength(families_);
+  max_len_pitch_ = helper::String::GetMaxLength(pitches_);
 
-  if (!helper::Numeric::IsEven(max_len_font_name)) ++max_len_font_name;
-  if (!helper::Numeric::IsEven(max_len_alt_name)) ++max_len_alt_name;
-  if (!helper::Numeric::IsEven(max_len_charset)) ++max_len_charset;
-  if (!helper::Numeric::IsEven(max_len_family)) ++max_len_family;
-  if (!helper::Numeric::IsEven(max_len_pitch)) ++max_len_pitch;
+  if (!helper::Numeric::IsEven(max_len_font_name_)) ++max_len_font_name_;
+  if (!helper::Numeric::IsEven(max_len_alt_name_)) ++max_len_alt_name_;
+  if (!helper::Numeric::IsEven(max_len_charset_)) ++max_len_charset_;
+  if (!helper::Numeric::IsEven(max_len_family_)) ++max_len_family_;
+  if (!helper::Numeric::IsEven(max_len_pitch_)) ++max_len_pitch_;
 
   // Ensure minimum length (= length of rel. headline)
-  if (max_len_font_name < 5) max_len_font_name = 5;
-  if (max_len_alt_name < 8) max_len_alt_name = 8;
-  if (max_len_charset < 8) max_len_charset = 8;
-  if (max_len_family < 7) max_len_family = 7;
-  if (max_len_pitch < 6) max_len_pitch = 6;
+  if (max_len_font_name_ < 5) max_len_font_name_ = 5;
+  if (max_len_alt_name_ < 8) max_len_alt_name_ = 8;
+  if (max_len_charset_ < 8) max_len_charset_ = 8;
+  if (max_len_family_ < 7) max_len_family_ = 7;
+  if (max_len_pitch_ < 6) max_len_pitch_ = 6;
 }
 
 void docx_fontTable::OutputPlain(const std::string& path_xml_file) {
   InitCliOutputPadding();
 
-  std::cout << path_xml_file << " lists " << amount_fonts << " fonts:\n\n";
+  std::cout << path_xml_file << " lists " << amount_fonts_ << " fonts:\n\n";
 
   std::cout
-      << "Font" << helper::String::Repeat(" ", max_len_font_name - 4) << "    "
-      << "AltName" << helper::String::Repeat(" ", max_len_alt_name - 7) << "     "
-      << "CharSet" << helper::String::Repeat(" ", max_len_charset - 7) << "     "
-      << "Family" << helper::String::Repeat(" ", max_len_family - 6) << "    "
-      << "Pitch" << helper::String::Repeat(" ", max_len_pitch - 5) << "\n";
+      << "Font" << helper::String::Repeat(" ", max_len_font_name_ - 4) << "    "
+      << "AltName" << helper::String::Repeat(" ", max_len_alt_name_ - 7) << "     "
+      << "CharSet" << helper::String::Repeat(" ", max_len_charset_ - 7) << "     "
+      << "Family" << helper::String::Repeat(" ", max_len_family_ - 6) << "    "
+      << "Pitch" << helper::String::Repeat(" ", max_len_pitch_ - 5) << "\n";
 
   std::cout
-      << helper::String::Repeat("-", max_len_font_name) << "    "
-      << helper::String::Repeat("-", max_len_alt_name) << "     "
-      << helper::String::Repeat("-", max_len_charset) << "     "
-      << helper::String::Repeat("-", max_len_family) << "    "
-      << helper::String::Repeat("-", max_len_pitch) << "\n";
+      << helper::String::Repeat("-", max_len_font_name_) << "    "
+      << helper::String::Repeat("-", max_len_alt_name_) << "     "
+      << helper::String::Repeat("-", max_len_charset_) << "     "
+      << helper::String::Repeat("-", max_len_family_) << "    "
+      << helper::String::Repeat("-", max_len_pitch_) << "\n";
 
-  for (int i=0; i<amount_fonts; i++) {
-    unsigned long len_font_name = font_names[i].length();
-    unsigned long len_alt_name = alt_names[i].length();
-    unsigned long len_charset = charsets[i].length();
-    unsigned long len_family = families[i].length();
+  for (int i=0; i<amount_fonts_; i++) {
+    unsigned long len_font_name = font_names_[i].length();
+    unsigned long len_alt_name = alt_names_[i].length();
+    unsigned long len_charset = charsets_[i].length();
+    unsigned long len_family = families_[i].length();
 
     std::cout
-      << font_names[i]
-      << (len_font_name < max_len_font_name
-        ? helper::String::Repeat(" ", max_len_font_name - len_font_name)
+        << font_names_[i]
+        << (len_font_name < max_len_font_name_
+        ? helper::String::Repeat(" ", max_len_font_name_ - len_font_name)
         : ""
         ) << "    "
-      << alt_names[i]
-      << (len_alt_name < max_len_alt_name
-            ? helper::String::Repeat(" ", max_len_alt_name - len_alt_name)
+        << alt_names_[i]
+        << (len_alt_name < max_len_alt_name_
+            ? helper::String::Repeat(" ", max_len_alt_name_ - len_alt_name)
             : ""
         ) << "     "
-      << charsets[i]
-      << (len_charset < max_len_charset
-        ? helper::String::Repeat(" ", max_len_charset - len_charset)
+        << charsets_[i]
+        << (len_charset < max_len_charset_
+        ? helper::String::Repeat(" ", max_len_charset_ - len_charset)
         : ""
       ) << "     "
-      << families[i]
-      << (len_family < max_len_family
-        ? helper::String::Repeat(" ", max_len_family - len_family)
+        << families_[i]
+        << (len_family < max_len_family_
+        ? helper::String::Repeat(" ", max_len_family_ - len_family)
         : ""
       ) << "    "
-      << pitches[i] << "\n";
+        << pitches_[i] << "\n";
   }
 
   std::cout << "\n";
@@ -120,15 +120,15 @@ void docx_fontTable::OutputAsJson(const std::string& path_xml_file) {
   << R"("xml": ")" << path_xml_file << "\","
   << "\"fonts\":[" ;
 
-  for (int i=0; i<amount_fonts; i++) {
+  for (int i=0; i<amount_fonts_; i++) {
     std::cout
         << "{"
-        << R"("name":")" << font_names[i] << "\","
-        << R"("altName":")" << alt_names[i] << "\","
-        << R"("charset":")" << charsets[i] << "\","
-        << R"("family":")" << families[i] << "\","
-        << R"("pitch":")" << pitches[i] << "\""
-        << "}" << (i <amount_fonts-1 ? "," : "");
+        << R"("name":")" << font_names_[i] << "\","
+        << R"("altName":")" << alt_names_[i] << "\","
+        << R"("charset":")" << charsets_[i] << "\","
+        << R"("family":")" << families_[i] << "\","
+        << R"("pitch":")" << pitches_[i] << "\""
+        << "}" << (i <amount_fonts_-1 ? "," : "");
   }
 
   std::cout

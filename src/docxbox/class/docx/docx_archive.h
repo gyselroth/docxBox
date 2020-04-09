@@ -36,15 +36,15 @@ class docx_archive {
   bool ReplaceText();
 
  private:
-  int argc;
-  char **argv;
+  int argc_;
+  char **argv_;
 
-  std::string path_working_directory;
+  std::string path_working_directory_;
 
   // DOCX to be read or manipulated
-  std::string path_docx_in;
+  std::string path_docx_in_;
   // Directory containing extracted XML files of DOCX
-  std::string path_extract;
+  std::string path_extract_;
 
   bool InitPathDocxByArgV(int index_path_argument);
   void InitExtractionPath(const std::string &directory_appendix, const std::string &path_docx);

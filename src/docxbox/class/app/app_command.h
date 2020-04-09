@@ -8,7 +8,7 @@ namespace docxbox {
 
 class AppCommands {
  public:
-  enum Command {
+  enum Commands {
     Command_Help,
     Command_GetPlainText,
     Command_GetPlainTextSegments,
@@ -32,19 +32,19 @@ class AppCommands {
 
   explicit AppCommands(std::string argc);
 
-  static Command ResolveCommandByName(const std::string &command);
+  static Commands ResolveCommandByName(const std::string &command);
 
-  Command GetResolved();
+  Commands GetResolved();
 
  private:
   // Argument value as received from CLI
   std::string argc_;
 
   // Argument resolved to Commands-enum
-  Command resolved_;
+  Commands resolved_;
 
   // Resolve command string (1st argument) to related command enum item (which allows e.g. switch)
-  Command Resolve();
+  Commands Resolve();
 };
 
 } // namespace docxbox

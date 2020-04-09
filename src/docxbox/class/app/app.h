@@ -27,12 +27,12 @@ class App {
   bool Process();
 
  private:
-  int argc;
-  char **argv;
+  int argc_;
+  char **argv_;
 
   AppCommands *command_;
 
-  AppCommands::Command PreProcess(AppArguments *arguments, AppCommands::Command &command) const;
+  AppCommands::Commands PreProcess(AppArguments *arguments, AppCommands::Commands &command) const;
 };
 
 } // namespace docxbox

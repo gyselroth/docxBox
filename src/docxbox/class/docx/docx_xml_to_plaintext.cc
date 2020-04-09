@@ -15,13 +15,13 @@ std::string docx_xml_to_plaintext::GetTextFromXmlFile(const std::string& path_xm
   tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")->FirstChildElement("w:body");
   GetChildNodesText(body, newline_at_segments);
 
-  return document_text;
+  return document_text_;
 }
 
 void docx_xml_to_plaintext::GetChildNodesText(tinyxml2::XMLElement *node, bool newline_at_segments) {
   if (!node || node->NoChildren()) return;
 
-  if (0 == strcmp(node->Value(), "w:p")) document_text += "\n";
+  if (0 == strcmp(node->Value(), "w:p")) document_text_ += "\n";
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
 
@@ -41,14 +41,14 @@ void docx_xml_to_plaintext::GetChildNodesText(tinyxml2::XMLElement *node, bool n
                 sub_node->Attribute("w:fldCharType"),
                 "begin"
             )
-            ) document_text += " ";
+            ) document_text_ += " ";
       } else if (0 == strcmp(value, "w:t")) {
         const char *text = sub_node->GetText();
 
         if (text) {
-          document_text += text;
+          document_text_ += text;
 
-          if (newline_at_segments) document_text += "\n";
+          if (newline_at_segments) document_text_ += "\n";
         }
 
         continue;
@@ -60,5 +60,5 @@ void docx_xml_to_plaintext::GetChildNodesText(tinyxml2::XMLElement *node, bool n
 }
 
 void docx_xml_to_plaintext::Output() {
-  std::cout << document_text;
+  std::cout << document_text_;
 }

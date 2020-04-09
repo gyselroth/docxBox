@@ -2,8 +2,8 @@
 #include "docx_xml.h"
 
 docx_xml::docx_xml(int argc, char **argv) {
-  this->argc = argc;
-  this->argv = argv;
+  argc_ = argc;
+  argv_ = argv;
 }
 
 bool docx_xml::IsXmlFileContainingText(std::string filename) {

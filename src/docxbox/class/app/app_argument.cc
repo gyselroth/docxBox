@@ -7,8 +7,8 @@ namespace docxbox {
  * Constructor
  */
 AppArguments::AppArguments(int argc, char **argv) {
-  this->argc = argc;
-  this->argv = argv;
+  argc_ = argc;
+  argv_ = argv;
 }
 
 // Resolve path from given argument: keep absolute or make relative from execution path
@@ -34,8 +34,8 @@ bool AppArguments::IsArgumentGiven(int argc, int index, const std::string& argum
 }
 
 bool AppArguments::Matches(int offset_argument, const std::string& identifier) {
-  return argc > offset_argument
-      && 0 == strcmp(argv[offset_argument], identifier.c_str());
+  return argc_ > offset_argument
+      && 0 == strcmp(argv_[offset_argument], identifier.c_str());
 }
 
 bool AppArguments::Matches(
@@ -43,9 +43,9 @@ bool AppArguments::Matches(
     const std::string& identifier_short,
     const std::string& identifier_long
 ) {
-  return argc > offset_argument
-    && (0 == strcmp(argv[offset_argument], identifier_short.c_str())
-        || 0 == strcmp(argv[offset_argument], identifier_long.c_str())
+  return argc_ > offset_argument
+    && (0 == strcmp(argv_[offset_argument], identifier_short.c_str())
+        || 0 == strcmp(argv_[offset_argument], identifier_long.c_str())
     );
 }
 
