@@ -24,6 +24,7 @@ add_executable(docxbox
         src/docxbox/class/app/app_command.cc
         src/docxbox/class/app/app_help.cc
         src/docxbox/class/app/app_help.h
+
         src/docxbox/class/docx/docx_archive.cc
         src/docxbox/class/docx/docx_fontTable.cc
         src/docxbox/class/docx/docx_meta.cc
