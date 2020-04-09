@@ -20,7 +20,7 @@ class docx_xml_to_plaintext:docx_xml {
 
   void GetChildNodesText(tinyxml2::XMLElement *node, bool newline_at_segments = false);
 
-  void Output(); // @todo inherit from docx_xml, instead of duplicating
+  void Output();
 };
 
 #endif //DOCXBOX_CLASS_XML_TO_PLAINTEXT

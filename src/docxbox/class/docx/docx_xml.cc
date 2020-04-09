@@ -15,10 +15,6 @@ bool docx_xml::IsXmlFileContainingText(std::string filename) {
       && !helper::String::EndsWith(filename, "webSettings.xml");
 }
 
-void docx_xml::Output() {
-  std::cout << document_text;
-}
-
 bool docx_xml::ReplaceStringInXml(const std::string& path_xml, std::string search, std::string replacement) {
   tinyxml2::XMLDocument doc;
 

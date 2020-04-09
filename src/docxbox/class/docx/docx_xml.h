@@ -19,8 +19,6 @@ class docx_xml {
 
   bool ReplaceStringInXml(const std::string& path_xml, std::string search, std::string replacement);
 
-  void Output();
-
  protected:
   int argc;
   char **argv;
