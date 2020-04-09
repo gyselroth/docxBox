@@ -102,9 +102,9 @@ or ````docxbox lsg foo.docx````
 To output as JSON:  
 
 ````docxbox ls foo.docx --mergefields --json````  
-or ````docxbox ls foo.docx -gj````
-or ````docxbox lsg foo.docx --json````
-or ````docxbox lsgj foo.docx````
+or ````docxbox ls foo.docx -gj````  
+or ````docxbox lsg foo.docx --json````  
+or ````docxbox lsgj foo.docx````  
 
 #### List meta data
 
