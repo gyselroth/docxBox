@@ -14,7 +14,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
     + [Output list of files](#output-list-of-files)
     + [Output list of referenced fonts](#output-list-of-referenced-fonts)
     + [List images information](#list-images-information)
-    + [List merge fields](#list-merge-fields)
+    + [List merge-fields](#list-merge-fields)
     + [List meta data](#list-meta-data)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
   * [Output plaintext](#output-plaintext)

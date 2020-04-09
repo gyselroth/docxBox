@@ -16,6 +16,7 @@ addons:
       - gcc-4.9
 
 before_install:
+  - pip install cpplint
   - git clone https://github.com/leethomason/tinyxml2.git ./src/vendor/tinyxml2
 #  - git clone https://github.com/tfussell/miniz-cpp.git ./src/vendor/miniz-cpp
   - git clone https://github.com/kstenschke/miniz-cpp.git ./src/vendor/miniz-cpp
@@ -29,6 +30,7 @@ before_install:
 script:
   - cmake CMakeLists.txt && make
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all ./src; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cpplint ./src/docxbox/* --recursive; fi
 
 after_success:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./bin/linux/docxbox ; fi
