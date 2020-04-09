@@ -2,7 +2,7 @@
 
 load _helper
 
-@test "Exit code of \docxbox ls filename.docx\" is zero" {
+@test "Exit code of \"docxbox ls filename.docx\" is zero" {
   run $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx
   [ "$status" -eq 0 ]
 }
