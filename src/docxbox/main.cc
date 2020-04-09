@@ -3,8 +3,8 @@
 #include "class/app/app.h"
 
 /**
- * @param argc Amount of arguments received
- * @param argv Array of arguments received, argv[0] is name and path of executable
+ * @param argc Amount of arguments
+ * @param argv Array of arguments, argv[0] is name and path of executable
  */
 int main(int argc, char **argv) {
   // Process command arguments, display help if no valid command given
@@ -16,6 +16,6 @@ int main(int argc, char **argv) {
 
   delete app;
 
-  // TODO(kay): return comprehensible bash error codes instead of 125 (="operation cancelled")
+  // TODO(kay): return comprehensible bash error codes instead of 125
   return success ? 0 : 125;
 }
