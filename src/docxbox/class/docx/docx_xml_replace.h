@@ -31,7 +31,11 @@ class docx_xml_replace:docx_xml {
 
   int amount_replaced_ = 0;
 
-  void ReplaceStringInChildNodesText(tinyxml2::XMLElement *node, const std::string& search, const std::string& replacement);
+  void ReplaceStringInTextNodes(tinyxml2::XMLElement *node, const std::string& search, const std::string& replacement);
+  void ReplaceSegmentedStringInTextNodes(
+      tinyxml2::XMLElement *node,
+      const std::string& search,
+      const std::string& replacement);
 };
 
 #endif //DOCXBOX_CLASS_XML_REPLACE

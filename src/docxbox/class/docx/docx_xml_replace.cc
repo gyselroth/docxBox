@@ -36,13 +36,17 @@ bool docx_xml_replace::ReplaceStringInXml(
 
   if (replace_segmented) {
     do {
+      // Replace (regular and) segmented text
       document_text_ = "";
 
-      ReplaceStringInChildNodesText(body, search, replacement);
+      ReplaceSegmentedStringInTextNodes(body, search, replacement);
 
       segments_look_behind_++;
     } while (helper::String::Contains(document_text_, search.c_str()));
-  } else ReplaceStringInChildNodesText(body, search, replacement);
+  } else {
+    // Replace only unsegmented text
+    ReplaceStringInTextNodes(body, search, replacement);
+  }
 
   if (amount_replaced_ > 0
       && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true))
@@ -55,24 +59,8 @@ bool docx_xml_replace::ReplaceStringInXml(
   return true;
 }
 
-/*
- * Replacement has 2 modes:
- *
- * 1. Simple: Replaces the searched string only when contained within a single <w:t> node
- * 2. Segmented:
- *    Replaces the searched string as in 1,
- *    and also when contained "segmented", that is spread over multiple consecutive <w:t> nodes (due to formatting).
- *    These are the steps for replacing segmented strings:
- *    2.1 Replace simple (look-behind level = 0), collecting document plaintext at the same time
- *    2.2 When plaintext of whole XML does not contain search-string anymore: done
- *    2.3 Increment look-behind level
- *    2.4 Iterate over text nodes, detect when concatenated text from previous nodes and current contains search-string
- *    2.5 When search-string found:
- *          Replace matching text segment within 1st <w:t> node of current look-behind-sequence,
- *          Remove matching text segments from other <w:t> nodes of current look-behind-sequence
- *    2.6 Repeat with step 2.2
- */
-void docx_xml_replace::ReplaceStringInChildNodesText(
+// Replaces the searched string when contained within a single <w:t> node
+void docx_xml_replace::ReplaceStringInTextNodes(
     tinyxml2::XMLElement *node,
     const std::string& search,
     const std::string& replacement
@@ -102,14 +90,74 @@ void docx_xml_replace::ReplaceStringInChildNodesText(
           sub_node->SetText(text.c_str());
         }
 
-        // TODO implement replacement of strings scattered over multiple xml tags (replace within first tag, set others empty)
+        continue;
+      }
+    }
+
+    ReplaceStringInTextNodes(sub_node, search, replacement);
+  } while ((sub_node = sub_node->NextSiblingElement()));
+}
+
+/*  Replaces the searched string when contained in a single <w:t> tag,
+ *  and also when contained "segmented", that is: spread over multiple consecutive <w:t> nodes (due to formatting).
+ *
+ *  Steps for replacing segmented strings:
+ *  1. Replace simple (look-behind level = 0), collecting document plaintext at the same time
+ *  2. When plaintext of whole XML does not contain search-string anymore: done
+ *  3. Increment look-behind level
+ *  4. Iterate over text nodes, detect when concatenated text from previous nodes and current contains search-string
+ *  5. When search-string found:
+ *        Replace matching text segment within 1st <w:t> node of current look-behind-sequence,
+ *        Remove matching text segments from other <w:t> nodes of current look-behind-sequence
+ *  6. Repeat from step 2.
+ */
+void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
+    tinyxml2::XMLElement *node,
+    const std::string& search,
+    const std::string& replacement
+) {
+  if (!node || node->NoChildren()) return;
+
+  if (0 == strcmp(node->Value(), "w:p")) document_text_ += "\n";
+
+  tinyxml2::XMLElement *sub_node = node->FirstChildElement();
+
+  if (sub_node == nullptr) return;
+
+  do {
+    if (!sub_node) continue;
+
+    const char *value = sub_node->Value();
+
+    if (value) {
+      if (0 == strcmp(value, "w:t")
+              && sub_node->FirstChild() != nullptr
+          )
+      {
+        std::string text = sub_node->GetText();
+
+        document_text_ += text;
+
+        if (!text.empty()
+            && helper::String::Contains(text, search.c_str())
+        ) {
+          amount_replaced_ += helper::String::ReplaceAll(text, search, replacement);
+          sub_node->SetText(text.c_str());
+        }
 
         continue;
+      } else if (0 == strcmp(value, "w:fldChar")) {
+        if (
+            0 == strcmp(
+                sub_node->Attribute("w:fldCharType"),
+                "begin"
+            )
+            ) document_text_ += " ";
       } else if (0 == strcmp(value, "w:instrText")) {
         continue;
       }
     }
 
-    ReplaceStringInChildNodesText(sub_node, search, replacement);
+    ReplaceStringInTextNodes(sub_node, search, replacement);
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
