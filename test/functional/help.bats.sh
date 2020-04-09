@@ -60,7 +60,7 @@ load _helper
 @test "\"docxbox h lsm\" displays help for lsm command" {
   run $BATS_TEST_DIRNAME/docxbox h lsm
   [ "$status" -eq 0 ]
-  [ "Command: lsm - List meta data DOCX:" = ${lines[0]} ]
+  [ "Command: lsm - List meta data DOCX:" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h lsmj\" displays help for lsmj command" {
