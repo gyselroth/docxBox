@@ -30,7 +30,7 @@ add_executable(docxbox
 
         src/docxbox/class/docx/docx_xml.cc
         src/docxbox/class/docx/docx_xml_to_plaintext.cc
-        src/docxbox/class/docx/docx_xml_to_plaintext.h
+        src/docxbox/class/docx/docx_xml_replace.cc
 
         src/docxbox/helper/helper_file.cc
         src/docxbox/helper/helper_string.cc

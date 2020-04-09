@@ -7,6 +7,7 @@
 
 #include "../app/app_argument.h"
 #include "docx_xml_to_plaintext.h"
+#include "docx_xml_replace.h"
 #include "docx_fontTable.h"
 #include "docx_meta.h"
 #include "docx_xml.h"
@@ -32,7 +33,6 @@ class docx_archive {
   bool ModifyMeta();
 
   bool ReplaceImage();
-  bool ReplaceImages();
   bool ReplaceText();
 
  private:

@@ -427,11 +427,6 @@ bool docx_archive::ReplaceImage() {
       || !docxbox::AppArguments::IsArgumentGiven(argc, 4, "Filename of replacement image")
   ) return false;
 
-  if (helper::String::StartsWith(argv[3], "[")) {
-    // JSON array = multiple images
-    return ReplaceImages();
-  }
-
   std::string image_original = argv[3];
 
   miniz_cpp::zip_file docx_file(path_docx_in);
@@ -470,11 +465,6 @@ bool docx_archive::ReplaceImage() {
   return miniz_cpp_ext::RemoveExtract(path_extract, file_list);
 }
 
-bool docx_archive::ReplaceImages() {
-  // @todo implement multiple images from JSON
-  return false;
-}
-
 bool docx_archive::ReplaceText() {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
@@ -491,7 +481,7 @@ bool docx_archive::ReplaceText() {
 
   auto file_list = docx_file.infolist();
 
-  auto parser = new docx_xml(argc, argv);
+  auto parser = new docx_xml_replace(argc, argv);
 
   for (const auto& file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
