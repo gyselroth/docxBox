@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #ifndef DOCXBOX_CONFIG_H
 #define DOCXBOX_CONFIG_H
