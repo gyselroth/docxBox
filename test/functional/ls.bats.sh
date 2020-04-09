@@ -30,6 +30,6 @@ load _helper
 
 @test "Output of \"docxbox ls {missing argument}\" is an error message" {
   run $BATS_TEST_DIRNAME/docxbox ls
-  [ "$status" -eq 125 ]
+  [ "$status" -ne 0 ]
   [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
