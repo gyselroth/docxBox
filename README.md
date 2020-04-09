@@ -10,7 +10,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 
 * [Planned features](#planned-features)
 * [Commands](#commands)
-  * [List files, referenced fonts, images, meta data](#list-files-and-directories-referenced-fonts-images-meta-data)
+  * [List files, referenced fonts, images, merge-fields, meta data](#list-files-referenced-fonts-images-merge-fields-meta-data)
     + [Output list of files](#output-list-of-files)
     + [Output list of referenced fonts](#output-list-of-referenced-fonts)
     + [List images information](#list-images-information)
@@ -49,7 +49,7 @@ Planned Features
 Commands
 --------
 
-### List files, referenced fonts, images, meta data
+### List files, referenced fonts, images, merge-fields, meta data
 
 #### Output list of files
 
@@ -93,7 +93,7 @@ or ````docxbox lsi foo.docx --json````
 or ````docxbox lsi foo.docx -j````  
 or ````docxbox lsij foo.docx````
 
-#### List merge fields
+#### List merge-fields
 
 ````docxbox ls foo.docx --mergefields````  
 or ````docxbox ls foo.docx -g````  
