@@ -15,6 +15,6 @@ int main(int argc, char **argv) {
 
   delete app;
 
-  // TODO return comprehensible bash error codes instead of 125 (="operation cancelled")
+  // TODO(kay): return comprehensible bash error codes instead of 125 (="operation cancelled")
   return success ? 0 : 125;
 }

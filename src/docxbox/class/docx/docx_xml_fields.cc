@@ -32,7 +32,7 @@ void docx_xml_fields::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
 
     if (value) {
       if (0 == strcmp(value, "w:instrText")) {
-        // TODO collect
+        // TODO(kay): collect
 
         continue;
       } else if (0 == strcmp(value, "w:fldChar")) {

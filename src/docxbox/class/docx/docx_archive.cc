@@ -36,7 +36,7 @@ class miniz_cpp_ext {
       const std::vector<miniz_cpp::zip_info> &file_list
   ) {
 
-    // TODO implement check of directory structure, mandatory files existence
+    // TODO(kay): implement check of directory structure, mandatory files existence
     //for (auto file_in_zip : file_list) {
     //  if (helper::String::EndsWith(file_in_zip.filename, "/")) {
     //
@@ -332,7 +332,7 @@ bool docx_archive::ListImages(bool as_json) {
     if (as_json) std::cout << (index_image > 0 ? "," : "") << "\"" << filename << "\"\n";
     else std::cout << filename << "\n";
 
-    // TODO output file size, image dimension, aspect ration, used scaled size(s), exif data
+    // TODO(kay): output file size, image dimension, aspect ration, used scaled size(s), exif data
     //std::cout << helper::String::Repeat("-", filename.length()+1) << "\n";
 
     //int *height;
