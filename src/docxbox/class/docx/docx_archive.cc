@@ -201,7 +201,7 @@ bool docx_archive::UnzipDocx(const std::string& directory_appendix, bool ensure_
   docx_file.extractall(path_working_directory + "/" + path_extract);
 
   if (ensure_is_docx && !miniz_cpp_ext::IsDocx(path_extract, file_list)) {
-    std::cout << "Error: " << path_docx_in << " is not a DOCX document.\n";;
+    std::cout << "Error: " << path_docx_in << " is not a DOCX document.\n";
 
     return false;
   }
@@ -324,7 +324,7 @@ bool docx_archive::ListImages(bool as_json) {
 
   int index_image = 0;
 
-  for (auto path_image : images) {
+  for (const auto& path_image : images) {
     std::string filename = helper::File::GetLastPathSegment(path_image);
 
     std::string path_jpeg = path_extract + "/" + path_image;

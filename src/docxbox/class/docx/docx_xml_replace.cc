@@ -5,7 +5,11 @@ docx_xml_replace::docx_xml_replace(int argc, char **argv) : docx_xml(argc, argv)
 
 }
 
-bool docx_xml_replace::ReplaceStringInXml(const std::string& path_xml, std::string search, std::string replacement) {
+bool docx_xml_replace::ReplaceStringInXml(
+    const std::string& path_xml,
+    const std::string& search,
+    const std::string& replacement
+) {
   tinyxml2::XMLDocument doc;
 
   std::string kPathXml = path_xml;

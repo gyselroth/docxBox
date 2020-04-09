@@ -16,7 +16,7 @@ class AppArguments {
 
   static std::string ResolvePathFromArgument(const std::string& pwd, int argc, char **argv, int index_argument);
 
-  static bool IsArgumentGiven(int argc, int index, std::string argument_description);
+  static bool IsArgumentGiven(int argc, int index, const std::string& argument_description);
 
   bool Matches(int offset_argument, const std::string& identifier);
   bool Matches(int offset_argument, const std::string& identifier_short, const std::string& identifier_long);

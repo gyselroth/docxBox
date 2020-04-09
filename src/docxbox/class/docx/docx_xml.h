@@ -22,9 +22,6 @@ class docx_xml {
   char **argv;
 
   std::string document_text;
-
- private:
-
 };
 
 #endif //DOCXBOX_CLASS_DOCX_XML

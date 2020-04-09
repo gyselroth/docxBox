@@ -17,7 +17,7 @@ bool AppHelp::PrintVersion() {
   return true;
 }
 
-bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command, std::string command_identifier) {
+bool AppHelp::PrintHelp(bool with_title, AppCommands::Command command, const std::string& command_identifier) {
   switch (command) {
     case AppCommands::Command_Help:return PrintOverview(true);
 
@@ -268,6 +268,6 @@ void AppHelp::PrintUnknownArgumentMessage(const char *arg) {
   PrintHelp(false, AppCommands::Command::Command_Invalid);
 }
 
-}; // namespace docxbox
+} // namespace docxbox
 
 #endif //DOCXBOX_SRC_DOCXBOX_CLASS_APP_HELP_H
