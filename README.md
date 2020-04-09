@@ -24,9 +24,10 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
   * [Output plaintext](#output-plaintext)
       + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
       + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
-  * [Modify meta data](#modify-meta-data)
-  * [Replace images](#replace-images)
-  * [Replace text](#replace-text)
+  * [Modify document](#modify-document)
+      + [Modify meta data](#modify-meta-data)
+      + [Replace images](#replace-images)
+      + [Replace text](#replace-text)
   * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
@@ -153,7 +154,9 @@ This can be helpful to identify "segmented" sentences:
 Sentences which visually appear as a unit, but are segmented into separate XML parent elements for formatting.
 
 
-### Modify meta data
+### Modify document
+
+#### Modify meta data
 
 DocxBox allows to modify existing attributes, or adds attributes if not present.
 
@@ -167,7 +170,7 @@ DocxBox allows to modify existing attributes, or adds attributes if not present.
 * Set creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
 
 
-### Replace images
+#### Replace images
 
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
 This overwrites the original DOCX with the modified document.
@@ -176,7 +179,7 @@ This overwrites the original DOCX with the modified document.
 This creates a new file: new.docx
 
 
-### Replace text
+#### Replace text
 
 Replace all (case-sensitive) occurrences of given string in DOCX text:
 
