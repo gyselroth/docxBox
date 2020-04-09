@@ -7,6 +7,12 @@ load _helper
   [ "$status" -eq 0 ]
 }
 
+@test "Output of \"docxbox ls {missing argument}\" is an error message" {
+  run $BATS_TEST_DIRNAME/docxbox ls
+  [ "$status" -ne 0 ]
+  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
+}
+
 @test "Output of \"docxbox ls filename.docx\" contains files' and directories' attributes" {
   $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx | grep -c "Length"
   $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx | grep -c "Date"
@@ -35,10 +41,4 @@ load _helper
 @test "Output of \"docxbox ls filename.docx\" contains files' date and time" {
   $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx | grep -c "04/07/2020"
   $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx | grep -c "20:14"
-}
-
-@test "Output of \"docxbox ls {missing argument}\" is an error message" {
-  run $BATS_TEST_DIRNAME/docxbox ls
-  [ "$status" -ne 0 ]
-  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
