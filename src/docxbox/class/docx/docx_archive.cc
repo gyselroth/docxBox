@@ -404,16 +404,13 @@ bool docx_archive::GetText(bool newline_at_segments) {
 
   auto file_list = docx_file.infolist();
 
-  auto parser = new docx_xml(argc, argv);
+  auto parser = new docx_xml_to_plaintext(argc, argv);
 
   for (const auto& file_in_zip : file_list) {
     //if (!docx_wordParser::IsXmlFileContainingText(file_in_zip.filename)) continue;
     if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml")) continue;
 
-    parser->GetTextFromXmlFile(
-        path_extract + "/" + file_in_zip.filename,
-        newline_at_segments
-    );
+    parser->GetTextFromXmlFile(path_extract + "/" + file_in_zip.filename, newline_at_segments);
   }
 
   parser->Output();

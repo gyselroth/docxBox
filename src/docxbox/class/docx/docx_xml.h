@@ -1,6 +1,6 @@
 
-#ifndef DOCXBOX_CLASS_DOCX_WORDPARSER_H
-#define DOCXBOX_CLASS_DOCX_WORDPARSER_H
+#ifndef DOCXBOX_CLASS_DOCX_XML
+#define DOCXBOX_CLASS_DOCX_XML
 
 #include <string>
 #include <iostream>
@@ -17,23 +17,20 @@ class docx_xml {
 
   static bool IsXmlFileContainingText(std::string filename);
 
-  std::string GetTextFromXmlFile(std::string path_xml, bool newline_at_segments = false);
+  bool ReplaceStringInXml(const std::string& path_xml, std::string search, std::string replacement);
 
   void Output();
 
-  bool ReplaceStringInXml(const std::string& path_xml, std::string search, std::string replacement);
-
- private:
+ protected:
   int argc;
   char **argv;
 
   std::string document_text;
 
+ private:
   int amount_replaced = 0;
-
-  void GetChildNodesText(tinyxml2::XMLElement *node, bool newline_at_segments = false);
 
   void ReplaceStringInChildNodesText(tinyxml2::XMLElement *node, const std::string& search, const std::string& replacement);
 };
 
-#endif //DOCXBOX_CLASS_DOCX_WORDPARSER_H
+#endif //DOCXBOX_CLASS_DOCX_XML

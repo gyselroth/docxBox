@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "../app/app_argument.h"
+#include "docx_xml_to_plaintext.h"
 #include "docx_fontTable.h"
 #include "docx_meta.h"
 #include "docx_xml.h"
