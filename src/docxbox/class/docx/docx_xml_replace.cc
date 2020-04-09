@@ -64,7 +64,7 @@ bool docx_xml_replace::ReplaceStringInXml(
  *    and also when contained "segmented", that is spread over multiple consecutive <w:t> nodes (due to formatting).
  *    These are the steps for replacing segmented strings:
  *    2.1 Replace simple (look-behind level = 0), collecting document plaintext at the same time
- *    2.2 When plaintext does not contain search-string anymore: done
+ *    2.2 When plaintext of whole XML does not contain search-string anymore: done
  *    2.3 Increment look-behind level
  *    2.4 Iterate over text nodes, detect when concatenated text from previous nodes and current contains search-string
  *    2.5 When search-string found:
