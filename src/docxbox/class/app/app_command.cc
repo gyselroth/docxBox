@@ -30,6 +30,8 @@ AppCommands::Commands AppCommands::ResolveCommandByName(const std::string &comma
   if (command=="lsf") return Command_ListFonts;
   if (command=="lsfj") return Command_ListFontsAsJson;
   if (command=="lsm") return Command_ListMeta;
+  if (command=="lsg") return Command_ListMergeFields;
+  if (command=="lsgj") return Command_ListMergeFieldsAsJson;
   if (command=="lsmj") return Command_ListMetaAsJson;
   if (command=="mm") return Command_ModifyMeta;
   if (command=="rpi") return Command_ReplaceImage;

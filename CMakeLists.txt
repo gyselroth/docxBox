@@ -30,6 +30,7 @@ add_executable(docxbox
         src/docxbox/class/docx/docx_meta.cc
 
         src/docxbox/class/docx/docx_xml.cc
+        src/docxbox/class/docx/docx_xml_fields.cc
         src/docxbox/class/docx/docx_xml_to_plaintext.cc
         src/docxbox/class/docx/docx_xml_replace.cc
 

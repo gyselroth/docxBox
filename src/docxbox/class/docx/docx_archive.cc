@@ -421,6 +421,29 @@ bool docx_archive::GetText(bool newline_at_segments) {
   return true;
 }
 
+bool docx_archive::ListMergeFields(bool as_json) {
+  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+
+  auto file_list = docx_file.infolist();
+
+  auto parser = new docx_xml_fields(argc_, argv_);
+
+  for (const auto& file_in_zip : file_list) {
+    //if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
+    if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml")) continue;
+
+    parser->CollectMergeFields(path_extract_ + "/" + file_in_zip.filename, as_json);
+  }
+
+  parser->Output();
+
+  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+
+  return true;
+}
+
 bool docx_archive::ReplaceImage() {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 

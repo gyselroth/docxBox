@@ -6,8 +6,11 @@
 #include <iostream>
 
 #include "../app/app_argument.h"
+
+#include "docx_xml_fields.h"
 #include "docx_xml_to_plaintext.h"
 #include "docx_xml_replace.h"
+
 #include "docx_fontTable.h"
 #include "docx_meta.h"
 #include "docx_xml.h"
@@ -26,6 +29,7 @@ class docx_archive {
   bool ListFiles(bool as_json);
   bool ListFonts(bool as_json);
   bool ListImages(bool as_json);
+  bool ListMergeFields(bool as_json);
   bool ListMeta(bool as_json);
 
   bool GetText(bool newline_at_segments);

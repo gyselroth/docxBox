@@ -18,6 +18,8 @@ class AppCommands {
     Command_ListImagesAsJson,
     Command_ListFonts,
     Command_ListFontsAsJson,
+    Command_ListMergeFields,
+    Command_ListMergeFieldsAsJson,
     Command_ListMeta,
     Command_ListMetaAsJson,
     Command_ModifyMeta,

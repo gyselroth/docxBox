@@ -32,6 +32,8 @@ AppCommands::Commands App::PreProcess(AppArguments *arguments, AppCommands::Comm
 
       if (arguments->Matches(3, "-ij")) return AppCommands::Command_ListImagesAsJson;
 
+      if (arguments->Matches(3, "-gj")) return AppCommands::Command_ListMergeFieldsAsJson;
+
       if (arguments->Matches(3, "-mj")) return AppCommands::Command_ListMetaAsJson;
 
 
@@ -44,6 +46,11 @@ AppCommands::Commands App::PreProcess(AppArguments *arguments, AppCommands::Comm
         return arguments->Matches(4, "-j", "--json")
                ? AppCommands::Command_ListImagesAsJson
                : AppCommands::Command_ListImages;
+
+      if (arguments->Matches(3, "-g", "--mergeFields"))
+        return arguments->Matches(4, "-j", "--json")
+               ? AppCommands::Command_ListMergeFieldsAsJson
+               : AppCommands::Command_ListMergeFields;
 
       if (arguments->Matches(3, "-m", "--meta"))
         return arguments->Matches(4, "-j", "--json")
@@ -106,6 +113,8 @@ bool App::Process() {
     case AppCommands::Command_ListImagesAsJson:return docx_archive->ListImages(true);
     case AppCommands::Command_ListFonts:return docx_archive->ListFonts(false);
     case AppCommands::Command_ListFontsAsJson:return docx_archive->ListFonts(true);
+    case AppCommands::Command_ListMergeFields:return docx_archive->ListMergeFields(false);
+    case AppCommands::Command_ListMergeFieldsAsJson:return docx_archive->ListMergeFields(true);
     case AppCommands::Command_ListMeta:return docx_archive->ListMeta(false);
     case AppCommands::Command_ListMetaAsJson:return docx_archive->ListMeta(true);
     case AppCommands::Command_ModifyMeta:return docx_archive->ModifyMeta();

@@ -12,13 +12,10 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 * [Commands](#commands)
   * [List files, referenced fonts, images, meta data](#list-files-and-directories-referenced-fonts-images-meta-data)
     + [Output list of files](#output-list-of-files)
-    + [Output files list as JSON](#output-files-list-as-json)
     + [Output list of referenced fonts](#output-list-of-referenced-fonts)
-    + [Output list of referenced fonts as JSON](#output-list-of-referenced-fonts-as-json)
     + [List images information](#list-images-information)
-    + [List images information as JSON](#list-images-information-as-json)
+    + [List merge fields](#list-merge-fields)
     + [List meta data](#list-meta-data)
-    + [List meta data as JSON](#list-meta-data-as-json)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
   * [Output plaintext](#output-plaintext)
       + [Output plaintext segments](#output-plaintext-segments)
@@ -40,6 +37,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 Planned Features
 ----------------
 
+* v0.0.2: List merge-fields
 * v0.0.2: Generate and insert/replace more complex DOCX markup elements (merge-fields, tables)
 * v0.1.0: Batch process sequences of manipulation operations
 * v0.1.0: Add optional configuration options via environment vars
@@ -59,7 +57,7 @@ Lists files (and directories) contained within a given DOCX, and their attribute
 
 ````docxbox ls foo.docx````
 
-#### Output files list as JSON
+To output as JSON:
 
 ````docxbox ls foo.docx --json````  
 or ````docxbox ls foo.docx -j````  
@@ -71,7 +69,7 @@ or ````docxbox lsj foo.docx````
 or ````docxbox ls foo.docx -f````  
 or ````docxbox lsf foo.docx````  
 
-#### Output list of referenced fonts as JSON
+To output as JSON:
 
 ````docxbox ls foo.docx --fonts --json````  
 or ````docxbox ls foo.docx -fj````  
@@ -87,13 +85,26 @@ Output list of contained images
 or ````docxbox ls foo.docx -i````  
 or ````docxbox lsi foo.docx````
 
-#### List images information as JSON
+To output as JSON:
 
 ````docxbox ls foo.docx --images --json````  
 ````docxbox ls foo.docx -ij````  
 or ````docxbox lsi foo.docx --json````  
 or ````docxbox lsi foo.docx -j````  
 or ````docxbox lsij foo.docx````
+
+#### List merge fields
+
+````docxbox ls foo.docx --mergefields````  
+or ````docxbox ls foo.docx -g````  
+or ````docxbox lsg foo.docx````  
+
+To output as JSON:  
+
+````docxbox ls foo.docx --mergefields --json````  
+or ````docxbox ls foo.docx -gj````
+or ````docxbox lsg foo.docx --json````
+or ````docxbox lsgj foo.docx````
 
 #### List meta data
 
@@ -103,7 +114,7 @@ Output meta data of given DOCX:
 or ````docxbox ls foo.docx -m````  
 or ````docxbox lsm foo.docx````
 
-#### List meta data as JSON
+To output as JSON:
 
 ````docxbox ls foo.docx --meta --json````  
 or ````docxbox ls foo.docx -mj````  

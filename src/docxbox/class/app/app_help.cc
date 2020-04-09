@@ -33,6 +33,9 @@ bool AppHelp::PrintHelp(bool with_title, AppCommands::Commands command, const st
     case AppCommands::Command_ListFontsAsJson:
     case AppCommands::Command_ListFonts:return PrintHelpOnListFonts(true);
 
+    case AppCommands::Command_ListMergeFields:
+    case AppCommands::Command_ListMergeFieldsAsJson:return PrintHelpOnListMergeFields(true);
+
     case AppCommands::Command_ListMeta:
     case AppCommands::Command_ListMetaAsJson:return PrintHelpOnListMeta(true);
 
@@ -67,6 +70,8 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    ls         - Output list of files in DOCX"
             << "\n    lsj        - Output list of files in DOCX as JSON"
             << "\n    lsf        - Output list of fonts in DOCX"
+            << "\n    lsg        - Output list of merge-fields in DOCX"
+            << "\n    lsgj       - Output list of merge-fields in DOCX as JSON"
             << "\n    lsfj       - Output list of fonts in DOCX as JSON"
             << "\n    lsi        - Output list of images in DOCX"
             << "\n    lsij       - Output list of images in DOCX as JSON"
@@ -157,8 +162,8 @@ bool AppHelp::PrintHelpOnListFonts(bool with_title) {
 
 bool AppHelp::PrintHelpOnListMeta(bool with_title) {
   if (with_title) {
-    std::cout << "Command: lsm - List meta data DOCX:\n"
-                 "-----------------------------------\n";
+    std::cout << "Command: lsm - List meta data of DOCX:\n"
+                 "--------------------------------------\n";
   }
 
   std::cout << "Output meta data of DOCX:\n"
@@ -172,6 +177,27 @@ bool AppHelp::PrintHelpOnListMeta(bool with_title) {
                "  or: docxbox lsm foo.docx --json\n"
                "  or: docxbox ls foo.docx -mj\n"
                "  or: docxbox ls foo.docx --meta -- json\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnListMergeFields(bool with_title) {
+  if (with_title) {
+    std::cout << "Command: lsg - List merge-fields from DOCX:\n"
+                 "-------------------------------------------\n";
+  }
+
+  std::cout << "Output list of merge-fields from DOCX:\n"
+               "  docxbox lsg foo.docx \n\n"
+               "  or: docxbox ls foo.docx -g\n"
+               "  or: docxbox ls foo.docx --mergeFields\n\n";
+
+  std::cout << "Output list of merge-fields from DOCX as JSON:\n"
+               "  docxbox lsgj foo.docx \n\n"
+               "  or: docxbox lsg foo.docx -j\n"
+               "  or: docxbox lsg foo.docx --json\n"
+               "  or: docxbox ls foo.docx -gj\n"
+               "  or: docxbox ls foo.docx --mergeFields -- json\n\n";
 
   return true;
 }

@@ -20,6 +20,7 @@ class AppHelp {
   static bool PrintHelpOnList();
   static bool PrintHelpOnListImages(bool with_title = true);
   static bool PrintHelpOnListFonts(bool with_title = true);
+  static bool PrintHelpOnListMergeFields(bool with_title = true);
   static bool PrintHelpOnListMeta(bool with_title = true);
   static bool PrintHelpOnModifyMeta();
   static bool PrintHelpOnReplaceImage();
