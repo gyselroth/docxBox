@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(docxbox)
 
-set (DOCXBOX_VERSION_MAJOR 0)
-set (DOCXBOX_VERSION_MINOR 0)
-set (DOCXBOX_VERSION_PATCH 1)
+set (VERSION_MAJOR "0")
+set (VERSION_MINOR "0")
+set (VERSION_PATCH "1")
 
 # configure config.h to be generated from config.h.in, with injected version number
 configure_file ("src/docxbox/config.h.in" "src/docxbox/config.h")
@@ -24,10 +24,15 @@ add_executable(docxbox
         src/docxbox/class/app/app_command.cc
         src/docxbox/class/app/app_help.cc
         src/docxbox/class/app/app_help.h
+
         src/docxbox/class/docx/docx_archive.cc
         src/docxbox/class/docx/docx_fontTable.cc
         src/docxbox/class/docx/docx_meta.cc
+
         src/docxbox/class/docx/docx_xml.cc
+        src/docxbox/class/docx/docx_xml_to_plaintext.cc
+        src/docxbox/class/docx/docx_xml_replace.cc
+
         src/docxbox/helper/helper_file.cc
         src/docxbox/helper/helper_string.cc
         src/docxbox/helper/helper_numeric.cc

@@ -135,9 +135,16 @@ docx_archive::docx_archive(int argc, char **argv) {
 
 // Setup path to DOCX file, absolute or relative from execution path, from given argument
 bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
-  path_docx_in = docxbox::AppArguments::ResolvePathFromArgument(path_working_directory, argc, argv, index_path_argument);
+  path_docx_in = docxbox::AppArguments::ResolvePathFromArgument(
+      path_working_directory,
+      argc,
+      argv,
+      index_path_argument
+  );
 
   if (!helper::File::FileExists(path_docx_in)) throw "Error - File not found: " + path_docx_in + "\n";
+
+  return true;
 }
 
 // Output paths of files (and directories) within DOCX file
@@ -194,7 +201,7 @@ bool docx_archive::UnzipDocx(const std::string& directory_appendix, bool ensure_
   docx_file.extractall(path_working_directory + "/" + path_extract);
 
   if (ensure_is_docx && !miniz_cpp_ext::IsDocx(path_extract, file_list)) {
-    std::cout << "Error: " << path_docx_in << " is not a DOCX document.\n";;
+    std::cout << "Error: " << path_docx_in << " is not a DOCX document.\n";
 
     return false;
   }
@@ -317,7 +324,7 @@ bool docx_archive::ListImages(bool as_json) {
 
   int index_image = 0;
 
-  for (auto path_image : images) {
+  for (const auto& path_image : images) {
     std::string filename = helper::File::GetLastPathSegment(path_image);
 
     std::string path_jpeg = path_extract + "/" + path_image;
@@ -397,16 +404,13 @@ bool docx_archive::GetText(bool newline_at_segments) {
 
   auto file_list = docx_file.infolist();
 
-  auto parser = new docx_xml(argc, argv);
+  auto parser = new docx_xml_to_plaintext(argc, argv);
 
   for (const auto& file_in_zip : file_list) {
     //if (!docx_wordParser::IsXmlFileContainingText(file_in_zip.filename)) continue;
     if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml")) continue;
 
-    parser->GetTextFromXmlFile(
-        path_extract + "/" + file_in_zip.filename,
-        newline_at_segments
-    );
+    parser->GetTextFromXmlFile(path_extract + "/" + file_in_zip.filename, newline_at_segments);
   }
 
   parser->Output();
@@ -422,11 +426,6 @@ bool docx_archive::ReplaceImage() {
   if (!docxbox::AppArguments::IsArgumentGiven(argc, 3, "Filename of image to be replaced")
       || !docxbox::AppArguments::IsArgumentGiven(argc, 4, "Filename of replacement image")
   ) return false;
-
-  if (helper::String::StartsWith(argv[3], "[")) {
-    // JSON array = multiple images
-    return ReplaceImages();
-  }
 
   std::string image_original = argv[3];
 
@@ -466,11 +465,6 @@ bool docx_archive::ReplaceImage() {
   return miniz_cpp_ext::RemoveExtract(path_extract, file_list);
 }
 
-bool docx_archive::ReplaceImages() {
-  // @todo implement multiple images from JSON
-  return false;
-}
-
 bool docx_archive::ReplaceText() {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
@@ -487,14 +481,18 @@ bool docx_archive::ReplaceText() {
 
   auto file_list = docx_file.infolist();
 
-  auto parser = new docx_xml(argc, argv);
+  auto parser = new docx_xml_replace(argc, argv);
 
   for (const auto& file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
     std::string path_file_absolute = path_extract + "/" + file_in_zip.filename;
 
-    parser->ReplaceStringInXml(path_file_absolute, search, replacement);
+    if (!parser->ReplaceStringInXml(path_file_absolute, search, replacement)) {
+      std::cout << "Error: Failed replace string in: " << file_in_zip.filename << "\n";
+
+      return false;
+    }
   }
 
   std::string path_docx_out = argc >= 6

@@ -8,8 +8,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 
 ## Table of contents
 
-* [Features](#features)
-  + [Planned features](#planned-features)
+* [Planned features](#planned-features)
 * [Commands](#commands)
   * [List files, referenced fonts, images, meta data](#list-files-and-directories-referenced-fonts-images-meta-data)
     + [Output list of files](#output-list-of-files)
@@ -22,11 +21,11 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
     + [List meta data as JSON](#list-meta-data-as-json)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
   * [Output plaintext](#output-plaintext)
-      + [Output plaintext from DOCX document](#output-plaintext-from-docx-document)
-      + [Output plaintext segments from DOCX document](#output-plaintext-segments-from-docx-document)
-  * [Modify meta data](#modify-meta-data)
-  * [Replace images](#replace-images)
-  * [Replace text](#replace-text)
+      + [Output plaintext segments](#output-plaintext-segments)
+  * [Modify document](#modify-document)
+      + [Modify meta data](#modify-meta-data)
+      + [Replace images](#replace-images)
+      + [Replace text](#replace-text)
   * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
@@ -38,22 +37,8 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 * [License](#license)
 
 
-Features
---------
-
-* Output plaintext from DOCX
-* List files (and their attributes) in DOCX 
-* List fonts (and their metrics) referenced in DOCX 
-* List images contained in DOCX 
-* List meta data of DOCX
-* Modify meta data of DOCX 
-* Replace images in DOCX
-* Replace string in DOCX text
-* Unzip files from DOCX: all files, only media files
-* Zip files in given path into new DOCX
-
-
-### Planned Features
+Planned Features
+----------------
 
 * v0.0.2: Generate and insert/replace more complex DOCX markup elements (merge-fields, tables)
 * v0.1.0: Batch process sequences of manipulation operations
@@ -68,9 +53,9 @@ Commands
 
 ### List files, referenced fonts, images, meta data
 
-Lists files (and directories) contained within a given DOCX, and their attributes.
-
 #### Output list of files
+
+Lists files (and directories) contained within a given DOCX, and their attributes:
 
 ````docxbox ls foo.docx````
 
@@ -139,11 +124,9 @@ or ````docxbox lsmj foo.docx````
 
 ### Output plaintext
 
-#### Output plaintext from DOCX document
-
 ````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and footer)
 
-#### Output plaintext segments from DOCX document 
+#### Output plaintext segments 
 
 ````docxbox txt foo.docx --segments````   
 or ````docxbox txt foo.docx -s```` 
@@ -153,7 +136,9 @@ This can be helpful to identify "segmented" sentences:
 Sentences which visually appear as a unit, but are segmented into separate XML parent elements for formatting.
 
 
-### Modify meta data
+### Modify document
+
+#### Modify meta data
 
 DocxBox allows to modify existing attributes, or adds attributes if not present.
 
@@ -167,7 +152,7 @@ DocxBox allows to modify existing attributes, or adds attributes if not present.
 * Set creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
 
 
-### Replace images
+#### Replace images
 
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
 This overwrites the original DOCX with the modified document.
@@ -176,7 +161,7 @@ This overwrites the original DOCX with the modified document.
 This creates a new file: new.docx
 
 
-### Replace text
+#### Replace text
 
 Replace all (case-sensitive) occurrences of given string in DOCX text:
 
