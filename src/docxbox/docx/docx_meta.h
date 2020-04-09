@@ -1,19 +1,21 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef DOCXBOX_CLASS_DOCX_META_H
-#define DOCXBOX_CLASS_DOCX_META_H
+#ifndef SRC_DOCXBOX_DOCX_META_H_
+#define SRC_DOCXBOX_DOCX_META_H_
 
 #include <string>
 #include <utility>
 
 #include "../app/app_argument.h"
-#include "../../helper/helper_string.h"
+#include "../helper/helper_string.h"
 
-// wordMl meta-attribute tag-parts (left- and right-hand-side strings surrounding the value)
+// wordMl meta-attribute tag-parts
+// (left- and right-hand-side strings surrounding the value)
 static const char *const kWordMlXmlSchemeLhs = "<Properties xmlns=\"";
 static const char *const kWordMlXmlSchemeRhs = "\" ";
 
-static const char *const kWordMlCreatedLhs = "<dcterms:created xsi:type=\"dcterms:W3CDTF\">";
+static const char
+    *const kWordMlCreatedLhs = "<dcterms:created xsi:type=\"dcterms:W3CDTF\">";
 static const char *const kWordMlCreatedRhs = "</dcterms:created>";
 
 static const char *const kWordMlTitleLhs = "<dc:title>";
@@ -22,7 +24,8 @@ static const char *const kWordMlTitleRhs = "</dc:title>";
 static const char *const kWordMlLastModifiedByLhs = "<cp:lastModifiedBy>";
 static const char *const kWordMlLastModifiedByRhs = "</cp:lastModifiedBy>";
 
-static const char *const kWordMlModifiedLhs = "<dcterms:modified xsi:type=\"dcterms:W3CDTF\">";
+static const char *const kWordMlModifiedLhs =
+    "<dcterms:modified xsi:type=\"dcterms:W3CDTF\">";
 static const char *const kWordMlModifiedRhs = "</dcterms:modified>";
 
 static const char *const kWordMlLastPrintedLhs = "<cp:lastPrinted>";
@@ -40,7 +43,6 @@ static const char *const kWordMlCreatorRhs = "</dc:creator>";
 static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
 
 class docx_meta {
-
  public:
   // Known (supported for modification) attributes
   enum Attribute {
@@ -123,4 +125,4 @@ class docx_meta {
   void EnsureIsLoadedCoreXml();
 };
 
-#endif //DOCXBOX_CLASS_DOCX_META_H
+#endif  // SRC_DOCXBOX_DOCX_META_H_

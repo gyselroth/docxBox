@@ -1,18 +1,17 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef DOCXBOX_CLASS_DOCX_XML
-#define DOCXBOX_CLASS_DOCX_XML
+#ifndef SRC_DOCXBOX_DOCX_XML_H_
+#define SRC_DOCXBOX_DOCX_XML_H_
 
 #include <string>
 #include <iostream>
 
-#include "../../helper/helper_file.h"
-#include "../../helper/helper_string.h"
+#include "../helper/helper_file.h"
+#include "../helper/helper_string.h"
 
-#include "../../../vendor/tinyxml2/tinyxml2.h"
+#include "../../vendor/tinyxml2/tinyxml2.h"
 
 class docx_xml {
-
  public:
   docx_xml(int argc, char **argv);
 
@@ -25,4 +24,4 @@ class docx_xml {
   std::string document_text_;
 };
 
-#endif //DOCXBOX_CLASS_DOCX_XML
+#endif  // SRC_DOCXBOX_DOCX_XML_H_

@@ -12,7 +12,8 @@ AppArguments::AppArguments(int argc, char **argv) {
   argv_ = argv;
 }
 
-// Resolve path from given argument: keep absolute or make relative from execution path
+// Resolve path from given argument:
+// keep absolute or make relative from execution path
 std::string AppArguments::ResolvePathFromArgument(
     const std::string& pwd,
     int argc,
@@ -24,7 +25,9 @@ std::string AppArguments::ResolvePathFromArgument(
   return helper::File::ResolvePath(pwd, argv[index_argument-1]);
 }
 
-bool AppArguments::IsArgumentGiven(int argc, int index, const std::string& argument_description) {
+bool AppArguments::IsArgumentGiven(int argc,
+                                   int index,
+                                   const std::string &argument_description) {
   if (argc <= index) {
     std::cout << "Missing argument: " << argument_description << "\n";
 
@@ -34,7 +37,7 @@ bool AppArguments::IsArgumentGiven(int argc, int index, const std::string& argum
   return true;
 }
 
-bool AppArguments::Matches(int offset_argument, const std::string& identifier) {
+bool AppArguments::Matches(int offset_argument, const std::string &identifier) {
   return argc_ > offset_argument
       && 0 == strcmp(argv_[offset_argument], identifier.c_str());
 }
@@ -46,8 +49,7 @@ bool AppArguments::Matches(
 ) {
   return argc_ > offset_argument
     && (0 == strcmp(argv_[offset_argument], identifier_short.c_str())
-        || 0 == strcmp(argv_[offset_argument], identifier_long.c_str())
-    );
+        || 0 == strcmp(argv_[offset_argument], identifier_long.c_str()));
 }
 
-} // namespace docxbox
+}  // namespace docxbox

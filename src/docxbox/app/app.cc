@@ -8,7 +8,7 @@ namespace docxbox {
  * Constructor: init (resolve) command and arguments
  */
 App::App(int argc, char **argv) {
-  if (argc==1) {
+  if (argc == 1) {
     // No command given
     AppHelp::PrintHelp(true, AppCommands::Commands::Command_Invalid);
 
@@ -22,20 +22,26 @@ App::App(int argc, char **argv) {
 }
 
 // Remap command + argument variations to rel. shorthand commands
-AppCommands::Commands App::PreProcess(AppArguments *arguments, AppCommands::Commands &command) const {
+AppCommands::Commands App::PreProcess(AppArguments *arguments,
+                                      AppCommands::Commands &command) const {
   switch (command) {
     case AppCommands::Command_GetPlainText:
-      if (arguments->Matches(3, "-s", "--segments")) return AppCommands::Command_GetPlainTextSegments;
+      if (arguments->Matches(3, "-s", "--segments"))
+        return AppCommands::Command_GetPlainTextSegments;
 
       return command;
     case AppCommands::Command_List:
-      if (arguments->Matches(3, "-fj")) return AppCommands::Command_ListFontsAsJson;
+      if (arguments->Matches(3, "-fj"))
+        return AppCommands::Command_ListFontsAsJson;
 
-      if (arguments->Matches(3, "-ij")) return AppCommands::Command_ListImagesAsJson;
+      if (arguments->Matches(3, "-ij"))
+        return AppCommands::Command_ListImagesAsJson;
 
-      if (arguments->Matches(3, "-gj")) return AppCommands::Command_ListMergeFieldsAsJson;
+      if (arguments->Matches(3, "-gj"))
+        return AppCommands::Command_ListMergeFieldsAsJson;
 
-      if (arguments->Matches(3, "-mj")) return AppCommands::Command_ListMetaAsJson;
+      if (arguments->Matches(3, "-mj"))
+        return AppCommands::Command_ListMetaAsJson;
 
 
       if (arguments->Matches(3, "-f", "--fonts"))
@@ -88,7 +94,7 @@ bool App::Process() {
 
   AppCommands::Commands command = command_->GetResolved();
 
-  // Preprocess: Remap command + argument(s) constellations to rel. shorthand commands
+  // Preprocess: Remap command + argument(s) to rel. shorthand commands
   if (argc_ > 2) command = PreProcess(arguments, command);
 
   // Process
@@ -107,17 +113,23 @@ bool App::Process() {
       return AppHelp::PrintHelp(true, kCommand, command_identifier);
     }
     case AppCommands::Command_GetPlainText:return docx_archive->GetText(false);
-    case AppCommands::Command_GetPlainTextSegments:return docx_archive->GetText(true);
+    case AppCommands::Command_GetPlainTextSegments:
+      return docx_archive->GetText(true);
     case AppCommands::Command_List:return docx_archive->ListFiles(false);
     case AppCommands::Command_ListAsJson:return docx_archive->ListFiles(true);
     case AppCommands::Command_ListImages:return docx_archive->ListImages(false);
-    case AppCommands::Command_ListImagesAsJson:return docx_archive->ListImages(true);
+    case AppCommands::Command_ListImagesAsJson:
+      return docx_archive->ListImages(true);
     case AppCommands::Command_ListFonts:return docx_archive->ListFonts(false);
-    case AppCommands::Command_ListFontsAsJson:return docx_archive->ListFonts(true);
-    case AppCommands::Command_ListMergeFields:return docx_archive->ListMergeFields(false);
-    case AppCommands::Command_ListMergeFieldsAsJson:return docx_archive->ListMergeFields(true);
+    case AppCommands::Command_ListFontsAsJson:
+      return docx_archive->ListFonts(true);
+    case AppCommands::Command_ListMergeFields:
+      return docx_archive->ListMergeFields(false);
+    case AppCommands::Command_ListMergeFieldsAsJson:
+      return docx_archive->ListMergeFields(true);
     case AppCommands::Command_ListMeta:return docx_archive->ListMeta(false);
-    case AppCommands::Command_ListMetaAsJson:return docx_archive->ListMeta(true);
+    case AppCommands::Command_ListMetaAsJson:
+      return docx_archive->ListMeta(true);
     case AppCommands::Command_ModifyMeta:return docx_archive->ModifyMeta();
     case AppCommands::Command_ReplaceImage:return docx_archive->ReplaceImage();
     case AppCommands::Command_ReplaceText:return docx_archive->ReplaceText();
@@ -132,4 +144,4 @@ bool App::Process() {
   }
 }
 
-} // namespace docxbox
+}  // namespace docxbox

@@ -31,7 +31,10 @@ extern bool IsDirectory(const std::string& file_path);
 extern bool FileExists(const std::string &name);
 
 // Resolve path: keep absolute or make relative from given (binary) path
-extern std::string ResolvePath(const std::string &pwd, std::string path, bool must_exist = false);
+extern std::string ResolvePath(
+    const std::string &pwd,
+    std::string path,
+    bool must_exist = false);
 
 extern std::streampos GetFileSize(std::ifstream &file);
 
@@ -40,14 +43,19 @@ extern std::string GetFileContents(std::ifstream &file);
 
 extern bool WriteToNewFile(const std::string &filename, std::string &content);
 
-extern void CopyFile(const std::string &path_image_original, const std::string &path_image_replacement);
+extern void CopyFile(
+    const std::string &path_image_original,
+    const std::string &path_image_replacement);
 
 extern bool Remove(const char *file_path);
 
 extern std::string GetLastPathSegment(std::string path);
 
 extern std::vector<std::string> ScanDir(const char *pathname);
-extern std::vector<std::string> ScanDirRecursive(const char *pathname, std::vector<std::string> files, const std::string& remove_prefix = "");
+extern std::vector<std::string> ScanDirRecursive(
+    const char *pathname,
+    std::vector<std::string> files,
+    const std::string& remove_prefix = "");
 
 extern std::string GetTmpName();
 

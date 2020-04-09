@@ -2,8 +2,9 @@
 
 #include "docx_xml_replace.h"
 
-docx_xml_replace::docx_xml_replace(int argc, char **argv) : docx_xml(argc, argv) {
-
+docx_xml_replace::docx_xml_replace(int argc, char **argv) : docx_xml(
+    argc,
+    argv) {
 }
 
 bool docx_xml_replace::ReplaceStringInXml(
@@ -29,11 +30,12 @@ bool docx_xml_replace::ReplaceStringInXml(
 
   doc.LoadFile(path_xml.c_str());
 
-  if(doc.ErrorID() != 0) return false;
+  if (doc.ErrorID() != 0) return false;
 
   amount_replaced_ = 0;
 
-  tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")
+      ->FirstChildElement("w:body");
 
   if (replace_segmented) {
     do {
@@ -50,8 +52,7 @@ bool docx_xml_replace::ReplaceStringInXml(
   }
 
   if (amount_replaced_ > 0
-      && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true))
-  {
+      && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
     std::cout << "Error - Failed saving: " << path_xml << "\n";
 
     return false;
@@ -64,8 +65,7 @@ bool docx_xml_replace::ReplaceStringInXml(
 void docx_xml_replace::ReplaceStringInTextNodes(
     tinyxml2::XMLElement *node,
     const std::string& search,
-    const std::string& replacement
-) {
+    const std::string& replacement) {
   if (!node || node->NoChildren()) return;
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
@@ -79,15 +79,14 @@ void docx_xml_replace::ReplaceStringInTextNodes(
 
     if (value) {
       if (0 == strcmp(value, "w:t")
-              && sub_node->FirstChild() != nullptr
-          )
-      {
+          && sub_node->FirstChild() != nullptr) {
         std::string text = sub_node->GetText();
 
         if (!text.empty()
-            && helper::String::Contains(text, search.c_str())
-        ) {
-          amount_replaced_ += helper::String::ReplaceAll(text, search, replacement);
+            && helper::String::Contains(text, search.c_str())) {
+          amount_replaced_ +=
+              helper::String::ReplaceAll(text, search, replacement);
+
           sub_node->SetText(text.c_str());
         }
 
@@ -100,16 +99,21 @@ void docx_xml_replace::ReplaceStringInTextNodes(
 }
 
 /*  Replaces the searched string when contained in a single <w:t> tag,
- *  and also when contained "segmented", that is: spread over multiple consecutive <w:t> nodes (due to formatting).
+ *  and also when contained "segmented", that is:
+ *  spread over multiple consecutive <w:t> nodes (due to formatting).
  *
  *  Steps for replacing segmented strings:
- *  1. Replace simple (look-behind level = 0), collecting document plaintext at the same time
+ *  1. Replace simple (look-behind level = 0),
+ *     collecting document plaintext at the same time
  *  2. When plaintext of whole XML does not contain search-string anymore: done
  *  3. Increment look-behind level
- *  4. Iterate over text nodes, detect when concatenated text from previous nodes and current contains search-string
+ *  4. Iterate over text nodes, detect when concatenated text from
+ *     previous nodes and current contains search-string
  *  5. When search-string found:
- *        Replace matching text segment within 1st <w:t> node of current look-behind-sequence,
- *        Remove matching text segments from other <w:t> nodes of current look-behind-sequence
+ *        - Replace matching text segment within 1st <w:t> node
+ *          of current look-behind-sequence,
+ *        - Remove matching text segments from other <w:t> nodes
+ *          of current look-behind-sequence
  *  6. Repeat from step 2.
  */
 void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
@@ -132,17 +136,16 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
 
     if (value) {
       if (0 == strcmp(value, "w:t")
-              && sub_node->FirstChild() != nullptr
-          )
-      {
+          && sub_node->FirstChild() != nullptr) {
         std::string text = sub_node->GetText();
 
         document_text_ += text;
 
         if (!text.empty()
-            && helper::String::Contains(text, search.c_str())
-        ) {
-          amount_replaced_ += helper::String::ReplaceAll(text, search, replacement);
+            && helper::String::Contains(text, search.c_str())) {
+          amount_replaced_ +=
+              helper::String::ReplaceAll(text, search, replacement);
+
           sub_node->SetText(text.c_str());
         }
 
@@ -151,9 +154,7 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
         if (
             0 == strcmp(
                 sub_node->Attribute("w:fldCharType"),
-                "begin"
-            )
-            ) document_text_ += " ";
+                "begin")) document_text_ += " ";
       } else if (0 == strcmp(value, "w:instrText")) {
         continue;
       }

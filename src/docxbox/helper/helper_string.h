@@ -23,12 +23,27 @@ extern bool StartsWith(const char *str, const char *prefix);
 
 extern bool Contains(std::string &haystack, const char *needle);
 
-extern std::string Replace(std::string &haystack, const char *needle, const char *replacement);
-extern int ReplaceAll(std::string &data, const std::string& toSearch, const std::string& replaceStr);
+extern std::string Replace(
+    std::string &haystack,
+    const char *needle,
+    const char *replacement);
+
+extern int ReplaceAll(
+    std::string &data,
+    const std::string& toSearch,
+    const std::string& replaceStr);
 
 // Get sub string between given surrounding left- and center-hand-side delimiters
-extern std::string GetSubStrBetween(std::string &str, const char *lhs, const char *rhs, unsigned long &offset);
-extern std::string GetSubStrBetween(std::string &str, const char *lhs, const char *rhs);
+extern std::string GetSubStrBetween(
+    std::string &str,
+    const char *lhs,
+    const char *rhs,
+    unsigned long &offset);
+
+extern std::string GetSubStrBetween(
+    std::string &str,
+    const char *lhs,
+    const char *rhs);
 
 // Split given string by given character delimiter into vector of strings
 extern std::vector<std::string> Explode(std::string const &str, char delimiter);

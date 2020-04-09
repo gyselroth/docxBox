@@ -1,9 +1,10 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef CLASS_DOCXBOX_APP_COMMAND
-#define CLASS_DOCXBOX_APP_COMMAND
+#ifndef SRC_DOCXBOX_APP_APP_COMMAND_H_
+#define SRC_DOCXBOX_APP_APP_COMMAND_H_
 
 #include <string>
+#include <utility>
 
 namespace docxbox {
 
@@ -46,10 +47,10 @@ class AppCommands {
   // Argument resolved to Commands-enum
   Commands resolved_;
 
-  // Resolve command string (1st argument) to related command enum item (which allows e.g. switch)
+  // Resolve command (1st argument) to rel. command enum item, allowing switch
   Commands Resolve();
 };
 
-} // namespace docxbox
+}  // namespace docxbox
 
-#endif // CLASS_DOCXBOX_APP_COMMAND
+#endif  // SRC_DOCXBOX_APP_APP_COMMAND_H_

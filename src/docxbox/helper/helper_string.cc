@@ -16,14 +16,18 @@ bool String::StartsWith(const char *str, const char *prefix) {
  * Check whether given string ends w/ given string
  */
 bool String::EndsWith(std::string const &value, std::string const &ending) {
-  return ending.size() <= value.size() && std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+  return ending.size() <= value.size()
+      && std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
 bool String::Contains(std::string &haystack, const char *needle) {
   return std::string::npos!=haystack.find(needle);
 }
 
-std::string String::Replace(std::string &haystack, const char *needle, const char *replacement) {
+std::string String::Replace(
+    std::string &haystack,
+    const char *needle,
+    const char *replacement) {
   size_t needle_len = strlen(needle);
 
   size_t index = 0;
@@ -34,7 +38,10 @@ std::string String::Replace(std::string &haystack, const char *needle, const cha
   return haystack;
 }
 
-int String::ReplaceAll(std::string &data, const std::string& toSearch, const std::string& replaceStr) {
+int String::ReplaceAll(
+    std::string &data,
+    const std::string &toSearch,
+    const std::string &replaceStr) {
   // Get the first occurrence
   size_t pos = data.find(toSearch);
 
@@ -58,7 +65,11 @@ int String::ReplaceAll(std::string &data, const std::string& toSearch, const std
  *
  *  return std::string  The enclosed sub-string or an empty string
  */
-std::string String::GetSubStrBetween(std::string &str, const char *lhs, const char *rhs, unsigned long &offset) {
+std::string String::GetSubStrBetween(
+    std::string &str,
+    const char *lhs,
+    const char *rhs,
+    unsigned long &offset) {
   size_t offsetStart = str.find(lhs, offset);
 
   if (std::string::npos==offsetStart) return "";
@@ -75,7 +86,10 @@ std::string String::GetSubStrBetween(std::string &str, const char *lhs, const ch
   return str.substr(offsetStart,offsetEnd - offsetStart);
 }
 
-std::string String::GetSubStrBetween(std::string &str, const char *lhs, const char *rhs) {
+std::string String::GetSubStrBetween(
+    std::string &str,
+    const char *lhs,
+    const char *rhs) {
   unsigned long offset = 0;
 
   return GetSubStrBetween(str, lhs, rhs, offset);
@@ -84,7 +98,9 @@ std::string String::GetSubStrBetween(std::string &str, const char *lhs, const ch
 /**
  * Split given string by given character delimiter into vector of strings
  */
-std::vector<std::string> String::Explode(std::string const &str, char delimiter) {
+std::vector<std::string> String::Explode(
+    std::string const &str,
+    char delimiter) {
   std::vector<std::string> result;
   std::istringstream iss(str);
 
@@ -98,8 +114,14 @@ std::vector<std::string> String::Explode(std::string const &str, char delimiter)
  * Trim from start (in place)
  */
 void String::LTrim(std::string &s) {
-  s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-                                  std::not1(std::ptr_fun<int, int>(std::isspace))));
+  s.erase(
+      s.begin(),
+      std::find_if(
+          s.begin(),
+          s.end(),
+          std::not1(std::ptr_fun<int, int>(std::isspace))
+      )
+  );
 }
 
 /**

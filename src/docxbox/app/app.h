@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef CLASS_DOCXBOX_APP
-#define CLASS_DOCXBOX_APP
+#ifndef SRC_DOCXBOX_APP_APP_H_
+#define SRC_DOCXBOX_APP_APP_H_
 
 #include <string>
 #include <iostream>
@@ -11,7 +11,7 @@
 #include "app_command.h"
 #include "app_help.h"
 #include "../docx/docx_archive.h"
-#include "../../config.h"
+#include "../config.h"
 
 namespace docxbox {
 
@@ -33,9 +33,10 @@ class App {
 
   AppCommands *command_;
 
-  AppCommands::Commands PreProcess(AppArguments *arguments, AppCommands::Commands &command) const;
+  AppCommands::Commands PreProcess(AppArguments *arguments,
+                                   AppCommands::Commands &command) const;
 };
 
-} // namespace docxbox
+}  // namespace docxbox
 
-#endif // CLASS_DOCXBOX_APP
+#endif  // SRC_DOCXBOX_APP_APP_H_

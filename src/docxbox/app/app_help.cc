@@ -1,8 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef DOCXBOX_SRC_DOCXBOX_CLASS_APP_HELP_H
-#define DOCXBOX_SRC_DOCXBOX_CLASS_APP_HELP_H
-
 #include "app_help.h"
 
 namespace docxbox {
@@ -18,24 +15,29 @@ bool AppHelp::PrintVersion() {
   return true;
 }
 
-bool AppHelp::PrintHelp(bool with_title, AppCommands::Commands command, const std::string& command_identifier) {
+bool AppHelp::PrintHelp(bool with_title,
+                        AppCommands::Commands command,
+                        const std::string &command_identifier) {
   switch (command) {
     case AppCommands::Command_Help:return PrintOverview(true);
 
     case AppCommands::Command_GetPlainText:
-    case AppCommands::Command_GetPlainTextSegments:return PrintHelpOnGetPlainText();
+    case AppCommands::Command_GetPlainTextSegments:
+      return PrintHelpOnGetPlainText();
 
     case AppCommands::Command_List:
     case AppCommands::Command_ListAsJson:return PrintHelpOnList();
 
     case AppCommands::Command_ListImages:
-    case AppCommands::Command_ListImagesAsJson:return PrintHelpOnListImages(true);
+    case AppCommands::Command_ListImagesAsJson:
+      return PrintHelpOnListImages(true);
 
     case AppCommands::Command_ListFontsAsJson:
     case AppCommands::Command_ListFonts:return PrintHelpOnListFonts(true);
 
     case AppCommands::Command_ListMergeFields:
-    case AppCommands::Command_ListMergeFieldsAsJson:return PrintHelpOnListMergeFields(true);
+    case AppCommands::Command_ListMergeFieldsAsJson:
+      return PrintHelpOnListMergeFields(true);
 
     case AppCommands::Command_ListMeta:
     case AppCommands::Command_ListMetaAsJson:return PrintHelpOnListMeta(true);
@@ -65,7 +67,8 @@ bool AppHelp::PrintHelp(bool with_title, AppCommands::Commands command, const st
 }
 
 bool AppHelp::PrintOverview(bool with_title) {
-  if (with_title) std::cout << "Usage: docxbox <command> [args]" << "\n\nAvailable commands:";
+  if (with_title)
+    std::cout << "Usage: docxbox <command> [args]" << "\n\nAvailable commands:";
 
   std::cout << "\n  1. List DOCX contents:"
             << "\n    ls         - Output list of files in DOCX"
@@ -107,6 +110,7 @@ bool AppHelp::PrintHelpOnList() {
                "---------------------------------\n"
                "Output list of files in DOCX:\n"
                "  docxbox ls foo.docx \n\n";
+
   std::cout << "Output list of files in DOCX as JSON:\n"
                "  docxbox lsj foo.docx\n"
                "  or: docxbox ls foo.docx -j\n"
@@ -220,12 +224,13 @@ bool AppHelp::PrintHelpOnModifyMeta() {
 }
 
 bool AppHelp::PrintHelpOnReplaceImage() {
-  std::cout << "Command: rpi - Replace image in DOCX document:\n"
-               "----------------------------------------------\n"
-               "Replace image, update existing DOCX file:\n"
-               "  docxbox rpi foo.docx image1.jpeg images/replacement.jpeg\n\n"
-               "Replace image, save to new changed DOCX document:\n"
-               "  docxbox rpi foo.docx image1.jpeg images/replacement.jpeg new.docx\n\n";
+  std::cout
+  << "Command: rpi - Replace image in DOCX document:\n"
+     "----------------------------------------------\n"
+     "Replace image, update existing DOCX file:\n"
+     "  docxbox rpi foo.docx img1.jpeg img/replacement.jpeg\n\n"
+     "Replace image, save to new changed DOCX document:\n"
+     "  docxbox rpi foo.docx img.jpeg img/replacement.jpeg new.docx\n\n";
 
   return true;
 }
@@ -233,9 +238,11 @@ bool AppHelp::PrintHelpOnReplaceImage() {
 bool AppHelp::PrintHelpOnReplaceText() {
   std::cout << "Command: rpt - Replace text in DOCX document:\n"
                "----------------------------------------------\n"
-               "Replace all occurrences of \"old\" by \"new\", update existing DOCX file:\n"
+               "Replace all occurrences of \"old\" by \"new\", "
+               "update existing DOCX file:\n"
                "  docxbox rpt foo.docx old new\n\n"
-               "Replace all occurrences of \"old\" by \"new\", save to new DOCX file:\n"
+               "Replace all occurrences of \"old\" by \"new\", "
+               "save to new DOCX file:\n"
                "  docxbox rpt foo.docx old new new.docx\n\n";
 
   return true;
@@ -295,6 +302,4 @@ void AppHelp::PrintUnknownArgumentMessage(const char *arg) {
   PrintHelp(false, AppCommands::Commands::Command_Invalid);
 }
 
-} // namespace docxbox
-
-#endif //DOCXBOX_SRC_DOCXBOX_CLASS_APP_HELP_H
+}  // namespace docxbox

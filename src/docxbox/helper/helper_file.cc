@@ -37,7 +37,10 @@ std::string File::GetFileContents(std::ifstream &file) {
 }
 
 // Resolve path: keep absolute or make relative from given (binary) path
-std::string File::ResolvePath(const std::string &pwd, std::string path, bool must_exist) {
+std::string File::ResolvePath(
+    const std::string &pwd,
+    std::string path,
+    bool must_exist) {
   helper::String::Trim(path);
 
   if (!helper::String::StartsWith(path.c_str(), "/"))
@@ -46,7 +49,8 @@ std::string File::ResolvePath(const std::string &pwd, std::string path, bool mus
         : pwd + "/" + path;
 
   if (must_exist
-    && (!helper::File::IsDirectory(path) && !helper::File::FileExists(path))
+    && (!helper::File::IsDirectory(path)
+    && !helper::File::FileExists(path))
   ) throw "File not found: " + path;
 
   return path;
@@ -68,9 +72,11 @@ bool File::WriteToNewFile(const std::string &filename, std::string &content) {
   return File::FileExists(filename);
 }
 
-void File::CopyFile(const std::string &path_image_original, const std::string &path_image_replacement) {
+void File::CopyFile(
+    const std::string &path_image_original,
+    const std::string &path_image_replacement) {
   int source = open(path_image_replacement.c_str(), O_RDONLY, 0);
-  int dest = open(path_image_original.c_str(), O_WRONLY | O_CREAT /*| O_TRUNC/**/, 0644);
+  int dest = open(path_image_original.c_str(), O_WRONLY | O_CREAT, 0644);
 
   // struct required, rationale: function stat() exists also
   struct stat stat_source;
@@ -149,10 +155,16 @@ std::vector<std::string> File::ScanDirRecursive(
         path_file  += namelist[i]->d_name;
 
         if (IsDirectory(path_file)) {
-          files = helper::File::ScanDirRecursive(path_file.c_str(), files, remove_prefix);
+          files =helper::File::ScanDirRecursive(
+              path_file.c_str(),
+              files,
+              remove_prefix);
         } else {
           if (do_remove_prefix)
-            path_file = helper::String::Replace(path_file, remove_prefix.c_str(), "");
+            path_file = helper::String::Replace(
+                path_file,
+                remove_prefix.c_str(),
+                "");
 
           files.push_back(path_file);
         }

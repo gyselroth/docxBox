@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef CLASS_DOCXBOX_DOCX_ARCHIVE_H
-#define CLASS_DOCXBOX_DOCX_ARCHIVE_H
+#ifndef SRC_DOCXBOX_DOCX_ARCHIVE_H_
+#define SRC_DOCXBOX_DOCX_ARCHIVE_H_
 
 #include <string>
 #include <iostream>
@@ -16,14 +16,17 @@
 #include "docx_meta.h"
 #include "docx_xml.h"
 
-#include "../../helper/helper_file.h"
-#include "../../helper/helper_string.h"
+#include "../helper/helper_file.h"
+#include "../helper/helper_string.h"
 
 class docx_archive {
  public:
   docx_archive(int argc, char **argv);
 
-  bool UnzipDocx(const std::string& directory_appendix = "", bool ensure_is_docx = true);
+  bool UnzipDocx(
+      const std::string &directory_appendix = "",
+      bool ensure_is_docx = true);
+
   bool UnzipMedia();
   bool Zip(std::string path_directory = "", std::string path_docx_result = "");
 
@@ -52,7 +55,9 @@ class docx_archive {
   std::string path_extract_;
 
   bool InitPathDocxByArgV(int index_path_argument);
-  void InitExtractionPath(const std::string &directory_appendix, const std::string &path_docx);
+
+  void InitExtractionPath(const std::string &directory_appendix,
+                          const std::string &path_docx);
 };
 
-#endif //CLASS_DOCXBOX_DOCX_ARCHIVE_H
+#endif  // SRC_DOCXBOX_DOCX_ARCHIVE_H_

@@ -3,7 +3,6 @@
 #include "docx_xml_fields.h"
 
 docx_xml_fields::docx_xml_fields(int argc, char **argv) : docx_xml(argc, argv) {
-
 }
 
 void docx_xml_fields::CollectMergeFields(std::string path_xml, bool as_json) {
@@ -11,16 +10,18 @@ void docx_xml_fields::CollectMergeFields(std::string path_xml, bool as_json) {
 
   doc.LoadFile(path_xml.c_str());
 
-  if(doc.ErrorID() != 0) return;
+  if (doc.ErrorID() != 0) return;
 
-  tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")
+      ->FirstChildElement("w:body");
+
   CollectFieldsFromNodes(body);
 }
 
 void docx_xml_fields::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
   if (!node || node->NoChildren()) return;
 
-  //if (0 == strcmp(node->Value(), "w:p")) document_text_ += "\n";
+//  if (0 == strcmp(node->Value(), "w:p")) document_text_ += "\n";
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
 

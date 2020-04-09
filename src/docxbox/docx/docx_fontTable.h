@@ -1,15 +1,15 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef CLASS_DOCXBOX_DOCX_FONTTABLE_H
-#define CLASS_DOCXBOX_DOCX_FONTTABLE_H
+#ifndef SRC_DOCXBOX_DOCX_FONTTABLE_H_
+#define SRC_DOCXBOX_DOCX_FONTTABLE_H_
 
 #include <vector>
 #include <string>
 #include <iostream>
 #include <cstring>
 
-#include "../../helper/helper_numeric.h"
-#include "../../helper/helper_string.h"
+#include "../helper/helper_numeric.h"
+#include "../helper/helper_string.h"
 
 class docx_fontTable {
  public:
@@ -38,4 +38,4 @@ class docx_fontTable {
   void InitCliOutputPadding();
 };
 
-#endif //CLASS_DOCXBOX_DOCX_FONTTABLE_H
+#endif  // SRC_DOCXBOX_DOCX_FONTTABLE_H_

@@ -19,20 +19,20 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin/linux)
 add_executable(docxbox
         src/docxbox/main.cc
 
-        src/docxbox/class/app/app.cc
-        src/docxbox/class/app/app_argument.cc
-        src/docxbox/class/app/app_command.cc
-        src/docxbox/class/app/app_help.cc
-        src/docxbox/class/app/app_help.h
+        src/docxbox/app/app.cc
+        src/docxbox/app/app_argument.cc
+        src/docxbox/app/app_command.cc
+        src/docxbox/app/app_help.cc
+        src/docxbox/app/app_help.h
 
-        src/docxbox/class/docx/docx_archive.cc
-        src/docxbox/class/docx/docx_fontTable.cc
-        src/docxbox/class/docx/docx_meta.cc
+        src/docxbox/docx/docx_archive.cc
+        src/docxbox/docx/docx_fontTable.cc
+        src/docxbox/docx/docx_meta.cc
 
-        src/docxbox/class/docx/docx_xml.cc
-        src/docxbox/class/docx/docx_xml_fields.cc
-        src/docxbox/class/docx/docx_xml_to_plaintext.cc
-        src/docxbox/class/docx/docx_xml_replace.cc
+        src/docxbox/docx/docx_xml.cc
+        src/docxbox/docx/docx_xml_fields.cc
+        src/docxbox/docx/docx_xml_to_plaintext.cc
+        src/docxbox/docx/docx_xml_replace.cc
 
         src/docxbox/helper/helper_file.cc
         src/docxbox/helper/helper_string.cc
