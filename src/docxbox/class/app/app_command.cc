@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #include "app_command.h"
 

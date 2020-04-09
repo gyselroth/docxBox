@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #ifndef CLASS_HELPER_FILE_H
 #define CLASS_HELPER_FILE_H

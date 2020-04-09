@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #ifndef CLASS_DOCXBOX_APP
 #define CLASS_DOCXBOX_APP

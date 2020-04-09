@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #ifndef DOCXBOX_CLASS_XML_FIELDS
 #define DOCXBOX_CLASS_XML_FIELDS

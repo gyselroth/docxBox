@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #ifndef DOCXBOX_CLASS_XML_TO_PLAINTEXT
 #define DOCXBOX_CLASS_XML_TO_PLAINTEXT

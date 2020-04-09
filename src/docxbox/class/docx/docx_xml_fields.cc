@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #include "docx_xml_fields.h"
 

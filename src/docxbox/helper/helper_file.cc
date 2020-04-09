@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #include "helper_file.h"
 

@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #ifndef DOCXBOX_CLASS_DOCX_META_H
 #define DOCXBOX_CLASS_DOCX_META_H

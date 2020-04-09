@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #include <cmath>
 #include "helper_string.h"

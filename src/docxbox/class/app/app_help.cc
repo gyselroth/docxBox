@@ -1,3 +1,4 @@
+// Copyright (c) 2020 gyselroth GmbH
 
 #ifndef DOCXBOX_SRC_DOCXBOX_CLASS_APP_HELP_H
 #define DOCXBOX_SRC_DOCXBOX_CLASS_APP_HELP_H
