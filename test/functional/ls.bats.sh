@@ -20,7 +20,7 @@ load _helper
   $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx | grep -c "Name"
 }
 
-@test "Output of \"docxbox ls filename.docx\" are contained files" {
+@test "Output of \"docxbox ls filename.docx\" is contained files" {
   $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx | grep -c "[Content_Types].xml"
   $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx | grep -c "docProps/app.xml"
   $BATS_TEST_DIRNAME/docxbox ls test/files/sample_100kB.docx | grep -c "docProps/core.xml"
