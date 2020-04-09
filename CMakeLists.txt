@@ -17,7 +17,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin/linux)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y -pedantic")
 
 add_executable(docxbox
-        src/docxbox/main.cpp
+        src/docxbox/main.cc
 
         src/docxbox/class/app/app.cc
         src/docxbox/class/app/app_argument.cc
