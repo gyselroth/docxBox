@@ -10,7 +10,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 
 * [Planned features](#planned-features)
 * [Commands](#commands)
-  * [List files, referenced fonts, images, merge-fields, meta data](#list-files-referenced-fonts-images-merge-fields-meta-data)
+  * [List DOCX content](#list-docx-contents)
     + [Output list of files](#output-list-of-files)
     + [Output list of referenced fonts](#output-list-of-referenced-fonts)
     + [List images information](#list-images-information)
@@ -49,7 +49,7 @@ Planned Features
 Commands
 --------
 
-### List files, referenced fonts, images, merge-fields, meta data
+### List DOCX contents
 
 #### Output list of files
 
