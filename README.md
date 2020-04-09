@@ -53,9 +53,9 @@ Commands
 
 ### List files, referenced fonts, images, meta data
 
-Lists files (and directories) contained within a given DOCX, and their attributes.
-
 #### Output list of files
+
+Lists files (and directories) contained within a given DOCX, and their attributes:
 
 ````docxbox ls foo.docx````
 
