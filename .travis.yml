@@ -32,5 +32,5 @@ script:
 
 after_success:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./bin/linux/docxbox ; fi
-#  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
 #  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/docxbox ; fi
