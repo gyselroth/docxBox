@@ -2,7 +2,8 @@
 
 load _helper
 
-@test "someting"{
-  skip
-run grep -c '12 files' $BATS_TEST_DIRNAME/docxbox ls files/sample_100kB.docx
+@test "Output of \"docxbox lsf {missing argument}\" is an error message" {
+  run $BATS_TEST_DIRNAME/docxbox lsf
+  [ "$status" -eq 125 ]
+  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }

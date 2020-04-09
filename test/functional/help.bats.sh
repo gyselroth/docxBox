@@ -38,6 +38,24 @@ load _helper
   [ "Command: lsf - List fonts referenced in DOCX:" = "${lines[0]}" ]
 }
 
+@test "\"docxbox h lsfj\" displays help for lsfj command" {
+  run $BATS_TEST_DIRNAME/docxbox h lsfj
+  [ "$status" -eq 0 ]
+  [ "Command: lsf - List fonts referenced in DOCX:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h lsi\" displays help for lsi command" {
+  run $BATS_TEST_DIRNAME/docxbox h lsi
+  [ "$status" -eq 0 ]
+  [ "Command: lsf - List images in DOCX:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h lsij\" displays help for lsij command" {
+  run $BATS_TEST_DIRNAME/docxbox h lsij
+  [ "$status" -eq 0 ]
+  [ "Command: lsf - List images in DOCX:" = "${lines[0]}" ]
+}
+
 @test "\"docxbox h lsm\" displays help for lsm command" {
   run $BATS_TEST_DIRNAME/docxbox h lsm
   [ "$status" -eq 0 ]
