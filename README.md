@@ -231,13 +231,17 @@ docxBox was built using the following third party libraries and tools:
 
 | Library                                                         | Description                                                                | License                                                          |
 | --------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| [Bats](https://github.com/sstephenson/bats)                     | Bash Automated Testing System                                              | [MIT License](https://opensource.org/licenses/MIT)               |      
-| [Clang](https://clang.llvm.org/)                                | A C language family frontend for LLVM                                      | [Apache License](https://www.apache.org/licenses/)               |      
-| [Cmake](https://cmake.org/)                                     | Family of tools designed to build, test and package software               | [New BSD License](https://en.wikipedia.org/wiki/New_BSD_License) |      
 | [nlohmann/json](https://github.com/nlohmann/json)               | JSON for Modern C++                                                        | [MIT License](https://opensource.org/licenses/MIT)               |
 | [tfussel/miniz-cpp](https://github.com/tfussell/miniz-cpp)      | Cross-platform header-only C++14 library for reading and writing ZIP files | [MIT License](https://opensource.org/licenses/MIT)               |
 | [leethomason/tinyxml2](https://github.com/leethomason/tinyxml2) | A simple, small, efficient, C++ XML parser                                 | [zlib License](https://www.zlib.net/zlib_license.html)           |
-| [Travis CI](https://travis-ci.org)                              | Hosted Continuous Integration Service                                      | [MIT License](https://opensource.org/licenses/MIT)               |
+
+| Tool                                                            | Description                                                                | License                                                                                                   |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [Bats](https://github.com/sstephenson/bats)                     | Bash Automated Testing System                                              | [MIT License](https://opensource.org/licenses/MIT)                                                        |      
+| [Clang](https://clang.llvm.org/)                                | A C language family frontend for LLVM                                      | [Apache License](https://www.apache.org/licenses/)                                                        |      
+| [Cmake](https://cmake.org/)                                     | Family of tools designed to build, test and package software               | [New BSD License](https://en.wikipedia.org/wiki/New_BSD_License)                                          |      
+| [GCC](https://gcc.gnu.org/)                                     | GCC, the GNU Compiler Collection                                           | [GNU General Public License version 3](https://gcc.gnu.org/onlinedocs/libstdc++/manual/appendix_gpl.html) |      
+| [Travis CI](https://travis-ci.org)                              | Hosted Continuous Integration Service                                      | [MIT License](https://opensource.org/licenses/MIT)                                                        |
 
 Thanks a lot!
 
