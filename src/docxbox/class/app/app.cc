@@ -9,19 +9,19 @@ namespace docxbox {
 App::App(int argc, char **argv) {
   if (argc==1) {
     // No command given
-    AppHelp::PrintHelp(true, AppCommands::Command::Command_Invalid);
+    AppHelp::PrintHelp(true, AppCommands::Commands::Command_Invalid);
 
     return;
   }
 
-  this->argc = argc;
-  this->argv = argv;
+  argc_ = argc;
+  argv_ = argv;
 
   command_ = new AppCommands(argc > 0 ? argv[1] : "");
 }
 
 // Remap command + argument variations to rel. shorthand commands
-AppCommands::Command App::PreProcess(AppArguments *arguments, AppCommands::Command &command) const {
+AppCommands::Commands App::PreProcess(AppArguments *arguments, AppCommands::Commands &command) const {
   switch (command) {
     case AppCommands::Command_GetPlainText:
       if (arguments->Matches(3, "-s", "--segments")) return AppCommands::Command_GetPlainTextSegments;
@@ -74,24 +74,24 @@ AppCommands::Command App::PreProcess(AppArguments *arguments, AppCommands::Comma
 }
 
 bool App::Process() {
-  auto *docx_archive = new class docx_archive(argc, argv);
+  auto *docx_archive = new class docx_archive(argc_, argv_);
 
-  auto arguments = new AppArguments(argc, argv);
+  auto arguments = new AppArguments(argc_, argv_);
 
-  AppCommands::Command command = command_->GetResolved();
+  AppCommands::Commands command = command_->GetResolved();
 
   // Preprocess: Remap command + argument(s) constellations to rel. shorthand commands
-  if (argc > 2) command = PreProcess(arguments, command);
+  if (argc_ > 2) command = PreProcess(arguments, command);
 
   // Process
   switch (command) {
     case AppCommands::Command_Help: {
-      AppCommands::Command kCommand;
+      AppCommands::Commands kCommand;
       std::string command_identifier;
 
-      if (argc > 2) {
-        kCommand = AppCommands::ResolveCommandByName(argv[2]);
-        command_identifier = argv[2];
+      if (argc_ > 2) {
+        kCommand = AppCommands::ResolveCommandByName(argv_[2]);
+        command_identifier = argv_[2];
       } else {
         kCommand = AppCommands::Command_Invalid;
       }
@@ -117,7 +117,7 @@ bool App::Process() {
     case AppCommands::Command_Zip:return docx_archive->Zip();
     case AppCommands::Command_Invalid:
     default:
-      AppHelp::PrintUnknownArgumentMessage(argv[1]);
+      AppHelp::PrintUnknownArgumentMessage(argv_[1]);
       return false;
   }
 }

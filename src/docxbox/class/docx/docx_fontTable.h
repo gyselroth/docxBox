@@ -20,19 +20,19 @@ class docx_fontTable {
   void Clear();
 
  private:
-  int amount_fonts = 0;
+  int amount_fonts_ = 0;
 
-  std::vector<std::string> font_names;
-  std::vector<std::string> alt_names;
-  std::vector<std::string> charsets;
-  std::vector<std::string> families;
-  std::vector<std::string> pitches;
+  std::vector<std::string> font_names_;
+  std::vector<std::string> alt_names_;
+  std::vector<std::string> charsets_;
+  std::vector<std::string> families_;
+  std::vector<std::string> pitches_;
 
-  unsigned long max_len_font_name;
-  unsigned long max_len_alt_name;
-  unsigned long max_len_charset;
-  unsigned long max_len_family;
-  unsigned long max_len_pitch;
+  unsigned long max_len_font_name_;
+  unsigned long max_len_alt_name_;
+  unsigned long max_len_charset_;
+  unsigned long max_len_family_;
+  unsigned long max_len_pitch_;
 
   void InitCliOutputPadding();
 };

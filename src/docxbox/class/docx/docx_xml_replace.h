@@ -24,12 +24,12 @@ class docx_xml_replace:docx_xml {
   );
 
  private:
-  bool replace_segmented;
+  bool replace_segmented_;
   // How many previous (tags containing text) nodes to look behind during current replacement run?
-  int segments_look_behind = 0;
-  std::vector<tinyxml2::XMLElement *> previous_text_nodes;
+  int segments_look_behind_ = 0;
+  std::vector<tinyxml2::XMLElement *> previous_text_nodes_;
 
-  int amount_replaced = 0;
+  int amount_replaced_ = 0;
 
   void ReplaceStringInChildNodesText(tinyxml2::XMLElement *node, const std::string& search, const std::string& replacement);
 };

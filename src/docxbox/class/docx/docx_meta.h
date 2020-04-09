@@ -80,35 +80,35 @@ class docx_meta {
   void Output();
 
  private:
-  int argc;
-  char **argv;
+  int argc_;
+  char **argv_;
 
-  std::string path_extract;
+  std::string path_extract_;
 
-  bool outputAsJson = false;
+  bool output_as_json_ = false;
 
-  bool has_collected_from_app_xml = false;
-  bool has_collected_from_core_xml = false;
+  bool has_collected_from_app_xml_ = false;
+  bool has_collected_from_core_xml_ = false;
 
-  std::string path_app_xml;
-  std::string path_core_xml;
+  std::string path_app_xml_;
+  std::string path_core_xml_;
 
-  std::string core_xml;
+  std::string core_xml_;
 
   // Attribute + value for single modification
   Attribute attribute_ = Attribute::Attribute_Unknown;
   std::string value_;
 
   // Extracted meta values
-  std::string creator;
-  std::string date_creation;
-  std::string date_modification;
-  std::string language;
-  std::string last_modified_by;
-  std::string last_printed;
-  std::string revision;
-  std::string title;
-  std::string xml_schema;
+  std::string creator_;
+  std::string date_creation_;
+  std::string date_modification_;
+  std::string language_;
+  std::string last_modified_by_;
+  std::string last_printed_;
+  std::string revision_;
+  std::string title_;
+  std::string xml_schema_;
 
   void OutputPlain();
   void OutputJson();

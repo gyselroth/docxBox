@@ -18,10 +18,10 @@ class docx_xml {
   static bool IsXmlFileContainingText(std::string filename);
 
  protected:
-  int argc;
-  char **argv;
+  int argc_;
+  char **argv_;
 
-  std::string document_text;
+  std::string document_text_;
 };
 
 #endif //DOCXBOX_CLASS_DOCX_XML

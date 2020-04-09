@@ -22,8 +22,8 @@ class AppArguments {
   bool Matches(int offset_argument, const std::string& identifier_short, const std::string& identifier_long);
 
  private:
-  int argc;
-  char **argv;
+  int argc_;
+  char **argv_;
 };
 
 } // namespace docxbox
