@@ -95,13 +95,13 @@ or ````docxbox lsij foo.docx````
 
 #### List merge-fields
 
-````docxbox ls foo.docx --mergefields````  
+````docxbox ls foo.docx --mergeFields````  
 or ````docxbox ls foo.docx -g````  
 or ````docxbox lsg foo.docx````  
 
 To output as JSON:  
 
-````docxbox ls foo.docx --mergefields --json````  
+````docxbox ls foo.docx --mergeFields --json````  
 or ````docxbox ls foo.docx -gj````  
 or ````docxbox lsg foo.docx --json````  
 or ````docxbox lsgj foo.docx````  
