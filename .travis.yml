@@ -16,7 +16,7 @@ addons:
       - gcc-4.9
 
 before_install:
-  - pip install cpplint
+  - sudo pip install cpplint
   - git clone https://github.com/leethomason/tinyxml2.git ./src/vendor/tinyxml2
 #  - git clone https://github.com/tfussell/miniz-cpp.git ./src/vendor/miniz-cpp
   - git clone https://github.com/kstenschke/miniz-cpp.git ./src/vendor/miniz-cpp
