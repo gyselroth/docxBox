@@ -1,10 +1,12 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef SRC_DOCXBOX_DOCX_ARCHIVE_H_
-#define SRC_DOCXBOX_DOCX_ARCHIVE_H_
+#ifndef SRC_DOCXBOX_DOCX_DOCX_ARCHIVE_H_
+#define SRC_DOCXBOX_DOCX_DOCX_ARCHIVE_H_
 
-#include <string>
 #include <iostream>
+#include <vector>
+#include <memory>
+#include <string>
 
 #include "../app/app_argument.h"
 
@@ -60,4 +62,4 @@ class docx_archive {
                           const std::string &path_docx);
 };
 
-#endif  // SRC_DOCXBOX_DOCX_ARCHIVE_H_
+#endif  // SRC_DOCXBOX_DOCX_DOCX_ARCHIVE_H_

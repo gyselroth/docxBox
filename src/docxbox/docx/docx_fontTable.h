@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef SRC_DOCXBOX_DOCX_FONTTABLE_H_
-#define SRC_DOCXBOX_DOCX_FONTTABLE_H_
+#ifndef SRC_DOCXBOX_DOCX_DOCX_FONTTABLE_H_
+#define SRC_DOCXBOX_DOCX_DOCX_FONTTABLE_H_
 
 #include <vector>
 #include <string>
@@ -29,13 +29,13 @@ class docx_fontTable {
   std::vector<std::string> families_;
   std::vector<std::string> pitches_;
 
-  unsigned long max_len_font_name_;
-  unsigned long max_len_alt_name_;
-  unsigned long max_len_charset_;
-  unsigned long max_len_family_;
-  unsigned long max_len_pitch_;
+  u_int32_t max_len_font_name_;
+  u_int32_t max_len_alt_name_;
+  u_int32_t max_len_charset_;
+  u_int32_t max_len_family_;
+  u_int32_t max_len_pitch_;
 
   void InitCliOutputPadding();
 };
 
-#endif  // SRC_DOCXBOX_DOCX_FONTTABLE_H_
+#endif  // SRC_DOCXBOX_DOCX_DOCX_FONTTABLE_H_

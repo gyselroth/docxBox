@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef SRC_DOCXBOX_DOCX_XML_REPLACE_H
-#define SRC_DOCXBOX_DOCX_XML_REPLACE_H
+#ifndef SRC_DOCXBOX_DOCX_DOCX_XML_REPLACE_H_
+#define SRC_DOCXBOX_DOCX_DOCX_XML_REPLACE_H_
 
 #include <iostream>
 #include <string>
@@ -43,4 +43,4 @@ class docx_xml_replace:docx_xml {
                                          const std::string &replacement);
 };
 
-#endif  // SRC_DOCXBOX_DOCX_XML_REPLACE_H
+#endif  // SRC_DOCXBOX_DOCX_DOCX_XML_REPLACE_H_

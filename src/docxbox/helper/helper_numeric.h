@@ -1,14 +1,14 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef CLASS_HELPER_NUMERIC_H
-#define CLASS_HELPER_NUMERIC_H
+#ifndef SRC_DOCXBOX_HELPER_HELPER_NUMERIC_H_
+#define SRC_DOCXBOX_HELPER_HELPER_NUMERIC_H_
 
 namespace helper {
 namespace Numeric {
 
-bool IsEven(unsigned long number);
+bool IsEven(int number);
 
-} // namespace Numeric
-} // namespace helper
+}  // namespace Numeric
+}  // namespace helper
 
-#endif //CLASS_HELPER_NUMERIC_H
+#endif  // SRC_DOCXBOX_HELPER_HELPER_NUMERIC_H_

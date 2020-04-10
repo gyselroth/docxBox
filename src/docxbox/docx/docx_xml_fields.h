@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef SRC_DOCXBOX_DOCX_XML_FIELDS_H
-#define SRC_DOCXBOX_DOCX_XML_FIELDS_H
+#ifndef SRC_DOCXBOX_DOCX_DOCX_XML_FIELDS_H_
+#define SRC_DOCXBOX_DOCX_DOCX_XML_FIELDS_H_
 
 #include <string>
 #include <iostream>
@@ -27,4 +27,4 @@ class docx_xml_fields:docx_xml {
   static void CollectFieldsFromNodes(tinyxml2::XMLElement *node);
 };
 
-#endif  // SRC_DOCXBOX_DOCX_XML_FIELDS_H_
+#endif  // SRC_DOCXBOX_DOCX_DOCX_XML_FIELDS_H_

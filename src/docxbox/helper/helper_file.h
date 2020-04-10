@@ -1,18 +1,18 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef CLASS_HELPER_FILE_H
-#define CLASS_HELPER_FILE_H
+#ifndef SRC_DOCXBOX_HELPER_HELPER_FILE_H_
+#define SRC_DOCXBOX_HELPER_HELPER_FILE_H_
 
 #include <dirent.h>
+#include <sys/stat.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sys/stat.h>
 #include <vector>
 
 #ifdef __linux__
 #include <unistd.h>
-#include <sys/stat.h>
 #include <algorithm>
 #include <chrono>
 #endif
@@ -59,7 +59,7 @@ extern std::vector<std::string> ScanDirRecursive(
 
 extern std::string GetTmpName();
 
-} // namespace File
-} // namespace helper
+}  // namespace File
+}  // namespace helper
 
-#endif //CLASS_HELPER_FILE_H
+#endif  // SRC_DOCXBOX_HELPER_HELPER_FILE_H_

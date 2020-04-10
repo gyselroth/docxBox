@@ -44,11 +44,9 @@ void docx_xml_to_plaintext::GetChildNodesText(
       if (0 == strcmp(value, "w:instrText")) {
         continue;
       } else if (0 == strcmp(value, "w:fldChar")) {
-        if (
-            0 == strcmp(
-                sub_node->Attribute("w:fldCharType"),
-                "begin"
-            )) document_text_ += " ";
+        if (0 == strcmp(
+            sub_node->Attribute("w:fldCharType"),
+            "begin")) document_text_ += " ";
       } else if (0 == strcmp(value, "w:t")) {
         const char *text = sub_node->GetText();
 

@@ -1,14 +1,16 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef CLASS_HELPER_STRING_H
-#define CLASS_HELPER_STRING_H
+#ifndef SRC_DOCXBOX_HELPER_HELPER_STRING_H_
+#define SRC_DOCXBOX_HELPER_HELPER_STRING_H_
 
 #include <algorithm>
 #include <codecvt>
 #include <cstring>
+#include <functional>
 #include <locale>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "helper_numeric.h"
@@ -33,12 +35,12 @@ extern int ReplaceAll(
     const std::string& toSearch,
     const std::string& replaceStr);
 
-// Get sub string between given surrounding left- and center-hand-side delimiters
+// Get substring between given surrounding left- and center-hand-side delimiters
 extern std::string GetSubStrBetween(
     std::string &str,
     const char *lhs,
     const char *rhs,
-    unsigned long &offset);
+    u_int32_t &offset);
 
 extern std::string GetSubStrBetween(
     std::string &str,
@@ -52,11 +54,11 @@ extern void LTrim(std::string &s);
 extern void RTrim(std::string &s);
 extern void Trim(std::string &s);
 
-extern unsigned long GetMaxLength(const std::vector<std::string>& strings);
+extern u_int32_t GetMaxLength(const std::vector<std::string>& strings);
 
-extern std::string Repeat(const std::string& str, unsigned long amount);
+extern std::string Repeat(const std::string& str, u_int16_t amount);
 
-} // namespace String
-} // namespace helper
+}  // namespace String
+}  // namespace helper
 
-#endif //CLASS_HELPER_STRING_H
+#endif  // SRC_DOCXBOX_HELPER_HELPER_STRING_H_

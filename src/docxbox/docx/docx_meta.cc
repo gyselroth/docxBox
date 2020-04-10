@@ -56,8 +56,7 @@ std::string docx_meta::SetLastModifiedByFromCoreXml() {
   return last_modified_by_ = helper::String::GetSubStrBetween(
       core_xml_,
       kWordMlLastModifiedByLhs,
-      kWordMlLastModifiedByRhs
-      );
+      kWordMlLastModifiedByRhs);
 }
 
 std::string docx_meta::SetTitleFromCoreXml() {
@@ -308,7 +307,7 @@ bool docx_meta::AttributeExistsInCoreXml(Attribute attribute) {
       return helper::String::Contains(core_xml_, kWordMlModifiedLhs);
     case Attribute_LastPrinted:
       return helper::String::Contains(core_xml_, kWordMlLastPrintedLhs);
-    default:return false;  
+    default:return false;
   }
 }
 
@@ -339,7 +338,7 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
 
   path_app_xml_ = std::move(path_app_xml_current);
 
-  unsigned long offset = 0;
+  u_int32_t offset = 0;
 
   xml_schema_ = helper::String::GetSubStrBetween(
       app_xml,
@@ -385,8 +384,10 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current) {
 
 void docx_meta::Output() {
   if (has_collected_from_app_xml_ || has_collected_from_core_xml_) {
-    if (output_as_json_) OutputJson();
-    else OutputPlain();
+    if (output_as_json_)
+      OutputJson();
+    else
+      OutputPlain();
   }
 
   Clear();

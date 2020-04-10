@@ -9,7 +9,7 @@ namespace helper {
  * Check whether given string starts w/ given prefix
  */
 bool String::StartsWith(const char *str, const char *prefix) {
-  return 0==strncmp(str, prefix, strlen(prefix));
+  return 0 == strncmp(str, prefix, strlen(prefix));
 }
 
 /**
@@ -21,7 +21,7 @@ bool String::EndsWith(std::string const &value, std::string const &ending) {
 }
 
 bool String::Contains(std::string &haystack, const char *needle) {
-  return std::string::npos!=haystack.find(needle);
+  return std::string::npos != haystack.find(needle);
 }
 
 std::string String::Replace(
@@ -33,7 +33,8 @@ std::string String::Replace(
   size_t index = 0;
   index = haystack.find(needle, index);
 
-  if (std::string::npos!=index) haystack.replace(index, needle_len, replacement);
+  if (std::string::npos != index)
+    haystack.replace(index, needle_len, replacement);
 
   return haystack;
 }
@@ -42,17 +43,18 @@ int String::ReplaceAll(
     std::string &data,
     const std::string &toSearch,
     const std::string &replaceStr) {
-  // Get the first occurrence
+  // Get first occurrence
   size_t pos = data.find(toSearch);
 
   int amount_replaced = 0;
 
   // Repeat till end is reached
-  while(pos != std::string::npos) {
+  while (pos != std::string::npos) {
     // Replace this occurrence of Sub String
     data.replace(pos, toSearch.size(), replaceStr);
+
     // Get the next occurrence from the current position
-    pos =data.find(toSearch, pos + replaceStr.size());
+    pos = data.find(toSearch, pos + replaceStr.size());
 
     amount_replaced++;
   }
@@ -69,28 +71,28 @@ std::string String::GetSubStrBetween(
     std::string &str,
     const char *lhs,
     const char *rhs,
-    unsigned long &offset) {
+    u_int32_t &offset) {
   size_t offsetStart = str.find(lhs, offset);
 
-  if (std::string::npos==offsetStart) return "";
+  if (std::string::npos == offsetStart) return "";
 
   size_t offsetEnd = str.find(rhs, offsetStart);
 
-  if (std::string::npos==offsetEnd) return "";
+  if (std::string::npos == offsetEnd) return "";
 
   // Exclude LHS
   offsetStart += strlen(lhs);
 
   offset = offsetStart;
 
-  return str.substr(offsetStart,offsetEnd - offsetStart);
+  return str.substr(offsetStart, offsetEnd - offsetStart);
 }
 
 std::string String::GetSubStrBetween(
     std::string &str,
     const char *lhs,
     const char *rhs) {
-  unsigned long offset = 0;
+    u_int32_t offset = 0;
 
   return GetSubStrBetween(str, lhs, rhs, offset);
 }
@@ -119,21 +121,20 @@ void String::LTrim(std::string &s) {
       std::find_if(
           s.begin(),
           s.end(),
-          std::not1(std::ptr_fun<int, int>(std::isspace))
-      )
-  );
+          std::not1(std::ptr_fun<int, int>(std::isspace))));
 }
 
 /**
  * Trim from end (in place)
  */
 void String::RTrim(std::string &s) {
-  s.erase(std::find_if(
-      s.rbegin(),
-      s.rend(),
-      std::not1(std::ptr_fun<int, int>(std::isspace))).base(),
-          s.end()
-  );
+  s.erase(
+      std::find_if(
+          s.rbegin(),
+          s.rend(),
+          std::not1(std::ptr_fun<int, int>(std::isspace)))
+          .base(),
+      s.end());
 }
 
 /**
@@ -144,11 +145,11 @@ void String::Trim(std::string &s) {
   RTrim(s);
 }
 
-unsigned long String::GetMaxLength(const std::vector<std::string>& strings) {
-  unsigned long max = 0;
-  
+u_int32_t String::GetMaxLength(const std::vector<std::string>& strings) {
+  u_int32_t max = 0;
+
   for (const auto& str : strings) {
-    unsigned long len = str.length();
+    u_int32_t len = str.length();
 
     if (len > max) max = len;
   }
@@ -156,14 +157,14 @@ unsigned long String::GetMaxLength(const std::vector<std::string>& strings) {
   return max;
 }
 
-std::string String::Repeat(const std::string& str, unsigned long amount) {
+std::string String::Repeat(const std::string& str, u_int16_t amount) {
   std::string out;
 
-  for (unsigned long i=0; i<amount; i++) {
+  for (u_int16_t i = 0; i < amount; i++) {
     out+= str;
   }
 
   return out;
 }
 
-} // namespace helper
+}  // namespace helper

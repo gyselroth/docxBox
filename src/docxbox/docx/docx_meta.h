@@ -1,10 +1,11 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef SRC_DOCXBOX_DOCX_META_H_
-#define SRC_DOCXBOX_DOCX_META_H_
+#ifndef SRC_DOCXBOX_DOCX_DOCX_META_H_
+#define SRC_DOCXBOX_DOCX_DOCX_META_H_
 
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "../app/app_argument.h"
 #include "../helper/helper_string.h"
@@ -117,7 +118,8 @@ class docx_meta {
   void OutputJson();
   void Clear();
 
-  static docx_meta::Attribute ResolveAttributeByName(const std::string &attribute);
+  static docx_meta::Attribute ResolveAttributeByName(
+      const std::string &attribute);
 
   bool AttributeExistsInCoreXml(Attribute attribute);
   bool UpdateAttribute(Attribute attribute, const std::string& value);
@@ -125,4 +127,4 @@ class docx_meta {
   void EnsureIsLoadedCoreXml();
 };
 
-#endif  // SRC_DOCXBOX_DOCX_META_H_
+#endif  // SRC_DOCXBOX_DOCX_DOCX_META_H_

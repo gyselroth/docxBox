@@ -13,7 +13,7 @@ bool File::IsDirectory(const std::string& file_path) {
 }
 
 bool File::FileExists(const std::string &name) {
-  return access(name.c_str(), F_OK)!=-1;
+  return access(name.c_str(), F_OK) != -1;
 }
 
 std::string File::GetFileContents(std::string &filename) {
@@ -26,7 +26,7 @@ std::string File::GetFileContents(std::ifstream &file) {
   std::streampos length = GetFileSize(file);
 
   // Read the whole file into the buffer
-  std::vector<char> buffer(static_cast<unsigned long>(length));
+  std::vector<char> buffer(static_cast<u_int32_t>(length));
   file.read(&buffer[0], length);
 
   std::string str(buffer.begin(), buffer.end());
@@ -49,9 +49,10 @@ std::string File::ResolvePath(
         : pwd + "/" + path;
 
   if (must_exist
-    && (!helper::File::IsDirectory(path)
-    && !helper::File::FileExists(path))
-  ) throw "File not found: " + path;
+      && (!helper::File::IsDirectory(path)
+          && !helper::File::FileExists(path))) {
+    throw "File not found: " + path;
+  }
 
   return path;
 }
@@ -114,7 +115,7 @@ std::vector<std::string> File::ScanDir(const char *pathname) {
     for (int i = 0; i < filecount; i++) {
       std::string path_file;
 
-      if (namelist[i]->d_name[0]!='.') {
+      if (namelist[i]->d_name[0] != '.') {
         path_file += pathname;
         path_file  += "/";
         path_file  += namelist[i]->d_name;
@@ -149,13 +150,13 @@ std::vector<std::string> File::ScanDirRecursive(
     for (int i = 0; i < filecount; i++) {
       std::string path_file;
 
-      if (namelist[i]->d_name[0]!='.') {
+      if (namelist[i]->d_name[0] != '.') {
         path_file += pathname;
         path_file  += "/";
         path_file  += namelist[i]->d_name;
 
         if (IsDirectory(path_file)) {
-          files =helper::File::ScanDirRecursive(
+          files = helper::File::ScanDirRecursive(
               path_file.c_str(),
               files,
               remove_prefix);
@@ -185,13 +186,13 @@ std::string File::GetTmpName() {
   char *buffer;
   size_t max_len;
 
-  int timestamp = (int) time(nullptr);
+  int timestamp = static_cast<int>(time(nullptr));
 
   max_len = snprintf(nullptr, 0, "%d", timestamp);
-  buffer = (char *)malloc(max_len + 1);
+  buffer = reinterpret_cast<char *>(malloc(max_len + 1));
   snprintf(buffer, max_len+1, "%d", timestamp);
 
   return std::string(buffer);
 }
 
-} // namespace helper
+}  // namespace helper

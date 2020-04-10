@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef SRC_DOCXBOX_DOCX_XML_PLAINTEXT_H
-#define SRC_DOCXBOX_DOCX_XML_PLAINTEXT_H
+#ifndef SRC_DOCXBOX_DOCX_DOCX_XML_TO_PLAINTEXT_H_
+#define SRC_DOCXBOX_DOCX_DOCX_XML_TO_PLAINTEXT_H_
 
 #include <string>
 #include <iostream>
@@ -27,4 +27,4 @@ class docx_xml_to_plaintext:docx_xml {
   void Output();
 };
 
-#endif  // SRC_DOCXBOX_DOCX_XML_PLAINTEXT_H
+#endif  // SRC_DOCXBOX_DOCX_DOCX_XML_TO_PLAINTEXT_H_

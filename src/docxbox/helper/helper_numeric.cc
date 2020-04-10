@@ -6,8 +6,8 @@
 
 namespace helper {
 
-bool Numeric::IsEven(unsigned long n) {
+bool Numeric::IsEven(int n) {
   return n % 2 == 0;
 }
 
-} // namespace helper
+}  // namespace helper
