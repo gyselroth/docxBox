@@ -8,7 +8,7 @@ set (VERSION_MINOR "0")
 set (VERSION_PATCH "1")
 
 # configure config.h to be generated from config.h.in, with injected version number
-configure_file ("src/docxbox/config.h.in" "src/docxbox/config.h")
+configure_file ("docxbox/config.h.in" "docxbox/config.h")
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -17,25 +17,25 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin/linux)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y -pedantic")
 
 add_executable(docxbox
-        src/docxbox/main.cc
+        docxbox/main.cc
 
-        src/docxbox/app/app.cc
-        src/docxbox/app/app_argument.cc
-        src/docxbox/app/app_command.cc
-        src/docxbox/app/app_help.cc
-        src/docxbox/app/app_help.h
+        docxbox/app/app.cc
+        docxbox/app/app_argument.cc
+        docxbox/app/app_command.cc
+        docxbox/app/app_help.cc
+        docxbox/app/app_help.h
 
-        src/docxbox/docx/docx_archive.cc
-        src/docxbox/docx/docx_fontTable.cc
-        src/docxbox/docx/docx_meta.cc
+        docxbox/docx/docx_archive.cc
+        docxbox/docx/docx_fontTable.cc
+        docxbox/docx/docx_meta.cc
 
-        src/docxbox/docx/docx_xml.cc
-        src/docxbox/docx/docx_xml_fields.cc
-        src/docxbox/docx/docx_xml_to_plaintext.cc
-        src/docxbox/docx/docx_xml_replace.cc
+        docxbox/docx/docx_xml.cc
+        docxbox/docx/docx_xml_fields.cc
+        docxbox/docx/docx_xml_to_plaintext.cc
+        docxbox/docx/docx_xml_replace.cc
 
-        src/docxbox/helper/helper_file.cc
-        src/docxbox/helper/helper_string.cc
-        src/docxbox/helper/helper_numeric.cc
+        docxbox/helper/helper_file.cc
+        docxbox/helper/helper_string.cc
+        docxbox/helper/helper_numeric.cc
 
-        src/vendor/tinyxml2/tinyxml2.cpp)
+        vendor/tinyxml2/tinyxml2.cpp)

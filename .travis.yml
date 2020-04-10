@@ -17,11 +17,11 @@ addons:
 
 before_install:
   - sudo pip install cpplint
-  - git clone https://github.com/leethomason/tinyxml2.git ./src/vendor/tinyxml2
-#  - git clone https://github.com/tfussell/miniz-cpp.git ./src/vendor/miniz-cpp
-  - git clone https://github.com/kstenschke/miniz-cpp.git ./src/vendor/miniz-cpp
+  - git clone https://github.com/leethomason/tinyxml2.git ./vendor/tinyxml2
+#  - git clone https://github.com/tfussell/miniz-cpp.git ./vendor/miniz-cpp
+  - git clone https://github.com/kstenschke/miniz-cpp.git ./vendor/miniz-cpp
 
-#  -git clone https://github.com/nlohmann/json.git ./src/vendor/json
+#  -git clone https://github.com/nlohmann/json.git ./vendor/json
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo add-apt-repository ppa:duggan/bats --yes; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq bats; fi
@@ -29,8 +29,8 @@ before_install:
 
 script:
   - cmake CMakeLists.txt && make
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all ./src; fi
-  #- if [ "$TRAVIS_OS_NAME" = "linux" ]; then cpplint src/docxbox/* --recursive --extensions=cc,h; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all ./docxbox; fi
+  #- if [ "$TRAVIS_OS_NAME" = "linux" ]; then cpplint docxbox/* --recursive --extensions=cc,h; fi
 
 after_success:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./bin/linux/docxbox ; fi
