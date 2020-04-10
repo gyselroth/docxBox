@@ -53,6 +53,8 @@ void docx_xml_fields::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
 }
 
 void docx_xml_fields::Output(bool as_json) {
+  if (as_json) return OutputAsJson();
+
   int i=0;
 
   for (const auto& xml_filename : field_xml_files_) {
@@ -68,4 +70,32 @@ void docx_xml_fields::Output(bool as_json) {
 
       i++;
   }
+}
+
+void docx_xml_fields::OutputAsJson() {
+  std::cout << "{";
+
+  int i=0;
+
+  for (const auto& xml_filename : field_xml_files_) {
+    if (i > 0) std::cout << ",";
+
+    std::cout << "\"" << xml_filename << "\":[";
+
+      int j=0;
+
+      for (const auto& field : fields_in_xml_files_[i]) {
+        if (j > 0) std::cout << ",";
+
+        std::cout << "\"" << field << "\"";
+
+        j++;
+      }
+
+      std::cout << "]";
+
+      i++;
+  }
+
+  std::cout << "}";
 }

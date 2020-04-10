@@ -19,7 +19,6 @@ class docx_xml_fields:docx_xml {
   void CollectMergeFields(const std::string& path_xml, bool as_json = false);
 
   void Output(bool as_json);
-
  private:
   std::vector <std::string> fields_in_current_xml_;
 
@@ -29,6 +28,7 @@ class docx_xml_fields:docx_xml {
   std::vector <std::vector<std::string>> fields_in_xml_files_;
 
   void CollectFieldsFromNodes(tinyxml2::XMLElement *node);
+  void OutputAsJson();
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_XML_FIELDS_H_
