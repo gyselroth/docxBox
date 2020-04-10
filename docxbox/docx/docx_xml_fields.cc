@@ -31,22 +31,10 @@ void docx_xml_fields::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
   if (sub_node == nullptr) return;
 
   do {
-    if (!sub_node) continue;
-
     const char *value = sub_node->Value();
 
-    if (value) {
-      if (0 == strcmp(value, "w:instrText")) {
+    if (value && 0 == strcmp(value, "w:instrText"))
         fields_in_current_xml_.emplace_back(sub_node->GetText());
-
-        continue;
-      } /*else if (0 == strcmp(value, "w:fldChar")) {
-        if (
-            0 == strcmp(
-                sub_node->Attribute("w:fldCharType"),
-                "begin"))
-      }*/
-    }
 
     CollectFieldsFromNodes(sub_node);
   } while ((sub_node = sub_node->NextSiblingElement()));
