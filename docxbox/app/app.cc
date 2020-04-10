@@ -37,12 +37,16 @@ AppCommands::Commands App::PreProcess(AppArguments *arguments,
       if (arguments->Matches(3, "-ij"))
         return AppCommands::Command_ListImagesAsJson;
 
-      if (arguments->Matches(3, "-gj"))
+      if (arguments->Matches(3, "-dj"))
         return AppCommands::Command_ListMergeFieldsAsJson;
 
       if (arguments->Matches(3, "-mj"))
         return AppCommands::Command_ListMetaAsJson;
 
+      if (arguments->Matches(3, "-d", "--fields"))
+        return arguments->Matches(4, "-j", "--json")
+               ? AppCommands::Command_ListMergeFieldsAsJson
+               : AppCommands::Command_ListMergeFields;
 
       if (arguments->Matches(3, "-f", "--fonts"))
         return arguments->Matches(4, "-j", "--json")
@@ -53,11 +57,6 @@ AppCommands::Commands App::PreProcess(AppArguments *arguments,
         return arguments->Matches(4, "-j", "--json")
                ? AppCommands::Command_ListImagesAsJson
                : AppCommands::Command_ListImages;
-
-      if (arguments->Matches(3, "-g", "--mergeFields"))
-        return arguments->Matches(4, "-j", "--json")
-               ? AppCommands::Command_ListMergeFieldsAsJson
-               : AppCommands::Command_ListMergeFields;
 
       if (arguments->Matches(3, "-m", "--meta"))
         return arguments->Matches(4, "-j", "--json")

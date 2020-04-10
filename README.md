@@ -14,7 +14,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
     + [Output list of files](#output-list-of-files)
     + [Output list of referenced fonts](#output-list-of-referenced-fonts)
     + [List images information](#list-images-information)
-    + [List merge-fields](#list-merge-fields)
+    + [List fields](#list-fields)
     + [List meta data](#list-meta-data)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
   * [Output plaintext](#output-plaintext)
@@ -37,8 +37,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 Planned Features
 ----------------
 
-* v0.0.2: List merge-fields
-* v0.0.2: Generate and insert/replace more complex DOCX markup elements (merge-fields, tables)
+* v0.0.2: Generate and insert/replace more complex DOCX markup elements (fields, tables)
 * v0.1.0: Batch process sequences of manipulation operations
 * v0.1.0: Add optional configuration options via environment vars
 * v0.1.0: (Optional) logging of operations
@@ -93,18 +92,18 @@ or ````docxbox lsi foo.docx --json````
 or ````docxbox lsi foo.docx -j````  
 or ````docxbox lsij foo.docx````
 
-#### List merge-fields
+#### List fields
 
-````docxbox ls foo.docx --mergeFields````  
-or ````docxbox ls foo.docx -g````  
-or ````docxbox lsg foo.docx````  
+````docxbox ls foo.docx --fields````  
+or ````docxbox ls foo.docx -d````  
+or ````docxbox lsd foo.docx````  
 
 To output as JSON:  
 
-````docxbox ls foo.docx --mergeFields --json````  
-or ````docxbox ls foo.docx -gj````  
-or ````docxbox lsg foo.docx --json````  
-or ````docxbox lsgj foo.docx````  
+````docxbox ls foo.docx --fields --json````  
+or ````docxbox ls foo.docx -dj````  
+or ````docxbox lsd foo.docx --json````  
+or ````docxbox lsdj foo.docx````  
 
 #### List meta data
 

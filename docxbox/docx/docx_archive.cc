@@ -469,7 +469,7 @@ bool docx_archive::ListMergeFields(bool as_json) {
         as_json);
   }
 
-  parser->Output();
+  parser->Output(as_json);
 
   miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 

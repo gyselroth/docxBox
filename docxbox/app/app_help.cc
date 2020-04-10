@@ -74,8 +74,8 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    ls         - Output list of files in DOCX"
             << "\n    lsj        - Output list of files in DOCX as JSON"
             << "\n    lsf        - Output list of fonts in DOCX"
-            << "\n    lsg        - Output list of merge-fields in DOCX"
-            << "\n    lsgj       - Output list of merge-fields in DOCX as JSON"
+            << "\n    lsg        - Output list of fields in DOCX"
+            << "\n    lsgj       - Output list of fields in DOCX as JSON"
             << "\n    lsfj       - Output list of fonts in DOCX as JSON"
             << "\n    lsi        - Output list of images in DOCX"
             << "\n    lsij       - Output list of images in DOCX as JSON"
@@ -188,21 +188,21 @@ bool AppHelp::PrintHelpOnListMeta(bool with_title) {
 
 bool AppHelp::PrintHelpOnListMergeFields(bool with_title) {
   if (with_title) {
-    std::cout << "Command: lsg - List merge-fields from DOCX:\n"
-                 "-------------------------------------------\n";
+    std::cout << "Command: lsd - List fields from DOCX:\n"
+                 "-------------------------------------\n";
   }
 
-  std::cout << "Output list of merge-fields from DOCX:\n"
-               "  docxbox lsg foo.docx \n\n"
+  std::cout << "Output list of fields from DOCX:\n"
+               "  docxbox lsd foo.docx \n\n"
                "  or: docxbox ls foo.docx -g\n"
-               "  or: docxbox ls foo.docx --mergeFields\n\n";
+               "  or: docxbox ls foo.docx --fields\n\n";
 
-  std::cout << "Output list of merge-fields from DOCX as JSON:\n"
-               "  docxbox lsgj foo.docx \n\n"
-               "  or: docxbox lsg foo.docx -j\n"
-               "  or: docxbox lsg foo.docx --json\n"
-               "  or: docxbox ls foo.docx -gj\n"
-               "  or: docxbox ls foo.docx --mergeFields -- json\n\n";
+  std::cout << "Output list of fields from DOCX as JSON:\n"
+               "  docxbox lsdj foo.docx \n\n"
+               "  or: docxbox lsd foo.docx -j\n"
+               "  or: docxbox lsd foo.docx --json\n"
+               "  or: docxbox ls foo.docx -dj\n"
+               "  or: docxbox ls foo.docx --fields -- json\n\n";
 
   return true;
 }
