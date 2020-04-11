@@ -23,6 +23,7 @@ AppCommands::Commands AppCommands::Resolve() {
 AppCommands::Commands AppCommands::ResolveCommandByName(
     const std::string &command) {
   if (command == "h" || command == "?") return Command_Help;
+  if (command == "lorem") return Command_LoremIpsum;
   if (command == "ls") return Command_List;
   if (command == "lsd") return Command_ListMergeFields;
   if (command == "lsdj") return Command_ListMergeFieldsAsJson;

@@ -1,9 +1,10 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include "docx_archive.h"
+#include "docx_meta.h"
+#include "docx_xml_lorem.h"
 
 #include "../../vendor/miniz-cpp/zip_file.hpp"
-#include "docx_meta.h"
 
 // Static extension methods to miniz-cpp
 //
@@ -464,9 +465,7 @@ bool docx_archive::ListMergeFields(bool as_json) {
     if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml"))
       continue;
 
-    parser->CollectMergeFields(
-        path_extract_ + "/" + file_in_zip.filename,
-        as_json);
+    parser->CollectMergeFields(path_extract_ + "/" + file_in_zip.filename);
   }
 
   parser->Output(as_json);
@@ -537,8 +536,6 @@ bool docx_archive::ReplaceImage() {
 }
 
 bool docx_archive::ReplaceText() {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
   if (
       !docxbox::AppArguments::IsArgumentGiven(
           argc_,
@@ -567,6 +564,51 @@ bool docx_archive::ReplaceText() {
 
     if (!parser->ReplaceStringInXml(path_file_absolute, search, replacement)) {
       std::cout << "Error: Failed replace string in: "
+                << file_in_zip.filename << "\n";
+
+      return false;
+    }
+  }
+
+  std::string path_docx_out = argc_ >= 6
+                              // Result filename is given as argument
+                              ? helper::File::ResolvePath(
+          path_working_directory_,
+          argv_[5])
+                              // Overwrite original DOCX
+                              : path_docx_in_;
+
+  if (!Zip(path_extract_, path_docx_out + "tmp")) {
+    std::cout << "DOCX creation failed.\n";
+
+    return false;
+  }
+
+  if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
+
+  std::rename(
+      std::string(path_docx_out).append("tmp").c_str(),
+      path_docx_out.c_str());
+
+  return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+}
+
+bool docx_archive::ReplaceAllTextByLoremIpsum() {
+  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+
+  auto file_list = docx_file.infolist();
+
+  auto parser = new docx_xml_lorem(argc_, argv_);
+
+  for (const auto &file_in_zip : file_list) {
+    if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
+
+    std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
+
+    if (!parser->RandomizeAllTextInXml(path_file_absolute)) {
+      std::cout << "Error: Failed insert lorem ipsum in: "
                 << file_in_zip.filename << "\n";
 
       return false;

@@ -42,6 +42,8 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_ListMeta:
     case AppCommands::Command_ListMetaAsJson:return PrintHelpOnListMeta(true);
 
+    case AppCommands::Command_LoremIpsum:return PrintHelpOnLoremIpsum();
+
     case AppCommands::Command_ModifyMeta:return PrintHelpOnModifyMeta();
     case AppCommands::Command_ReplaceImage:return PrintHelpOnReplaceImage();
     case AppCommands::Command_ReplaceText:return PrintHelpOnReplaceText();
@@ -86,6 +88,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    rpi        - Replace image in DOCX"
             << "\n    rpt        - Replace text in DOCX"
             << "\n    mm         - Modify or set meta attribute in DOCX"
+            << "\n    lorem      - Replace all text by random dummy text"
             << "\n"
             << "\n  3. Convert DOCX:"
             << "\n    txt        - Output DOCX document as plaintext"
@@ -203,6 +206,17 @@ bool AppHelp::PrintHelpOnListMergeFields(bool with_title) {
                "  or: docxbox lsd foo.docx --json\n"
                "  or: docxbox ls foo.docx -dj\n"
                "  or: docxbox ls foo.docx --fields -- json\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnLoremIpsum() {
+  std::cout << "Replace all text by \"Lorem Ipsum\" dummy text:\n"
+               "-----------------------------------------------\n"
+               "Update existing file:\n"
+               "  docxbox lorem foo.docx\n\n"
+               "Save to new file:"
+               "  docxbox lorem foo.docx new.docx\n\n";
 
   return true;
 }

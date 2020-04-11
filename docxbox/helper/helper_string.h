@@ -31,9 +31,9 @@ extern std::string Replace(
     const char *replacement);
 
 extern int ReplaceAll(
-    std::string &data,
-    const std::string& toSearch,
-    const std::string& replaceStr);
+    std::string &haystack,
+    const std::string& needle,
+    const std::string& replacement);
 
 // Get substring between given surrounding left- and center-hand-side delimiters
 extern std::string GetSubStrBetween(
@@ -54,7 +54,16 @@ extern void LTrim(std::string &s);
 extern void RTrim(std::string &s);
 extern void Trim(std::string &s);
 
+extern bool IsNumeric(
+    std::string str,
+    bool trim,
+    bool can_contain_spaces);
+
+extern bool IsNumeric(char c);
+
 extern u_int32_t GetMaxLength(const std::vector<std::string>& strings);
+
+extern int GetAmountWords(std::string str);
 
 extern std::string Repeat(const std::string& str, u_int16_t amount);
 

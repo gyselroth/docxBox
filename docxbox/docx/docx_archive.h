@@ -44,6 +44,7 @@ class docx_archive {
 
   bool ReplaceImage();
   bool ReplaceText();
+  bool ReplaceAllTextByLoremIpsum();
 
  private:
   int argc_;

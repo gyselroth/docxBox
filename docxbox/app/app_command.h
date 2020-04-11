@@ -24,6 +24,7 @@ class AppCommands {
     Command_ListMergeFieldsAsJson,
     Command_ListMeta,
     Command_ListMetaAsJson,
+    Command_LoremIpsum,
     Command_ModifyMeta,
     Command_ReplaceImage,
     Command_ReplaceText,

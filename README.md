@@ -23,6 +23,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
       + [Modify meta data](#modify-meta-data)
       + [Replace images](#replace-images)
       + [Replace text](#replace-text)
+      + [Lorem Ipsum](#lorem-ipsum)
   * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
@@ -143,7 +144,8 @@ or ````docxbox txt foo.docx -s````
 
 Outputs the text from document, w/ markup sections separated by newlines.
 This can be helpful to identify "segmented" sentences:
-Sentences which visually appear as a unit, but are segmented into separate XML parent elements for formatting.
+Sentences which visually appear as a unit, but are segmented into separate XML 
+parent elements for formatting.
 
 
 ### Modify document
@@ -177,6 +179,15 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 ````docxbox rpt foo.docx old new```` updates foo.docx  
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
+
+
+#### Lorem Ipsum
+
+Replace all text of an existing document by "Lorem Ipsum" dummy text, 
+helpful for generating DOCX documents for testing purposes:
+
+````docxbox lorem foo.docx```` updates foo.docx  
+````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
 
 
 ### Unzip DOCX: Extract all files, or only media files
@@ -228,7 +239,8 @@ See [Changelog](https://github.com/gyselroth/docxbox/blob/master/CHANGELOG.md)
 Bug Reporting and Feature Requests
 ----------------------------------
 
-If you find a bug or have an enhancement request, please file an issue on the github repository.
+If you find a bug or have an enhancement request, please file an issue on the 
+github repository.
 
 
 Third Party References

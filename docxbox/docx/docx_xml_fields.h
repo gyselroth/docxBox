@@ -3,8 +3,9 @@
 #ifndef DOCXBOX_DOCX_DOCX_XML_FIELDS_H_
 #define DOCXBOX_DOCX_DOCX_XML_FIELDS_H_
 
-#include <string>
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include "docx_xml.h"
 #include "../helper/helper_file.h"
@@ -16,7 +17,7 @@ class docx_xml_fields:docx_xml {
  public:
   docx_xml_fields(int argc, char **argv);
 
-  void CollectMergeFields(const std::string& path_xml, bool as_json = false);
+  void CollectMergeFields(const std::string& path_xml);
 
   void Output(bool as_json);
  private:

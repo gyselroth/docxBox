@@ -40,21 +40,21 @@ std::string String::Replace(
 }
 
 int String::ReplaceAll(
-    std::string &data,
-    const std::string &toSearch,
-    const std::string &replaceStr) {
+    std::string &haystack,
+    const std::string &needle,
+    const std::string &replacement) {
   // Get first occurrence
-  size_t pos = data.find(toSearch);
+  size_t pos = haystack.find(needle);
 
   int amount_replaced = 0;
 
   // Repeat till end is reached
   while (pos != std::string::npos) {
     // Replace this occurrence of Sub String
-    data.replace(pos, toSearch.size(), replaceStr);
+    haystack.replace(pos, needle.size(), replacement);
 
     // Get the next occurrence from the current position
-    pos = data.find(toSearch, pos + replaceStr.size());
+    pos = haystack.find(needle, pos + replacement.size());
 
     amount_replaced++;
   }
@@ -145,6 +145,29 @@ void String::Trim(std::string &s) {
   RTrim(s);
 }
 
+extern bool String::IsNumeric(
+    std::string str,
+    bool trim,
+    bool can_contain_spaces) {
+  if (str.empty()) return false;
+
+  if (trim) Trim(str);
+
+  if (str.empty() && !can_contain_spaces) return false;
+
+  for (size_t i = 0; i < str.length(); i++) {
+    if (!can_contain_spaces && str[i] == ' ') return false;
+
+    if (!IsNumeric(str[i])) return false;
+  }
+
+  return true;
+}
+
+extern bool String::IsNumeric(char c) {
+  return c >= 48 && c <= 57;
+}
+
 u_int32_t String::GetMaxLength(const std::vector<std::string>& strings) {
   u_int32_t max = 0;
 
@@ -155,6 +178,14 @@ u_int32_t String::GetMaxLength(const std::vector<std::string>& strings) {
   }
 
   return max;
+}
+
+int String::GetAmountWords(std::string str) {
+  Trim(str);
+
+  while (Contains(str, "  ")) ReplaceAll(str, "  ", " ");
+
+  return std::count(str.begin(), str.end(), ' ');
 }
 
 std::string String::Repeat(const std::string& str, u_int16_t amount) {

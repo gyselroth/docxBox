@@ -31,6 +31,7 @@ add_executable(docxbox
 
         docxbox/docx/docx_xml.cc
         docxbox/docx/docx_xml_fields.cc
+        docxbox/docx/docx_xml_lorem.cc
         docxbox/docx/docx_xml_to_plaintext.cc
         docxbox/docx/docx_xml_replace.cc
 

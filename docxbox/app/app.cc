@@ -129,6 +129,8 @@ bool App::Process() {
     case AppCommands::Command_ListMeta:return docx_archive->ListMeta(false);
     case AppCommands::Command_ListMetaAsJson:
       return docx_archive->ListMeta(true);
+    case AppCommands::Command_LoremIpsum:
+      return docx_archive->ReplaceAllTextByLoremIpsum();
     case AppCommands::Command_ModifyMeta:return docx_archive->ModifyMeta();
     case AppCommands::Command_ReplaceImage:return docx_archive->ReplaceImage();
     case AppCommands::Command_ReplaceText:return docx_archive->ReplaceText();

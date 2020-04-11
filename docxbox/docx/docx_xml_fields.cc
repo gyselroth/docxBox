@@ -5,7 +5,7 @@
 docx_xml_fields::docx_xml_fields(int argc, char **argv) : docx_xml(argc, argv) {
 }
 
-void docx_xml_fields::CollectMergeFields(const std::string& path_xml, bool as_json) {
+void docx_xml_fields::CollectMergeFields(const std::string& path_xml) {
   fields_in_current_xml_.clear();
 
   tinyxml2::XMLDocument doc;
@@ -43,7 +43,7 @@ void docx_xml_fields::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
 void docx_xml_fields::Output(bool as_json) {
   if (as_json) return OutputAsJson();
 
-  int i=0;
+  int i = 0;
 
   for (const auto& xml_filename : field_xml_files_) {
     std::cout
@@ -63,14 +63,14 @@ void docx_xml_fields::Output(bool as_json) {
 void docx_xml_fields::OutputAsJson() {
   std::cout << "{";
 
-  int i=0;
+  int i = 0;
 
   for (const auto& xml_filename : field_xml_files_) {
     if (i > 0) std::cout << ",";
 
     std::cout << "\"" << xml_filename << "\":[";
 
-      int j=0;
+      int j = 0;
 
       for (const auto& field : fields_in_xml_files_[i]) {
         if (j > 0) std::cout << ",";
