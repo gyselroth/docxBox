@@ -145,6 +145,17 @@ void String::Trim(std::string &s) {
   RTrim(s);
 }
 
+char* String::RemoveLastCharacter(char *word) {
+  int len = strlen(word);
+
+  if (len <= 1) return word;
+
+  std::string shortened = std::string(word);
+  shortened.pop_back();
+
+  return const_cast<char *>(shortened.c_str());
+}
+
 extern bool String::IsNumeric(
     std::string str,
     bool trim,

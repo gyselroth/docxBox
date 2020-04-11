@@ -123,8 +123,7 @@ std::string docx_xml_lorem::GetRandomText(
     if (i == index_second_last_word
       && (helper::String::EndsWith(word, ",")
           || helper::String::EndsWith(word, "."))) {
-      // Remove trailing "," or "." from second-last word
-      word[strlen(word) - 1] = 0;
+      word = helper::String::RemoveLastCharacter(word);
     }
 
     str += word;

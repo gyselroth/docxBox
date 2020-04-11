@@ -54,6 +54,8 @@ extern void LTrim(std::string &s);
 extern void RTrim(std::string &s);
 extern void Trim(std::string &s);
 
+extern char* RemoveLastCharacter(char *word);
+
 extern bool IsNumeric(
     std::string str,
     bool trim,
