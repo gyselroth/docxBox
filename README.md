@@ -183,8 +183,9 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 #### Lorem Ipsum
 
-Replace all text of an existing document by "Lorem Ipsum" dummy text, 
-helpful for generating DOCX documents for testing purposes:
+Replace all text of an existing document by similarly structured random 
+"Lorem Ipsum" dummy text, helpful for generating DOCX documents for testing 
+purposes:
 
 ````docxbox lorem foo.docx```` updates foo.docx  
 ````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
