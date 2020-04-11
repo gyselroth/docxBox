@@ -23,7 +23,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
       + [Modify meta data](#modify-meta-data)
       + [Replace images](#replace-images)
       + [Replace text](#replace-text)
-      + [Lorem Ipsum](#lorem-ipsum)
+      + [Randomize document text](#randomize-document-text)
   * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
@@ -181,7 +181,7 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
 
-#### Lorem Ipsum
+#### Randomize document text
 
 Replace all text of an existing document by similarly structured random 
 "Lorem Ipsum" dummy text, helpful for generating DOCX documents for testing 

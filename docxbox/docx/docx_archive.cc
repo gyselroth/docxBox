@@ -615,13 +615,12 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
     }
   }
 
-  std::string path_docx_out = argc_ >= 6
-                              // Result filename is given as argument
-                              ? helper::File::ResolvePath(
-          path_working_directory_,
-          argv_[5])
-                              // Overwrite original DOCX
-                              : path_docx_in_;
+  std::string path_docx_out =
+      argc_ >= 4
+      // Result filename is given as argument
+      ? helper::File::ResolvePath(path_working_directory_, argv_[3])
+      // Overwrite original DOCX
+      : path_docx_in_;
 
   if (!Zip(path_extract_, path_docx_out + "tmp")) {
     std::cout << "DOCX creation failed.\n";
