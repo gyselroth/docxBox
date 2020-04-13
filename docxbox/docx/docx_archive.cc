@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include "docx_archive.h"
-#include "docx_meta.h"
+#include "docx_xml_meta.h"
 #include "docx_xml_lorem.h"
 
 #include "../../vendor/miniz-cpp/zip_file.hpp"
@@ -247,7 +247,7 @@ bool docx_archive::ListMeta(bool as_json) {
 
   auto file_list = docx_file.infolist();
 
-  auto *meta = new docx_meta(argc_, argv_);
+  auto *meta = new docx_xml_meta(argc_, argv_);
   meta->SetPathExtract(path_extract_);
 
   if (as_json) {
@@ -293,7 +293,7 @@ bool docx_archive::ListMeta(bool as_json) {
 }
 
 bool docx_archive::ModifyMeta() {
-  auto *meta = new docx_meta(argc_, argv_);
+  auto *meta = new docx_xml_meta(argc_, argv_);
 
   if (!meta->InitModificationArguments()) return false;
 

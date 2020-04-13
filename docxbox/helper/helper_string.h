@@ -54,20 +54,21 @@ extern void LTrim(std::string &s);
 extern void RTrim(std::string &s);
 extern void Trim(std::string &s);
 
-extern char* RemoveLastCharacter(char *word);
-
 extern bool IsNumeric(
     std::string str,
     bool trim,
+    bool can_contain_punctuation,
     bool can_contain_spaces);
 
-extern bool IsNumeric(char c);
+extern bool IsAllUpper(const std::string& str);
+
+extern std::string ToUpper(const std::string &str);
 
 extern u_int32_t GetMaxLength(const std::vector<std::string>& strings);
 
-extern int GetAmountWords(std::string str);
-
 extern std::string Repeat(const std::string& str, u_int16_t amount);
+
+extern std::string GetRandomNumericString(u_int32_t length, bool starts_with_zero);
 
 }  // namespace String
 }  // namespace helper

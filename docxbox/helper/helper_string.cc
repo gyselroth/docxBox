@@ -145,20 +145,10 @@ void String::Trim(std::string &s) {
   RTrim(s);
 }
 
-char* String::RemoveLastCharacter(char *word) {
-  int len = strlen(word);
-
-  if (len <= 1) return word;
-
-  std::string shortened = std::string(word);
-  shortened.pop_back();
-
-  return const_cast<char *>(shortened.c_str());
-}
-
 extern bool String::IsNumeric(
     std::string str,
     bool trim,
+    bool can_contain_punctuation,
     bool can_contain_spaces) {
   if (str.empty()) return false;
 
@@ -166,17 +156,29 @@ extern bool String::IsNumeric(
 
   if (str.empty() && !can_contain_spaces) return false;
 
-  for (size_t i = 0; i < str.length(); i++) {
-    if (!can_contain_spaces && str[i] == ' ') return false;
+  for (char i : str) {
+    if ((can_contain_spaces && i == ' ')
+        || (can_contain_punctuation && ispunct(i))) continue;
 
-    if (!IsNumeric(str[i])) return false;
+    if (!isdigit(i)) return false;
   }
 
   return true;
 }
 
-extern bool String::IsNumeric(char c) {
-  return c >= 48 && c <= 57;
+bool String::IsAllUpper(const std::string& str) {
+  for (auto c : str)
+    if (isalpha(c) && !isupper(c)) return false;
+
+  return true;
+}
+
+std::string String::ToUpper(const std::string& str) {
+  std::string upper;
+
+  for (auto c : str) upper += toupper(c);
+
+  return upper;
 }
 
 u_int32_t String::GetMaxLength(const std::vector<std::string>& strings) {
@@ -191,14 +193,6 @@ u_int32_t String::GetMaxLength(const std::vector<std::string>& strings) {
   return max;
 }
 
-int String::GetAmountWords(std::string str) {
-  Trim(str);
-
-  while (Contains(str, "  ")) ReplaceAll(str, "  ", " ");
-
-  return std::count(str.begin(), str.end(), ' ');
-}
-
 std::string String::Repeat(const std::string& str, u_int16_t amount) {
   std::string out;
 
@@ -207,6 +201,20 @@ std::string String::Repeat(const std::string& str, u_int16_t amount) {
   }
 
   return out;
+}
+
+std::string String::GetRandomNumericString(
+    u_int32_t length,
+    bool starts_with_zero) {
+  std::string str = starts_with_zero
+    ? "0"
+    : std::to_string(std::rand() % 9);
+
+  if (length == 1) return str;
+
+  while (str.length() < length) str += std::to_string(std::rand() % 9);
+
+  return str;
 }
 
 }  // namespace helper

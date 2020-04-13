@@ -108,6 +108,9 @@ or ````docxbox lsdj foo.docx````
 
 #### List meta data
 
+docxBox displays only attributes that are contained within the current 
+DOCX file (this differs by DOCX version and application), also if empty.
+
 Output meta data of given DOCX:  
 
 ````docxbox ls foo.docx --meta````  
@@ -124,13 +127,14 @@ or ````docxbox lsmj foo.docx````
 
 #### Reference: Recognized meta attributes
 
-* XML schema (````<Properties xmlns ...```` of app.xml) 
-* Title (``<dc:title>`` of core.xml)
+* Authors: Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
+* Dates: Creation-, modification and print-date  
+  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml) 
+* Descriptions: Description, Keywords, Subject, Title   
+  (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
 * Language (``<dc:language>`` of core.xml) 
 * Revision (``<cp:revision>`` of core.xml)
-* Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
-* Creation-, modification and print-date  
-  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml)
+* XML schema (````<Properties xmlns ...```` of app.xml)
 
 
 ### Output plaintext
@@ -154,14 +158,17 @@ parent elements for formatting.
 
 DocxBox allows to modify existing attributes, or adds attributes if not present.
 
-* Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
-* Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
-* Set lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
-* Set revision attribute:       ````docxbox mm foo.docx revision 2````
-* Set lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
-* Set language attribute:       ````docxbox mm foo.docx language "en-US"````  
-* Set modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
 * Set creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
+* Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
+* Set description attribute:    ````docxbox mm foo.docx description "Foo bar baz"````  
+* Set keywords attribute:       ````docxbox mm foo.docx keywords "Foo bar baz"````  
+* Set language attribute:       ````docxbox mm foo.docx language "en-US"````  
+* Set lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
+* Set lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
+* Set modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
+* Set revision attribute:       ````docxbox mm foo.docx revision 2````
+* Set subject attribute:        ````docxbox mm foo.docx subject "Foo bar"````
+* Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````
 
 
 #### Replace images

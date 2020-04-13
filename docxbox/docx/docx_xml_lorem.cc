@@ -10,27 +10,48 @@ docx_xml_lorem::docx_xml_lorem(int argc, char **argv) : docx_xml(
 }
 
 // Replaces all text by random "Lorem Ipsum".
-// Note: Segmented text still looks ok: as upper/lower-case of first character
+// Note: Segmented text still looks ok:
+// surrounding space characters and upper/lower-case of first character
 // of each text item is maintained.
 bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
+  has_xml_changed_ = false;
+
   tinyxml2::XMLDocument doc;
 
-  std::string kPathXml = path_xml;
-  std::string xml = helper::File::GetFileContents(kPathXml);
+  bool is_document_xml = helper::String::EndsWith(path_xml, "document.xml");
 
-  if (!helper::String::Contains(xml, "w:document")
-      || !helper::String::Contains(xml, "w:body")) return true;
+  bool is_header_xml =
+      !is_document_xml
+          && helper::String::EndsWith(path_xml, "header1.xml");
 
+  if (!is_document_xml && !is_header_xml) return true;
+
+  std::string path_xml_tmp = path_xml;
+  std::string xml = helper::File::GetFileContents(path_xml_tmp);
+
+  if (is_document_xml) {
+    if (!helper::String::Contains(xml, "w:document")
+        || !helper::String::Contains(xml, "w:body")) return true;
+  } else {
+    if (!helper::String::Contains(xml, "w:hdr")) return true;
+  }
+  
   doc.LoadFile(path_xml.c_str());
 
   if (doc.ErrorID() != 0) return false;
 
-  tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")
-      ->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body;
+
+  if (is_document_xml) {
+    body = doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+  } else {
+    body = doc.FirstChildElement("w:hdr");
+  }
 
   RandomizeInTextNodes(body);
 
-  if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
+  if (has_xml_changed_
+      && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
     std::cout << "Error - Failed saving: " << path_xml << "\n";
 
     return false;
@@ -61,17 +82,9 @@ void docx_xml_lorem::RandomizeInTextNodes(tinyxml2::XMLElement *node) {
           u_int32_t text_length = text.length();
 
           if (text_length > 1) {
-            bool starts_with_space = text[0] == ' ';
-            bool is_numeric = helper::String::IsNumeric(text, true, true);
+            text = RandomizeText(text);
 
-            text = GetRandomText(
-                helper::String::GetAmountWords(text),
-                starts_with_space,
-                isupper(text[starts_with_space && text_length > 1 ? 1 : 0]),
-                helper::String::EndsWith(text, "."),
-                is_numeric,
-                is_numeric && text[starts_with_space ? 1 : 0] == '0',
-                text_length);
+            has_xml_changed_ = true;
           }
 
           sub_node->SetText(text.c_str());
@@ -85,81 +98,92 @@ void docx_xml_lorem::RandomizeInTextNodes(tinyxml2::XMLElement *node) {
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 
-std::string docx_xml_lorem::GetRandomText(
-    int amount_words,
-    bool starts_with_space,
-    bool start_uppercase,
-    bool end_with_dot,
-    bool is_numeric,
-    bool first_number_is_zero,
-    int amount_characters) {
-  std::string str;
+// These "segments" might be words,
+// but can also be or contain punctuation marks or numbers
+std::vector<std::string> docx_xml_lorem::SplitIntoSpaceSeparatedSegments(
+    std::string sentence) {
 
-  if (starts_with_space) str = " ";
+  helper::String::Trim(sentence);
 
-  if (is_numeric) {
-    // Maintain e.g. phone numbers numeric
-    return GetRandomNumber(
-        starts_with_space ? amount_characters - 1 : amount_characters,
-        first_number_is_zero);
-  }
+  while (helper::String::Contains(sentence, "  "))
+    helper::String::ReplaceAll(sentence, "  ", " ");
 
-  bool make_upper = start_uppercase;
-
-  unsigned int offset_word_start = 0;
-
-  std::string previous_word;
-
-  u_int32_t index_last_word = amount_words - 1;
-  u_int32_t index_second_last_word = index_last_word - 1;
-
-  for (int i = 0; i < amount_words; i++) {
-    char *word;
-
-    do {
-      word = const_cast<char *>(lorem_ipsum_[std::rand() % 68]);
-    } while (word == previous_word);
-
-    if (i == index_second_last_word
-      && (helper::String::EndsWith(word, ",")
-          || helper::String::EndsWith(word, "."))) {
-      word = helper::String::RemoveLastCharacter(word);
-    }
-
-    str += word;
-
-    previous_word = word;
-
-    if (i < index_last_word) str += ' ';
-
-    if (make_upper) str[offset_word_start] = toupper(str[offset_word_start]);
-
-    offset_word_start = str.length();
-
-    make_upper = helper::String::EndsWith(str, ". ");
-  }
-
-  if (helper::String::EndsWith(str, ","))
-    str = str.substr(0, str.length() - 1);
-
-  return end_with_dot && !helper::String::EndsWith(str, ".")
-    ? str + "."
-    : str;
+  return helper::String::Explode(sentence, ' ');
 }
 
-std::string docx_xml_lorem::GetRandomNumber(
-    u_int32_t amount_characters,
-    bool first_number_is_zero) {
-  std::string str;
+std::string docx_xml_lorem::RandomizeText(std::string str_in) {
+  std::vector<std::string> segments_in = SplitIntoSpaceSeparatedSegments(str_in);
+  u_int32_t amount_segments = segments_in.size();
+  u_int32_t index_last_word = amount_segments - 1;
 
-  if (first_number_is_zero) {
-    str = "0";
-    amount_characters--;
+  std::string segment_prev;
+
+  std::string str_out;
+
+  if (str_in[0] == ' ') str_out = " ";
+
+  int i = 0;
+
+  for (auto segment_in : segments_in) {
+    std::string word;
+
+    char lead_char_in = segment_in[0];
+
+    if (helper::String::IsNumeric(segment_in, false, true, true)) {
+      // Maintain e.g. phone numbers numeric
+      word = helper::String::GetRandomNumericString(
+          i == 0 && str_in[0] == ' '
+            ? segment_in.length() - 1
+            : segment_in.length(),
+          lead_char_in == '0');
+    } else {
+      word = GetRandomReplacement(segment_in, segment_prev);
+    }
+
+    str_out += word;
+
+    segment_prev = word;
+
+    if (i < index_last_word || str_in[str_in.length() - 1] == ' ')
+      // Separate segments by space, maintain overall trailing space
+      str_out += ' ';
+
+    i++;
+  }
+  
+  return str_out;
+}
+
+std::string docx_xml_lorem::GetRandomReplacement(
+    std::string &segment_in,
+    std::string &previous_segment) {
+  std::string segment;
+
+  do {
+    // Get random word of "Lorem Ipsum", prevent repeating a word
+    segment = lorem_ipsum_[rand() % 68];
+  } while (segment == previous_segment);
+
+  // Maintain lead character which is a punctuation
+  if (ispunct(segment_in[0])) {
+    segment = segment_in[0] + segment;
+  } else {
+    if (isalpha(segment[0])) {
+      // Maintain capitalization of segment
+      if (helper::String::IsAllUpper(segment_in)) {
+        segment = helper::String::ToUpper(segment);
+      } else {
+        segment[0] = isupper(segment_in[0])
+            ? toupper(segment[0])
+            : tolower(segment[0]);
+      }
+    }
   }
 
-  for (u_int32_t i = 0; i < amount_characters; i++) {
-    str += std::to_string(std::rand() % 9);
-  }
+  // Maintain trailing punctuation
+  char ch_trail_original = segment_in[ segment_in.length() - 1];
 
-  return str;
+  if (ispunct(ch_trail_original)) segment += ch_trail_original;
+
+  return segment;
 }

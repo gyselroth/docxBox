@@ -2,92 +2,149 @@
 
 #include <iostream>
 
-#include "docx_meta.h"
+#include "docx_xml_meta.h"
 
-docx_meta::docx_meta(int argc, char **argv) {
-  argc_ = argc;
-  argv_ = argv;
+docx_xml_meta::docx_xml_meta(int argc, char **argv) : docx_xml(
+    argc,
+    argv) {
 }
 
-void docx_meta::SetPathExtract(const std::string &path) {
+void docx_xml_meta::SetPathExtract(const std::string &path) {
   path_extract_ = path;
 }
 
-void docx_meta::SetOutputAsJson(bool output_as_json) {
+void docx_xml_meta::SetOutputAsJson(bool output_as_json) {
   output_as_json_ = output_as_json;
 }
 
-std::string docx_meta::SetCreatorFromCoreXml() {
-  return creator_ = helper::String::GetSubStrBetween(
-      core_xml_,
-      kWordMlCreatorLhs,
-      kWordMlCreatorRhs);
-}
+std::string docx_xml_meta::SetCreatedFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlCreatedLhs))
+    return date_creation_ = nullptr;
 
-std::string docx_meta::SetRevisionFromCoreXml() {
-  return revision_ = helper::String::GetSubStrBetween(
-      core_xml_,
-      kWordMlRevisionLhs,
-      kWordMlRevisionRhs);
-}
-
-std::string docx_meta::SetLanguageFromCoreXml() {
-  return language_ = helper::String::GetSubStrBetween(
-      core_xml_,
-      kWordMlLanguageLhs,
-      kWordMlLanguageRhs);
-}
-
-std::string docx_meta::SetLastPrintedFromCoreXml() {
-  return last_printed_ = helper::String::GetSubStrBetween(
-      core_xml_,
-      kWordMlLastPrintedLhs,
-      kWordMlLastPrintedRhs);
-}
-
-std::string docx_meta::SetModifiedFromCoreXml() {
-  return date_modification_ = helper::String::GetSubStrBetween(
-      core_xml_,
-      kWordMlModifiedLhs,
-      kWordMlModifiedRhs);
-}
-
-std::string docx_meta::SetLastModifiedByFromCoreXml() {
-  return last_modified_by_ = helper::String::GetSubStrBetween(
-      core_xml_,
-      kWordMlLastModifiedByLhs,
-      kWordMlLastModifiedByRhs);
-}
-
-std::string docx_meta::SetTitleFromCoreXml() {
-  return title_ = helper::String::GetSubStrBetween(
-      core_xml_,
-      kWordMlTitleLhs,
-      kWordMlTitleRhs);
-}
-
-std::string docx_meta::SetCreatedFromCoreXml() {
   return date_creation_ = helper::String::GetSubStrBetween(
       core_xml_,
       kWordMlCreatedLhs,
       kWordMlCreatedRhs);
 }
 
-docx_meta::Attribute docx_meta::ResolveAttributeByName(
+std::string docx_xml_meta::SetCreatorFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlCreatorLhs))
+    return creator_ = nullptr;
+
+  return creator_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlCreatorLhs,
+      kWordMlCreatorRhs);
+}
+
+std::string docx_xml_meta::SetDescriptionFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlDescriptionLhs))
+    return date_creation_ = nullptr;
+
+  return description_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlDescriptionLhs,
+      kWordMlDescriptionRhs);
+}
+
+std::string docx_xml_meta::SetKeywordsFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlKeywordsLhs))
+    return keywords_ = nullptr;
+
+  return keywords_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlKeywordsLhs,
+      kWordMlKeywordsRhs);
+}
+
+std::string docx_xml_meta::SetLanguageFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlLanguageLhs))
+    return language_ = nullptr;
+
+  return language_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlLanguageLhs,
+      kWordMlLanguageRhs);
+}
+
+std::string docx_xml_meta::SetLastModifiedByFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlLastModifiedByLhs))
+    return last_modified_by_ = nullptr;
+
+  return last_modified_by_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlLastModifiedByLhs,
+      kWordMlLastModifiedByRhs);
+}
+
+std::string docx_xml_meta::SetLastPrintedFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlLastPrintedLhs))
+    return last_printed_ = nullptr;
+
+  return last_printed_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlLastPrintedLhs,
+      kWordMlLastPrintedRhs);
+}
+
+std::string docx_xml_meta::SetModifiedFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlCreatedLhs))
+    return date_modification_ = nullptr;
+
+  return date_modification_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlModifiedLhs,
+      kWordMlModifiedRhs);
+}
+
+std::string docx_xml_meta::SetRevisionFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlRevisionLhs))
+    return revision_ = nullptr;
+
+  return revision_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlRevisionLhs,
+      kWordMlRevisionRhs);
+}
+
+std::string docx_xml_meta::SetSubjectFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlSubjectLhs))
+    return subject_ = nullptr;
+
+  return subject_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlSubjectLhs,
+      kWordMlSubjectRhs);
+}
+
+std::string docx_xml_meta::SetTitleFromCoreXml() {
+  if (!helper::String::Contains(core_xml_, kWordMlSubjectLhs))
+    return title_ = nullptr;
+
+  return title_ = helper::String::GetSubStrBetween(
+      core_xml_,
+      kWordMlTitleLhs,
+      kWordMlTitleRhs);
+}
+
+docx_xml_meta::Attribute docx_xml_meta::ResolveAttributeByName(
     const std::string &attribute) {
-  if (attribute == "title") return Attribute_Title;
-  if (attribute == "language") return Attribute_Language;
-  if (attribute == "revision") return Attribute_Revision;
-  if (attribute == "creator") return Attribute_Creator;
-  if (attribute == "lastModifiedBy") return Attribute_LastModifiedBy;
   if (attribute == "created") return Attribute_Created;
-  if (attribute == "modified") return Attribute_Modified;
+  if (attribute == "creator") return Attribute_Creator;
+  if (attribute == "description") return Attribute_Description;
+  if (attribute == "keywords") return Attribute_Keywords;
+  if (attribute == "language") return Attribute_Language;
+  if (attribute == "lastModifiedBy") return Attribute_LastModifiedBy;
   if (attribute == "lastPrinted") return Attribute_LastPrinted;
+  if (attribute == "modified") return Attribute_Modified;
+  if (attribute == "revision") return Attribute_Revision;
+  if (attribute == "subject") return Attribute_Subject;
+  if (attribute == "title") return Attribute_Title;
 
   return Attribute_Unknown;
 }
 
-bool docx_meta::InitModificationArguments() {
+bool docx_xml_meta::InitModificationArguments() {
   if (!docxbox::AppArguments::IsArgumentGiven(
       argc_,
       3,
@@ -115,7 +172,7 @@ bool docx_meta::InitModificationArguments() {
   return true;
 }
 
-bool docx_meta::UpsertAttribute() {
+bool docx_xml_meta::UpsertAttribute() {
   path_core_xml_ = path_extract_ + "/docProps/core.xml";
 
   LoadCoreXml(path_core_xml_);
@@ -125,7 +182,7 @@ bool docx_meta::UpsertAttribute() {
     : InsertAttribute(attribute_, value_);
 }
 
-bool docx_meta::UpdateAttribute(Attribute attribute, const std::string& value) {
+bool docx_xml_meta::UpdateAttribute(Attribute attribute, const std::string& value) {
   EnsureIsLoadedCoreXml();
 
   switch (attribute) {
@@ -196,7 +253,7 @@ bool docx_meta::UpdateAttribute(Attribute attribute, const std::string& value) {
   }
 }
 
-bool docx_meta::InsertAttribute(Attribute attribute, const std::string& value) {
+bool docx_xml_meta::InsertAttribute(Attribute attribute, const std::string& value) {
   EnsureIsLoadedCoreXml();
 
   std::string replacement;
@@ -287,50 +344,56 @@ bool docx_meta::InsertAttribute(Attribute attribute, const std::string& value) {
 }
 
 // Check whether core.xml of current DOCX contains given attribute
-bool docx_meta::AttributeExistsInCoreXml(Attribute attribute) {
+bool docx_xml_meta::AttributeExistsInCoreXml(Attribute attribute) {
   EnsureIsLoadedCoreXml();
 
   switch (attribute) {
-    case Attribute_Title:
-      return helper::String::Contains(core_xml_, kWordMlTitleLhs);
-    case Attribute_Language:
-      return helper::String::Contains(core_xml_, kWordMlLanguageLhs);
-    case Attribute_Revision:
-      return helper::String::Contains(core_xml_, kWordMlRevisionLhs);
-    case Attribute_Creator:
-      return helper::String::Contains(core_xml_, kWordMlCreatorLhs);
-    case Attribute_LastModifiedBy:
-      return helper::String::Contains(core_xml_, kWordMlLastModifiedByLhs);
     case Attribute_Created:
       return helper::String::Contains(core_xml_, kWordMlCreatedLhs);
-    case Attribute_Modified:
-      return helper::String::Contains(core_xml_, kWordMlModifiedLhs);
+    case Attribute_Creator:
+      return helper::String::Contains(core_xml_, kWordMlCreatorLhs);
+    case Attribute_Description:
+      return helper::String::Contains(core_xml_, kWordMlDescriptionLhs);
+    case Attribute_Language:
+      return helper::String::Contains(core_xml_, kWordMlLanguageLhs);
+    case Attribute_Keywords:
+      return helper::String::Contains(core_xml_, kWordMlKeywordsLhs);
+    case Attribute_LastModifiedBy:
+      return helper::String::Contains(core_xml_, kWordMlLastModifiedByLhs);
     case Attribute_LastPrinted:
       return helper::String::Contains(core_xml_, kWordMlLastPrintedLhs);
+    case Attribute_Modified:
+      return helper::String::Contains(core_xml_, kWordMlModifiedLhs);
+    case Attribute_Revision:
+      return helper::String::Contains(core_xml_, kWordMlRevisionLhs);
+    case Attribute_Title:
+      return helper::String::Contains(core_xml_, kWordMlTitleLhs);
+    case Attribute_Subject:
+      return helper::String::Contains(core_xml_, kWordMlSubjectLhs);
     default:return false;
   }
 }
 
-void docx_meta::EnsureIsLoadedCoreXml() {
+void docx_xml_meta::EnsureIsLoadedCoreXml() {
   if (core_xml_.empty()) {
     path_core_xml_ = path_extract_ + "/docProps/core.xml";
     core_xml_ = helper::File::GetFileContents(path_core_xml_);
   }
 }
 
-void docx_meta::LoadCoreXml(std::string path) {
+void docx_xml_meta::LoadCoreXml(std::string path) {
   core_xml_ = helper::File::GetFileContents(path);
 }
 
-bool docx_meta::SaveCoreXml() {
+bool docx_xml_meta::SaveCoreXml() {
   if (helper::File::FileExists(core_xml_))
     helper::File::Remove(path_core_xml_.c_str());
 
   return helper::File::WriteToNewFile(path_core_xml_, core_xml_);
 }
 
-void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
-                                  std::string app_xml) {
+void docx_xml_meta::CollectFromAppXml(std::string path_app_xml_current,
+                                      std::string app_xml) {
   // Attempt output after collecting meta data from app.xml and core.xml,
   // but when parsing the 2nd app.xml w/o having parsed a rel. core.xml:
   // output prematurely
@@ -360,7 +423,7 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
   if (has_collected_from_app_xml_ && has_collected_from_core_xml_) Output();
 }
 
-void docx_meta::CollectFromCoreXml(std::string path_core_xml_current) {
+void docx_xml_meta::CollectFromCoreXml(std::string path_core_xml_current) {
   // Attempt output after collecting meta data from app.xml and core.xml,
   // but when parsing the 2nd core.xml w/o having parsed a rel. app.xml:
   // output prematurely
@@ -369,20 +432,23 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current) {
   path_core_xml_ = std::move(path_core_xml_current);
 
   SetCreatedFromCoreXml();
-  SetTitleFromCoreXml();
-  SetLastModifiedByFromCoreXml();
-  SetModifiedFromCoreXml();
-  SetLastPrintedFromCoreXml();
-  SetLanguageFromCoreXml();
-  SetRevisionFromCoreXml();
   SetCreatorFromCoreXml();
+  SetDescriptionFromCoreXml();
+  SetKeywordsFromCoreXml();
+  SetLanguageFromCoreXml();
+  SetLastModifiedByFromCoreXml();
+  SetLastPrintedFromCoreXml();
+  SetModifiedFromCoreXml();
+  SetRevisionFromCoreXml();
+  SetSubjectFromCoreXml();
+  SetTitleFromCoreXml();
 
   has_collected_from_core_xml_ = true;
 
   if (has_collected_from_app_xml_ && has_collected_from_core_xml_) Output();
 }
 
-void docx_meta::Output() {
+void docx_xml_meta::Output() {
   if (has_collected_from_app_xml_ || has_collected_from_core_xml_) {
     if (output_as_json_)
       OutputJson();
@@ -393,7 +459,7 @@ void docx_meta::Output() {
   Clear();
 }
 
-void docx_meta::OutputPlain() {
+void docx_xml_meta::OutputPlain() {
   std::cout
       << (has_collected_from_app_xml_
           ? path_app_xml_ + ":\n"
@@ -414,7 +480,7 @@ void docx_meta::OutputPlain() {
           : "") << "\n";
 }
 
-void docx_meta::OutputJson() {
+void docx_xml_meta::OutputJson() {
   std::cout
       << "["
       << (has_collected_from_app_xml_
@@ -434,7 +500,7 @@ void docx_meta::OutputJson() {
           : "") << "]";
 }
 
-void docx_meta::Clear() {
+void docx_xml_meta::Clear() {
   has_collected_from_app_xml_ = false;
   has_collected_from_core_xml_ = false;
 
