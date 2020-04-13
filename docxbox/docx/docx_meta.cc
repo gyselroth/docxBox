@@ -86,7 +86,9 @@ bool docx_meta::UpsertAttribute() {
     : InsertCoreAttribute(attribute_, value_);
 }
 
-bool docx_meta::UpdateCoreAttribute(Attribute attribute, const std::string& value) {
+bool docx_meta::UpdateCoreAttribute(
+    Attribute attribute,
+    const std::string& value) {
   EnsureIsLoadedCoreXml();
 
   const char *lhs_of_value;
@@ -271,11 +273,25 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current) {
 
   FetchAttributeFromCoreXml(kWordMlCreatedLhs, kWordMlCreatedRhs, "created");
   FetchAttributeFromCoreXml(kWordMlCreatorLhs, kWordMlCreatorRhs, "creator");
-  FetchAttributeFromCoreXml(kWordMlDescriptionLhs, kWordMlDescriptionRhs, "description");
+
+  FetchAttributeFromCoreXml(
+      kWordMlDescriptionLhs,
+      kWordMlDescriptionRhs,
+      "description");
+
   FetchAttributeFromCoreXml(kWordMlKeywordsLhs, kWordMlKeywordsRhs, "keywords");
   FetchAttributeFromCoreXml(kWordMlLanguageLhs, kWordMlLanguageRhs, "language");
-  FetchAttributeFromCoreXml(kWordMlLastModifiedByLhs, kWordMlLastModifiedByRhs, "modifiedBy");
-  FetchAttributeFromCoreXml(kWordMlLastPrintedLhs, kWordMlLastPrintedRhs, "lastPrinted");
+
+  FetchAttributeFromCoreXml(
+      kWordMlLastModifiedByLhs,
+      kWordMlLastModifiedByRhs,
+      "modifiedBy");
+
+  FetchAttributeFromCoreXml(
+      kWordMlLastPrintedLhs,
+      kWordMlLastPrintedRhs,
+      "lastPrinted");
+
   FetchAttributeFromCoreXml(kWordMlModifiedLhs, kWordMlModifiedRhs, "modified");
   FetchAttributeFromCoreXml(kWordMlRevisionLhs, kWordMlRevisionRhs, "revision");
   FetchAttributeFromCoreXml(kWordMlSubjectLhs, kWordMlSubjectRhs, "subject");
@@ -299,7 +315,9 @@ void docx_meta::Output() {
 
 void docx_meta::OutputPlain() {
   for (std::tuple<std::string, std::string> attribute : attributes_) {
-    std::cout << std::get<0>(attribute) << ": " << std::get<1>(attribute) << "\n";
+    std::cout
+      << std::get<0>(attribute) << ": "
+      << std::get<1>(attribute) << "\n";
   }
 }
 
