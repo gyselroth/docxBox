@@ -15,7 +15,7 @@
 #include "docx_xml_replace.h"
 
 #include "docx_fontTable.h"
-#include "docx_xml_meta.h"
+#include "docx_meta.h"
 #include "docx_xml.h"
 
 #include "../helper/helper_file.h"

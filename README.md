@@ -109,7 +109,7 @@ or ````docxbox lsdj foo.docx````
 #### List meta data
 
 docxBox displays only attributes that are contained within the current 
-DOCX file (this differs by DOCX version and application), also if empty.
+DOCX file (this differs by DOCX version and application), also if given empty.
 
 Output meta data of given DOCX:  
 

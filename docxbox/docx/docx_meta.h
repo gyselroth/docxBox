@@ -53,7 +53,7 @@ static const char *const kWordMlTitleRhs = "</dc:title>";
 static const char *const kWordMlXmlSchemeLhs = "<Properties xmlns=\"";
 static const char *const kWordMlXmlSchemeRhs = "\" ";
 
-class docx_xml_meta:docx_xml {
+class docx_meta {
  public:
   // Known (supported for modification) attributes
   enum Attribute {
@@ -71,7 +71,7 @@ class docx_xml_meta:docx_xml {
     Attribute_Unknown
   };
 
-  docx_xml_meta(int argc, char **argv);
+  docx_meta(int argc, char **argv);
 
   void SetPathExtract(const std::string &path_extract);
   void SetOutputAsJson(bool output_as_json);
@@ -79,17 +79,10 @@ class docx_xml_meta:docx_xml {
   void LoadCoreXml(std::string path);
   bool SaveCoreXml();
 
-  std::string SetCreatedFromCoreXml();
-  std::string SetCreatorFromCoreXml();
-  std::string SetDescriptionFromCoreXml();
-  std::string SetKeywordsFromCoreXml();
-  std::string SetLanguageFromCoreXml();
-  std::string SetLastModifiedByFromCoreXml();
-  std::string SetLastPrintedFromCoreXml();
-  std::string SetModifiedFromCoreXml();
-  std::string SetRevisionFromCoreXml();
-  std::string SetSubjectFromCoreXml();
-  std::string SetTitleFromCoreXml();
+  std::string FetchAttributeFromCoreXml(
+      const char* lhs_of_value,
+      const char* rhs_of_value,
+      const std::string &label);
 
   bool InitModificationArguments();
   bool UpsertAttribute();
@@ -120,29 +113,19 @@ class docx_xml_meta:docx_xml {
   std::string value_;
 
   // Extracted meta values, string if contained / nullptr if not contained
-  std::string creator_;
-  std::string date_creation_;
-  std::string date_modification_;
-  std::string description_;
-  std::string keywords_;
-  std::string language_;
-  std::string last_modified_by_;
-  std::string last_printed_;
-  std::string revision_;
-  std::string subject_;
-  std::string title_;
-  std::string xml_schema_;
+  std::vector<std::tuple<std::string, std::string>> attributes_;
 
   void OutputPlain();
   void OutputJson();
+
   void Clear();
 
-  static docx_xml_meta::Attribute ResolveAttributeByName(
+  static docx_meta::Attribute ResolveAttributeByName(
       const std::string &attribute);
 
   bool AttributeExistsInCoreXml(Attribute attribute);
-  bool UpdateAttribute(Attribute attribute, const std::string& value);
-  bool InsertAttribute(Attribute attribute, const std::string& value);
+  bool UpdateCoreAttribute(Attribute attribute, const std::string& value);
+  bool InsertCoreAttribute(Attribute attribute, const std::string& value);
   void EnsureIsLoadedCoreXml();
 };
 

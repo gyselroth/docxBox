@@ -27,7 +27,7 @@ add_executable(docxbox
 
         docxbox/docx/docx_archive.cc
         docxbox/docx/docx_fontTable.cc
-        docxbox/docx/docx_xml_meta.cc
+        docxbox/docx/docx_meta.cc
 
         docxbox/docx/docx_xml.cc
         docxbox/docx/docx_xml_fields.cc

@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include "docx_archive.h"
-#include "docx_xml_meta.h"
+#include "docx_meta.h"
 #include "docx_xml_lorem.h"
 
 #include "../../vendor/miniz-cpp/zip_file.hpp"
@@ -247,14 +247,10 @@ bool docx_archive::ListMeta(bool as_json) {
 
   auto file_list = docx_file.infolist();
 
-  auto *meta = new docx_xml_meta(argc_, argv_);
+  auto *meta = new docx_meta(argc_, argv_);
   meta->SetPathExtract(path_extract_);
 
-  if (as_json) {
-    meta->SetOutputAsJson(true);
-
-    std::cout << "[";
-  }
+  if (as_json) meta->SetOutputAsJson(true);
 
   int index_app = 0;
   int index_core = 0;
@@ -285,15 +281,13 @@ bool docx_archive::ListMeta(bool as_json) {
   // Output anything that hasn't been yet
   meta->Output();
 
-  if (as_json) std::cout << "]";
-
   miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
   return true;
 }
 
 bool docx_archive::ModifyMeta() {
-  auto *meta = new docx_xml_meta(argc_, argv_);
+  auto *meta = new docx_meta(argc_, argv_);
 
   if (!meta->InitModificationArguments()) return false;
 
@@ -536,8 +530,9 @@ bool docx_archive::ReplaceImage() {
 }
 
 bool docx_archive::ReplaceText() {
-  if (
-      !docxbox::AppArguments::IsArgumentGiven(
+
+  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX Filename")
+      || !docxbox::AppArguments::IsArgumentGiven(
           argc_,
           3,
           "String to be found (and replaced)")
