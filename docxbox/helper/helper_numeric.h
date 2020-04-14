@@ -3,6 +3,9 @@
 #ifndef DOCXBOX_HELPER_HELPER_NUMERIC_H_
 #define DOCXBOX_HELPER_HELPER_NUMERIC_H_
 
+#include <cstdio>
+#include <cstdint>
+
 namespace helper {
 namespace Numeric {
 

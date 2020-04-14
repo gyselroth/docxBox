@@ -1,7 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <cmath>
-#include "helper_string.h"
+#include <docxbox/helper/helper_string.h>
 
 namespace helper {
 

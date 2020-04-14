@@ -7,9 +7,9 @@
 #include <iostream>
 #include <cstring>
 
-#include "app_argument.h"
-#include "app_command.h"
-#include "app_help.h"
+#include "./app_argument.h"
+#include "./app_command.h"
+#include "./app_help.h"
 #include "../docx/docx_archive.h"
 #include "../config.h"
 
@@ -34,7 +34,7 @@ class App {
   AppCommands *command_;
 
   AppCommands::Commands PreProcess(AppArguments *arguments,
-                                   AppCommands::Commands &command) const;
+                                   const AppCommands::Commands &command) const;
 };
 
 }  // namespace docxbox

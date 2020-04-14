@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "app_argument.h"
+#include <docxbox/app/app_argument.h>
 
 namespace docxbox {
 

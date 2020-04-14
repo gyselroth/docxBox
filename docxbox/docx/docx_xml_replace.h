@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "docx_xml.h"
+#include "./docx_xml.h"
 #include "../helper/helper_file.h"
 
 #include "../helper/helper_string.h"

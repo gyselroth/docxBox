@@ -1,8 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <iostream>
-
-#include "docx_meta.h"
+#include <docxbox/docx/docx_meta.h>
 
 docx_meta::docx_meta(int argc, char **argv) {
     argc_ = argc;
@@ -18,16 +16,16 @@ void docx_meta::SetOutputAsJson(bool output_as_json) {
 }
 
 std::string docx_meta::FetchAttributeFromCoreXml(
-    const char* lhs_of_value, 
+    const char* lhs_of_value,
     const char* rhs_of_value,
     const std::string &label) {
   if (!helper::String::Contains(core_xml_, lhs_of_value)) return "";
 
   std::string value =
       helper::String::GetSubStrBetween(core_xml_, lhs_of_value, rhs_of_value);
-  
+
   if (!label.empty()) attributes_.emplace_back(label, value);
-  
+
   return value;
 }
 
@@ -49,15 +47,11 @@ docx_meta::Attribute docx_meta::ResolveAttributeByName(
 }
 
 bool docx_meta::InitModificationArguments() {
-  if (!docxbox::AppArguments::IsArgumentGiven(
-      argc_,
-      2,
-      "DOCX filename")
+  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX filename")
       || !docxbox::AppArguments::IsArgumentGiven(
-      argc_,
-      3,
-      "Meta attribute to be set"))
-    return false;
+          argc_,
+          3,
+          "Meta attribute to be set")) return false;
 
   attribute_ = ResolveAttributeByName(argv_[3]);
 
@@ -257,7 +251,7 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
 
   helper::String::Replace(
       xml_schema,
-      (std::string("/") + segments[ segments.size()-1] ).c_str(),
+      (std::string("/") + segments[ segments.size() - 1]).c_str(),
       "");
 
   attributes_.emplace_back("xmlSchema", xml_schema);

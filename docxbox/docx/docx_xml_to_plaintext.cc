@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "docx_xml_to_plaintext.h"
+#include <docxbox/docx/docx_xml_to_plaintext.h>
 
 docx_xml_to_plaintext::docx_xml_to_plaintext(int argc, char **argv) : docx_xml(
     argc,

@@ -7,4 +7,4 @@
 #define DOCXBOX_VERSION_MINOR "0"
 #define DOCXBOX_VERSION_PATCH "1"
 
-#endif // DOCXBOX_CONFIG_H_
+#endif  // DOCXBOX_CONFIG_H_
