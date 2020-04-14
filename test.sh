@@ -27,6 +27,12 @@ bats ./test/functional/lsf.bats.sh
 printf "\n\033[4mTest listing referenced fonts in DOCX as JSON\033[0m\n"
 bats ./test/functional/lsfj.bats.sh
 
+printf "\n\033[4mTest listing merge fields in DOCX\033[0m\n"
+bats ./test/functional/lsg.bats.sh
+
+printf "\n\033[4mTest listing merge fields in DOCX as JSON\033[0m\n"
+bats ./test/functional/lsgj.bats.sh
+
 printf "\n\033[4mTest listing images in DOCX\033[0m\n"
 bats ./test/functional/lsi.bats.sh
 
