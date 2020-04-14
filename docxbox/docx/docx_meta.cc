@@ -283,7 +283,7 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current) {
   FetchAttributeFromCoreXml(
       kWordMlLastModifiedByLhs,
       kWordMlLastModifiedByRhs,
-      "modifiedBy");
+      "lastModifiedBy");
 
   FetchAttributeFromCoreXml(
       kWordMlLastPrintedLhs,
