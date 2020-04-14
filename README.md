@@ -10,15 +10,12 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 
 * [Planned features](#planned-features)
 * [Commands](#commands)
-  * [List files, referenced fonts, images, meta data](#list-files-and-directories-referenced-fonts-images-meta-data)
+  * [List DOCX contents](#list-docx-contents)
     + [Output list of files](#output-list-of-files)
-    + [Output files list as JSON](#output-files-list-as-json)
     + [Output list of referenced fonts](#output-list-of-referenced-fonts)
-    + [Output list of referenced fonts as JSON](#output-list-of-referenced-fonts-as-json)
     + [List images information](#list-images-information)
-    + [List images information as JSON](#list-images-information-as-json)
+    + [List fields](#list-fields)
     + [List meta data](#list-meta-data)
-    + [List meta data as JSON](#list-meta-data-as-json)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
   * [Output plaintext](#output-plaintext)
       + [Output plaintext segments](#output-plaintext-segments)
@@ -26,6 +23,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
       + [Modify meta data](#modify-meta-data)
       + [Replace images](#replace-images)
       + [Replace text](#replace-text)
+      + [Randomize document text](#randomize-document-text)
   * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
@@ -40,7 +38,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 Planned Features
 ----------------
 
-* v0.0.2: Generate and insert/replace more complex DOCX markup elements (merge-fields, tables)
+* v0.0.2: Generate and insert/replace more complex DOCX markup elements (fields, tables)
 * v0.1.0: Batch process sequences of manipulation operations
 * v0.1.0: Add optional configuration options via environment vars
 * v0.1.0: (Optional) logging of operations
@@ -51,7 +49,7 @@ Planned Features
 Commands
 --------
 
-### List files, referenced fonts, images, meta data
+### List DOCX contents
 
 #### Output list of files
 
@@ -59,7 +57,7 @@ Lists files (and directories) contained within a given DOCX, and their attribute
 
 ````docxbox ls foo.docx````
 
-#### Output files list as JSON
+To output as JSON:
 
 ````docxbox ls foo.docx --json````  
 or ````docxbox ls foo.docx -j````  
@@ -71,7 +69,7 @@ or ````docxbox lsj foo.docx````
 or ````docxbox ls foo.docx -f````  
 or ````docxbox lsf foo.docx````  
 
-#### Output list of referenced fonts as JSON
+To output as JSON:
 
 ````docxbox ls foo.docx --fonts --json````  
 or ````docxbox ls foo.docx -fj````  
@@ -87,7 +85,7 @@ Output list of contained images
 or ````docxbox ls foo.docx -i````  
 or ````docxbox lsi foo.docx````
 
-#### List images information as JSON
+To output as JSON:
 
 ````docxbox ls foo.docx --images --json````  
 ````docxbox ls foo.docx -ij````  
@@ -95,7 +93,23 @@ or ````docxbox lsi foo.docx --json````
 or ````docxbox lsi foo.docx -j````  
 or ````docxbox lsij foo.docx````
 
+#### List fields
+
+````docxbox ls foo.docx --fields````  
+or ````docxbox ls foo.docx -d````  
+or ````docxbox lsd foo.docx````  
+
+To output as JSON:  
+
+````docxbox ls foo.docx --fields --json````  
+or ````docxbox ls foo.docx -dj````  
+or ````docxbox lsd foo.docx --json````  
+or ````docxbox lsdj foo.docx````  
+
 #### List meta data
+
+docxBox displays only attributes that are contained within the current 
+DOCX file (this differs by DOCX version and application), also if given empty.
 
 Output meta data of given DOCX:  
 
@@ -103,7 +117,7 @@ Output meta data of given DOCX:
 or ````docxbox ls foo.docx -m````  
 or ````docxbox lsm foo.docx````
 
-#### List meta data as JSON
+To output as JSON:
 
 ````docxbox ls foo.docx --meta --json````  
 or ````docxbox ls foo.docx -mj````  
@@ -113,13 +127,14 @@ or ````docxbox lsmj foo.docx````
 
 #### Reference: Recognized meta attributes
 
-* XML schema (````<Properties xmlns ...```` of app.xml) 
-* Title (``<dc:title>`` of core.xml)
+* Authors: Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
+* Dates: Creation-, modification and print-date  
+  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml) 
+* Descriptions: Description, Keywords, Subject, Title   
+  (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
 * Language (``<dc:language>`` of core.xml) 
 * Revision (``<cp:revision>`` of core.xml)
-* Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
-* Creation-, modification and print-date  
-  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml)
+* XML schema (````<Properties xmlns ...```` of app.xml)
 
 
 ### Output plaintext
@@ -133,7 +148,8 @@ or ````docxbox txt foo.docx -s````
 
 Outputs the text from document, w/ markup sections separated by newlines.
 This can be helpful to identify "segmented" sentences:
-Sentences which visually appear as a unit, but are segmented into separate XML parent elements for formatting.
+Sentences which visually appear as a unit, but are segmented into separate XML 
+parent elements for formatting.
 
 
 ### Modify document
@@ -142,14 +158,17 @@ Sentences which visually appear as a unit, but are segmented into separate XML p
 
 DocxBox allows to modify existing attributes, or adds attributes if not present.
 
-* Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````  
-* Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
-* Set lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
-* Set revision attribute:       ````docxbox mm foo.docx revision 2````
-* Set lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
-* Set language attribute:       ````docxbox mm foo.docx language "en-US"````  
-* Set modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
 * Set creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
+* Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
+* Set description attribute:    ````docxbox mm foo.docx description "Foo bar baz"````  
+* Set keywords attribute:       ````docxbox mm foo.docx keywords "Foo bar baz"````  
+* Set language attribute:       ````docxbox mm foo.docx language "en-US"````  
+* Set lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
+* Set lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
+* Set modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
+* Set revision attribute:       ````docxbox mm foo.docx revision 2````
+* Set subject attribute:        ````docxbox mm foo.docx subject "Foo bar"````
+* Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````
 
 
 #### Replace images
@@ -167,6 +186,16 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 ````docxbox rpt foo.docx old new```` updates foo.docx  
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
+
+
+#### Randomize document text
+
+Replace all text of an existing document by similarly structured random 
+"Lorem Ipsum" dummy text, helpful for generating DOCX documents for testing 
+purposes:
+
+````docxbox lorem foo.docx```` updates foo.docx  
+````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
 
 
 ### Unzip DOCX: Extract all files, or only media files
@@ -218,7 +247,8 @@ See [Changelog](https://github.com/gyselroth/docxbox/blob/master/CHANGELOG.md)
 Bug Reporting and Feature Requests
 ----------------------------------
 
-If you find a bug or have an enhancement request, please file an issue on the github repository.
+If you find a bug or have an enhancement request, please file an issue on the 
+github repository.
 
 
 Third Party References
