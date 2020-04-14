@@ -51,6 +51,10 @@ docx_meta::Attribute docx_meta::ResolveAttributeByName(
 bool docx_meta::InitModificationArguments() {
   if (!docxbox::AppArguments::IsArgumentGiven(
       argc_,
+      2,
+      "DOCX filename")
+      || !docxbox::AppArguments::IsArgumentGiven(
+      argc_,
       3,
       "Meta attribute to be set"))
     return false;
