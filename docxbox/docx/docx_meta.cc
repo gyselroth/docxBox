@@ -93,9 +93,15 @@ bool docx_meta::UpsertAttribute() {
 
   LoadCoreXml(path_core_xml_);
 
-  return AttributeExistsInCoreXml(attribute_)
-    ? UpdateCoreAttribute(attribute_, value_)
-    : InsertCoreAttribute(attribute_, value_);
+  try {
+    return AttributeExistsInCoreXml(attribute_)
+           ? UpdateCoreAttribute(attribute_, value_)
+           : InsertCoreAttribute(attribute_, value_);
+  } catch (std::string &message) {
+    std::cout << message;
+
+    return false;
+  }
 }
 
 bool docx_meta::UpdateCoreAttribute(
@@ -184,13 +190,16 @@ bool docx_meta::InsertCoreAttribute(
       lhs_of_value = kWordMlLastPrintedLhs;
       rhs_of_value = kWordMlLastPrintedRhs;
       break;
-    default:return false;
+    default:
+      throw "Attribute unknown";
   }
 
-  core_xml_ = helper::String::Replace(
+  helper::String::Replace(
       core_xml_,
       kWordMlCorePropertiesRhs,
       (lhs_of_value + value + rhs_of_value + kWordMlCorePropertiesRhs).c_str());
+
+  return true;
 }
 
 // Check whether core.xml of current DOCX contains given attribute
@@ -239,7 +248,10 @@ bool docx_meta::SaveCoreXml() {
   if (helper::File::FileExists(core_xml_))
     helper::File::Remove(path_core_xml_.c_str());
 
-  return helper::File::WriteToNewFile(path_core_xml_, core_xml_);
+  if (!helper::File::WriteToNewFile(path_core_xml_, core_xml_))
+    throw "Failed saving: " + path_core_xml_;
+
+  return true;
 }
 
 void docx_meta::CollectFromAppXml(std::string path_app_xml_current,

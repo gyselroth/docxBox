@@ -299,7 +299,11 @@ bool docx_archive::ModifyMeta() {
   if (!meta->UpsertAttribute()) return false;
 
   // Modifiable meta attributes are in docProps/core.xml
-  meta->SaveCoreXml();
+  try {
+    meta->SaveCoreXml();
+  } catch (std::string &message) {
+    std::cout << message;
+  }
 
   std::string path_docx_out;
 

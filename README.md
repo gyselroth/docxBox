@@ -172,6 +172,9 @@ DocxBox allows to modify existing attributes, or adds attributes if not present.
 * Set subject attribute:        ````docxbox mm foo.docx subject "Foo bar"````
 * Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````
 
+To alter/insert an attribute and save the modified document to a new file:  
+````docxbox mm foo.docx <attribute> <value> new.docx````
+
 
 #### Replace images
 
