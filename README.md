@@ -134,7 +134,9 @@ or ````docxbox lsmj foo.docx````
   (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
 * Language (``<dc:language>`` of core.xml) 
 * Revision (``<cp:revision>`` of core.xml)
-* XML schema (````<Properties xmlns ...```` of app.xml)
+* Application created with, name of used template,
+  XML schema of document (``<Application>``, ``<Template>`` and 
+  ``<Properties xmlns ...`` of app.xml)
 
 
 ### Output plaintext
@@ -169,6 +171,9 @@ DocxBox allows to modify existing attributes, or adds attributes if not present.
 * Set revision attribute:       ````docxbox mm foo.docx revision 2````
 * Set subject attribute:        ````docxbox mm foo.docx subject "Foo bar"````
 * Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````
+
+To alter/insert an attribute and save the modified document to a new file:  
+````docxbox mm foo.docx <attribute> <value> new.docx````
 
 
 #### Replace images
