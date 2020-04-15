@@ -15,6 +15,20 @@ void docx_meta::SetOutputAsJson(bool output_as_json) {
   output_as_json_ = output_as_json;
 }
 
+std::string docx_meta::FetchAttributeFromAppXml(
+    const char* lhs_of_value,
+    const char* rhs_of_value,
+    const std::string &label) {
+  if (!helper::String::Contains(app_xml_, lhs_of_value)) return "";
+
+  std::string value =
+      helper::String::GetSubStrBetween(app_xml_, lhs_of_value, rhs_of_value);
+
+  if (!label.empty()) attributes_.emplace_back(label, value);
+
+  return value;
+}
+
 std::string docx_meta::FetchAttributeFromCoreXml(
     const char* lhs_of_value,
     const char* rhs_of_value,
@@ -237,6 +251,26 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
 
   path_app_xml_ = std::move(path_app_xml_current);
 
+  app_xml_ = app_xml;
+  FetchAttributeFromAppXml(
+      kWordMlApplicationLhs,
+      kWordMlApplicationRhs,
+      "Application");
+
+  attributes_.emplace_back("xmlSchema", ExtractXmlSchemaFromAppXml(app_xml));
+
+  app_xml_ = app_xml;
+  FetchAttributeFromAppXml(
+      kWordMlTemplateLhs,
+      kWordMlTemplateRhs,
+      "Template");
+
+  has_collected_from_app_xml_ = true;
+
+  if (has_collected_from_app_xml_ && has_collected_from_core_xml_) Output();
+}
+
+std::string docx_meta::ExtractXmlSchemaFromAppXml(std::string &app_xml) const {
   u_int32_t offset = 0;
 
   std::string xml_schema = helper::String::GetSubStrBetween(
@@ -253,12 +287,7 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
       xml_schema,
       (std::string("/") + segments[ segments.size() - 1]).c_str(),
       "");
-
-  attributes_.emplace_back("xmlSchema", xml_schema);
-
-  has_collected_from_app_xml_ = true;
-
-  if (has_collected_from_app_xml_ && has_collected_from_core_xml_) Output();
+  return xml_schema;
 }
 
 void docx_meta::CollectFromCoreXml(std::string path_core_xml_current) {

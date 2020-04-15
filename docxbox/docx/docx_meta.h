@@ -17,6 +17,9 @@
 // (left- and right-hand-side strings surrounding the value)
 static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
 
+static const char *const kWordMlApplicationLhs = "<Application>";
+static const char *const kWordMlApplicationRhs = "</Application>";
+
 static const char
     *const kWordMlCreatedLhs = "<dcterms:created xsi:type=\"dcterms:W3CDTF\">";
 static const char *const kWordMlCreatedRhs = "</dcterms:created>";
@@ -48,6 +51,9 @@ static const char *const kWordMlRevisionRhs = "</cp:revision>";
 
 static const char *const kWordMlSubjectLhs = "<dc:subject>";
 static const char *const kWordMlSubjectRhs = "</dc:subject>";
+
+static const char *const kWordMlTemplateLhs = "<Template>";
+static const char *const kWordMlTemplateRhs = "</Template>";
 
 static const char *const kWordMlTitleLhs = "<dc:title>";
 static const char *const kWordMlTitleRhs = "</dc:title>";
@@ -81,6 +87,11 @@ class docx_meta {
   void LoadCoreXml(std::string path);
   bool SaveCoreXml();
 
+  std::string FetchAttributeFromAppXml(
+      const char* lhs_of_value,
+      const char* rhs_of_value,
+      const std::string &label);
+
   std::string FetchAttributeFromCoreXml(
       const char* lhs_of_value,
       const char* rhs_of_value,
@@ -108,6 +119,7 @@ class docx_meta {
   std::string path_app_xml_;
   std::string path_core_xml_;
 
+  std::string app_xml_;
   std::string core_xml_;
 
   // Attribute + value for single modification
@@ -129,6 +141,7 @@ class docx_meta {
   bool UpdateCoreAttribute(Attribute attribute, const std::string& value);
   bool InsertCoreAttribute(Attribute attribute, const std::string& value);
   void EnsureIsLoadedCoreXml();
+  std::string ExtractXmlSchemaFromAppXml(std::string &app_xml) const;
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_META_H_
