@@ -1,8 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "docx_archive.h"
-#include "docx_meta.h"
-#include "docx_xml_lorem.h"
+#include <docxbox/docx/docx_archive.h>
 
 #include "../../vendor/miniz-cpp/zip_file.hpp"
 
@@ -44,8 +42,8 @@ class miniz_cpp_ext {
   }
 
   static void ReduceExtractToImages(
-      std::string &path_extract,
-      std::vector<miniz_cpp::zip_info> &file_list) {
+      const std::string &path_extract,
+      const std::vector<miniz_cpp::zip_info> &file_list) {
     for (const auto &file_in_zip : file_list) {
       const char *path_file_within_docx = file_in_zip.filename.c_str();
 
@@ -530,7 +528,6 @@ bool docx_archive::ReplaceImage() {
 }
 
 bool docx_archive::ReplaceText() {
-
   if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX Filename")
       || !docxbox::AppArguments::IsArgumentGiven(
           argc_,

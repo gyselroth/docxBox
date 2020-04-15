@@ -5,8 +5,9 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
-#include "docx_xml.h"
+#include "./docx_xml.h"
 #include "../helper/helper_file.h"
 
 #include "../helper/helper_string.h"
@@ -36,12 +37,13 @@ class docx_xml_lorem:docx_xml {
 
   void RandomizeInTextNodes(tinyxml2::XMLElement *node);
 
-  static std::vector<std::string> SplitIntoSpaceSeparatedSegments(std::string sentence);
+  static std::vector<std::string> SplitIntoSpaceSeparatedSegments(
+      std::string sentence);
 
   std::string RandomizeText(std::string str_in);
 
-  std::string GetRandomReplacement(std::string &segment_in,
-                                   std::string &previous_segment);
+  std::string GetRandomReplacement(const std::string &segment_in,
+                                   const std::string &previous_segment);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_XML_LOREM_H_

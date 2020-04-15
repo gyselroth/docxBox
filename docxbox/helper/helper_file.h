@@ -17,10 +17,7 @@
 #include <chrono>
 #endif
 
-#include <fcntl.h>
-#include <sys/sendfile.h>
-
-#include "helper_string.h"
+#include <docxbox/helper/helper_string.h>
 
 namespace helper {
 namespace File {

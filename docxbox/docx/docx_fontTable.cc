@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "docx_fontTable.h"
+#include <docxbox/docx/docx_fontTable.h>
 
 docx_fontTable::docx_fontTable() = default;
 

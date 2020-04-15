@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "app.h"
+#include <docxbox/app/app.h>
 
 namespace docxbox {
 
@@ -22,8 +22,9 @@ App::App(int argc, char **argv) {
 }
 
 // Remap command + argument variations to rel. shorthand commands
-AppCommands::Commands App::PreProcess(AppArguments *arguments,
-                                      AppCommands::Commands &command) const {
+AppCommands::Commands App::PreProcess(
+    AppArguments *arguments,
+    const AppCommands::Commands &command) const {
   switch (command) {
     case AppCommands::Command_GetPlainText:
       if (arguments->Matches(3, "-s", "--segments"))

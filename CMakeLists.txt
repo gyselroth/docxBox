@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(docxbox)
 
+include_directories(${CMAKE_SOURCE_DIR})
+
 set (VERSION_MAJOR "0")
 set (VERSION_MINOR "0")
 set (VERSION_PATCH "1")

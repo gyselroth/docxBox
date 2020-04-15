@@ -3,13 +3,15 @@
 #ifndef DOCXBOX_DOCX_DOCX_META_H_
 #define DOCXBOX_DOCX_DOCX_META_H_
 
+#include <iostream>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 
 #include "../app/app_argument.h"
 #include "../helper/helper_string.h"
-#include "docx_xml.h"
+#include "./docx_xml.h"
 
 // wordMl meta-attribute tag-parts
 // (left- and right-hand-side strings surrounding the value)

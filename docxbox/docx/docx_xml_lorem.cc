@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "docx_xml_lorem.h"
+#include <docxbox/docx/docx_xml_lorem.h>
 
 docx_xml_lorem::docx_xml_lorem(int argc, char **argv) : docx_xml(
     argc,
@@ -35,7 +35,7 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
   } else {
     if (!helper::String::Contains(xml, "w:hdr")) return true;
   }
-  
+
   doc.LoadFile(path_xml.c_str());
 
   if (doc.ErrorID() != 0) return false;
@@ -112,7 +112,9 @@ std::vector<std::string> docx_xml_lorem::SplitIntoSpaceSeparatedSegments(
 }
 
 std::string docx_xml_lorem::RandomizeText(std::string str_in) {
-  std::vector<std::string> segments_in = SplitIntoSpaceSeparatedSegments(str_in);
+  std::vector<std::string> segments_in =
+      SplitIntoSpaceSeparatedSegments(str_in);
+
   u_int32_t amount_segments = segments_in.size();
   u_int32_t index_last_word = amount_segments - 1;
 
@@ -150,13 +152,13 @@ std::string docx_xml_lorem::RandomizeText(std::string str_in) {
 
     i++;
   }
-  
+
   return str_out;
 }
 
 std::string docx_xml_lorem::GetRandomReplacement(
-    std::string &segment_in,
-    std::string &previous_segment) {
+    const std::string &segment_in,
+    const std::string &previous_segment) {
   std::string segment;
 
   do {

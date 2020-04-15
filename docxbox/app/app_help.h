@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "../config.h"
-#include "app.h"
+#include "./app.h"
 
 
 namespace docxbox {

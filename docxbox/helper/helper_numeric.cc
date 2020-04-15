@@ -1,8 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <cstdio>
-#include <cstdint>
-#include "helper_numeric.h"
+#include <docxbox/helper/helper_numeric.h>
 
 namespace helper {
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "docx_xml.h"
+#include <docxbox/docx/docx_xml.h>
 
 docx_xml::docx_xml(int argc, char **argv) {
   argc_ = argc;
