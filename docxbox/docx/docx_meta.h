@@ -13,32 +13,29 @@
 #include "../helper/helper_string.h"
 #include "./docx_xml.h"
 
-// wordMl meta-attribute tag-parts
-// (left- and right-hand-side strings surrounding the value)
-static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
-
+// wordMl meta attribute tag names
 static const char *const kWmlTagApplication = "Application";
+static const char *const kWmlTagTemplate = "Template";
+
 static const char *const kWmlTagCpLastModifiedBy = "cp:lastModifiedBy";
 static const char *const kWmlTagCpLastPrinted = "cp:lastPrinted";
 static const char *const kWmlTagCpRevision = "cp:revision";
+
 static const char *const kWmlTagDcCreator = "dc:creator";
 static const char *const kWmlTagDcDescription = "dc:description";
 static const char *const kWmlTagDcKeywords = "dc:keywords";
 static const char *const kWmlTagDcLanguage = "dc:language";
 static const char *const kWmlTagDcSubject = "dc:subject";
 static const char *const kWmlTagDcTitle = "dc:title";
-static const char *const kWmlTagTemplate = "Template";
 
-static const char
-    *const kWordMlCreatedLhs = "<dcterms:created xsi:type=\"dcterms:W3CDTF\">";
-static const char *const kWordMlCreatedRhs = "</dcterms:created>";
-
-static const char *const kWordMlModifiedLhs =
-    "<dcterms:modified xsi:type=\"dcterms:W3CDTF\">";
-static const char *const kWordMlModifiedRhs = "</dcterms:modified>";
+static const char *const kWmlAttributeDcTermsXsi = " xsi:type=\"dcterms:W3CDTF\"";
+static const char *const kWmlTagDcTermsCreated = "dcterms:created";
+static const char *const kWmlTagDcTermsModified = "dcterms:modified";
 
 static const char *const kWordMlXmlSchemeLhs = "<Properties xmlns=\"";
 static const char *const kWordMlXmlSchemeRhs = "\" ";
+
+static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
 
 class docx_meta {
  public:
@@ -133,6 +130,12 @@ class docx_meta {
 
   static std::basic_string<char> GetLhsTagByTagName(const char *tag_name);
   static std::basic_string<char> GetRhsTagByTagName(const char *tag_name);
+
+  void GetLhsTagByAttribute(const Attribute &attribute,
+                            const char *&lhs_of_value);
+
+  void GetRhsTagByAttribute(const Attribute &attribute,
+                            const char *&rhs_of_value);
 
   std::string ExtractXmlSchemaFromAppXml(std::string &app_xml) const;
 };
