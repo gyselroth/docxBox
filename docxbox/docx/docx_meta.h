@@ -13,6 +13,8 @@
 #include "../helper/helper_string.h"
 #include "./docx_xml.h"
 
+// TODO(kay): solve redundancy: reduce to tag-name, instead of using 2 constants
+
 // wordMl meta-attribute tag-parts
 // (left- and right-hand-side strings surrounding the value)
 static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
