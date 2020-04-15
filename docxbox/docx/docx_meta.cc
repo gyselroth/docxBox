@@ -16,6 +16,24 @@ void docx_meta::SetOutputAsJson(bool output_as_json) {
 }
 
 std::string docx_meta::FetchAttributeFromAppXml(
+    const char *tag_name,
+    const std::string &label) {
+
+  return FetchAttributeFromAppXml(
+      GetLhsTagByTagName(tag_name).c_str(),
+      GetRhsTagByTagName(tag_name).c_str(),
+      label);
+}
+
+std::basic_string<char> docx_meta::GetRhsTagByTagName(const char *tag_name) {
+  return std::string("</") + tag_name + ">";
+}
+
+std::basic_string<char> docx_meta::GetLhsTagByTagName(const char *tag_name) {
+  return std::string("<") + tag_name + ">";
+}
+
+std::string docx_meta::FetchAttributeFromAppXml(
     const char* lhs_of_value,
     const char* rhs_of_value,
     const std::string &label) {
@@ -27,6 +45,15 @@ std::string docx_meta::FetchAttributeFromAppXml(
   if (!label.empty()) attributes_.emplace_back(label, value);
 
   return value;
+}
+
+std::string docx_meta::FetchAttributeFromCoreXml(
+    const char* tag_name,
+    const std::string &label) {
+  return FetchAttributeFromCoreXml(
+      GetLhsTagByTagName(tag_name).c_str(),
+      GetRhsTagByTagName(tag_name).c_str(),
+      label);
 }
 
 std::string docx_meta::FetchAttributeFromCoreXml(
@@ -113,29 +140,36 @@ bool docx_meta::UpdateCoreAttribute(
   const char *rhs_of_value;
 
   switch (attribute) {
-    case Attribute_Title:lhs_of_value = kWordMlTitleLhs;
-      rhs_of_value = kWordMlTitleRhs;
+    case Attribute_Title:
+      lhs_of_value = GetLhsTagByTagName(kWmlTagDcTitle).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagDcTitle).c_str();
       break;
-    case Attribute_Language:lhs_of_value = kWordMlLanguageLhs;
-      rhs_of_value = kWordMlLanguageRhs;
+    case Attribute_Language:
+      lhs_of_value = GetLhsTagByTagName(kWmlTagDcLanguage).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagDcLanguage).c_str();
       break;
-    case Attribute_Revision:lhs_of_value = kWordMlRevisionLhs;
-      rhs_of_value = kWordMlRevisionRhs;
+    case Attribute_Revision:
+      lhs_of_value = GetLhsTagByTagName(kWmlTagCpRevision).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagCpRevision).c_str();
       break;
-    case Attribute_Creator:lhs_of_value = kWordMlCreatorLhs;
-      rhs_of_value = kWordMlCreatorRhs;
+    case Attribute_Creator:
+      lhs_of_value = GetLhsTagByTagName(kWmlTagDcCreator).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagDcCreator).c_str();
       break;
-    case Attribute_LastModifiedBy:lhs_of_value = kWordMlLastModifiedByLhs;
-      rhs_of_value = kWordMlLastModifiedByRhs;
+    case Attribute_LastModifiedBy:
+      lhs_of_value = GetLhsTagByTagName(kWmlTagCpLastModifiedBy).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagCpLastModifiedBy).c_str();
       break;
     case Attribute_Created:lhs_of_value = kWordMlCreatedLhs;
       rhs_of_value = kWordMlCreatedRhs;
       break;
-    case Attribute_Modified:lhs_of_value = kWordMlModifiedLhs;
+    case Attribute_Modified:
+      lhs_of_value = kWordMlModifiedLhs;
       rhs_of_value = kWordMlModifiedRhs;
       break;
-    case Attribute_LastPrinted:lhs_of_value = kWordMlLastPrintedLhs;
-      rhs_of_value = kWordMlLastPrintedRhs;
+    case Attribute_LastPrinted:
+      lhs_of_value = GetLhsTagByTagName(kWmlTagCpLastPrinted).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagCpLastPrinted).c_str();
       break;
     default:return false;
   }
@@ -159,24 +193,24 @@ bool docx_meta::InsertCoreAttribute(
 
   switch (attribute) {
     case Attribute_Title:
-      lhs_of_value = kWordMlTitleLhs;
-      rhs_of_value = kWordMlTitleRhs;
+      lhs_of_value = GetLhsTagByTagName(kWmlTagDcTitle).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagDcTitle).c_str();
       break;
     case Attribute_Language:
-      lhs_of_value = kWordMlLanguageLhs;
-      rhs_of_value = kWordMlLanguageRhs;
+      lhs_of_value = GetLhsTagByTagName(kWmlTagDcLanguage).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagDcLanguage).c_str();
       break;
     case Attribute_Revision:
-      lhs_of_value = kWordMlRevisionLhs;
-      rhs_of_value = kWordMlRevisionRhs;
+      lhs_of_value = GetLhsTagByTagName(kWmlTagCpRevision).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagCpRevision).c_str();
       break;
     case Attribute_Creator:
-      lhs_of_value = kWordMlCreatorLhs;
-      rhs_of_value = kWordMlCreatorRhs;
+      lhs_of_value = GetLhsTagByTagName(kWmlTagDcCreator).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagDcCreator).c_str();
       break;
     case Attribute_LastModifiedBy:
-      lhs_of_value = kWordMlLastModifiedByLhs;
-      rhs_of_value = kWordMlLastModifiedByRhs;
+      lhs_of_value = GetLhsTagByTagName(kWmlTagCpLastModifiedBy).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagCpLastModifiedBy).c_str();
       break;
     case Attribute_Created:
       lhs_of_value = kWordMlCreatedLhs;
@@ -187,8 +221,8 @@ bool docx_meta::InsertCoreAttribute(
       rhs_of_value = kWordMlModifiedRhs;
       break;
     case Attribute_LastPrinted:
-      lhs_of_value = kWordMlLastPrintedLhs;
-      rhs_of_value = kWordMlLastPrintedRhs;
+      lhs_of_value = GetLhsTagByTagName(kWmlTagCpLastPrinted).c_str();
+      rhs_of_value = GetRhsTagByTagName(kWmlTagCpLastPrinted).c_str();
       break;
     default:
       throw "Attribute unknown";
@@ -210,25 +244,43 @@ bool docx_meta::AttributeExistsInCoreXml(Attribute attribute) {
     case Attribute_Created:
       return helper::String::Contains(core_xml_, kWordMlCreatedLhs);
     case Attribute_Creator:
-      return helper::String::Contains(core_xml_, kWordMlCreatorLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagDcCreator).c_str());
     case Attribute_Description:
-      return helper::String::Contains(core_xml_, kWordMlDescriptionLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagDcDescription).c_str());
     case Attribute_Language:
-      return helper::String::Contains(core_xml_, kWordMlLanguageLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagDcLanguage).c_str());
     case Attribute_Keywords:
-      return helper::String::Contains(core_xml_, kWordMlKeywordsLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagDcKeywords).c_str());
     case Attribute_LastModifiedBy:
-      return helper::String::Contains(core_xml_, kWordMlLastModifiedByLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagCpLastModifiedBy).c_str());
     case Attribute_LastPrinted:
-      return helper::String::Contains(core_xml_, kWordMlLastPrintedLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagCpLastPrinted).c_str());
     case Attribute_Modified:
       return helper::String::Contains(core_xml_, kWordMlModifiedLhs);
     case Attribute_Revision:
-      return helper::String::Contains(core_xml_, kWordMlRevisionLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagCpRevision).c_str());
     case Attribute_Title:
-      return helper::String::Contains(core_xml_, kWordMlTitleLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagDcTitle).c_str());
     case Attribute_Subject:
-      return helper::String::Contains(core_xml_, kWordMlSubjectLhs);
+      return helper::String::Contains(
+          core_xml_,
+          GetLhsTagByTagName(kWmlTagDcSubject).c_str());
     default:return false;
   }
 }
@@ -264,18 +316,14 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
   path_app_xml_ = std::move(path_app_xml_current);
 
   app_xml_ = app_xml;
-  FetchAttributeFromAppXml(
-      kWordMlApplicationLhs,
-      kWordMlApplicationRhs,
-      "Application");
+
+  FetchAttributeFromAppXml(kWmlTagApplication, "Application");
 
   attributes_.emplace_back("xmlSchema", ExtractXmlSchemaFromAppXml(app_xml));
 
   app_xml_ = app_xml;
-  FetchAttributeFromAppXml(
-      kWordMlTemplateLhs,
-      kWordMlTemplateRhs,
-      "Template");
+
+  FetchAttributeFromAppXml(kWmlTagTemplate, "Template");
 
   has_collected_from_app_xml_ = true;
 
@@ -311,30 +359,19 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current) {
   path_core_xml_ = std::move(path_core_xml_current);
 
   FetchAttributeFromCoreXml(kWordMlCreatedLhs, kWordMlCreatedRhs, "created");
-  FetchAttributeFromCoreXml(kWordMlCreatorLhs, kWordMlCreatorRhs, "creator");
 
-  FetchAttributeFromCoreXml(
-      kWordMlDescriptionLhs,
-      kWordMlDescriptionRhs,
-      "description");
-
-  FetchAttributeFromCoreXml(kWordMlKeywordsLhs, kWordMlKeywordsRhs, "keywords");
-  FetchAttributeFromCoreXml(kWordMlLanguageLhs, kWordMlLanguageRhs, "language");
-
-  FetchAttributeFromCoreXml(
-      kWordMlLastModifiedByLhs,
-      kWordMlLastModifiedByRhs,
-      "lastModifiedBy");
-
-  FetchAttributeFromCoreXml(
-      kWordMlLastPrintedLhs,
-      kWordMlLastPrintedRhs,
-      "lastPrinted");
+  FetchAttributeFromCoreXml(kWmlTagDcCreator, "created");
+  FetchAttributeFromCoreXml(kWmlTagDcDescription, "description");
+  FetchAttributeFromCoreXml(kWmlTagDcKeywords, "keywords");
+  FetchAttributeFromCoreXml(kWmlTagDcLanguage, "language");
+  FetchAttributeFromCoreXml(kWmlTagCpLastModifiedBy, "lastModifiedBy");
+  FetchAttributeFromCoreXml(kWmlTagCpLastPrinted, "lastPrinted");
 
   FetchAttributeFromCoreXml(kWordMlModifiedLhs, kWordMlModifiedRhs, "modified");
-  FetchAttributeFromCoreXml(kWordMlRevisionLhs, kWordMlRevisionRhs, "revision");
-  FetchAttributeFromCoreXml(kWordMlSubjectLhs, kWordMlSubjectRhs, "subject");
-  FetchAttributeFromCoreXml(kWordMlTitleLhs, kWordMlTitleRhs, "title");
+
+  FetchAttributeFromCoreXml(kWmlTagCpRevision, "revision");
+  FetchAttributeFromCoreXml(kWmlTagDcSubject, "subject");
+  FetchAttributeFromCoreXml(kWmlTagDcTitle, "title");
 
   has_collected_from_core_xml_ = true;
 
