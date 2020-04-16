@@ -133,11 +133,13 @@ class docx_meta {
   static std::basic_string<char> GetLhsTagByTagName(const char *tag_name);
   static std::basic_string<char> GetRhsTagByTagName(const char *tag_name);
 
-  void GetLhsTagByAttribute(const Attribute &attribute,
-                            const char *&lhs_of_value);
+  static void GetLhsTagByAttribute(
+      const Attribute &attribute,
+      const char *&lhs_of_value);
 
-  void GetRhsTagByAttribute(const Attribute &attribute,
-                            const char *&rhs_of_value);
+  static void GetRhsTagByAttribute(
+      const Attribute &attribute,
+      const char *&rhs_of_value);
 
   std::string ExtractXmlSchemaFromAppXml(std::string &app_xml) const;
 };

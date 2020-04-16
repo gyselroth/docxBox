@@ -17,7 +17,7 @@ class miniz_cpp_ext {
       const std::string &path_extract,
       const std::vector<miniz_cpp::zip_info> &file_list
   ) {
-    for (auto file_in_zip : file_list) {
+    for (const auto& file_in_zip : file_list) {
       if (helper::String::Contains(file_in_zip.filename, "/")) {
         auto directories = helper::String::Explode(file_in_zip.filename, '/');
 
@@ -75,7 +75,7 @@ class miniz_cpp_ext {
   static void RemoveSubDirectories(
       const std::string &path_extract,
       const std::vector<miniz_cpp::zip_info> &file_list) {
-    for (auto file_in_zip : file_list) {
+    for (const auto& file_in_zip : file_list) {
       if (helper::String::Contains(file_in_zip.filename, "/")) {
         auto directories = helper::String::Explode(file_in_zip.filename, '/');
 
