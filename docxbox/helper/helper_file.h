@@ -14,7 +14,7 @@
 #ifdef __linux__
 #include <unistd.h>
 #include <algorithm>
-#include <chrono>
+#include <chrono>  // NOLINT [build/c++11]
 #endif
 
 #include <docxbox/helper/helper_string.h>
