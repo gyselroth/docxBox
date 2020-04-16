@@ -35,10 +35,12 @@ extern std::string ResolvePath(
 
 extern std::streampos GetFileSize(std::ifstream &file);
 
-extern std::string GetFileContents(std::string &filename);
+extern std::string GetFileContents(const std::string &filename);
 extern std::string GetFileContents(std::ifstream &file);
 
-extern bool WriteToNewFile(const std::string &filename, std::string &content);
+extern bool WriteToNewFile(
+    const std::string &filename,
+    const std::string &content);
 
 extern void CopyFile(
     const std::string &path_image_original,

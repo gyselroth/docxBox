@@ -3,11 +3,6 @@
 #ifndef DOCXBOX_DOCX_DOCX_ARCHIVE_H_
 #define DOCXBOX_DOCX_DOCX_ARCHIVE_H_
 
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <string>
-
 #include <docxbox/app/app_argument.h>
 #include <docxbox/docx/docx_xml_fields.h>
 #include <docxbox/docx/docx_xml_lorem.h>
@@ -20,6 +15,11 @@
 
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
+
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <string>
 
 class docx_archive {
  public:
