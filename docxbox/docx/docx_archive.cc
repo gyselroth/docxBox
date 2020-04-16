@@ -494,59 +494,55 @@ bool docx_archive::ReplaceImage() {
 
   bool found = false;
 
-  for (const auto &file_in_zip : file_list) {
-    if (!helper::String::EndsWith(file_in_zip.filename, image_original))
-      continue;
+  try {
+    for (const auto &file_in_zip : file_list) {
+      if (!helper::String::EndsWith(file_in_zip.filename, image_original))
+        continue;
 
-    found = true;
+      found = true;
 
-    std::string
-        path_image_original = path_extract_ + "/" + file_in_zip.filename;
+      std::string
+          path_image_original = path_extract_ + "/" + file_in_zip.filename;
 
-    if (!helper::File::Remove(path_image_original.c_str())) {
-      std::cout << "Failed replace " << image_original << "\n";
+      if (!helper::File::Remove(path_image_original.c_str()))
+        throw "Failed replace " + image_original + "\n";
 
-      // TODO(kay): cleanup - remove unzipped files (throw exception)
-      return false;
+      std::string path_image_replacement =
+          helper::File::ResolvePath(path_working_directory_, argv_[4]);
+
+      helper::File::CopyFile(path_image_original, path_image_replacement);
+
+      break;
     }
 
-    std::string path_image_replacement =
-        helper::File::ResolvePath(path_working_directory_, argv_[4]);
+    if (!found)
+      throw "Cannot replace " + image_original
+            + " - no such image within " + path_docx_in_ + "\n";
 
-    helper::File::CopyFile(path_image_original, path_image_replacement);
-
-    break;
-  }
-
-  if (!found) {
-    std::cout
-      << "Cannot replace " << image_original
-      << " - no such image within " << path_docx_in_ << "\n";
-
-    // TODO(kay): cleanup - remove unzipped files (throw exception)
-    return false;
-  }
-
-  std::string path_docx_out =
-      argc_ >= 6
+    std::string path_docx_out =
+        argc_ >= 6
         // Result filename is given as argument
         ? helper::File::ResolvePath(
-          path_working_directory_,
-          argv_[5])
+            path_working_directory_,
+            argv_[5])
         // Overwrite original DOCX
         : path_docx_in_;
 
-  if (!Zip(path_extract_, path_docx_out + "tmp")) {
-    std::cout << "DOCX creation failed.\n";
+    if (!Zip(path_extract_, path_docx_out + "tmp"))
+      throw "DOCX creation failed.\n";
+
+    if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
+
+    std::rename(
+        std::string(path_docx_out).append("tmp").c_str(),
+        path_docx_out.c_str());
+  } catch (std::string &message) {
+    std::cout << message;
+
+    miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
     return false;
   }
-
-  if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
-
-  std::rename(
-      std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
 
   return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 }
