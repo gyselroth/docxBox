@@ -8,19 +8,18 @@
 #include <memory>
 #include <string>
 
-#include "../app/app_argument.h"
+#include <docxbox/app/app_argument.h>
+#include <docxbox/docx/docx_xml_fields.h>
+#include <docxbox/docx/docx_xml_lorem.h>
+#include <docxbox/docx/docx_xml_replace.h>
+#include <docxbox/docx/docx_xml_to_plaintext.h>
 
-#include "./docx_xml_fields.h"
-#include "./docx_xml_lorem.h"
-#include "./docx_xml_replace.h"
-#include "./docx_xml_to_plaintext.h"
+#include <docxbox/docx/docx_fontTable.h>
+#include <docxbox/docx/docx_meta.h>
+#include <docxbox/docx/docx_xml.h>
 
-#include "./docx_fontTable.h"
-#include "./docx_meta.h"
-#include "./docx_xml.h"
-
-#include "../helper/helper_file.h"
-#include "../helper/helper_string.h"
+#include <docxbox/helper/helper_file.h>
+#include <docxbox/helper/helper_string.h>
 
 class docx_archive {
  public:

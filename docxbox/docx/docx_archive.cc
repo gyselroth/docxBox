@@ -472,19 +472,19 @@ bool docx_archive::ListMergeFields(bool as_json) {
 }
 
 bool docx_archive::ReplaceImage() {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
   if (
       !docxbox::AppArguments::IsArgumentGiven(
           argc_,
           3,
           "Filename of image to be replaced")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          4,
-          "Filename of replacement image")
+          || !docxbox::AppArguments::IsArgumentGiven(
+              argc_,
+              4,
+              "Filename of replacement image")
       )
     return false;
+
+  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
   std::string image_original = argv_[3];
 
