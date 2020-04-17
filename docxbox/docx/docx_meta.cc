@@ -215,7 +215,7 @@ bool docx_meta::UpdateCoreAttribute(
     return false;
   }
 
-  core_xml_ = helper::String::Replace(
+  helper::String::Replace(
       core_xml_,
       (std::string(lhs_of_value)
           + FetchAttributeFromCoreXml(lhs_of_value, rhs_of_value, "")).c_str(),

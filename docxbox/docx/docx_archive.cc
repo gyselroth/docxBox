@@ -17,7 +17,7 @@ class miniz_cpp_ext {
       const std::string &path_extract,
       const std::vector<miniz_cpp::zip_info> &file_list
   ) {
-    for (auto file_in_zip : file_list) {
+    for (const auto& file_in_zip : file_list) {
       if (helper::String::Contains(file_in_zip.filename, "/")) {
         auto directories = helper::String::Explode(file_in_zip.filename, '/');
 
@@ -75,7 +75,7 @@ class miniz_cpp_ext {
   static void RemoveSubDirectories(
       const std::string &path_extract,
       const std::vector<miniz_cpp::zip_info> &file_list) {
-    for (auto file_in_zip : file_list) {
+    for (const auto& file_in_zip : file_list) {
       if (helper::String::Contains(file_in_zip.filename, "/")) {
         auto directories = helper::String::Explode(file_in_zip.filename, '/');
 
@@ -472,19 +472,19 @@ bool docx_archive::ListMergeFields(bool as_json) {
 }
 
 bool docx_archive::ReplaceImage() {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
   if (
       !docxbox::AppArguments::IsArgumentGiven(
           argc_,
           3,
           "Filename of image to be replaced")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          4,
-          "Filename of replacement image")
+          || !docxbox::AppArguments::IsArgumentGiven(
+              argc_,
+              4,
+              "Filename of replacement image")
       )
     return false;
+
+  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
   std::string image_original = argv_[3];
 
@@ -492,41 +492,57 @@ bool docx_archive::ReplaceImage() {
 
   auto file_list = docx_file.infolist();
 
-  for (const auto &file_in_zip : file_list) {
-    if (!helper::String::EndsWith(file_in_zip.filename, image_original))
-      continue;
+  bool found = false;
 
-    std::string
-        path_image_original = path_extract_ + "/" + file_in_zip.filename;
-    helper::File::Remove(path_image_original.c_str());
+  try {
+    for (const auto &file_in_zip : file_list) {
+      if (!helper::String::EndsWith(file_in_zip.filename, image_original))
+        continue;
 
-    std::string path_image_replacement =
-        helper::File::ResolvePath(path_working_directory_, argv_[4]);
+      found = true;
 
-    helper::File::CopyFile(path_image_original, path_image_replacement);
+      std::string
+          path_image_original = path_extract_ + "/" + file_in_zip.filename;
 
-    break;
-  }
+      if (!helper::File::Remove(path_image_original.c_str()))
+        throw "Failed replace " + image_original + "\n";
 
-  std::string path_docx_out = argc_ >= 6
-                              // Result filename is given as argument
-                              ? helper::File::ResolvePath(
-          path_working_directory_,
-          argv_[5])
-                              // Overwrite original DOCX
-                              : path_docx_in_;
+      std::string path_image_replacement =
+          helper::File::ResolvePath(path_working_directory_, argv_[4]);
 
-  if (!Zip(path_extract_, path_docx_out + "tmp")) {
-    std::cout << "DOCX creation failed.\n";
+      helper::File::CopyFile(path_image_original, path_image_replacement);
+
+      break;
+    }
+
+    if (!found)
+      throw "Cannot replace " + image_original
+            + " - no such image within " + path_docx_in_ + "\n";
+
+    std::string path_docx_out =
+        argc_ >= 6
+        // Result filename is given as argument
+        ? helper::File::ResolvePath(
+            path_working_directory_,
+            argv_[5])
+        // Overwrite original DOCX
+        : path_docx_in_;
+
+    if (!Zip(path_extract_, path_docx_out + "tmp"))
+      throw "DOCX creation failed.\n";
+
+    if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
+
+    std::rename(
+        std::string(path_docx_out).append("tmp").c_str(),
+        path_docx_out.c_str());
+  } catch (std::string &message) {
+    std::cout << message;
+
+    miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
     return false;
   }
-
-  if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
-
-  std::rename(
-      std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
 
   return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 }

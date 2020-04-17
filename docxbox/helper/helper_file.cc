@@ -16,7 +16,7 @@ bool File::FileExists(const std::string &name) {
   return access(name.c_str(), F_OK) != -1;
 }
 
-std::string File::GetFileContents(std::string &filename) {
+std::string File::GetFileContents(const std::string &filename) {
   std::ifstream file(filename);
 
   return GetFileContents(file);
@@ -65,7 +65,7 @@ std::streampos File::GetFileSize(std::ifstream &file) {
   return length;
 }
 
-bool File::WriteToNewFile(const std::string &filename, std::string &content) {
+bool File::WriteToNewFile(const std::string &filename, const std::string &content) {
   std::ofstream outfile(filename);
   outfile << content;
   outfile.close();
@@ -162,10 +162,7 @@ std::vector<std::string> File::ScanDirRecursive(
               remove_prefix);
         } else {
           if (do_remove_prefix)
-            path_file = helper::String::Replace(
-                path_file,
-                remove_prefix.c_str(),
-                "");
+            helper::String::Replace(path_file, remove_prefix.c_str(), "");
 
           files.push_back(path_file);
         }

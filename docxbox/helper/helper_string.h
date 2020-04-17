@@ -27,9 +27,9 @@ bool EndsWith(std::string const &value, std::string const &ending);
 // Check whether given string starts w/ given prefix
 extern bool StartsWith(const char *str, const char *prefix);
 
-extern bool Contains(std::string &haystack, const char *needle);
+extern bool Contains(const std::string &haystack, const char *needle);
 
-extern std::string Replace(
+extern void Replace(
     std::string &haystack,
     const char *needle,
     const char *replacement);
@@ -41,13 +41,13 @@ extern int ReplaceAll(
 
 // Get substring between given surrounding left- and center-hand-side delimiters
 extern std::string GetSubStrBetween(
-    std::string &str,
+    const std::string &str,
     const char *lhs,
     const char *rhs,
     u_int32_t &offset);
 
 extern std::string GetSubStrBetween(
-    std::string &str,
+    const std::string &str,
     const char *lhs,
     const char *rhs);
 

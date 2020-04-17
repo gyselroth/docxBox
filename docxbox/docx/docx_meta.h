@@ -28,7 +28,9 @@ static const char *const kWmlTagDcLanguage = "dc:language";
 static const char *const kWmlTagDcSubject = "dc:subject";
 static const char *const kWmlTagDcTitle = "dc:title";
 
-static const char *const kWmlAttributeDcTermsXsi = " xsi:type=\"dcterms:W3CDTF\"";
+static const char *const kWmlAttributeDcTermsXsi =
+    " xsi:type=\"dcterms:W3CDTF\"";
+
 static const char *const kWmlTagDcTermsCreated = "dcterms:created";
 static const char *const kWmlTagDcTermsModified = "dcterms:modified";
 
@@ -131,11 +133,13 @@ class docx_meta {
   static std::basic_string<char> GetLhsTagByTagName(const char *tag_name);
   static std::basic_string<char> GetRhsTagByTagName(const char *tag_name);
 
-  void GetLhsTagByAttribute(const Attribute &attribute,
-                            const char *&lhs_of_value);
+  static void GetLhsTagByAttribute(
+      const Attribute &attribute,
+      const char *&lhs_of_value);
 
-  void GetRhsTagByAttribute(const Attribute &attribute,
-                            const char *&rhs_of_value);
+  static void GetRhsTagByAttribute(
+      const Attribute &attribute,
+      const char *&rhs_of_value);
 
   std::string ExtractXmlSchemaFromAppXml(std::string &app_xml) const;
 };
