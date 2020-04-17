@@ -45,6 +45,19 @@ load _helper
   [ "Command: lsf - List fonts referenced in DOCX:" = "${lines[0]}" ]
 }
 
+# active once lsg command is implemented
+#@test "\"docxbox h lsg\" displays help for lsg command" {
+#  run $BATS_TEST_DIRNAME/docxbox h lsg
+#  [ "$status" -eq 0 ]
+#  [ "" = "${lines[0]}" ]
+#}
+#
+#@test "\"docxbox h lsgj\" displays help for lsgj command" {
+#  run $BATS_TEST_DIRNAME/docxbox h lsgj
+#  [ "$status" -eq 0 ]
+#  [ "" = "${lines[0]}" ]
+#}
+
 @test "\"docxbox h lsi\" displays help for lsi command" {
   run "$BATS_TEST_DIRNAME"/docxbox h lsi
   [ "$status" -eq 0 ]
