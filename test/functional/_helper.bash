@@ -33,10 +33,10 @@ teardown() {
   if [ -f test/files/tbl.docx ]; then
     rm test/files/tbl.docx;
   fi
-#  if [ -d test/files/unziped ]; then
-#    rm -r  test/files/unziped;
-#  fi
   if [ -f test/files/cp_image.docx ]; then
     rm test/files/cp_image.docx;
   fi
+#  if [ -d test/files/unziped ]; then
+#    rm -r  test/files/unziped;
+#  fi
 }

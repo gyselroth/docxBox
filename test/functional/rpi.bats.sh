@@ -29,7 +29,9 @@ load _helper
     mkdir test/files/unziped;
     unzip test/files/cp_image.docx -d test/files/unziped;
   fi
+
   identify -verbose test/files/unziped/word/media/image1.jpeg | grep -c "Resolution: 600x600"
+
   if [ -d test/files/unziped ]; then
     rm -r  test/files/unziped;
   fi
