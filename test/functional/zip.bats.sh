@@ -14,7 +14,7 @@ load _helper
     unzip test/files/docx/cp_table_unordered_list_images.docx -d test/files/docx/unziped;
   fi
 
-  run $BATS_TEST_DIRNAME/docxbox zip test/files/docx/unziped test/files/docx/zp_table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox zip test/files/docx/unziped test/files/docx/zp_table_unordered_list_images.docx
   [ "$status" -eq 0 ]
 }
 

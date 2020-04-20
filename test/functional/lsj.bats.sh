@@ -7,6 +7,10 @@ load _helper
   "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "date"
   "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "time"
   "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "file"
+  "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "length"
+  "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "date"
+  "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "time"
+  "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "file"
 }
 
 @test "Output of \"docxbox ls filename.docx --json\" contains files' and directories' attributes" {
@@ -31,6 +35,8 @@ load _helper
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
+  "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "4/11/2020"
+  "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "11:03"
   "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "4/11/2020"
   "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "11:3"
 }

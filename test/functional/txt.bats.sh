@@ -9,9 +9,9 @@ load _helper
 }
 
 @test "Output of \"docxbox txt filename.docx\" is the the plain text from given file" {
-  $BATS_TEST_DIRNAME/docxbox txt test/files/docx/bio_assay.docx | grep -c "NISI IRURE"
-  $BATS_TEST_DIRNAME/docxbox txt test/files/docx/policy_with_bullets.docx | grep -c "At Officiain Dolore"
-  $BATS_TEST_DIRNAME/docxbox txt test/files/docx/table_unordered_list_images.docx | grep -c "Officia"
+  "$BATS_TEST_DIRNAME"/docxbox txt test/files/docx/bio_assay.docx | grep -c "NISI IRURE"
+  "$BATS_TEST_DIRNAME"/docxbox txt test/files/docx/policy_with_bullets.docx | grep -c "At Officiain Dolore"
+  "$BATS_TEST_DIRNAME"/docxbox txt test/files/docx/table_unordered_list_images.docx | grep -c "Officia"
 }
 
 @test "Output of \"docxbox txt filename.docx -s \" is the segmented plain text from given file" {

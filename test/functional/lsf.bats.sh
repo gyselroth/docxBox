@@ -3,18 +3,18 @@
 load _helper
 
 @test "Exit code of \"docxbox ls filename.docx\" is zero" {
-  run $BATS_TEST_DIRNAME/docxbox ls test/files/docx/table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox lsf {missing argument}\" is an error message" {
-  run $BATS_TEST_DIRNAME/docxbox lsf
+  run "$BATS_TEST_DIRNAME"/docxbox lsf
   [ "$status" -ne 0 ]
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox lsf filename.docx\" contains ground informations" {
-  run $BATS_TEST_DIRNAME/docxbox lsf test/files/docx/table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox lsf test/files/docx/table_unordered_list_images.docx
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
 }

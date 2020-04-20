@@ -3,7 +3,7 @@
 load _helper
 
 @test "Exit code of \"docxbox ls filename.docx\" is zero" {
-  run $BATS_TEST_DIRNAME/docxbox ls test/files/docx/table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx
   [ "$status" -eq 0 ]
 }
 
@@ -14,6 +14,11 @@ load _helper
 }
 
 @test "Output of \"docxbox lsfj filename.docx\" contains files' and directories' attributes" {
+  "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep "pitch"
   "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep "font"
   "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep "altName"
   "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep "charset"
