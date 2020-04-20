@@ -17,3 +17,8 @@ load _helper
   $BATS_TEST_DIRNAME/docxbox txt test/files/policy_with_bullets.docx | grep -c "At Officiain Dolore"
   $BATS_TEST_DIRNAME/docxbox txt test/files/table_unordered_list_images.docx | grep -c "Officia"
 }
+
+@test "Output of \"docxbox txt filename.docx -s \" is the segmented plain text from given file" {
+  $BATS_TEST_DIRNAME/docxbox txt test/files/table_unordered_list_images.docx -s | wc -l | grep -c "105"
+  $BATS_TEST_DIRNAME/docxbox txt test/files/table_unordered_list_images.docx | wc -l | grep -c "65"
+}
