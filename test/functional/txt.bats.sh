@@ -7,3 +7,13 @@ load _helper
   [ "$status" -ne 0 ]
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
+
+@test "Output of \"docxbox txt nonExistentFilename.docx\" is an error message" {
+  $BATS_TEST_DIRNAME/docxbox txt test/files/bio_assay_2.docx | grep -c "Error - File not found:"
+}
+
+@test "Output of \"docxbox txt filename.docx\" is the the plain text from given file" {
+  $BATS_TEST_DIRNAME/docxbox txt test/files/bio_assay.docx | grep -c "NISI IRURE"
+  $BATS_TEST_DIRNAME/docxbox txt test/files/policy_with_bullets.docx | grep -c "At Officiain Dolore"
+  $BATS_TEST_DIRNAME/docxbox txt test/files/table_unordered_list_images.docx | grep -c "Officia"
+}
