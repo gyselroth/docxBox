@@ -228,7 +228,7 @@ the full table specification as JSON looks like:
 * ``header`` is optional, when given: ``columns`` is optional
 * ``content`` is optional, when given: ``rows`` is optional
 
-The table configuration than must be passed as escaped JSON:    
+The table configuration must be passed as escaped JSON:    
 ````docxbox rpt foo.docx search "{\"table\":{\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
   
 
