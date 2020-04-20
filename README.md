@@ -204,7 +204,7 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 | b1 | b2 | b3 |
 | c1 | c2 | c3 | 
 
-the full table specification as JSON looks like:
+the table specification as JSON looks like:
 ````
 {
     "table":{
