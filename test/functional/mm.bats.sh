@@ -9,7 +9,7 @@ load _helper
 }
 
 @test "Output of \"docxbox mm filename.docx {missing argument}\" is an error message" {
-  run $BATS_TEST_DIRNAME/docxbox mm test/files/table_unordered_list_images.docx
+  run $BATS_TEST_DIRNAME/docxbox mm test/files/docx/table_unordered_list_images.docx
   [ "$status" -ne 0 ]
   [ "Missing argument: Meta attribute to be set" = "${lines[0]}" ]
 }

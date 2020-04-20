@@ -3,7 +3,7 @@
 load _helper
 
 @test "Exit code of \"docxbox lsm filename.docx\" is zero" {
-  run $BATS_TEST_DIRNAME/docxbox lsm test/files/table_unordered_list_images.docx
+  run $BATS_TEST_DIRNAME/docxbox lsm test/files/docx/table_unordered_list_images.docx
   [ "$status" -eq 0 ]
 }
 
@@ -14,17 +14,17 @@ load _helper
 }
 
 @test "Output of \"docxbox lsm filename.docx\" contains information about the xml schema" {
-  $BATS_TEST_DIRNAME/docxbox lsm test/files/table_unordered_list_images.docx | grep -c "xmlSchema: http://schemas.openxmlformats.org/officeDocument/2006"
+  $BATS_TEST_DIRNAME/docxbox lsm test/files/docx/table_unordered_list_images.docx | grep -c "xmlSchema: http://schemas.openxmlformats.org/officeDocument/2006"
 }
 
 @test "Output of \"docxbox lsm filename.docx\" contains information about the creation time and date" {
-  $BATS_TEST_DIRNAME/docxbox lsm test/files/table_unordered_list_images.docx | grep -c "created: 2017-08-02T11:09:18Z"
+  $BATS_TEST_DIRNAME/docxbox lsm test/files/docx/table_unordered_list_images.docx | grep -c "created: 2017-08-02T11:09:18Z"
 }
 
 @test "Output of \"docxbox lsm filename.docx\" contains language information" {
-  $BATS_TEST_DIRNAME/docxbox lsm test/files/table_unordered_list_images.docx | grep -c "language: en-US"
+  $BATS_TEST_DIRNAME/docxbox lsm test/files/docx/table_unordered_list_images.docx | grep -c "language: en-US"
 }
 
 @test "Output of \"docxbox lsm filename.docx\" contains information about the revision" {
-  $BATS_TEST_DIRNAME/docxbox lsm test/files/table_unordered_list_images.docx | grep -c "revision: 0"
+  $BATS_TEST_DIRNAME/docxbox lsm test/files/docx/table_unordered_list_images.docx | grep -c "revision: 0"
 }
