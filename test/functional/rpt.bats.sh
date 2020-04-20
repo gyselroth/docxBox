@@ -21,13 +21,13 @@ load _helper
 }
 
 @test "With \"docxbox rpt filename.docx stringToBeReplaced replacementString\" the stringToBeReplaced gets replaced" {
-  run $BATS_TEST_DIRNAME/docxbox rpt test/files/docx/tbl.docx Lorem Dorem
+  run $BATS_TEST_DIRNAME/docxbox rpt test/files/docx/cp_bio_assay.docx Lorem Dorem
   [ "$status" -eq 0 ]
-  $BATS_TEST_DIRNAME/docxbox txt test/files/docx/tbl.docx | grep -c Dorem
+  $BATS_TEST_DIRNAME/docxbox txt test/files/docx/cp_bio_assay.docx | grep -c Dorem
 }
 
 @test "With \"docxbox rpt filename.docx stringToBeReplaced replacementString newFile.docx\" the stringToBeReplaced gets replaced and is saved to new file" {
-  run $BATS_TEST_DIRNAME/docxbox rpt test/files/docx/tbl.docx Lorem Dorem test/files/docx/replacedString.docx
+  run $BATS_TEST_DIRNAME/docxbox rpt test/files/docx/cp_bio_assay.docx Lorem Dorem test/files/docx/replacedString.docx
   [ "$status" -eq 0 ]
   $BATS_TEST_DIRNAME/docxbox txt test/files/docx/replacedString.docx | grep -c Dorem
   if [ -f test/files/docx/replacedString.docx ]; then
