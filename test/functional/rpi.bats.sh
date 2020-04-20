@@ -7,7 +7,7 @@ load _helper
   [ "$status" -ne 0 ]
 #  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 # Error message is "wrong" replace once issue is resolved
-  [ "Missing argument: Filename of image to be replaced" = "${lines[0]}" ]
+  [ "Missing argument: Filename of DOCX" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox rpi filename.docx {missing argument}\" is an error message" {
