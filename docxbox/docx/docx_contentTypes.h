@@ -4,6 +4,7 @@
 #define DOCXBOX_DOCX_DOCX_CONTENTTYPES_H_
 
 #include <string>
+#include <utility>
 
 class docx_contentTypes {
  public:

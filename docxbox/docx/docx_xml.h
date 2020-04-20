@@ -3,13 +3,13 @@
 #ifndef DOCXBOX_DOCX_DOCX_XML_H_
 #define DOCXBOX_DOCX_DOCX_XML_H_
 
+#include <docxbox/helper/helper_file.h>
+#include <docxbox/helper/helper_string.h>
+
+#include <vendor/tinyxml2/tinyxml2.h>
+
 #include <string>
 #include <iostream>
-
-#include "../helper/helper_file.h"
-#include "../helper/helper_string.h"
-
-#include "../../vendor/tinyxml2/tinyxml2.h"
 
 class docx_xml {
  public:

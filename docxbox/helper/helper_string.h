@@ -17,7 +17,7 @@
 #include <utility>
 #include <vector>
 
-#include "./helper_numeric.h"
+#include <docxbox/helper/helper_numeric.h>
 
 namespace helper {
 namespace String {

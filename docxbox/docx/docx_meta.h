@@ -3,18 +3,20 @@
 #ifndef DOCXBOX_DOCX_DOCX_META_H_
 #define DOCXBOX_DOCX_DOCX_META_H_
 
+#include <docxbox/app/app_argument.h>
+#include <docxbox/helper/helper_string.h>
+#include <docxbox/docx/docx_xml.h>
+
 #include <iostream>
 #include <string>
 #include <tuple>
 #include <utility>
 #include <vector>
 
-#include "../app/app_argument.h"
-#include "../helper/helper_string.h"
-#include "./docx_xml.h"
-
 // wordMl meta attribute tag names
 static const char *const kWmlTagApplication = "Application";
+static const char *const kWmlTagAppVersion = "AppVersion";
+static const char *const kWmlTagCompany = "Company";
 static const char *const kWmlTagTemplate = "Template";
 
 static const char *const kWmlTagCpLastModifiedBy = "cp:lastModifiedBy";
@@ -67,7 +69,7 @@ class docx_meta {
 
   std::string FetchAttributeFromAppXml(
       const char* tag_name,
-      const std::string &label);
+      const std::string &label = "");
 
   std::string FetchAttributeFromAppXml(
       const char* lhs_of_value,

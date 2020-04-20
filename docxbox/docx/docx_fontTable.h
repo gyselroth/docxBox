@@ -3,13 +3,13 @@
 #ifndef DOCXBOX_DOCX_DOCX_FONTTABLE_H_
 #define DOCXBOX_DOCX_DOCX_FONTTABLE_H_
 
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cstring>
+#include <docxbox/helper/helper_numeric.h>
+#include <docxbox/helper/helper_string.h>
 
-#include "../helper/helper_numeric.h"
-#include "../helper/helper_string.h"
+#include <cstring>
+#include <iostream>
+#include <string>
+#include <vector>
 
 class docx_fontTable {
  public:
