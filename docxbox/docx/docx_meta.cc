@@ -341,7 +341,7 @@ void docx_meta::CollectFromCoreXml(std::string path_core_xml_current) {
   path_core_xml_ = std::move(path_core_xml_current);
 
   FetchAttributeFromCoreXml(kWmlTagDcTermsCreated, "created");
-  FetchAttributeFromCoreXml(kWmlTagDcCreator, "created");
+  FetchAttributeFromCoreXml(kWmlTagDcCreator, "creator");
   FetchAttributeFromCoreXml(kWmlTagDcDescription, "description");
   FetchAttributeFromCoreXml(kWmlTagDcKeywords, "keywords");
   FetchAttributeFromCoreXml(kWmlTagDcLanguage, "language");
