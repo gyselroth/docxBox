@@ -128,14 +128,14 @@ or ````docxbox lsmj foo.docx````
 
 #### Reference: Recognized meta attributes
 
-* Authors: Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
-* Dates (ISO 8601): Creation-, modification and print-date  
+* **Authors:** Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
+* **Dates** (ISO 8601): Creation-, modification and print-date  
   (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml) 
-* Descriptions: Description, Keywords, Subject, Title   
+* **Descriptions:** Description, Keywords, Subject, Title   
   (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
-* Language (``<dc:language>`` of core.xml) 
-* Revision (``<cp:revision>`` of core.xml)
-* Application created with and its version, name of used template, company
+* **Language** (``<dc:language>`` of core.xml) 
+* **Revision** (``<cp:revision>`` of core.xml)
+* **Application** created with and its version, name of used template, company,
   XML schema of document (``<Application>``, ``<AppVersion>``, ``<Template>``, 
   ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
 
