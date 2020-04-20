@@ -15,6 +15,7 @@
 
 // wordMl meta attribute tag names
 static const char *const kWmlTagApplication = "Application";
+static const char *const kWmlTagAppVersion = "AppVersion";
 static const char *const kWmlTagCompany = "Company";
 static const char *const kWmlTagTemplate = "Template";
 

@@ -134,8 +134,8 @@ or ````docxbox lsmj foo.docx````
   (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
 * Language (``<dc:language>`` of core.xml) 
 * Revision (``<cp:revision>`` of core.xml)
-* Application created with, name of used template, company
-  XML schema of document (``<Application>``, ``<Template>``, 
+* Application created with and its version, name of used template, company
+  XML schema of document (``<Application>``, ``<AppVersion>``, ``<Template>``, 
   ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
 
 
