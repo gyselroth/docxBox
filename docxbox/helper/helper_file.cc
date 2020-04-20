@@ -65,7 +65,9 @@ std::streampos File::GetFileSize(std::ifstream &file) {
   return length;
 }
 
-bool File::WriteToNewFile(const std::string &filename, const std::string &content) {
+bool File::WriteToNewFile(
+    const std::string &filename,
+    const std::string &content) {
   std::ofstream outfile(filename);
   outfile << content;
   outfile.close();

@@ -1,6 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/docx/docx_archive.h>
+#include <docxbox/helper/helper_dateTime.h>
 
 #include <vendor/miniz-cpp/zip_file.hpp>
 
@@ -332,7 +333,11 @@ bool docx_archive::ModifyMeta() {
     path_docx_out = path_docx_in_;
   }
 
-  if (!Zip(path_extract_, path_docx_out + "tmp")) {
+  if (!Zip(path_extract_, path_docx_out + "tmp",
+      // TODO(kay): vary the follow arguments depending of attribute,
+      //  = when explicitly modifying "created" or "modified"
+      //  via CLI evokation - don't override it
+      true, true)) {
     std::cerr << "DOCX creation failed.\n";
 
     return false;
@@ -685,8 +690,13 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
 }
 
 // Zip files into given path into DOCX of given filename
-bool docx_archive::Zip(std::string path_directory,
-                       std::string path_docx_result) {
+// Optionally update "creation" and "modified" meta attributes (core.xml)
+// to current date-time value
+bool docx_archive::Zip(
+    std::string path_directory,
+    std::string path_docx_result,
+    bool update_created,
+    bool update_modified) {
   if (path_directory.empty()) {
     if (argc_ <= 2) {
       std::cerr << "Missing argument: path of directory to be zipped\n";
@@ -709,8 +719,38 @@ bool docx_archive::Zip(std::string path_directory,
         argv_[3],
         false);
   } else {
-    if (!helper::File::IsDirectory(path_directory)) return false;
+    if (!helper::File::IsDirectory(path_directory)) {
+      std::cerr << "Not a directory: " << path_directory;
+
+      return false;
+    }
   }
+
+  docx_meta *meta = nullptr;
+
+  if (update_created) {
+     meta = new docx_meta(argc_, argv_);
+
+     meta->SetPathExtract(path_extract_);
+     meta->SetAttribute(docx_meta::Attribute::Attribute_Created);
+     meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
+
+     meta->UpsertAttribute();
+  }
+
+  if (update_modified) {
+    if (meta == nullptr) {
+      meta = new docx_meta(argc_, argv_);
+      meta->SetPathExtract(path_extract_);
+    }
+
+    meta->SetAttribute(docx_meta::Attribute::Attribute_Created);
+    meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
+
+    meta->UpsertAttribute();
+  }
+
+  delete meta;
 
   // Get relative paths of all files to be zipped
   std::vector<std::string> files_in_zip;

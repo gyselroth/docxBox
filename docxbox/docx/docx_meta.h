@@ -61,6 +61,9 @@ class docx_meta {
 
   docx_meta(int argc, char **argv);
 
+  void SetAttribute(Attribute attribute);
+  void SetValue(const std::string &value);
+
   void SetPathExtract(const std::string &path_extract);
   void SetOutputAsJson(bool output_as_json);
 
@@ -85,7 +88,10 @@ class docx_meta {
       const char* rhs_of_value,
       const std::string &label);
 
+  // Explicit meta modification CLI call:
+  // Validate CLI arguments and initialize rel. properties
   bool InitModificationArguments();
+
   bool UpsertAttribute();
 
   void CollectFromAppXml(std::string path_app_xml, std::string app_xml);
