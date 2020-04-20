@@ -15,6 +15,11 @@ void docx_meta::SetOutputAsJson(bool output_as_json) {
   output_as_json_ = output_as_json;
 }
 
+/**
+ * @param tag_name
+ * @param label     Optional, if empty: same as tag_name
+ * @return Fetched value of given attribute
+ */
 std::string docx_meta::FetchAttributeFromAppXml(
     const char *tag_name,
     const std::string &label) {
@@ -22,7 +27,7 @@ std::string docx_meta::FetchAttributeFromAppXml(
   return FetchAttributeFromAppXml(
       GetLhsTagByTagName(tag_name).c_str(),
       GetRhsTagByTagName(tag_name).c_str(),
-      label);
+      label.empty() ? tag_name : label);
 }
 
 std::basic_string<char> docx_meta::GetRhsTagByTagName(const char *tag_name) {
@@ -292,15 +297,15 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
 
   app_xml_ = app_xml;
 
-  FetchAttributeFromAppXml(kWmlTagApplication, "Application");
+  FetchAttributeFromAppXml(kWmlTagApplication);
 
-  FetchAttributeFromAppXml(kWmlTagCompany, "Company");
+  FetchAttributeFromAppXml(kWmlTagCompany);
 
   attributes_.emplace_back("xmlSchema", ExtractXmlSchemaFromAppXml(app_xml));
 
   app_xml_ = app_xml;
 
-  FetchAttributeFromAppXml(kWmlTagTemplate, "Template");
+  FetchAttributeFromAppXml(kWmlTagTemplate);
 
   has_collected_from_app_xml_ = true;
 
