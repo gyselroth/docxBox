@@ -3,6 +3,8 @@
 #ifndef DOCXBOX_HELPER_HELPER_STRING_H_
 #define DOCXBOX_HELPER_HELPER_STRING_H_
 
+#include <docxbox/helper/helper_numeric.h>
+
 #include <fcntl.h>
 #include <sys/sendfile.h>
 
@@ -16,8 +18,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-
-#include <docxbox/helper/helper_numeric.h>
 
 namespace helper {
 namespace String {

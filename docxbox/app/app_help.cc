@@ -55,7 +55,7 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_Zip:return PrintHelpOnZip();
     case AppCommands::Command_Invalid:
       if (!command_identifier.empty()) {
-        std::cout << "Unknown command: " << command_identifier << ".\n\n";
+        std::cerr << "Unknown command: " << command_identifier << ".\n\n";
 
         with_title = true;
       }
@@ -311,7 +311,8 @@ bool AppHelp::PrintHelpOnZip() {
 }
 
 void AppHelp::PrintUnknownArgumentMessage(const char *arg) {
-  std::cout << "Unknown argument: \"" << arg << "\". Possible arguments are:\n";
+  std::cerr << "Unknown argument: \"" << arg << "\".";
+  std::cout << "Possible arguments are:\n";
 
   PrintHelp(false, AppCommands::Commands::Command_Invalid);
 }

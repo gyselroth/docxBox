@@ -52,7 +52,7 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
 
   if (has_xml_changed_
       && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
-    std::cout << "Error - Failed saving: " << path_xml << "\n";
+    std::cerr << "Error - Failed saving: " << path_xml << "\n";
 
     return false;
   }

@@ -27,8 +27,19 @@ class docx_archive {
       const std::string &directory_appendix = "",
       bool ensure_is_docx = true);
 
+  // Check formal structure of DOCX archive - mandatory files given?
+  bool IsDocx();
+
   bool UnzipMedia();
-  bool Zip(std::string path_directory = "", std::string path_docx_result = "");
+
+  // Zip files into given path into DOCX of given filename
+  // Optionally update "creation" and "modified" meta attributes (core.xml)
+  // to current date-time value
+  bool Zip(
+      std::string path_directory = "",
+      std::string path_docx_result = "",
+      bool update_created = false,
+      bool update_modified = false);
 
   bool ListFiles(bool as_json);
   bool ListFonts(bool as_json);

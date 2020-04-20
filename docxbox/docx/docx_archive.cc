@@ -1,6 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/docx/docx_archive.h>
+#include <docxbox/helper/helper_dateTime.h>
 
 #include <vendor/miniz-cpp/zip_file.hpp>
 
@@ -30,15 +31,6 @@ class miniz_cpp_ext {
         }
       }
     }
-  }
-
-  static bool IsDocx(
-      const std::string &path_extract,
-      const std::vector<miniz_cpp::zip_info> &file_list
-  ) {
-    // TODO(kay): check directory structure, mandatory files existence
-
-    return true;
   }
 
   static void ReduceExtractToImages(
@@ -161,7 +153,7 @@ bool docx_archive::ListFiles(bool as_json) {
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     return false;
   }
@@ -198,7 +190,7 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    std::cout << message << "\n";
+    std::cerr << message << "\n";
 
     return false;
   }
@@ -214,13 +206,26 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
 
   docx_file.extractall(path_working_directory_ + "/" + path_extract_);
 
-  if (ensure_is_docx && !miniz_cpp_ext::IsDocx(path_extract_, file_list)) {
-    std::cout << "Error: " << path_docx_in_ << " is not a DOCX document.\n";
+  if (ensure_is_docx && IsDocx()) {
+    std::cerr << "Error: " << path_docx_in_ << " is not a DOCX document.\n";
 
     return false;
   }
 
   return true;
+}
+
+// Check formal structure of DOCX archive - mandatory files given?
+bool docx_archive::IsDocx() {
+  return
+      helper::File::IsDirectory(path_extract_ + "/rels")
+          && helper::File::IsDirectory(path_extract_ + "/docProps")
+          && helper::File::IsDirectory(path_extract_ + "/word")
+          && helper::File::FileExists(path_extract_ + "/[Content_Types].xml")
+          && helper::File::FileExists(path_extract_ + "/_rels/.rels")
+          && helper::File::FileExists(path_extract_ + "/docProps/app.xml")
+          && helper::File::FileExists(path_extract_ + "/docProps/core.xml")
+          && helper::File::FileExists(path_extract_ + "/word/document.xml");
 }
 
 // Unzip all (than remove everything but) media files from DOCX file
@@ -312,7 +317,7 @@ bool docx_archive::ModifyMeta() {
   try {
     meta->SaveCoreXml();
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
   }
 
   delete meta;
@@ -328,8 +333,12 @@ bool docx_archive::ModifyMeta() {
     path_docx_out = path_docx_in_;
   }
 
-  if (!Zip(path_extract_, path_docx_out + "tmp")) {
-    std::cout << "DOCX creation failed.\n";
+  if (!Zip(path_extract_, path_docx_out + "tmp",
+      // TODO(kay): vary the follow arguments depending of attribute,
+      //  = when explicitly modifying "created" or "modified"
+      //  via CLI evokation - don't override it
+      true, true)) {
+    std::cerr << "DOCX creation failed.\n";
 
     return false;
   }
@@ -559,7 +568,7 @@ bool docx_archive::ReplaceImage() {
         std::string(path_docx_out).append("tmp").c_str(),
         path_docx_out.c_str());
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
@@ -597,7 +606,7 @@ bool docx_archive::ReplaceText() {
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
 
     if (!parser->ReplaceStringInXml(path_file_absolute, search, replacement)) {
-      std::cout << "Error: Failed replace string in: "
+      std::cerr << "Error: Failed replace string in: "
                 << file_in_zip.filename << "\n";
 
       delete parser;
@@ -618,7 +627,7 @@ bool docx_archive::ReplaceText() {
       : path_docx_in_;
 
   if (!Zip(path_extract_, path_docx_out + "tmp")) {
-    std::cout << "DOCX creation failed.\n";
+    std::cerr << "DOCX creation failed.\n";
 
     return false;
   }
@@ -647,7 +656,7 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
 
     if (!parser->RandomizeAllTextInXml(path_file_absolute)) {
-      std::cout << "Error: Failed insert lorem ipsum in: "
+      std::cerr << "Error: Failed insert lorem ipsum in: "
                 << file_in_zip.filename << "\n";
 
       delete parser;
@@ -666,7 +675,7 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
       : path_docx_in_;
 
   if (!Zip(path_extract_, path_docx_out + "tmp")) {
-    std::cout << "DOCX creation failed.\n";
+    std::cerr << "DOCX creation failed.\n";
 
     return false;
   }
@@ -681,17 +690,22 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
 }
 
 // Zip files into given path into DOCX of given filename
-bool docx_archive::Zip(std::string path_directory,
-                       std::string path_docx_result) {
+// Optionally update "creation" and "modified" meta attributes (core.xml)
+// to current date-time value
+bool docx_archive::Zip(
+    std::string path_directory,
+    std::string path_docx_result,
+    bool update_created,
+    bool update_modified) {
   if (path_directory.empty()) {
     if (argc_ <= 2) {
-      std::cout << "Missing argument: path of directory to be zipped\n";
+      std::cerr << "Missing argument: path of directory to be zipped\n";
 
       return false;
     }
 
     if (argc_ <= 3) {
-      std::cout << "Missing argument: filename of docx to be created\n";
+      std::cerr << "Missing argument: filename of docx to be created\n";
 
       return false;
     }
@@ -705,8 +719,38 @@ bool docx_archive::Zip(std::string path_directory,
         argv_[3],
         false);
   } else {
-    if (!helper::File::IsDirectory(path_directory)) return false;
+    if (!helper::File::IsDirectory(path_directory)) {
+      std::cerr << "Not a directory: " << path_directory;
+
+      return false;
+    }
   }
+
+  docx_meta *meta = nullptr;
+
+  if (update_created) {
+     meta = new docx_meta(argc_, argv_);
+
+     meta->SetPathExtract(path_extract_);
+     meta->SetAttribute(docx_meta::Attribute::Attribute_Created);
+     meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
+
+     meta->UpsertAttribute();
+  }
+
+  if (update_modified) {
+    if (meta == nullptr) {
+      meta = new docx_meta(argc_, argv_);
+      meta->SetPathExtract(path_extract_);
+    }
+
+    meta->SetAttribute(docx_meta::Attribute::Attribute_Created);
+    meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
+
+    meta->UpsertAttribute();
+  }
+
+  delete meta;
 
   // Get relative paths of all files to be zipped
   std::vector<std::string> files_in_zip;

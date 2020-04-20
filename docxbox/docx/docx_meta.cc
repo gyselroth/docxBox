@@ -7,6 +7,14 @@ docx_meta::docx_meta(int argc, char **argv) {
     argv_ = argv;
 }
 
+void docx_meta::SetAttribute(docx_meta::Attribute attribute) {
+  attribute_ = attribute;
+}
+
+void docx_meta::SetValue(const std::string &value) {
+  value_ = value;
+}
+
 void docx_meta::SetPathExtract(const std::string &path) {
   path_extract_ = path;
 }
@@ -159,6 +167,8 @@ docx_meta::Attribute docx_meta::ResolveAttributeByName(
   return Attribute_Unknown;
 }
 
+// Explicit meta modification CLI call:
+// Validate CLI arguments and initialize rel. properties
 bool docx_meta::InitModificationArguments() {
   if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX filename")
       || !docxbox::AppArguments::IsArgumentGiven(
@@ -169,7 +179,7 @@ bool docx_meta::InitModificationArguments() {
   attribute_ = ResolveAttributeByName(argv_[3]);
 
   if (attribute_ == Attribute::Attribute_Unknown) {
-    std::cout
+    std::cerr
         << "Invalid argument: Unknown or unsupported attribute: "
         << argv_[3] << "\n";
 
@@ -197,7 +207,7 @@ bool docx_meta::UpsertAttribute() {
            ? UpdateCoreAttribute(attribute_, value_)
            : InsertCoreAttribute(attribute_, value_);
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     return false;
   }
@@ -215,7 +225,7 @@ bool docx_meta::UpdateCoreAttribute(
     GetLhsTagByAttribute(attribute, lhs_of_value);
     GetRhsTagByAttribute(attribute, rhs_of_value);
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     return false;
   }
@@ -257,7 +267,7 @@ bool docx_meta::AttributeExistsInCoreXml(Attribute attribute) {
   try {
     GetLhsTagByAttribute(attribute, lhs_of_value);
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     return false;
   }
