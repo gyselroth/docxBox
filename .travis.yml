@@ -29,7 +29,7 @@ before_install:
 
 script:
   - cmake CMakeLists.txt && make
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all ./docxbox; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all ./docxbox/*; fi
   #- if [ "$TRAVIS_OS_NAME" = "linux" ]; then cpplint docxbox/* --recursive --extensions=cc,h; fi
 
 after_success:
