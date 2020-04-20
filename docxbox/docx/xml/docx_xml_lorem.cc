@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <docxbox/docx/docx_xml_lorem.h>
+#include <docxbox/docx/xml/docx_xml_lorem.h>
 
 docx_xml_lorem::docx_xml_lorem(int argc, char **argv) : docx_xml(
     argc,

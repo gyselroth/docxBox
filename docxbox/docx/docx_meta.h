@@ -5,7 +5,7 @@
 
 #include <docxbox/app/app_argument.h>
 #include <docxbox/helper/helper_string.h>
-#include <docxbox/docx/docx_xml.h>
+#include <docxbox/docx/xml/docx_xml.h>
 
 #include <iostream>
 #include <string>

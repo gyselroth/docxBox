@@ -22,7 +22,8 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
       + [Replace images](#replace-images)
-      + [Replace text](#replace-text)
+      + [Replace text by text](#replace-text-by-text)
+      + [Replace text by table](#replace-text-by-table)
       + [Randomize document text](#randomize-document-text)
   * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
@@ -185,13 +186,43 @@ This overwrites the original DOCX with the modified document.
 This creates a new file: new.docx
 
 
-#### Replace text
+#### Replace text by text
 
 Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 ````docxbox rpt foo.docx old new```` updates foo.docx  
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
+
+#### Replace text by table
+
+To replace text by a newly rendered table like:
+
+| A  | B  | C  |
+|----|----|----|
+| a1 | a2 | a3 |
+| b1 | b2 | b3 |
+| c1 | c2 | c3 | 
+
+the table data must be specified as JSON:
+````
+{
+    "table":{
+        "columns":3,
+        "rows":3,
+        "header":["A","B","C"],
+        "content":[
+            ["a1","a2","a3"],
+            ["b1","b2","b3"],
+            ["c1","c2","c3"]
+        ]
+    }
+}
+````
+
+Table-data must be passed as escaped JSON:    
+````docxbox rpt foo.docx search "{\"table\":{\"columns\":3,\"rows\":3,\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
+  
 
 #### Randomize document text
 

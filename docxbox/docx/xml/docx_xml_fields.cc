@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <docxbox/docx/docx_xml_fields.h>
+#include <docxbox/docx/xml/docx_xml_fields.h>
 
 docx_xml_fields::docx_xml_fields(int argc, char **argv) : docx_xml(argc, argv) {
 }
