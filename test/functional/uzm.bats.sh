@@ -7,3 +7,16 @@ load _helper
   [ "$status" -ne 0 ]
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
+
+@test "With \"docxbox uzm filename.docx\ only media files are extracted" {
+  run "$BATS_TEST_DIRNAME"/docxbox uzm test/files/docx/cp_table_unordered_list_images.docx
+}
+
+@test "Unziped files are located in project root" {
+  ls | grep -c cp_table_unordered_list_images.docx-media
+
+  if [ -d cp_table_unordered_list_images.docx-media ]; then
+    rm -r cp_table_unordered_list_images.docx-media;
+  fi
+}
+
