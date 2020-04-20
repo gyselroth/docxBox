@@ -15,10 +15,10 @@ setup() {
     cp $BATS_TEST_DIRNAME/../../bin/linux/docxbox $BATS_TEST_DIRNAME/docxbox
   fi
   if [ ! -f test/files/tbl.docx ]; then
-    cp test/files/bio_assay.docx test/files/tbl.docx;
+    cp test/files/docx/bio_assay.docx test/files/tbl.docx;
   fi
   if [ ! -f test/files/cp_image.docx ]; then
-    cp test/files/table_unordered_list_images.docx test/files/cp_image.docx;
+    cp test/files/docx/table_unordered_list_images.docx test/files/cp_image.docx;
   fi
 #  if [ ! -d test/files/unziped ]; then
 #    mkdir test/files/unziped;
