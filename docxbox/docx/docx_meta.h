@@ -15,6 +15,7 @@
 
 // wordMl meta attribute tag names
 static const char *const kWmlTagApplication = "Application";
+static const char *const kWmlTagCompany = "Company";
 static const char *const kWmlTagTemplate = "Template";
 
 static const char *const kWmlTagCpLastModifiedBy = "cp:lastModifiedBy";
@@ -67,7 +68,7 @@ class docx_meta {
 
   std::string FetchAttributeFromAppXml(
       const char* tag_name,
-      const std::string &label);
+      const std::string &label = "");
 
   std::string FetchAttributeFromAppXml(
       const char* lhs_of_value,

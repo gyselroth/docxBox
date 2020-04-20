@@ -294,6 +294,8 @@ void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
 
   FetchAttributeFromAppXml(kWmlTagApplication, "Application");
 
+  FetchAttributeFromAppXml(kWmlTagCompany, "Company");
+
   attributes_.emplace_back("xmlSchema", ExtractXmlSchemaFromAppXml(app_xml));
 
   app_xml_ = app_xml;
