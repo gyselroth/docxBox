@@ -25,10 +25,10 @@ class docx_wml_renderer_table {
 
   std::string json_;
 
-  int amount_columns_;
-  int amount_rows_;
-  bool has_column_titles = false;
-  std::vector<std::string> column_titles_;
+  int amount_columns_ = 0;
+  int amount_rows_ = 0;
+  bool has_column_headers = false;
+  std::vector<std::string> column_headers_;
   std::vector<std::string> cell_content_;
 
   std::string wml_;

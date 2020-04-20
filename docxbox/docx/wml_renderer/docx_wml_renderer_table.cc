@@ -32,21 +32,41 @@ void docx_wml_renderer_table::InitSpecs() {
       } else if (key == "rows") {
         amount_rows_ = it.value();
       } else if (key == "header") {
-        has_column_titles = true;
+        has_column_headers = true;
+        amount_columns_ = 0;
 
-        auto value = it.value();
-        for (nlohmann::json::iterator it_header = value.begin();
-             it_header != value.end();
+        auto headers = it.value();
+
+        for (nlohmann::json::iterator it_header = headers.begin();
+             it_header != headers.end();
              ++it_header) {
-          column_titles_.push_back(it_header.value());
+          column_headers_.push_back(it_header.value());
+
+          ++amount_columns_;
         }
       } else if (key == "content") {
-        // TODO(kay): implement collect cell content
+        amount_rows_ = 0;
+
+        auto rows = it.value();
+
+        for (nlohmann::json::iterator it_row = rows.begin();
+             it_row != rows.end();
+             ++it_row) {
+          auto row = it_row.value();
+
+          for (nlohmann::json::iterator it_column = row.begin();
+               it_column != row.end();
+               ++it_column) {
+            cell_content_.push_back(it_column.value());
+          }
+
+          ++amount_rows_;
+        }
       }
     }
   }
 
-  int x = 0;
+  is_valid_table_json_ = amount_columns_ > 0 && amount_rows_ > 0;
 }
 
 bool docx_wml_renderer_table::Render() {
