@@ -7,7 +7,7 @@ docx_xml::docx_xml(int argc, char **argv) {
   argv_ = argv;
 }
 
-bool docx_xml::IsXmlFileContainingText(std::string filename) {
+bool docx_xml::IsXmlFileContainingText(const std::string &filename) {
   return
       helper::String::Contains(filename, "word/")
       && !helper::String::EndsWith(filename, "fontTable.xml")
