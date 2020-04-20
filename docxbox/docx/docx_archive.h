@@ -63,6 +63,7 @@ class docx_archive {
 
   // DOCX to be read or manipulated
   std::string path_docx_in_;
+
   // Directory containing extracted XML files of DOCX
   std::string path_extract_;
 
@@ -70,6 +71,9 @@ class docx_archive {
 
   void InitExtractionPath(const std::string &directory_appendix,
                           const std::string &path_docx);
+
+  // Update given meta date attribute and immediately save updated core.xml
+  bool UpdateCoreXmlDate(docx_meta::Attribute attribute);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_ARCHIVE_H_

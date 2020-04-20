@@ -294,9 +294,10 @@ bool docx_archive::ListMeta(bool as_json) {
 bool docx_archive::ModifyMeta() {
   auto *meta = new docx_meta(argc_, argv_);
 
-  if (
-      !meta->InitModificationArguments()
-      ||!UnzipDocx("-" + helper::File::GetTmpName())) {
+  if (!meta->InitModificationArguments()
+      || !UnzipDocx("-" + helper::File::GetTmpName())) {
+    std::cerr << "Initialization for meta modification failed.\n";
+
     delete meta;
 
     return false;
@@ -308,6 +309,8 @@ bool docx_archive::ModifyMeta() {
   meta->SetPathExtract(path_extract_);
 
   if (!meta->UpsertAttribute()) {
+    std::cerr << "Update/Insert meta attribute failed.\n";
+
     delete meta;
 
     return false;
@@ -336,7 +339,7 @@ bool docx_archive::ModifyMeta() {
   if (!Zip(path_extract_, path_docx_out + "tmp",
       // TODO(kay): vary the follow arguments depending of attribute,
       //  = when explicitly modifying "created" or "modified"
-      //  via CLI evokation - don't override it
+      //  via CLI invocation - don't override it
       true, true)) {
     std::cerr << "DOCX creation failed.\n";
 
@@ -523,9 +526,9 @@ bool docx_archive::ReplaceImage() {
 
   auto file_list = docx_file.infolist();
 
-  bool found = false;
-
   try {
+    bool found = false;
+
     for (const auto &file_in_zip : file_list) {
       if (!helper::String::EndsWith(file_in_zip.filename, image_original))
         continue;
@@ -710,14 +713,11 @@ bool docx_archive::Zip(
       return false;
     }
 
-    path_directory = helper::File::ResolvePath(
-        path_working_directory_,
-        argv_[2]);
+    path_directory =
+        helper::File::ResolvePath(path_working_directory_, argv_[2]);
 
-    path_docx_result = helper::File::ResolvePath(
-        path_working_directory_,
-        argv_[3],
-        false);
+    path_docx_result =
+        helper::File::ResolvePath(path_working_directory_, argv_[3], false);
   } else {
     if (!helper::File::IsDirectory(path_directory)) {
       std::cerr << "Not a directory: " << path_directory;
@@ -726,34 +726,15 @@ bool docx_archive::Zip(
     }
   }
 
-  docx_meta *meta = nullptr;
+  if (update_created)
+    UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Created);
 
-  if (update_created) {
-     meta = new docx_meta(argc_, argv_);
-
-     meta->SetPathExtract(path_extract_);
-     meta->SetAttribute(docx_meta::Attribute::Attribute_Created);
-     meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
-
-     meta->UpsertAttribute();
-  }
-
-  if (update_modified) {
-    if (meta == nullptr) {
-      meta = new docx_meta(argc_, argv_);
-      meta->SetPathExtract(path_extract_);
-    }
-
-    meta->SetAttribute(docx_meta::Attribute::Attribute_Created);
-    meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
-
-    meta->UpsertAttribute();
-  }
-
-  delete meta;
+  if (update_modified)
+    UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Modified);
 
   // Get relative paths of all files to be zipped
   std::vector<std::string> files_in_zip;
+
   files_in_zip = helper::File::ScanDirRecursive(
       path_directory.c_str(),
       files_in_zip,
@@ -773,4 +754,24 @@ bool docx_archive::Zip(
   file.save(path_docx_result);
 
   return helper::File::FileExists(path_docx_result);
+}
+
+// Update given meta date attribute and immediately save updated core.xml
+// TODO(kay): add multi-attributes variation of method
+//  to load/save only once than
+bool docx_archive::UpdateCoreXmlDate(docx_meta::Attribute attribute) {
+  // TODO(kay): add gate - ensure attribute is a date
+
+  auto meta = new docx_meta(argc_, argv_);
+
+  meta->SetPathExtract(path_extract_);
+
+  meta->SetAttribute(attribute);
+  meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
+
+  auto result = meta->UpsertAttribute(true);
+
+  delete meta;
+
+  return result;
 }
