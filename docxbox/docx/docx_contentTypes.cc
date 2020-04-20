@@ -2,8 +2,6 @@
 
 #include <docxbox/docx/docx_contentTypes.h>
 
-#include <utility>
-
 docx_contentTypes::docx_contentTypes(std::string path_content_types_xml) {
   path_content_types_xml_ = std::move(path_content_types_xml);
 }

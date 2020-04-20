@@ -3,15 +3,15 @@
 #ifndef DOCXBOX_APP_APP_H_
 #define DOCXBOX_APP_APP_H_
 
+#include <docxbox/app/app_argument.h>
+#include <docxbox/app/app_command.h>
+#include <docxbox/app/app_help.h>
+#include <docxbox/docx/docx_archive.h>
+#include <docxbox/config.h>
+
 #include <string>
 #include <iostream>
 #include <cstring>
-
-#include "./app_argument.h"
-#include "./app_command.h"
-#include "./app_help.h"
-#include "../docx/docx_archive.h"
-#include "../config.h"
 
 namespace docxbox {
 

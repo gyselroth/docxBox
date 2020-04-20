@@ -2,7 +2,7 @@
 
 #include <docxbox/docx/docx_archive.h>
 
-#include "../../vendor/miniz-cpp/zip_file.hpp"
+#include <vendor/miniz-cpp/zip_file.hpp>
 
 // Static extension methods to miniz-cpp
 //

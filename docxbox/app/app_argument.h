@@ -3,11 +3,11 @@
 #ifndef DOCXBOX_APP_APP_ARGUMENT_H_
 #define DOCXBOX_APP_APP_ARGUMENT_H_
 
+#include <docxbox/helper/helper_string.h>
+#include <docxbox/helper/helper_file.h>
+
 #include <cstring>
 #include <string>
-
-#include "../helper/helper_string.h"
-#include "../helper/helper_file.h"
 
 namespace docxbox {
 

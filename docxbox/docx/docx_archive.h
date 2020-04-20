@@ -8,11 +8,9 @@
 #include <docxbox/docx/docx_xml_lorem.h>
 #include <docxbox/docx/docx_xml_replace.h>
 #include <docxbox/docx/docx_xml_to_plaintext.h>
-
 #include <docxbox/docx/docx_fontTable.h>
 #include <docxbox/docx/docx_meta.h>
 #include <docxbox/docx/docx_xml.h>
-
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "app/app.h"
+#include <docxbox/app/app.h>
 
 /**
  * @param argc Amount of arguments

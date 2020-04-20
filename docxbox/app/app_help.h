@@ -3,12 +3,11 @@
 #ifndef DOCXBOX_APP_APP_HELP_H_
 #define DOCXBOX_APP_APP_HELP_H_
 
+#include <docxbox/config.h>
+#include <docxbox/app/app.h>
+
 #include <string>
 #include <iostream>
-
-#include "../config.h"
-#include "./app.h"
-
 
 namespace docxbox {
 

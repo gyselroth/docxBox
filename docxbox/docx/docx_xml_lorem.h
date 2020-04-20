@@ -3,15 +3,15 @@
 #ifndef DOCXBOX_DOCX_DOCX_XML_LOREM_H_
 #define DOCXBOX_DOCX_DOCX_XML_LOREM_H_
 
+#include <docxbox/docx/docx_xml.h>
+#include <docxbox/helper/helper_file.h>
+#include <docxbox/helper/helper_string.h>
+
+#include <vendor/tinyxml2/tinyxml2.h>
+
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include "./docx_xml.h"
-#include "../helper/helper_file.h"
-
-#include "../helper/helper_string.h"
-#include "../../vendor/tinyxml2/tinyxml2.h"
 
 class docx_xml_lorem:docx_xml {
  public:
