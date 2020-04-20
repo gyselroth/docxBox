@@ -169,7 +169,7 @@ bool docx_meta::InitModificationArguments() {
   attribute_ = ResolveAttributeByName(argv_[3]);
 
   if (attribute_ == Attribute::Attribute_Unknown) {
-    std::cout
+    std::cerr
         << "Invalid argument: Unknown or unsupported attribute: "
         << argv_[3] << "\n";
 
@@ -197,7 +197,7 @@ bool docx_meta::UpsertAttribute() {
            ? UpdateCoreAttribute(attribute_, value_)
            : InsertCoreAttribute(attribute_, value_);
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     return false;
   }
@@ -215,7 +215,7 @@ bool docx_meta::UpdateCoreAttribute(
     GetLhsTagByAttribute(attribute, lhs_of_value);
     GetRhsTagByAttribute(attribute, rhs_of_value);
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     return false;
   }
@@ -257,7 +257,7 @@ bool docx_meta::AttributeExistsInCoreXml(Attribute attribute) {
   try {
     GetLhsTagByAttribute(attribute, lhs_of_value);
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     return false;
   }

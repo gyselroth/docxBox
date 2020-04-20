@@ -27,7 +27,7 @@ bool AppArguments::IsArgumentGiven(int argc,
                                    int index,
                                    const std::string &argument_description) {
   if (argc <= index) {
-    std::cout << "Missing argument: " << argument_description << "\n";
+    std::cerr << "Missing argument: " << argument_description << "\n";
 
     return false;
   }

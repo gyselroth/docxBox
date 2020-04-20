@@ -152,7 +152,7 @@ bool docx_archive::ListFiles(bool as_json) {
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     return false;
   }
@@ -189,7 +189,7 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    std::cout << message << "\n";
+    std::cerr << message << "\n";
 
     return false;
   }
@@ -206,7 +206,7 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
   docx_file.extractall(path_working_directory_ + "/" + path_extract_);
 
   if (ensure_is_docx && IsDocx()) {
-    std::cout << "Error: " << path_docx_in_ << " is not a DOCX document.\n";
+    std::cerr << "Error: " << path_docx_in_ << " is not a DOCX document.\n";
 
     return false;
   }
@@ -316,7 +316,7 @@ bool docx_archive::ModifyMeta() {
   try {
     meta->SaveCoreXml();
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
   }
 
   delete meta;
@@ -333,7 +333,7 @@ bool docx_archive::ModifyMeta() {
   }
 
   if (!Zip(path_extract_, path_docx_out + "tmp")) {
-    std::cout << "DOCX creation failed.\n";
+    std::cerr << "DOCX creation failed.\n";
 
     return false;
   }
@@ -563,7 +563,7 @@ bool docx_archive::ReplaceImage() {
         std::string(path_docx_out).append("tmp").c_str(),
         path_docx_out.c_str());
   } catch (std::string &message) {
-    std::cout << message;
+    std::cerr << message;
 
     miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
@@ -601,7 +601,7 @@ bool docx_archive::ReplaceText() {
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
 
     if (!parser->ReplaceStringInXml(path_file_absolute, search, replacement)) {
-      std::cout << "Error: Failed replace string in: "
+      std::cerr << "Error: Failed replace string in: "
                 << file_in_zip.filename << "\n";
 
       delete parser;
@@ -622,7 +622,7 @@ bool docx_archive::ReplaceText() {
       : path_docx_in_;
 
   if (!Zip(path_extract_, path_docx_out + "tmp")) {
-    std::cout << "DOCX creation failed.\n";
+    std::cerr << "DOCX creation failed.\n";
 
     return false;
   }
@@ -651,7 +651,7 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
 
     if (!parser->RandomizeAllTextInXml(path_file_absolute)) {
-      std::cout << "Error: Failed insert lorem ipsum in: "
+      std::cerr << "Error: Failed insert lorem ipsum in: "
                 << file_in_zip.filename << "\n";
 
       delete parser;
@@ -670,7 +670,7 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
       : path_docx_in_;
 
   if (!Zip(path_extract_, path_docx_out + "tmp")) {
-    std::cout << "DOCX creation failed.\n";
+    std::cerr << "DOCX creation failed.\n";
 
     return false;
   }
@@ -689,13 +689,13 @@ bool docx_archive::Zip(std::string path_directory,
                        std::string path_docx_result) {
   if (path_directory.empty()) {
     if (argc_ <= 2) {
-      std::cout << "Missing argument: path of directory to be zipped\n";
+      std::cerr << "Missing argument: path of directory to be zipped\n";
 
       return false;
     }
 
     if (argc_ <= 3) {
-      std::cout << "Missing argument: filename of docx to be created\n";
+      std::cerr << "Missing argument: filename of docx to be created\n";
 
       return false;
     }
