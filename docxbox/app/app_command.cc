@@ -4,9 +4,7 @@
 
 namespace docxbox {
 
-/**
- * Constructor
- */
+// Constructor
 AppCommands::AppCommands(std::string argc): argc_(std::move(argc)) {
   resolved_ = Resolve();
 }
