@@ -13,7 +13,8 @@ bool docx_contentTypes::ReplacePartname(const std::string &part_name) {
 
   // std::string override_partname_tag = RenderOverridePartnameTag(part_name)
 
-  // if (!PartnameTagExists(override_partname_tag)) std::cout << "!"; return false
+  // if (!PartnameTagExists(override_partname_tag))
+  // std::cout << "!"; return false
 
   // helper::String::Replace(xml, overide_partname_tag, replace_tag);
 
