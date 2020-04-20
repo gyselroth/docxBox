@@ -1,6 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/app/app.h>
+#include <docxbox/helper/helper_dateTime.h>
 
 /**
  * @param argc Amount of arguments

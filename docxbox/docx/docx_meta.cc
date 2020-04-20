@@ -38,11 +38,11 @@ std::string docx_meta::FetchAttributeFromAppXml(
       label.empty() ? tag_name : label);
 }
 
-std::basic_string<char> docx_meta::GetRhsTagByTagName(const char *tag_name) {
+std::string docx_meta::GetRhsTagByTagName(const char *tag_name) {
   return std::string("</") + tag_name + ">";
 }
 
-std::basic_string<char> docx_meta::GetLhsTagByTagName(const char *tag_name) {
+std::string docx_meta::GetLhsTagByTagName(const char *tag_name) {
   std::string attributes;
 
   if (helper::String::StartsWith(tag_name, "dcterms:"))
@@ -51,63 +51,48 @@ std::basic_string<char> docx_meta::GetLhsTagByTagName(const char *tag_name) {
   return std::string("<") + tag_name + attributes + ">";
 }
 
-void docx_meta::GetLhsTagByAttribute(const docx_meta::Attribute &attribute,
-                                     const char *&lhs_of_value) {
+std::string docx_meta::GetLhsTagByAttribute(
+    const docx_meta::Attribute &attribute) {
   switch (attribute) {
     case Attribute_Created:
-      lhs_of_value = GetLhsTagByTagName(kWmlTagDcTermsCreated).c_str();
-      break;
+      return GetLhsTagByTagName(kWmlTagDcTermsCreated);
     case Attribute_Creator:
-      lhs_of_value = GetLhsTagByTagName(kWmlTagDcCreator).c_str();
-      break;
+      return GetLhsTagByTagName(kWmlTagDcCreator);
     case Attribute_Title:
-      lhs_of_value = GetLhsTagByTagName(kWmlTagDcTitle).c_str();
-      break;
+      return GetLhsTagByTagName(kWmlTagDcTitle);
     case Attribute_Language:
-      lhs_of_value = GetLhsTagByTagName(kWmlTagDcLanguage).c_str();
-      break;
+      return GetLhsTagByTagName(kWmlTagDcLanguage);
     case Attribute_Revision:
-      lhs_of_value = GetLhsTagByTagName(kWmlTagCpRevision).c_str();
-      break;
+      return GetLhsTagByTagName(kWmlTagCpRevision);
     case Attribute_LastModifiedBy:
-      lhs_of_value = GetLhsTagByTagName(kWmlTagCpLastModifiedBy).c_str();
-      break;
+      return GetLhsTagByTagName(kWmlTagCpLastModifiedBy);
     case Attribute_Modified:
-      lhs_of_value = GetLhsTagByTagName(kWmlTagDcTermsModified).c_str();
-      break;
+      return GetLhsTagByTagName(kWmlTagDcTermsModified);
     case Attribute_LastPrinted:
-      lhs_of_value = GetLhsTagByTagName(kWmlTagCpLastPrinted).c_str();
-      break;
+      return GetLhsTagByTagName(kWmlTagCpLastPrinted);
     default:throw "Attribute unknown";
   }
 }
-void docx_meta::GetRhsTagByAttribute(const docx_meta::Attribute &attribute,
-                                     const char *&rhs_of_value) {
+
+std::string docx_meta::GetRhsTagByAttribute(
+    const docx_meta::Attribute &attribute) {
   switch (attribute) {
     case Attribute_Created:
-      rhs_of_value = GetRhsTagByTagName(kWmlTagDcTermsCreated).c_str();
-      break;
+      return GetRhsTagByTagName(kWmlTagDcTermsCreated);
     case Attribute_Creator:
-      rhs_of_value = GetRhsTagByTagName(kWmlTagDcCreator).c_str();
-      break;
+      return GetRhsTagByTagName(kWmlTagDcCreator);
     case Attribute_Title:
-      rhs_of_value = GetRhsTagByTagName(kWmlTagDcTitle).c_str();
-      break;
+      return GetRhsTagByTagName(kWmlTagDcTitle);
     case Attribute_Language:
-      rhs_of_value = GetRhsTagByTagName(kWmlTagDcLanguage).c_str();
-      break;
+      return GetRhsTagByTagName(kWmlTagDcLanguage);
     case Attribute_Revision:
-      rhs_of_value = GetRhsTagByTagName(kWmlTagCpRevision).c_str();
-      break;
+      return GetRhsTagByTagName(kWmlTagCpRevision);
     case Attribute_LastModifiedBy:
-      rhs_of_value = GetRhsTagByTagName(kWmlTagCpLastModifiedBy).c_str();
-      break;
+      return GetRhsTagByTagName(kWmlTagCpLastModifiedBy);
     case Attribute_Modified:
-      rhs_of_value = GetRhsTagByTagName(kWmlTagDcTermsModified).c_str();
-      break;
+      return GetRhsTagByTagName(kWmlTagDcTermsModified);
     case Attribute_LastPrinted:
-      rhs_of_value = GetRhsTagByTagName(kWmlTagCpLastPrinted).c_str();
-      break;
+      return GetRhsTagByTagName(kWmlTagCpLastPrinted);
     default:throw "Attribute unknown";
   }
 }
@@ -197,13 +182,17 @@ bool docx_meta::InitModificationArguments() {
   return true;
 }
 
-bool docx_meta::UpsertAttribute() {
+bool docx_meta::UpsertAttribute(bool saveXml) {
   path_core_xml_ = path_extract_ + "/docProps/core.xml";
 
   LoadCoreXml(path_core_xml_);
 
+  bool result;
+
   try {
-    return AttributeExistsInCoreXml(attribute_)
+    bool attribute_exists = AttributeExistsInCoreXml(attribute_);
+
+    result = attribute_exists
            ? UpdateCoreAttribute(attribute_, value_)
            : InsertCoreAttribute(attribute_, value_);
   } catch (std::string &message) {
@@ -211,6 +200,10 @@ bool docx_meta::UpsertAttribute() {
 
     return false;
   }
+
+  return result && saveXml
+    ? SaveCoreXml()
+    : result;
 }
 
 bool docx_meta::UpdateCoreAttribute(
@@ -218,12 +211,12 @@ bool docx_meta::UpdateCoreAttribute(
     const std::string& value) {
   EnsureIsLoadedCoreXml();
 
-  const char *lhs_of_value;
-  const char *rhs_of_value;
+  std::string lhs_of_value;
+  std::string rhs_of_value;
 
   try {
-    GetLhsTagByAttribute(attribute, lhs_of_value);
-    GetRhsTagByAttribute(attribute, rhs_of_value);
+    lhs_of_value = GetLhsTagByAttribute(attribute);
+    rhs_of_value = GetRhsTagByAttribute(attribute);
   } catch (std::string &message) {
     std::cerr << message;
 
@@ -233,7 +226,10 @@ bool docx_meta::UpdateCoreAttribute(
   helper::String::Replace(
       core_xml_,
       (std::string(lhs_of_value)
-          + FetchAttributeFromCoreXml(lhs_of_value, rhs_of_value, "")).c_str(),
+          + FetchAttributeFromCoreXml(
+              lhs_of_value.c_str(),
+              rhs_of_value.c_str(),
+              "")).c_str(),
       std::string(lhs_of_value).append(value).c_str());
 
   return true;
@@ -244,16 +240,13 @@ bool docx_meta::InsertCoreAttribute(
     const std::string& value) {
   EnsureIsLoadedCoreXml();
 
-  const char *lhs_of_value;
-  const char *rhs_of_value;
-
-  GetLhsTagByAttribute(attribute, lhs_of_value);
-  GetLhsTagByAttribute(attribute, rhs_of_value);
-
   helper::String::Replace(
       core_xml_,
       kWordMlCorePropertiesRhs,
-      (lhs_of_value + value + rhs_of_value + kWordMlCorePropertiesRhs).c_str());
+      (GetLhsTagByAttribute(attribute)
+          + value
+          + GetRhsTagByAttribute(attribute)
+          + kWordMlCorePropertiesRhs).c_str());
 
   return true;
 }
@@ -262,17 +255,17 @@ bool docx_meta::InsertCoreAttribute(
 bool docx_meta::AttributeExistsInCoreXml(Attribute attribute) {
   EnsureIsLoadedCoreXml();
 
-  const char *lhs_of_value;
+  std::string lhs_of_value;
 
   try {
-    GetLhsTagByAttribute(attribute, lhs_of_value);
+    lhs_of_value = GetLhsTagByAttribute(attribute);
   } catch (std::string &message) {
     std::cerr << message;
 
     return false;
   }
 
-  return helper::String::Contains(core_xml_, lhs_of_value);
+  return helper::String::Contains(core_xml_, lhs_of_value.c_str());
 }
 
 void docx_meta::EnsureIsLoadedCoreXml() {
@@ -282,7 +275,7 @@ void docx_meta::EnsureIsLoadedCoreXml() {
   }
 }
 
-void docx_meta::LoadCoreXml(std::string path) {
+void docx_meta::LoadCoreXml(const std::string& path) {
   core_xml_ = helper::File::GetFileContents(path);
 }
 

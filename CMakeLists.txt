@@ -38,7 +38,7 @@ add_executable(docxbox
         docxbox/docx/docx_xml_to_plaintext.cc
         docxbox/docx/docx_xml_replace.cc
 
-        docxbox/helper/helper_dateTime.cpp
+        docxbox/helper/helper_dateTime.cc
         docxbox/helper/helper_file.cc
         docxbox/helper/helper_string.cc
         docxbox/helper/helper_numeric.cc

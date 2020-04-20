@@ -67,7 +67,7 @@ class docx_meta {
   void SetPathExtract(const std::string &path_extract);
   void SetOutputAsJson(bool output_as_json);
 
-  void LoadCoreXml(std::string path);
+  void LoadCoreXml(const std::string& path);
   bool SaveCoreXml();
 
   std::string FetchAttributeFromAppXml(
@@ -92,7 +92,7 @@ class docx_meta {
   // Validate CLI arguments and initialize rel. properties
   bool InitModificationArguments();
 
-  bool UpsertAttribute();
+  bool UpsertAttribute(bool saveXml = false);
 
   void CollectFromAppXml(std::string path_app_xml, std::string app_xml);
   void CollectFromCoreXml(std::string path_core_xml_current);
@@ -138,16 +138,11 @@ class docx_meta {
 
   void EnsureIsLoadedCoreXml();
 
-  static std::basic_string<char> GetLhsTagByTagName(const char *tag_name);
-  static std::basic_string<char> GetRhsTagByTagName(const char *tag_name);
+  static std::string GetLhsTagByTagName(const char *tag_name);
+  static std::string GetRhsTagByTagName(const char *tag_name);
 
-  static void GetLhsTagByAttribute(
-      const Attribute &attribute,
-      const char *&lhs_of_value);
-
-  static void GetRhsTagByAttribute(
-      const Attribute &attribute,
-      const char *&rhs_of_value);
+  static std::string GetLhsTagByAttribute(const Attribute &attribute);
+  static std::string GetRhsTagByAttribute(const Attribute &attribute);
 
   std::string ExtractXmlSchemaFromAppXml(std::string &app_xml) const;
 };
