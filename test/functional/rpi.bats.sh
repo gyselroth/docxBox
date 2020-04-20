@@ -34,3 +34,21 @@ load _helper
     rm -r  test/files/unziped;
   fi
 }
+
+@test "With \"docxbox rpi filename.docx imageName replacementImageName newFilename.docx\" an image can be replaced and saved to new doxc" {
+  run $BATS_TEST_DIRNAME/docxbox rpi test/files/cp_image.docx image1.jpeg test/files/images/2100x400.jpeg test/files/newImage.docx
+  [ "$status" -eq 0 ]
+  if [ ! -d test/files/unziped ]; then
+    mkdir test/files/unziped;
+    unzip test/files/newImage.docx -d test/files/unziped;
+  fi
+
+  identify -verbose test/files/unziped/word/media/image1.jpeg | grep -c "Resolution: 600x600"
+
+  if [ -d test/files/unziped ]; then
+    rm -r  test/files/unziped;
+  fi
+  if [ -f test/files/newImage.docx ]; then
+    rm test/files/newImage.docx;
+  fi
+}
