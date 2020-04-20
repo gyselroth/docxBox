@@ -281,22 +281,32 @@ bool docx_archive::ListMeta(bool as_json) {
 
   miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
+  delete meta;
+
   return true;
 }
 
 bool docx_archive::ModifyMeta() {
   auto *meta = new docx_meta(argc_, argv_);
 
-  if (!meta->InitModificationArguments()) return false;
+  if (
+      !meta->InitModificationArguments()
+      ||!UnzipDocx("-" + helper::File::GetTmpName())) {
+    delete meta;
 
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+    return false;
+  }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
   auto file_list = docx_file.infolist();
 
   meta->SetPathExtract(path_extract_);
 
-  if (!meta->UpsertAttribute()) return false;
+  if (!meta->UpsertAttribute()) {
+    delete meta;
+
+    return false;
+  }
 
   // Modifiable meta attributes are in docProps/core.xml
   try {
@@ -304,6 +314,8 @@ bool docx_archive::ModifyMeta() {
   } catch (std::string &message) {
     std::cout << message;
   }
+
+  delete meta;
 
   std::string path_docx_out;
 
@@ -412,6 +424,8 @@ bool docx_archive::ListFonts(bool as_json) {
     }
   }
 
+  delete fontTable;
+
   if (as_json) std::cout << "]";
 
   miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
@@ -441,6 +455,8 @@ bool docx_archive::GetText(bool newline_at_segments) {
 
   parser->Output();
 
+  delete parser;
+
   miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
   return true;
@@ -465,6 +481,8 @@ bool docx_archive::ListMergeFields(bool as_json) {
   }
 
   parser->Output(as_json);
+
+  delete parser;
 
   miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
@@ -578,17 +596,22 @@ bool docx_archive::ReplaceText() {
       std::cout << "Error: Failed replace string in: "
                 << file_in_zip.filename << "\n";
 
+      delete parser;
+
       return false;
     }
   }
 
-  std::string path_docx_out = argc_ >= 6
-                              // Result filename is given as argument
-                              ? helper::File::ResolvePath(
+  delete parser;
+
+  std::string path_docx_out =
+      argc_ >= 6
+      // Result filename is given as argument
+      ? helper::File::ResolvePath(
           path_working_directory_,
           argv_[5])
-                              // Overwrite original DOCX
-                              : path_docx_in_;
+      // Overwrite original DOCX
+      : path_docx_in_;
 
   if (!Zip(path_extract_, path_docx_out + "tmp")) {
     std::cout << "DOCX creation failed.\n";
@@ -623,9 +646,13 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
       std::cout << "Error: Failed insert lorem ipsum in: "
                 << file_in_zip.filename << "\n";
 
+      delete parser;
+
       return false;
     }
   }
+
+  delete parser;
 
   std::string path_docx_out =
       argc_ >= 4

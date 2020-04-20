@@ -4,9 +4,7 @@
 
 namespace docxbox {
 
-/**
- * Constructor
- */
+// Constructor
 AppArguments::AppArguments(int argc, char **argv) {
   argc_ = argc;
   argv_ = argv;
