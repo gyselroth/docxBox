@@ -493,6 +493,10 @@ bool docx_archive::ReplaceImage() {
   if (
       !docxbox::AppArguments::IsArgumentGiven(
           argc_,
+          2,
+          "Filename of DOCX")
+          || !docxbox::AppArguments::IsArgumentGiven(
+          argc_,
           3,
           "Filename of image to be replaced")
           || !docxbox::AppArguments::IsArgumentGiven(
