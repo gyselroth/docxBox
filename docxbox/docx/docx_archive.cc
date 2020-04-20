@@ -32,15 +32,6 @@ class miniz_cpp_ext {
     }
   }
 
-  static bool IsDocx(
-      const std::string &path_extract,
-      const std::vector<miniz_cpp::zip_info> &file_list
-  ) {
-    // TODO(kay): check directory structure, mandatory files existence
-
-    return true;
-  }
-
   static void ReduceExtractToImages(
       const std::string &path_extract,
       const std::vector<miniz_cpp::zip_info> &file_list) {
@@ -214,13 +205,26 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
 
   docx_file.extractall(path_working_directory_ + "/" + path_extract_);
 
-  if (ensure_is_docx && !miniz_cpp_ext::IsDocx(path_extract_, file_list)) {
+  if (ensure_is_docx && IsDocx()) {
     std::cout << "Error: " << path_docx_in_ << " is not a DOCX document.\n";
 
     return false;
   }
 
   return true;
+}
+
+// Check formal structure of DOCX archive - mandatory files given?
+bool docx_archive::IsDocx() {
+  return
+      helper::File::IsDirectory(path_extract_ + "/rels")
+          && helper::File::IsDirectory(path_extract_ + "/docProps")
+          && helper::File::IsDirectory(path_extract_ + "/word")
+          && helper::File::FileExists(path_extract_ + "/[Content_Types].xml")
+          && helper::File::FileExists(path_extract_ + "/_rels/.rels")
+          && helper::File::FileExists(path_extract_ + "/docProps/app.xml")
+          && helper::File::FileExists(path_extract_ + "/docProps/core.xml")
+          && helper::File::FileExists(path_extract_ + "/word/document.xml");
 }
 
 // Unzip all (than remove everything but) media files from DOCX file
