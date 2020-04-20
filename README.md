@@ -196,7 +196,7 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 #### Replace text by table
 
-To replace text by a newly rendered table like:
+**Example:** To replace text by a newly rendered table like:
 
 | A  | B  | C  |
 |----|----|----|
@@ -204,7 +204,7 @@ To replace text by a newly rendered table like:
 | b1 | b2 | b3 |
 | c1 | c2 | c3 | 
 
-the table data must be specified as JSON:
+the full table specification as JSON looks like:
 ````
 {
     "table":{
@@ -220,8 +220,16 @@ the table data must be specified as JSON:
 }
 ````
 
-Table-data must be passed as escaped JSON:    
-````docxbox rpt foo.docx search "{\"table\":{\"columns\":3,\"rows\":3,\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
+##### Specification rules:
+
+* JSON must be wrapped within ``{...}``
+* The type specifier (``table``) is mandatory
+* The order of keys within the config of the type (``table``) is arbitrary
+* ``header`` is optional, when given: ``columns`` is optional
+* ``content`` is optional, when given: ``rows`` is optional
+
+The table configuration than must be passed as escaped JSON:    
+````docxbox rpt foo.docx search "{\"table\":{\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
   
 
 #### Randomize document text
