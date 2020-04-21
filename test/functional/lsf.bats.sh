@@ -3,18 +3,30 @@
 load _helper
 
 @test "Exit code of \"docxbox ls filename.docx\" is zero" {
-  run $BATS_TEST_DIRNAME/docxbox ls test/files/docx/table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox lsf {missing argument}\" is an error message" {
-  run $BATS_TEST_DIRNAME/docxbox lsf
+  run "$BATS_TEST_DIRNAME"/docxbox lsf
   [ "$status" -ne 0 ]
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox lsf filename.docx\" contains ground informations" {
-  run $BATS_TEST_DIRNAME/docxbox lsf test/files/docx/table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox lsf test/files/docx/table_unordered_list_images.docx
+  [ "$status" -eq 0 ]
+  [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
+}
+
+@test "Output of \"docxbox ls filename.docx --fonts\" contains ground informations" {
+  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx --fonts
+  [ "$status" -eq 0 ]
+  [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
+}
+
+@test "Output of \"docxbox ls filename.docx -f\" contains ground informations" {
+  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx -f
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
 }
@@ -32,7 +44,7 @@ load _helper
 }
 
 @test "Output of \"docxbox lsf filename.docx\" contains amount fonts" {
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/files/table_unordered_list_images.docx | grep -c "12 fonts"
+  "$BATS_TEST_DIRNAME"/docxbox lsf test/files/docx/table_unordered_list_images.docx | grep -c "12 fonts"
 }
 
 @test "Output of \"docxbox lsf filename.docx\" contains font names" {

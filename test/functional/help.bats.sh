@@ -47,13 +47,13 @@ load _helper
 
 # active once lsg command is implemented
 #@test "\"docxbox h lsg\" displays help for lsg command" {
-#  run $BATS_TEST_DIRNAME/docxbox h lsg
+#  run "$BATS_TEST_DIRNAME"/docxbox h lsg
 #  [ "$status" -eq 0 ]
 #  [ "" = "${lines[0]}" ]
 #}
 #
 #@test "\"docxbox h lsgj\" displays help for lsgj command" {
-#  run $BATS_TEST_DIRNAME/docxbox h lsgj
+#  run "$BATS_TEST_DIRNAME"/docxbox h lsgj
 #  [ "$status" -eq 0 ]
 #  [ "" = "${lines[0]}" ]
 #}
