@@ -36,8 +36,6 @@ load _helper
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
   "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "4/11/2020"
-  "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "11:03"
-  "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "4/11/2020"
   "$BATS_TEST_DIRNAME"/docxbox lsj test/files/docx/table_unordered_list_images.docx | grep -c "11:3"
 }
 
