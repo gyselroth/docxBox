@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef DOCXBOX_DOCX_DOCX_XML_H_
-#define DOCXBOX_DOCX_DOCX_XML_H_
+#ifndef DOCXBOX_DOCX_XML_DOCX_XML_H_
+#define DOCXBOX_DOCX_XML_DOCX_XML_H_
 
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
@@ -24,4 +24,4 @@ class docx_xml {
   std::string document_text_;
 };
 
-#endif  // DOCXBOX_DOCX_DOCX_XML_H_
+#endif  // DOCXBOX_DOCX_XML_DOCX_XML_H_

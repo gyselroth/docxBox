@@ -6,10 +6,11 @@
 #include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
 #include <docxbox/helper/helper_string.h>
 
-#include <vendor/json/single_include/nlohmann/json.hpp>
-
 #include <string>
 #include <vector>
+
+#include <vendor/json/single_include/nlohmann/json.hpp>
+
 
 class docx_wml_renderer_table {
  public:
@@ -25,16 +26,25 @@ class docx_wml_renderer_table {
 
   std::string json_;
 
+  // Table specs from JSON
   int amount_columns_ = 0;
   int amount_rows_ = 0;
-  bool has_column_headers = false;
   std::vector<std::string> column_headers_;
   std::vector<std::string> cell_content_;
+
+  int width_ = 5000;
+
+  // Generic table specs
+  bool has_column_headers = false;
+
 
   std::string wml_;
 
   // Collect table specs from JSON
   void InitSpecs();
+
+  std::string RenderTableProperties();
+  std::string RenderTableGrid();
 };
 
 #endif  // DOCXBOX_DOCX_WML_RENDERER_DOCX_WML_RENDERER_TABLE_H_
