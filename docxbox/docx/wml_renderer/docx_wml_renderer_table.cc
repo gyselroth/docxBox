@@ -72,11 +72,12 @@ void docx_wml_renderer_table::InitSpecs() {
 bool docx_wml_renderer_table::Render() {
   if (!is_valid_table_json_) return false;
 
-  width_ = 5000;
-
   wml_ = "<w:tbl>";
   wml_ += RenderTableProperties();
   wml_ += RenderTableGrid();
+  // TODO(kay): add rendering of header
+  wml_ += RenderTableRows();
+  wml_ = "</w:tbl>";
 
   return true;
 }
@@ -85,20 +86,52 @@ std::string docx_wml_renderer_table::RenderTableProperties() {
   return
     "<w:tblPr>"
       "<w:tblStyle w:val=\"TableGrid\"/>"
-      "<w:tblW w:w=\"" + std::to_string(width_) + "\" w:type=\"pct\"/>"
+      "<w:tblW w:w=\"" + std::to_string(table_width_) + "\" w:type=\"pct\"/>"
     "</w:tblPr>";
 }
 
 std::string docx_wml_renderer_table::RenderTableGrid() {
   std::string markup = "<w:tblGrid>";
 
-  // TODO(kay): calculate width per column
-
   for (int i = 0; i < amount_columns_; i++) {
-    markup += "<w:gridCol w:w=\"2880\"/>";
+    markup += "<w:gridCol w:w=\"" + std::to_string(col_width_) + "\"/>";
   }
 
   return markup + "</w:tblGrid>";;
+}
+
+std::string docx_wml_renderer_table::RenderTableRows() {
+  std::string markup;
+
+  int index_cell = 0;
+
+  for (int i = 0; i < amount_rows_; i++) {
+    markup += "<w:tr>";
+
+    for (int j = 0; j < amount_columns_; j++) {
+      markup += RenderTableCell(index_cell);
+    }
+
+    markup += "</w:tr>";
+
+    index_cell++;
+  }
+
+  return markup;
+}
+
+std::string docx_wml_renderer_table::RenderTableCell(int index_cell) {
+  return
+      "<w:tc>"
+        "<w:tcPr>"
+          "<w:tcW w:w=\"" + std::to_string(col_width_) + "\" w:type=\"dxa\"/>"
+        "</w:tcPr>"
+        "<w:p>"
+          "<w:r>"
+          "<w:t>" + cell_content_[index_cell] + "</w:t>"
+          "</w:r>"
+        "</w:p>"
+      "</w:tc>";
 }
 
 const std::string &docx_wml_renderer_table::GetWml() const {
