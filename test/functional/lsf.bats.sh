@@ -19,6 +19,18 @@ load _helper
   [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
 }
 
+@test "Output of \"docxbox ls filename.docx --fonts\" contains ground informations" {
+  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx --fonts
+  [ "$status" -eq 0 ]
+  [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
+}
+
+@test "Output of \"docxbox ls filename.docx -f\" contains ground informations" {
+  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx -f
+  [ "$status" -eq 0 ]
+  [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
+}
+
 @test "Output of \"docxbox lsf filename.docx\" contains files' and directories' attributes" {
   "$BATS_TEST_DIRNAME"/docxbox lsf test/files/docx/table_unordered_list_images.docx | grep "Font"
   "$BATS_TEST_DIRNAME"/docxbox lsf test/files/docx/table_unordered_list_images.docx | grep "AltName"

@@ -42,6 +42,22 @@ load _helper
   "$BATS_TEST_DIRNAME"/docxbox lsf test/files/docx/table_unordered_list_images.docx -j | grep "pitch"
 }
 
+@test "Output of \"docxbox ls filename.docx --fonts --json\" contains files' and directories' attributes" {
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx --fonts --json | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx --fonts --json | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx --fonts --json | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx --fonts --json | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx --fonts --json | grep "pitch"
+}
+
+@test "Output of \"docxbox ls filename.docx -fj\" contains files' and directories' attributes" {
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx -fj | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx -fj | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx -fj | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx -fj | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx -fj | grep "pitch"
+}
+
 @test "Output of \"docxbox lsfj filename.docx\" contains fontfile-filename" {
   "$BATS_TEST_DIRNAME"/docxbox lsfj test/files/docx/table_unordered_list_images.docx | grep -c "fontTable.xml"
 }
