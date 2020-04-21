@@ -3,5 +3,5 @@
 load _helper
 
 @test "\"docxbox v\" displays version number" {
-  "$BATS_TEST_DIRNAME"/docxbox v | grep '0.0.1'
+  "$BATS_TEST_DIRNAME"/docxbox v | grep '0.0.2'
 }
