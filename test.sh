@@ -21,6 +21,12 @@ bats ./test/functional/ls.bats.sh
 printf "\n\033[4mTest listing files in DOCX as JSON\033[0m\n"
 bats ./test/functional/lsj.bats.sh
 
+printf "\n\033[4mTest listing fields in DOCX\033[0m\n"
+bats ./test/functional/lsd.bats.sh
+
+printf "\n\033[4mTest listing fields in DOCX as JSON\033[0m\n"
+bats ./test/functional/lsdj.bats.sh
+
 printf "\n\033[4mTest listing referenced fonts in DOCX\033[0m\n"
 bats ./test/functional/lsf.bats.sh
 
