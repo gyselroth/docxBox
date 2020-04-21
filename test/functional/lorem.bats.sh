@@ -14,7 +14,7 @@ load _helper
 }
 
 @test "With \"docxbox lorem filename.docx\" text gets replaced by dummy text" {
-  "$BATS_TEST_DIRNAME"/docxbox txt test/files/docx/cp_table_unordered_list_images.docx | grep -v "Culpa ad eiusmod"
+  "$BATS_TEST_DIRNAME"/docxbox txt test/files/docx/cp_table_unordered_list_images.docx | grep -vc "Culpa ad eiusmod"
 }
 
 @test "With \"docxbox lorem filename.docx newFilename.docx\" text gets replaced by dummy text and is saved to new file" {

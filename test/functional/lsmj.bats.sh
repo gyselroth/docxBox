@@ -25,6 +25,14 @@ load _helper
   "$BATS_TEST_DIRNAME"/docxbox lsm test/files/docx/table_unordered_list_images.docx -j | grep -c "\"created\": \"2017-08-02T11:09:18Z\""
 }
 
+@test "Output of \"docxbox ls filename.docx --meta --json\" contains information about the creation time and date" {
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx --meta --json | grep -c "\"created\": \"2017-08-02T11:09:18Z\""
+}
+
+@test "Output of \"docxbox ls filename.docx -mj\" contains information about the creation time and date" {
+  "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx -mj | grep -c "\"created\": \"2017-08-02T11:09:18Z\""
+}
+
 @test "Output of \"docxbox lsmj filename.docx\" contains language information" {
   "$BATS_TEST_DIRNAME"/docxbox lsmj test/files/docx/table_unordered_list_images.docx | grep -c "\"language\": \"en-US\""
 }
