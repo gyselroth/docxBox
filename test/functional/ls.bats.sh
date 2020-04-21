@@ -3,7 +3,7 @@
 load _helper
 
 @test "Exit code of \"docxbox ls filename.docx\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox ls test/files/docx/table_unordered_list_images.docx
   [ "$status" -eq 0 ]
 }
 

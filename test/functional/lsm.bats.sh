@@ -32,7 +32,7 @@ load _helper
 }
 
 @test "Output of \"docxbox lsm filename.docx\" contains information about the revision" {
-  run $BATS_TEST_DIRNAME/docxbox lsm test/files/docx/table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox lsm test/files/docx/table_unordered_list_images.docx
   [ "$status" -eq 0 ]
   [ "revision: 0" = "${lines[3]}" ]
 }
