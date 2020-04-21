@@ -235,7 +235,7 @@ The table configuration must be passed as escaped JSON:
 
 #### Remove content between text
 
-Remove all document content between given strings (``left`` and ``right``):    
+Remove content between (and including) given strings (``left`` and ``right``):    
 
 ````docxbox rem foo.docx left right```` updates foo.docx  
 ````docxbox rem foo.docx left right new.docx```` creates a new file new.docx

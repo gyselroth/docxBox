@@ -106,7 +106,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    h          - Help: Describe usage of this program"
             << "\n    v          - Version: Output version number"
             << "\n\n"
-            << "Type 'docxbox help <command>' for help on a specific command."
+            << "Type 'docxbox help <command>' for more help on a specific command."
             << "\n\n";
 
   return true;

@@ -1,10 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/docx/docx_archive.h>
-#include <docxbox/helper/helper_dateTime.h>
 
 #include <vendor/miniz-cpp/zip_file.hpp>
-#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
 
 // Static extension methods to miniz-cpp
 //

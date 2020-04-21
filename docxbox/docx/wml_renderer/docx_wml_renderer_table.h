@@ -16,15 +16,11 @@ class docx_wml_renderer_table:docx_wml_renderer {
   // Constructor
   explicit docx_wml_renderer_table(const std::string &json);
 
+  std::string GetWml();
+
   bool Render();
 
-  const std::string &GetWml() const;
-
  private:
-  bool is_valid_table_json_;
-
-  std::string json_;
-
   // Table specs from JSON
   int amount_columns_ = 0;
   int amount_rows_ = 0;
@@ -37,8 +33,6 @@ class docx_wml_renderer_table:docx_wml_renderer {
 
   // Generic table specs
   bool has_column_headers = false;
-
-  std::string wml_;
 
   // Collect table specs from JSON
   void InitSpecs();

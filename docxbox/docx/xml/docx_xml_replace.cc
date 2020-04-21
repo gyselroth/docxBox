@@ -90,7 +90,6 @@ void docx_xml_replace::ReplaceStringInTextNodes(
 
     if (tag) {
       if (0 == strcmp(tag, "w:r")) {
-      //if (0 == strcmp(tag, "w:p")) {
           current_run_ = sub_node;
       } else if (0 == strcmp(tag, "w:t")
           && sub_node->FirstChild() != nullptr) {

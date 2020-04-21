@@ -4,14 +4,16 @@
 #define DOCXBOX_DOCX_DOCX_ARCHIVE_H_
 
 #include <docxbox/app/app_argument.h>
+#include <docxbox/docx/docx_fontTable.h>
+#include <docxbox/docx/docx_meta.h>
+#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
 #include <docxbox/docx/xml/docx_xml_fields.h>
 #include <docxbox/docx/xml/docx_xml_lorem.h>
 #include <docxbox/docx/xml/docx_xml_remove.h>
 #include <docxbox/docx/xml/docx_xml_replace.h>
 #include <docxbox/docx/xml/docx_xml_to_plaintext.h>
-#include <docxbox/docx/docx_fontTable.h>
-#include <docxbox/docx/docx_meta.h>
 #include <docxbox/docx/xml/docx_xml.h>
+#include <docxbox/helper/helper_dateTime.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
 
@@ -77,7 +79,7 @@ class docx_archive {
   // Update given meta date attribute and immediately save updated core.xml
   bool UpdateCoreXmlDate(docx_meta::Attribute attribute);
 
-  std::string RenderTableMarkup(const std::string& json);
+  static std::string RenderTableMarkup(const std::string& json);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_ARCHIVE_H_

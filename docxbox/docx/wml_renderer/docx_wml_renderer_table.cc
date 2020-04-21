@@ -11,6 +11,10 @@ docx_wml_renderer_table::docx_wml_renderer_table(const std::string &json) {
   if (is_valid_table_json_) InitSpecs();
 }
 
+std::string docx_wml_renderer_table::GetWml() {
+  return wml_;
+}
+
 // Collect table specs from JSON
 void docx_wml_renderer_table::InitSpecs() {
   if (!helper::String::Contains(json_, "table")) {
@@ -103,7 +107,7 @@ std::string docx_wml_renderer_table::RenderTableGrid() {
     markup += "<w:gridCol w:w=\"" + std::to_string(col_width_) + "\"/>";
   }
 
-  return markup + "</w:tblGrid>";;
+  return markup + "</w:tblGrid>";
 }
 
 std::string docx_wml_renderer_table::RenderTableRows() {
@@ -138,8 +142,4 @@ std::string docx_wml_renderer_table::RenderTableCell(int index_cell) {
           "</w:r>"
         "</w:p>"
       "</w:tc>";
-}
-
-const std::string &docx_wml_renderer_table::GetWml() const {
-  return wml_;
 }
