@@ -69,15 +69,21 @@ void docx_wml_renderer_table::InitSpecs() {
   is_valid_table_json_ = amount_columns_ > 0 && amount_rows_ > 0;
 }
 
+// @see http://officeopenxml.com/WPtable.php
 bool docx_wml_renderer_table::Render() {
   if (!is_valid_table_json_) return false;
 
-  wml_ = "<w:tbl>";
+  wml_ = std::string(kXmlDeclaration);
+  wml_ += std::string(kWRunLhs);
+
+  wml_ += std::string(kWTableLhs);
   wml_ += RenderTableProperties();
   wml_ += RenderTableGrid();
   // TODO(kay): add rendering of header
   wml_ += RenderTableRows();
-  wml_ = "</w:tbl>";
+  wml_ += std::string(kWTableRhs);
+
+  wml_ += std::string(kWRunRhs);
 
   return true;
 }

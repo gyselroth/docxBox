@@ -3,7 +3,7 @@
 #ifndef DOCXBOX_DOCX_WML_RENDERER_DOCX_WML_RENDERER_TABLE_H_
 #define DOCXBOX_DOCX_WML_RENDERER_DOCX_WML_RENDERER_TABLE_H_
 
-#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
+#include <docxbox/docx/wml_renderer/docx_wml_renderer.h>
 #include <docxbox/helper/helper_string.h>
 
 #include <string>
@@ -11,8 +11,7 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-
-class docx_wml_renderer_table {
+class docx_wml_renderer_table:docx_wml_renderer {
  public:
   // Constructor
   explicit docx_wml_renderer_table(const std::string &json);

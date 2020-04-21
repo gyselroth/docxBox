@@ -2,9 +2,11 @@
 
 #include <docxbox/docx/xml/docx_xml_replace.h>
 
-docx_xml_replace::docx_xml_replace(int argc, char **argv) : docx_xml(
-    argc,
-    argv) {
+docx_xml_replace::docx_xml_replace(
+    int argc,
+    char **argv,
+    bool is_replacement_xml) : docx_xml(argc, argv) {
+  is_replacement_xml_ = is_replacement_xml;
 }
 
 bool docx_xml_replace::ReplaceStringInXml(
@@ -18,6 +20,13 @@ bool docx_xml_replace::ReplaceStringInXml(
   if (replace_segmented) {
     segments_look_behind_ = 0;
     previous_text_nodes_.clear();
+  }
+
+  if (is_replacement_xml_) {
+    // Replacement will be done in steps:
+    // 1. Locate nodes containing child-nodes containing text to be replaced
+    // 2. Replace the located nodes
+    runs_to_be_replaced_.clear();
   }
 
   tinyxml2::XMLDocument doc;
@@ -34,7 +43,8 @@ bool docx_xml_replace::ReplaceStringInXml(
 
   amount_replaced_ = 0;
 
-  tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")
+  tinyxml2::XMLElement *body = doc
+      .FirstChildElement("w:document")
       ->FirstChildElement("w:body");
 
   if (replace_segmented) {
@@ -50,6 +60,9 @@ bool docx_xml_replace::ReplaceStringInXml(
     // Replace only unsegmented text
     ReplaceStringInTextNodes(body, search, replacement);
   }
+
+  if (is_replacement_xml_ && !runs_to_be_replaced_.empty())
+    ReplaceRunsByMarkup(replacement);
 
   if (amount_replaced_ > 0
       && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
@@ -75,19 +88,26 @@ void docx_xml_replace::ReplaceStringInTextNodes(
   do {
     if (!sub_node) continue;
 
-    const char *value = sub_node->Value();
+    const char *tag = sub_node->Value();
 
-    if (value) {
-      if (0 == strcmp(value, "w:t")
+    if (tag) {
+      if (0 == strcmp(tag, "w:r")) {
+      //if (0 == strcmp(tag, "w:p")) {
+          current_run_ = sub_node;
+      } else if (0 == strcmp(tag, "w:t")
           && sub_node->FirstChild() != nullptr) {
         std::string text = sub_node->GetText();
 
         if (!text.empty()
             && helper::String::Contains(text, search.c_str())) {
-          amount_replaced_ +=
-              helper::String::ReplaceAll(text, search, replacement);
+          if (is_replacement_xml_) {
+            runs_to_be_replaced_.push_back(current_run_);
+          } else {
+            amount_replaced_ +=
+                helper::String::ReplaceAll(text, search, replacement);
 
-          sub_node->SetText(text.c_str());
+            sub_node->SetText(text.c_str());
+          }
         }
 
         continue;
@@ -96,6 +116,28 @@ void docx_xml_replace::ReplaceStringInTextNodes(
 
     ReplaceStringInTextNodes(sub_node, search, replacement);
   } while ((sub_node = sub_node->NextSiblingElement()));
+}
+
+// Step two of replacing text by markup
+// (1: locate runs, containing nodes containing text to be replaced)
+// 2: Replace located runs by markup
+void docx_xml_replace::ReplaceRunsByMarkup(const std::string &replacement) {
+  tinyxml2::XMLDocument replacement_doc;
+  replacement_doc.Parse(replacement.c_str());
+
+  auto replacement_node = replacement_doc.FirstChildElement();
+
+  for (auto run : runs_to_be_replaced_) {
+    tinyxml2::XMLNode *kParent_node = run->Parent();
+
+    kParent_node->InsertAfterChild(
+        run,
+        replacement_node);
+
+    kParent_node->DeleteChild(run);
+
+    amount_replaced_++;
+  }
 }
 
 /*  Replaces the searched string when contained in a single <w:t> tag,
