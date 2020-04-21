@@ -22,7 +22,8 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
       + [Replace images](#replace-images)
-      + [Replace text](#replace-text)
+      + [Replace text by text](#replace-text-by-text)
+      + [Replace text by table](#replace-text-by-table)
       + [Randomize document text](#randomize-document-text)
   * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
@@ -127,14 +128,14 @@ or ````docxbox lsmj foo.docx````
 
 #### Reference: Recognized meta attributes
 
-* Authors: Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
-* Dates (ISO 8601): Creation-, modification and print-date  
+* **Authors:** Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
+* **Dates** (ISO 8601): Creation-, modification and print-date  
   (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml) 
-* Descriptions: Description, Keywords, Subject, Title   
+* **Descriptions:** Description, Keywords, Subject, Title   
   (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
-* Language (``<dc:language>`` of core.xml) 
-* Revision (``<cp:revision>`` of core.xml)
-* Application created with and its version, name of used template, company
+* **Language** (``<dc:language>`` of core.xml) 
+* **Revision** (``<cp:revision>`` of core.xml)
+* **Application** created with and its version, name of used template, company,
   XML schema of document (``<Application>``, ``<AppVersion>``, ``<Template>``, 
   ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
 
@@ -185,13 +186,51 @@ This overwrites the original DOCX with the modified document.
 This creates a new file: new.docx
 
 
-#### Replace text
+#### Replace text by text
 
 Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 ````docxbox rpt foo.docx old new```` updates foo.docx  
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
+
+#### Replace text by table
+
+**Example:** To replace text by a newly rendered table like:
+
+| A  | B  | C  |
+|----|----|----|
+| a1 | a2 | a3 |
+| b1 | b2 | b3 |
+| c1 | c2 | c3 | 
+
+the table specification as JSON looks like:
+````
+{
+    "table":{
+        "columns":3,
+        "rows":3,
+        "header":["A","B","C"],
+        "content":[
+            ["a1","a2","a3"],
+            ["b1","b2","b3"],
+            ["c1","c2","c3"]
+        ]
+    }
+}
+````
+
+##### Specification rules:
+
+* JSON must be wrapped within ``{...}``
+* The type specifier (``table``) is mandatory
+* The order of keys within the config of the type (``table``) is arbitrary
+* ``header`` is optional, when given: ``columns`` is optional
+* ``content`` is optional, when given: ``rows`` is optional
+
+The table configuration must be passed as escaped JSON:    
+````docxbox rpt foo.docx search "{\"table\":{\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
+  
 
 #### Randomize document text
 

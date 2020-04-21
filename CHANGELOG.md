@@ -1,6 +1,11 @@
 docxBox Changelog
 =================
 
-V0.0.1 - Not finished yet
+V0.0.2 - Not finished yet
 -------------------------
-* Initial release of basic feature set
+* Add replace text by WML table
+
+
+V0.0.1 - 2020-04-20
+-------------------
+* Implement initial feature set

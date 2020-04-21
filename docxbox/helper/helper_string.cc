@@ -155,6 +155,16 @@ bool String::IsAllUpper(const std::string& str) {
   return true;
 }
 
+bool String::IsJson(const std::string &str) {
+  const char *kStr = str.c_str();
+
+  return
+      ((StartsWith(kStr, "{") && EndsWith(str, "}"))
+       || (StartsWith(kStr, "[") && EndsWith(str, "]")))
+       && Contains(kStr, "\"")
+       && Contains(kStr, ":");
+}
+
 std::string String::ToUpper(const std::string& str) {
   std::string upper;
 

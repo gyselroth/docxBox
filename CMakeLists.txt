@@ -32,11 +32,13 @@ add_executable(docxbox
         docxbox/docx/docx_fontTable.cc
         docxbox/docx/docx_meta.cc
 
-        docxbox/docx/docx_xml.cc
-        docxbox/docx/docx_xml_fields.cc
-        docxbox/docx/docx_xml_lorem.cc
-        docxbox/docx/docx_xml_to_plaintext.cc
-        docxbox/docx/docx_xml_replace.cc
+        docxbox/docx/wml_renderer/docx_wml_renderer_table.cc
+
+        docxbox/docx/xml/docx_xml.cc
+        docxbox/docx/xml/docx_xml_fields.cc
+        docxbox/docx/xml/docx_xml_lorem.cc
+        docxbox/docx/xml/docx_xml_to_plaintext.cc
+        docxbox/docx/xml/docx_xml_replace.cc
 
         docxbox/helper/helper_dateTime.cc
         docxbox/helper/helper_file.cc

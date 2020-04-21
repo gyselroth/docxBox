@@ -1,6 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <docxbox/docx/docx_xml_lorem.h>
+#include <docxbox/docx/xml/docx_xml_lorem.h>
 
 docx_xml_lorem::docx_xml_lorem(int argc, char **argv) : docx_xml(
     argc,
@@ -42,11 +42,9 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
 
   tinyxml2::XMLElement *body;
 
-  if (is_document_xml) {
-    body = doc.FirstChildElement("w:document")->FirstChildElement("w:body");
-  } else {
-    body = doc.FirstChildElement("w:hdr");
-  }
+  body = is_document_xml
+    ? doc.FirstChildElement("w:document")->FirstChildElement("w:body")
+    : doc.FirstChildElement("w:hdr");
 
   RandomizeInTextNodes(body);
 
@@ -119,7 +117,6 @@ std::string docx_xml_lorem::RandomizeText(std::string str_in) {
   u_int32_t index_last_word = amount_segments - 1;
 
   std::string segment_prev;
-
   std::string str_out;
 
   if (str_in[0] == ' ') str_out = " ";
@@ -143,7 +140,6 @@ std::string docx_xml_lorem::RandomizeText(std::string str_in) {
     }
 
     str_out += word;
-
     segment_prev = word;
 
     if (i < index_last_word || str_in[str_in.length() - 1] == ' ')

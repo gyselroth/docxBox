@@ -17,7 +17,7 @@ load _helper
 @test "Output of \"docxbox rpt filename.docx stringToBeReplaced {missing argument}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox rpt test/files/docx/table_unordered_list_images.docx toBeReplaced
   [ "$status" -ne 0 ]
-  [ "Missing argument: Replacement string" = "${lines[0]}" ]
+  [ "Missing argument: Replacement" = "${lines[0]}" ]
 }
 
 @test "With \"docxbox rpt filename.docx stringToBeReplaced replacementString\" the stringToBeReplaced gets replaced" {

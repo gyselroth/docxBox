@@ -4,6 +4,7 @@
 #include <docxbox/helper/helper_dateTime.h>
 
 #include <vendor/miniz-cpp/zip_file.hpp>
+#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
 
 // Static extension methods to miniz-cpp
 //
@@ -16,8 +17,7 @@ class miniz_cpp_ext {
  public:
   static void CreateSubDirectories(
       const std::string &path_extract,
-      const std::vector<miniz_cpp::zip_info> &file_list
-  ) {
+      const std::vector<miniz_cpp::zip_info> &file_list) {
     for (const auto& file_in_zip : file_list) {
       if (helper::String::Contains(file_in_zip.filename, "/")) {
         auto directories = helper::String::Explode(file_in_zip.filename, '/');
@@ -590,10 +590,24 @@ bool docx_archive::ReplaceText() {
       || !docxbox::AppArguments::IsArgumentGiven(
           argc_,
           4,
-          "Replacement string")) return false;
+          "Replacement")) return false;
 
   std::string search = argv_[3];
   std::string replacement = argv_[4];
+
+  if (helper::String::IsJson(replacement)) {
+    auto renderer = new docx_wml_renderer_table(replacement);
+
+    if (!renderer->Render()) {
+      std::cout << "Failed render table wml.\n";
+
+      delete renderer;
+
+      return false;
+    }
+
+    //replacement
+  }
 
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
