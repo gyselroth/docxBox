@@ -72,9 +72,33 @@ void docx_wml_renderer_table::InitSpecs() {
 bool docx_wml_renderer_table::Render() {
   if (!is_valid_table_json_) return false;
 
-  // TODO(kay): render WML from table-properties
+  width_ = 5000;
+
+  wml_ = "<w:tbl>";
+  wml_ += RenderTableProperties();
+  wml_ += RenderTableGrid();
 
   return true;
+}
+
+std::string docx_wml_renderer_table::RenderTableProperties() {
+  return
+    "<w:tblPr>"
+      "<w:tblStyle w:val=\"TableGrid\"/>"
+      "<w:tblW w:w=\"" + std::to_string(width_) + "\" w:type=\"pct\"/>"
+    "</w:tblPr>";
+}
+
+std::string docx_wml_renderer_table::RenderTableGrid() {
+  std::string markup = "<w:tblGrid>";
+
+  // TODO(kay): calculate width per column
+
+  for (int i = 0; i < amount_columns_; i++) {
+    markup += "<w:gridCol w:w=\"2880\"/>";
+  }
+
+  return markup + "</w:tblGrid>";;
 }
 
 const std::string &docx_wml_renderer_table::GetWml() const {

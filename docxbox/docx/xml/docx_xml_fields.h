@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef DOCXBOX_DOCX_DOCX_XML_FIELDS_H_
-#define DOCXBOX_DOCX_DOCX_XML_FIELDS_H_
+#ifndef DOCXBOX_DOCX_XML_DOCX_XML_FIELDS_H_
+#define DOCXBOX_DOCX_XML_DOCX_XML_FIELDS_H_
 
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_file.h>
@@ -32,4 +32,4 @@ class docx_xml_fields:docx_xml {
   void OutputAsJson();
 };
 
-#endif  // DOCXBOX_DOCX_DOCX_XML_FIELDS_H_
+#endif  // DOCXBOX_DOCX_XML_DOCX_XML_FIELDS_H_
