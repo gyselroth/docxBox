@@ -595,18 +595,23 @@ bool docx_archive::ReplaceText() {
   std::string search = argv_[3];
   std::string replacement = argv_[4];
 
-  if (helper::String::IsJson(replacement)) {
+  bool is_replacement_xml = helper::String::IsJson(replacement);
+
+  if (is_replacement_xml) {
+    // Replacement is JSON: render resp. markup (ATM: table only)
     auto renderer = new docx_wml_renderer_table(replacement);
 
     if (!renderer->Render()) {
-      std::cout << "Failed render table wml.\n";
+      std::cout << "Failed render table markup.\n";
 
       delete renderer;
 
       return false;
     }
 
-    //replacement
+    replacement = renderer->GetWml();
+
+    delete renderer;
   }
 
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
@@ -615,7 +620,7 @@ bool docx_archive::ReplaceText() {
 
   auto file_list = docx_file.infolist();
 
-  auto parser = new docx_xml_replace(argc_, argv_);
+  auto parser = new docx_xml_replace(argc_, argv_, is_replacement_xml);
 
   for (const auto &file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;

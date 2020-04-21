@@ -7,7 +7,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 set (VERSION_MAJOR "0")
 set (VERSION_MINOR "0")
-set (VERSION_PATCH "1")
+set (VERSION_PATCH "2")
 
 # configure config.h to be generated from config.h.in, with injected version number
 configure_file ("docxbox/config.h.in" "docxbox/config.h")
@@ -32,6 +32,7 @@ add_executable(docxbox
         docxbox/docx/docx_fontTable.cc
         docxbox/docx/docx_meta.cc
 
+        docxbox/docx/wml_renderer/docx_wml_renderer.cc
         docxbox/docx/wml_renderer/docx_wml_renderer_table.cc
 
         docxbox/docx/xml/docx_xml.cc
