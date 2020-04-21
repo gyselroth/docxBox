@@ -32,11 +32,12 @@ class docx_wml_renderer_table {
   std::vector<std::string> column_headers_;
   std::vector<std::string> cell_content_;
 
-  int width_ = 5000;
+  // TODO(kay): make seizing parametric and/or generic
+  int table_width_ = 5000;
+  int col_width_ = 2880;
 
   // Generic table specs
   bool has_column_headers = false;
-
 
   std::string wml_;
 
@@ -45,6 +46,8 @@ class docx_wml_renderer_table {
 
   std::string RenderTableProperties();
   std::string RenderTableGrid();
+  std::string RenderTableCell(int index_cell);
+  std::string RenderTableRows();
 };
 
 #endif  // DOCXBOX_DOCX_WML_RENDERER_DOCX_WML_RENDERER_TABLE_H_
