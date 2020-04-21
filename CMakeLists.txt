@@ -9,7 +9,8 @@ set (VERSION_MAJOR "0")
 set (VERSION_MINOR "0")
 set (VERSION_PATCH "2")
 
-# configure config.h to be generated from config.h.in, with injected version number
+# configure config.h to be generated from config.h.in,
+# with injected version number
 configure_file ("docxbox/config.h.in" "docxbox/config.h")
 
 set(CMAKE_CXX_STANDARD 14)
@@ -39,6 +40,7 @@ add_executable(docxbox
         docxbox/docx/xml/docx_xml_fields.cc
         docxbox/docx/xml/docx_xml_lorem.cc
         docxbox/docx/xml/docx_xml_to_plaintext.cc
+        docxbox/docx/xml/docx_xml_remove.cc
         docxbox/docx/xml/docx_xml_replace.cc
 
         docxbox/helper/helper_dateTime.cc

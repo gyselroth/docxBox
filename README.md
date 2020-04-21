@@ -24,6 +24,7 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
       + [Replace images](#replace-images)
       + [Replace text by text](#replace-text-by-text)
       + [Replace text by table](#replace-text-by-table)
+      + [Remove content between text](#remove-content-between-text)
       + [Randomize document text](#randomize-document-text)
   * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
   * [Zip files into DOCX](#zip-files-into-docx)  
@@ -231,6 +232,14 @@ the table specification as JSON looks like:
 The table configuration must be passed as escaped JSON:    
 ````docxbox rpt foo.docx search "{\"table\":{\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
   
+
+#### Remove content between text
+
+Remove all document content between given strings (``left`` and ``right``):    
+
+````docxbox rem foo.docx left right```` updates foo.docx  
+````docxbox rem foo.docx left right new.docx```` creates a new file new.docx
+
 
 #### Randomize document text
 
