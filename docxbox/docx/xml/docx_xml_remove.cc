@@ -48,6 +48,8 @@ void docx_xml_remove::LocateNodesBetweenText(
     const std::string& rhs) {
   if (!node || node->NoChildren()) return;
 
+  if (found_lhs_ && !found_rhs_) nodes_to_be_removed_.push_back(node);
+
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
 
   if (sub_node == nullptr) return;
@@ -57,10 +59,10 @@ void docx_xml_remove::LocateNodesBetweenText(
 
     const char *tag = sub_node->Value();
 
+    if (found_lhs_ && !found_rhs_) nodes_to_be_removed_.push_back(sub_node);
+
     if (tag) {
-      if (0 == strcmp(tag, "w:p")) {
-          current_run_ = sub_node;
-      } else if (0 == strcmp(tag, "w:t")
+      if (0 == strcmp(tag, "w:t")
           && sub_node->FirstChild() != nullptr) {
         std::string text = sub_node->GetText();
 
@@ -70,11 +72,11 @@ void docx_xml_remove::LocateNodesBetweenText(
           if (helper::String::Contains(text, lhs.c_str())) {
             found_lhs_ = true;
 
-            nodes_to_be_removed_.push_back(current_run_);
+            nodes_to_be_removed_.push_back(sub_node);
           }
         } else {
           // Collect all runs until also right-hand-side string is found
-          nodes_to_be_removed_.push_back(current_run_);
+          nodes_to_be_removed_.push_back(sub_node);
 
           if (helper::String::Contains(text, rhs.c_str())) found_rhs_ = true;
         }
@@ -88,16 +90,11 @@ void docx_xml_remove::LocateNodesBetweenText(
 
 
 void docx_xml_remove::RemoveNodes() {
-  tinyxml2::XMLNode *previous_node = NULL;
-
   for (auto node : nodes_to_be_removed_) {
-    // Avoid deleting already deleted node (segmentation fault)
-    if (node != previous_node) {
+    if (nullptr != node) {
       tinyxml2::XMLNode *kParent = node->Parent();
 
-      previous_node = node;
-
-      kParent->DeleteChild(node);
+      if (kParent) kParent->DeleteChild(node);
     }
   }
 }
