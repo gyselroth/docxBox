@@ -26,6 +26,7 @@ class AppCommands {
     Command_ListMetaAsJson,
     Command_LoremIpsum,
     Command_ModifyMeta,
+    Command_RemoveBetweenText,
     Command_ReplaceImage,
     Command_ReplaceText,
     Command_Unzip,

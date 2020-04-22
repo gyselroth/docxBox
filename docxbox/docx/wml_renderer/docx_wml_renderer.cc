@@ -1,3 +1,3 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include "docx_wml_renderer.h"
+#include <docxbox/docx/wml_renderer/docx_wml_renderer.h>

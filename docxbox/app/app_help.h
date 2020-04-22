@@ -28,6 +28,7 @@ class AppHelp {
   static bool PrintHelpOnModifyMeta();
   static bool PrintHelpOnReplaceImage();
   static bool PrintHelpOnReplaceText();
+  static bool PrintHelpOnRemoveBetweenText();
   static bool PrintHelpOnGetPlainText();
   static bool PrintHelpOnUnzip(bool with_uz = true);
   static bool PrintHelpOnVersion();

@@ -13,8 +13,7 @@ bool docx_xml_replace::ReplaceStringInXml(
     const std::string& path_xml,
     const std::string& search,
     const std::string& replacement,
-    bool replace_segmented
-) {
+    bool replace_segmented) {
   replace_segmented_ = replace_segmented;
 
   if (replace_segmented) {
@@ -43,9 +42,8 @@ bool docx_xml_replace::ReplaceStringInXml(
 
   amount_replaced_ = 0;
 
-  tinyxml2::XMLElement *body = doc
-      .FirstChildElement("w:document")
-      ->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body =
+      doc.FirstChildElement("w:document")->FirstChildElement("w:body");
 
   if (replace_segmented) {
     do {
@@ -92,7 +90,6 @@ void docx_xml_replace::ReplaceStringInTextNodes(
 
     if (tag) {
       if (0 == strcmp(tag, "w:r")) {
-      //if (0 == strcmp(tag, "w:p")) {
           current_run_ = sub_node;
       } else if (0 == strcmp(tag, "w:t")
           && sub_node->FirstChild() != nullptr) {

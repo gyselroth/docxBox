@@ -44,6 +44,9 @@ bool AppHelp::PrintHelp(bool with_title,
 
     case AppCommands::Command_LoremIpsum:return PrintHelpOnLoremIpsum();
 
+    case AppCommands::Command_RemoveBetweenText:
+      return PrintHelpOnRemoveBetweenText();
+
     case AppCommands::Command_ModifyMeta:return PrintHelpOnModifyMeta();
     case AppCommands::Command_ReplaceImage:return PrintHelpOnReplaceImage();
     case AppCommands::Command_ReplaceText:return PrintHelpOnReplaceText();
@@ -87,6 +90,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n  2. Manipulate DOCX document:"
             << "\n    rpi        - Replace image in DOCX"
             << "\n    rpt        - Replace text in DOCX"
+            << "\n    rem        - Remove DOCX content between given strings"
             << "\n    mm         - Modify or set meta attribute in DOCX"
             << "\n    lorem      - Replace all text by random dummy text"
             << "\n"
@@ -102,7 +106,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    h          - Help: Describe usage of this program"
             << "\n    v          - Version: Output version number"
             << "\n\n"
-            << "Type 'docxbox help <command>' for help on a specific command."
+            << "Type 'docxbox help <command>' for more help on a specific command."
             << "\n\n";
 
   return true;
@@ -258,6 +262,19 @@ bool AppHelp::PrintHelpOnReplaceText() {
                "Replace all occurrences of \"old\" by \"new\", "
                "save to new DOCX file:\n"
                "  docxbox rpt foo.docx old new new.docx\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnRemoveBetweenText() {
+  std::cout << "Command: rem - Remove DOCX content between given strings:\n"
+               "----------------------------------------------\n"
+               "Replace all content between \"left-hand-side\" and "
+               "\"right-hand-side\":\n"
+               "  Update existing DOCX file:\n"
+               "    docxbox rem foo.docx left-hand-side right-hand-side\n\n"
+               "  Save to new DOCX file:\n"
+               "    docxbox rem foo.docx left-hand-side right-hand-side new.docx\n\n";
 
   return true;
 }

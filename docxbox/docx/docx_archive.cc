@@ -1,10 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/docx/docx_archive.h>
-#include <docxbox/helper/helper_dateTime.h>
 
 #include <vendor/miniz-cpp/zip_file.hpp>
-#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
 
 // Static extension methods to miniz-cpp
 //
@@ -598,20 +596,13 @@ bool docx_archive::ReplaceText() {
   bool is_replacement_xml = helper::String::IsJson(replacement);
 
   if (is_replacement_xml) {
-    // Replacement is JSON: render resp. markup (ATM: table only)
-    auto renderer = new docx_wml_renderer_table(replacement);
-
-    if (!renderer->Render()) {
-      std::cout << "Failed render table markup.\n";
-
-      delete renderer;
+    try {
+      replacement = RenderTableMarkup(replacement);
+    } catch (std::string &message) {
+      std::cerr << message;
 
       return false;
     }
-
-    replacement = renderer->GetWml();
-
-    delete renderer;
   }
 
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
@@ -655,6 +646,85 @@ bool docx_archive::ReplaceText() {
   }
 
   if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
+
+  std::rename(
+      std::string(path_docx_out).append("tmp").c_str(),
+      path_docx_out.c_str());
+
+  return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+}
+
+std::string docx_archive::RenderTableMarkup(const std::string& json) {
+  auto renderer = new docx_wml_renderer_table(json);
+
+  if (!renderer->Render()) {
+    delete renderer;
+
+    throw "Failed render table markup.\n";
+  }
+
+  auto markup = renderer->GetWml();
+
+  delete renderer;
+
+  return markup;
+}
+
+bool docx_archive::RemoveBetweenText() {
+  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX Filename")
+      || !docxbox::AppArguments::IsArgumentGiven(
+          argc_,
+          3,
+          "String left-hand-side of part to be removed")
+      || !docxbox::AppArguments::IsArgumentGiven(
+          argc_,
+          4,
+          "String right-hand-side of part to be removed")) return false;
+
+  std::string lhs = argv_[3];
+  std::string rhs = argv_[4];
+
+  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+
+  auto file_list = docx_file.infolist();
+
+  auto parser = new docx_xml_remove(argc_, argv_);
+
+  for (const auto &file_in_zip : file_list) {
+    if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
+
+    std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
+
+    if (!parser->RemoveBetweenStringsInXml(path_file_absolute, lhs, rhs)) {
+      std::cerr << "Error: Failed to remove content from: "
+                << file_in_zip.filename << "\n";
+
+      delete parser;
+
+      return false;
+    }
+  }
+
+  delete parser;
+
+  std::string path_docx_out =
+      argc_ >= 7
+      // Result filename is given as argument
+      ? helper::File::ResolvePath(
+          path_working_directory_,
+          argv_[6])
+      // Overwrite original DOCX
+      : path_docx_in_;
+
+  if (!Zip(path_extract_, path_docx_out + "tmp")) {
+    std::cerr << "DOCX creation failed.\n";
+
+    return false;
+  }
+
+  if (argc_ < 7) helper::File::Remove(path_docx_in_.c_str());
 
   std::rename(
       std::string(path_docx_out).append("tmp").c_str(),

@@ -155,6 +155,9 @@ bool App::Process() {
     case AppCommands::Command_ModifyMeta:
       result = docx_archive->ModifyMeta();
       break;
+    case AppCommands::Command_RemoveBetweenText:
+      result = docx_archive->RemoveBetweenText();
+      break;
     case AppCommands::Command_ReplaceImage:
       result = docx_archive->ReplaceImage();
       break;
