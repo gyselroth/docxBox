@@ -56,7 +56,6 @@ bool docx_xml_replace::ReplaceStringInXml(
     }
   }
 
-  //doc.LoadFile(path_xml.c_str());
   doc.Parse(doc_xml.c_str());
 
   if (doc.ErrorID() != 0) return false;
@@ -64,7 +63,8 @@ bool docx_xml_replace::ReplaceStringInXml(
   amount_replaced_ = 0;
 
   if (is_replacement_xml_)
-    replacement_xml_element_ = doc.FirstChildElement()->FirstChildElement("w:r");
+    replacement_xml_element_ =
+        doc.FirstChildElement()->FirstChildElement("w:r");
 
   tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")
       ->FirstChildElement("w:body");
