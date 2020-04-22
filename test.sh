@@ -51,6 +51,9 @@ bats ./test/functional/rpi.bats.sh
 printf "\n\033[4mTest replacing text in DOCX\033[0m\n"
 bats ./test/functional/rpt.bats.sh
 
+printf "\n\033[4mTest removing text between (and including) given strings in DOCX\033[0m\n"
+bats ./test/functional/rem.bats.sh
+
 printf "\n\033[4mTest modyfing or setting meta attributes in DOCX\033[0m\n"
 bats ./test/functional/mm.bats.sh
 

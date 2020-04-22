@@ -94,6 +94,12 @@ load _helper
   [ "Command: rpt - Replace text in DOCX document:" = "${lines[0]}" ]
 }
 
+@test "\"docxbox h rem\" displays help for rem command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h rem
+  [ "$status" -eq 0 ]
+  [ "Command: rem - Remove DOCX content between given strings:" = "${lines[0]}" ]
+}
+
 @test "\"docxbox h rpi\" displays help for mm command" {
   run "$BATS_TEST_DIRNAME"/docxbox h mm
   [ "$status" -eq 0 ]
