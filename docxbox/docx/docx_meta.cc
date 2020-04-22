@@ -7,6 +7,10 @@ docx_meta::docx_meta(int argc, char **argv) {
     argv_ = argv;
 }
 
+docx_meta::Attribute docx_meta::GetAttribute() const {
+  return attribute_;
+}
+
 void docx_meta::SetAttribute(docx_meta::Attribute attribute) {
   attribute_ = attribute;
 }

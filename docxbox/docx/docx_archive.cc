@@ -334,11 +334,11 @@ bool docx_archive::ModifyMeta() {
     path_docx_out = path_docx_in_;
   }
 
+  auto attribute = meta->GetAttribute();
+
   if (!Zip(path_extract_, path_docx_out + "tmp",
-      // TODO(kay): vary the follow arguments depending of attribute,
-      //  = when explicitly modifying "created" or "modified"
-      //  via CLI invocation - don't override it
-      true, true)) {
+      attribute != docx_meta::Attribute_Created,
+      attribute != docx_meta::Attribute_Modified)) {
     std::cerr << "DOCX creation failed.\n";
 
     return false;
