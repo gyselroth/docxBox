@@ -18,6 +18,8 @@ class docx_wml_renderer_table:docx_wml_renderer {
 
   std::string GetWml();
 
+  static std::string RenderTableMarkup(const std::string& json);
+
   bool Render();
 
  private:
@@ -40,7 +42,7 @@ class docx_wml_renderer_table:docx_wml_renderer {
   std::string RenderTableProperties();
   std::string RenderTableGrid();
   std::string RenderTableCell(int index_cell);
-  std::string RenderTableRows();
+  std::string RenderTableRowsAndCells();
 };
 
 #endif  // DOCXBOX_DOCX_WML_RENDERER_DOCX_WML_RENDERER_TABLE_H_

@@ -15,7 +15,7 @@
 
 class docx_xml_replace:docx_xml {
  public:
-  docx_xml_replace(int argc, char **argv, bool is_replacement_xml);
+  docx_xml_replace(int argc, char **argv);
 
   bool ReplaceStringInXml(
       const std::string& path_xml,
@@ -39,23 +39,22 @@ class docx_xml_replace:docx_xml {
 
   tinyxml2::XMLElement *current_run_;
 
+  tinyxml2::XMLElement *replacement_xml_element_;
+
   // Nodes stack, for when replacing text that is contained segmented
   std::vector<tinyxml2::XMLElement *> previous_text_nodes_;
 
   int amount_replaced_ = 0;
 
-  void ReplaceStringInTextNodes(tinyxml2::XMLElement *node,
-                                const std::string &search,
-                                const std::string &replacement);
+  void ReplaceOrLocateStringInXml(tinyxml2::XMLElement *node,
+                                  const std::string &search,
+                                  const std::string &replacement);
 
   void ReplaceSegmentedStringInTextNodes(tinyxml2::XMLElement *node,
                                          const std::string &search,
                                          const std::string &replacement);
 
-  // Step two of replacing text by markup
-  // (1: locate runs, containing nodes containing text to be replaced)
-  // 2: Replace located runs by markup
-  void ReplaceRunsByMarkup(const std::string &replacement);
+  void ReplaceRunsByXmlElement();
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_

@@ -5,9 +5,6 @@
 
 #include <string>
 
-static const char *const kXmlDeclaration =
-    R"(<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>)";
-
 static const char *const kWRunLhs = "<w:r>";
 static const char *const kWRunRhs = "</w:r>";
 

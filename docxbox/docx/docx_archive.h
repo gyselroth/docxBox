@@ -78,8 +78,6 @@ class docx_archive {
 
   // Update given meta date attribute and immediately save updated core.xml
   bool UpdateCoreXmlDate(docx_meta::Attribute attribute);
-
-  static std::string RenderTableMarkup(const std::string& json);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_ARCHIVE_H_

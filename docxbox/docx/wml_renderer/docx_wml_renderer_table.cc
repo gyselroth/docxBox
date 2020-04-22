@@ -11,6 +11,23 @@ docx_wml_renderer_table::docx_wml_renderer_table(const std::string &json) {
   if (is_valid_table_json_) InitSpecs();
 }
 
+std::string docx_wml_renderer_table::RenderTableMarkup(
+    const std::string& json) {
+  auto renderer = new docx_wml_renderer_table(json);
+
+  if (!renderer->Render()) {
+    delete renderer;
+
+    throw "Failed render table markup.\n";
+  }
+
+  auto markup = renderer->GetWml();
+
+  delete renderer;
+
+  return markup;
+}
+
 std::string docx_wml_renderer_table::GetWml() {
   return wml_;
 }
@@ -77,14 +94,13 @@ void docx_wml_renderer_table::InitSpecs() {
 bool docx_wml_renderer_table::Render() {
   if (!is_valid_table_json_) return false;
 
-  wml_ = std::string(kXmlDeclaration);
-  wml_ += std::string(kWRunLhs);
+  wml_ = std::string(kWRunLhs);
 
   wml_ += std::string(kWTableLhs);
   wml_ += RenderTableProperties();
   wml_ += RenderTableGrid();
   // TODO(kay): add rendering of header
-  wml_ += RenderTableRows();
+  wml_ += RenderTableRowsAndCells();
   wml_ += std::string(kWTableRhs);
 
   wml_ += std::string(kWRunRhs);
@@ -110,7 +126,7 @@ std::string docx_wml_renderer_table::RenderTableGrid() {
   return markup + "</w:tblGrid>";
 }
 
-std::string docx_wml_renderer_table::RenderTableRows() {
+std::string docx_wml_renderer_table::RenderTableRowsAndCells() {
   std::string markup;
 
   int index_cell = 0;
@@ -120,11 +136,11 @@ std::string docx_wml_renderer_table::RenderTableRows() {
 
     for (int j = 0; j < amount_columns_; j++) {
       markup += RenderTableCell(index_cell);
+
+      index_cell++;
     }
 
     markup += "</w:tr>";
-
-    index_cell++;
   }
 
   return markup;
