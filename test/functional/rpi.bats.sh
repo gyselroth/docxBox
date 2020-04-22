@@ -43,7 +43,7 @@ load _helper
     unzip test/files/docx/newImage.docx -d test/files/docx/unziped;
   fi
 
-  identify -verbose test/files/docx/unziped/word/media/image1.jpeg | grep -c "Resolution: 600x600"
+  file test/files/docx/unziped/word/media/image1.jpeg | grep -c "2100x400"
 
   if [ -d test/files/docx/unziped ]; then
     rm -r  test/files/docx/unziped;
