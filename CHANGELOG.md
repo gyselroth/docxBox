@@ -1,6 +1,10 @@
 docxBox Changelog
 =================
 
+V0.0.3 - Not finished yet
+-------------------------
+
+
 V0.0.2 - 2020-04-22
 -------------------
 * Add remove content between text (rem)
