@@ -3,7 +3,7 @@
 load _helper
 
 @test "Exit code of \"docxbox lorem filename.docx\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox lorem test/files/docx/cp_table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox lorem test/functional/tmp/cp_table_unordered_list_images.docx
   [ "$status" -eq 0 ]
 }
 
@@ -14,14 +14,14 @@ load _helper
 }
 
 @test "With \"docxbox lorem filename.docx\" text gets replaced by dummy text" {
-  "$BATS_TEST_DIRNAME"/docxbox txt test/files/docx/cp_table_unordered_list_images.docx | grep -vc "Culpa ad eiusmod"
+  "$BATS_TEST_DIRNAME"/docxbox txt test/functional/tmp/cp_table_unordered_list_images.docx | grep -vc "Culpa ad eiusmod"
 }
 
 @test "With \"docxbox lorem filename.docx newFilename.docx\" text gets replaced by dummy text and is saved to new file" {
-  "$BATS_TEST_DIRNAME"/docxbox lorem test/files/docx/cp_table_unordered_list_images.docx test/files/docx/lorem.docx
-  ls test/files/docx | grep -c lorem.docx
-
-  if [ -f test/files/docx/lorem.docx ]; then
-    rm test/files/docx/lorem.docx;
-  fi
+  "$BATS_TEST_DIRNAME"/docxbox lorem test/functional/tmp/cp_table_unordered_list_images.docx test/functional/tmp/lorem.docx
+  ls test/functional/tmp | grep -c lorem.docx
+#
+#  if [ -f test/files/docx/lorem.docx ]; then
+#    rm test/files/docx/lorem.docx;
+#  fi
 }
