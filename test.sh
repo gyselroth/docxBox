@@ -21,17 +21,17 @@ bats ./test/functional/ls.bats.sh
 printf "\n\033[4mTest listing files in DOCX as JSON\033[0m\n"
 bats ./test/functional/lsj.bats.sh
 
+printf "\n\033[4mTest listing fields in DOCX\033[0m\n"
+bats ./test/functional/lsd.bats.sh
+
+printf "\n\033[4mTest listing fields in DOCX as JSON\033[0m\n"
+bats ./test/functional/lsdj.bats.sh
+
 printf "\n\033[4mTest listing referenced fonts in DOCX\033[0m\n"
 bats ./test/functional/lsf.bats.sh
 
 printf "\n\033[4mTest listing referenced fonts in DOCX as JSON\033[0m\n"
 bats ./test/functional/lsfj.bats.sh
-
-printf "\n\033[4mTest listing merge fields in DOCX\033[0m\n"
-bats ./test/functional/lsg.bats.sh
-
-printf "\n\033[4mTest listing merge fields in DOCX as JSON\033[0m\n"
-bats ./test/functional/lsgj.bats.sh
 
 printf "\n\033[4mTest listing images in DOCX\033[0m\n"
 bats ./test/functional/lsi.bats.sh
@@ -51,8 +51,14 @@ bats ./test/functional/rpi.bats.sh
 printf "\n\033[4mTest replacing text in DOCX\033[0m\n"
 bats ./test/functional/rpt.bats.sh
 
+printf "\n\033[4mTest removing text between (and including) given strings in DOCX\033[0m\n"
+bats ./test/functional/rem.bats.sh
+
 printf "\n\033[4mTest modyfing or setting meta attributes in DOCX\033[0m\n"
 bats ./test/functional/mm.bats.sh
+
+printf "\n\033[4mTest replacing text with dummy text in DOCX\033[0m\n"
+bats ./test/functional/lorem.bats.sh
 
 printf "\n\033[4mTest output DOCX document as plaintext\033[0m\n"
 bats ./test/functional/txt.bats.sh

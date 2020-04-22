@@ -9,7 +9,7 @@ load _helper
 }
 
 @test "With of \"docxbox uz filename.docx\" all files are unziped" {
-  run "$BATS_TEST_DIRNAME"/docxbox uz test/files/docx/cp_bio_assay.docx
+  run "$BATS_TEST_DIRNAME"/docxbox uz test/functional/tmp/cp_bio_assay.docx
   [ "$status" -eq 0 ]
 }
 

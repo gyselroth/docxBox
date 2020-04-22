@@ -11,7 +11,7 @@ load _helper
 @test "With \"docxbox zip directory /path-to-file/filename.docx\" a directory can be zipped into a docx" {
   if [ ! -d test/files/docx/unziped ]; then
     mkdir test/files/docx/unziped;
-    unzip test/files/docx/cp_table_unordered_list_images.docx -d test/files/docx/unziped;
+    unzip test/functional/tmp/cp_table_unordered_list_images.docx -d test/files/docx/unziped;
   fi
 
   run "$BATS_TEST_DIRNAME"/docxbox zip test/files/docx/unziped test/files/docx/zp_table_unordered_list_images.docx

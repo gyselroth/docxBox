@@ -45,18 +45,17 @@ load _helper
   [ "Command: lsf - List fonts referenced in DOCX:" = "${lines[0]}" ]
 }
 
-# active once lsg command is implemented
-#@test "\"docxbox h lsg\" displays help for lsg command" {
-#  run "$BATS_TEST_DIRNAME"/docxbox h lsg
-#  [ "$status" -eq 0 ]
-#  [ "" = "${lines[0]}" ]
-#}
-#
-#@test "\"docxbox h lsgj\" displays help for lsgj command" {
-#  run "$BATS_TEST_DIRNAME"/docxbox h lsgj
-#  [ "$status" -eq 0 ]
-#  [ "" = "${lines[0]}" ]
-#}
+@test "\"docxbox h lsd\" displays help for lsd command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h lsd
+  [ "$status" -eq 0 ]
+  [ "Command: lsd - List fields from DOCX:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h lsdj\" displays help for lsdj command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h lsdj
+  [ "$status" -eq 0 ]
+  [ "Command: lsd - List fields from DOCX:" = "${lines[0]}" ]
+}
 
 @test "\"docxbox h lsi\" displays help for lsi command" {
   run "$BATS_TEST_DIRNAME"/docxbox h lsi
@@ -93,6 +92,12 @@ load _helper
   run "$BATS_TEST_DIRNAME"/docxbox h rpt
   [ "$status" -eq 0 ]
   [ "Command: rpt - Replace text in DOCX document:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h rem\" displays help for rem command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h rem
+  [ "$status" -eq 0 ]
+  [ "Command: rem - Remove DOCX content between given strings:" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h rpi\" displays help for mm command" {
