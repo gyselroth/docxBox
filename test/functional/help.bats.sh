@@ -94,10 +94,10 @@ load _helper
   [ "Command: rpt - Replace text in DOCX document:" = "${lines[0]}" ]
 }
 
-@test "\"docxbox h rem\" displays help for rem command" {
-  run "$BATS_TEST_DIRNAME"/docxbox h rem
+@test "\"docxbox h rmt\" displays help for rmt command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h rmt
   [ "$status" -eq 0 ]
-  [ "Command: rem - Remove DOCX content between given strings:" = "${lines[0]}" ]
+  [ "Command: rmt - Remove DOCX content between given strings:" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h rpi\" displays help for mm command" {
@@ -126,8 +126,8 @@ load _helper
   [ "Command: uzm - Unzip only media files DOCX file:" = "${lines[0]}" ]
 }
 
-@test "\"docxbox h zip\" displays help for zip command" {
-  run "$BATS_TEST_DIRNAME"/docxbox h zip
+@test "\"docxbox h zp\" displays help for zp command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h zp
   [ "$status" -eq 0 ]
-  [ "Command: zip - Create (zip) DOCX from files:" = "${lines[0]}" ]
+  [ "Command: zp - Create (zip) DOCX from files:" = "${lines[0]}" ]
 }

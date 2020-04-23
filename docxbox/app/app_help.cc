@@ -92,7 +92,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n  2. Manipulate DOCX document:"
             << "\n    rpi        - Replace image in DOCX"
             << "\n    rpt        - Replace text in DOCX"
-            << "\n    rem        - Remove DOCX content between given strings"
+            << "\n    rmt        - Remove DOCX content between given strings"
             << "\n    mm         - Modify or set meta attribute in DOCX"
             << "\n    lorem      - Replace all text by random dummy text"
             << "\n"
@@ -103,7 +103,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    uz         - Unzip files from DOCX"
             << "\n    uzi        - Unzip DOCX and indent XML files"
             << "\n    uzm        - Unzip only media files from DOCX"
-            << "\n    zip        - Create (zip) DOCX from files"
+            << "\n    zp         - Create (zip) DOCX from files"
             << "\n"
             << "\n  5. Meta commands:"
             << "\n    h          - Help: Describe usage of this program"
@@ -272,14 +272,14 @@ bool AppHelp::PrintHelpOnReplaceText() {
 
 bool AppHelp::PrintHelpOnRemoveBetweenText() {
   std::cout
-    << "Command: rem - Remove DOCX content between given strings:\n"
+    << "Command: rmt - Remove DOCX content between given strings:\n"
        "----------------------------------------------\n"
        "Replace all content between \"left-hand-side\" and "
        "\"right-hand-side\":\n"
        "  Update existing DOCX file:\n"
-       "    docxbox rem foo.docx left-hand-side right-hand-side\n\n"
+       "    docxbox rmt foo.docx left-hand-side right-hand-side\n\n"
        "  Save to new DOCX file:\n"
-       "    docxbox rem foo.docx left-hand-side right-hand-side new.docx\n\n";
+       "    docxbox rmt foo.docx left-hand-side right-hand-side new.docx\n\n";
 
   return true;
 }
@@ -332,10 +332,10 @@ bool AppHelp::PrintHelpOnUnzip(bool with_uz, bool with_uzm, bool with_uzi) {
 }
 
 bool AppHelp::PrintHelpOnZip() {
-  std::cout << "Command: zip - Create (zip) DOCX from files:\n"
+  std::cout << "Command: zp - Create (zip) DOCX from files:\n"
                "--------------------------------------------\n"
                "Create DOCX from files in given (directory) path to new DOCX:\n"
-               "  docxbox zip foo foo.docx\n\n";
+               "  docxbox zp foo foo.docx\n\n";
 
   return true;
 }

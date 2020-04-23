@@ -163,8 +163,7 @@ class miniz_cpp_ext {
 
       std::cout
           << size_total << "                     "
-          << index_file << " file" << (index_file == 1 ? "" : "s")
-          << "\n";
+          << index_file << " file" << (index_file == 1 ? "" : "s") << "\n";
     }
   }
 

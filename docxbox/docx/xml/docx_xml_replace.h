@@ -3,6 +3,8 @@
 #ifndef DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
 #define DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
 
+#include <docxbox/docx/wml_renderer/docx_wml_renderer.h>
+#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
@@ -55,6 +57,8 @@ class docx_xml_replace:docx_xml {
                                          const std::string &replacement);
 
   void ReplaceRunsByXmlElement();
+
+  static std::string RenderMarkupFromJson(const std::string& json);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_

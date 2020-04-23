@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+// Constructor
 docx_wml_renderer_table::docx_wml_renderer_table(const std::string &json) {
   json_ = json;
   is_valid_wml_json_ = helper::String::IsJson(json);
@@ -11,7 +12,7 @@ docx_wml_renderer_table::docx_wml_renderer_table(const std::string &json) {
   if (is_valid_wml_json_) InitSpecs();
 }
 
-std::string docx_wml_renderer_table::RenderTableMarkup(
+std::string docx_wml_renderer_table::RenderMarkup(
     const std::string& json) {
   auto renderer = new docx_wml_renderer_table(json);
 
@@ -153,9 +154,9 @@ std::string docx_wml_renderer_table::RenderTableCell(int index_cell) {
           "<w:tcW w:w=\"" + std::to_string(col_width_) + "\" w:type=\"dxa\"/>"
         "</w:tcPr>"
         "<w:p>"
-          "<w:r>"
-          "<w:t>" + cell_content_[index_cell] + "</w:t>"
-          "</w:r>"
-        "</w:p>"
+          + kWRunLhs
+          + "<w:t>" + cell_content_[index_cell] + "</w:t>"
+          + kWRunRhs
+        + "</w:p>"
       "</w:tc>";
 }

@@ -33,7 +33,7 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "lsm") return Command_ListMeta;
   if (command == "lsmj") return Command_ListMetaAsJson;
   if (command == "mm") return Command_ModifyMeta;
-  if (command == "rem") return Command_RemoveBetweenText;
+  if (command == "rmt") return Command_RemoveBetweenText;
   if (command == "rpi") return Command_ReplaceImage;
   if (command == "rpt") return Command_ReplaceText;
   if (command == "txt") return Command_GetPlainText;
@@ -41,7 +41,7 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "uzi") return Command_UnzipAndIndentXml;
   if (command == "uzm") return Command_UnzipMedia;
   if (command == "v") return Command_Version;
-  if (command == "zip") return Command_Zip;
+  if (command == "zp") return Command_Zip;
 
   return Command_Invalid;
 }

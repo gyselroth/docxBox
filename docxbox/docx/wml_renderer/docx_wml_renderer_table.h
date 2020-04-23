@@ -18,7 +18,7 @@ class docx_wml_renderer_table:docx_wml_renderer {
 
   std::string GetWml();
 
-  static std::string RenderTableMarkup(const std::string& json);
+  static std::string RenderMarkup(const std::string& json);
 
   bool Render();
 

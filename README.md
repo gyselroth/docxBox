@@ -18,11 +18,11 @@ Linux tool for DOCX (OpenXML) analysis and manipulation.
     + [List images information](#list-images-information)
     + [List fields](#list-fields)
   * [Output plaintext](#output-plaintext)
-      + [Output plaintext segments](#output-plaintext-segments)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
       + [Replace image](#replace-image)
       + [Replace text by text](#replace-text-by-text)
+      + [Replace text by image](#replace-text-by-image)
       + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
       + [Randomize document text](#randomize-document-text)
@@ -151,8 +151,7 @@ or ````docxbox ls foo.docx --fields --json````
 
 ````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and footer)
 
-#### Output plaintext segments 
-
+**Output plaintext segments:**  
 ````docxbox txt foo.docx -s````   
 or ````docxbox txt foo.docx --segments````   
 
@@ -189,6 +188,9 @@ To alter/insert an attribute and save the modified document to a new file:
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
 This overwrites the original DOCX with the modified document.
 
+**Note:** For now the original and replacement image must be of the same format 
+(bmp, gif, jpg, etc.).
+
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg new.docx````  
 This creates a new file: new.docx
 
@@ -199,6 +201,36 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 ````docxbox rpt foo.docx old new```` updates foo.docx  
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
+
+
+#### Replace text by image
+
+**Example:** To replace text by an image: 
+
+The image specification as JSON looks like:
+
+````
+{
+    "img":{
+        "filename":"example.jpg",
+        "offset":[0,0],
+        "size":[2438400,1828800]
+    }
+}
+````
+
+##### Specification rules:
+* JSON must be wrapped within ``{...}``
+* The type specifier (``image``) is mandatory
+* When adding a new image file resource, the ``filename`` parameter is optional,
+  it specifies a different filename to be used within DOCX 
+* The ``offset`` argument is optional
+* Embeddable image formats are: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, ``tif``, ``tiff``, ``wmf``
+* Size is given in EMUs (English Metric Unit) that is: ``pixels * 9525``
+
+The image configuration must be passed as escaped JSON, 
+when inserting a new image file, it must be given as additional argument:  
+````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````
 
 
 #### Replace text by table
@@ -274,7 +306,7 @@ or ````docxbox uz foo.docx --indent````
 
 ### Zip files into DOCX
 
-````docxbox zip path/to/directory out.docx````
+````docxbox zp path/to/directory out.docx````
 
 
 ### Output docxBox help or version number

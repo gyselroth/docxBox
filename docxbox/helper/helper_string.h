@@ -51,6 +51,8 @@ extern std::string GetSubStrBetween(
     const char *lhs,
     const char *rhs);
 
+extern int OffsetChar(const std::string &str, char c, int offset = 0);
+
 // Split given string by given character delimiter into vector of strings
 extern std::vector<std::string> Explode(std::string const &str, char delimiter);
 

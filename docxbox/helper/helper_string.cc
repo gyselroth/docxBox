@@ -87,6 +87,22 @@ std::string String::GetSubStrBetween(
   return GetSubStrBetween(str, lhs, rhs, offset);
 }
 
+int String::OffsetChar(const std::string &str, char c, int offset) {
+  char ch;
+
+  int16_t len = str.length();
+
+  do {
+    ch = str[offset];
+    
+    if (ch == c) return offset;
+    
+    ++offset;
+  } while (offset < len);
+
+  return -1;
+}
+
 // Split given string by given character delimiter into vector of strings
 std::vector<std::string> String::Explode(
     std::string const &str,

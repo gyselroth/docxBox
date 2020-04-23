@@ -2,14 +2,14 @@
 
 load _helper
 
-@test "Output of \"docxbox rem {missing filename}\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox rem
+@test "Output of \"docxbox rmt {missing filename}\" is an error message" {
+  run "$BATS_TEST_DIRNAME"/docxbox rmt
   [ "$status" -ne 0 ]
   [ "Missing argument: DOCX Filename" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox rem filename.docx {missing arguments}\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox rem test/functional/tmp/cp_table_unordered_list_images.docx
+@test "Output of \"docxbox rmt filename.docx {missing arguments}\" is an error message" {
+  run "$BATS_TEST_DIRNAME"/docxbox rmt test/functional/tmp/cp_table_unordered_list_images.docx
   [ "$status" -ne 0 ]
   [ "Missing argument: String left-hand-side of part to be removed" = "${lines[0]}" ]
 }
