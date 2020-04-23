@@ -3,8 +3,6 @@
 #ifndef DOCXBOX_HELPER_HELPER_NUMERIC_H_
 #define DOCXBOX_HELPER_HELPER_NUMERIC_H_
 
-#include <math.h>
-
 #include <cstdio>
 #include <cstdint>
 #include <cmath>
