@@ -9,7 +9,7 @@ bool Numeric::IsEven(int n) {
 }
 
 int Numeric::GetAmountDigits(int n) {
-  return floor (log10 (fabs (n))) + 1;
+  return floor (log10(n)) + 1;
 }
 
 }  // namespace helper
