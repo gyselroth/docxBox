@@ -6,9 +6,9 @@
 
 docx_wml_renderer_table::docx_wml_renderer_table(const std::string &json) {
   json_ = json;
-  is_valid_table_json_ = helper::String::IsJson(json);
+  is_valid_wml_json_ = helper::String::IsJson(json);
 
-  if (is_valid_table_json_) InitSpecs();
+  if (is_valid_wml_json_) InitSpecs();
 }
 
 std::string docx_wml_renderer_table::RenderTableMarkup(
@@ -35,7 +35,7 @@ std::string docx_wml_renderer_table::GetWml() {
 // Collect table specs from JSON
 void docx_wml_renderer_table::InitSpecs() {
   if (!helper::String::Contains(json_, "table")) {
-    is_valid_table_json_ = false;
+    is_valid_wml_json_ = false;
 
     return;
   }
@@ -87,12 +87,12 @@ void docx_wml_renderer_table::InitSpecs() {
     }
   }
 
-  is_valid_table_json_ = amount_columns_ > 0 && amount_rows_ > 0;
+  is_valid_wml_json_ = amount_columns_ > 0 && amount_rows_ > 0;
 }
 
 // @see http://officeopenxml.com/WPtable.php
 bool docx_wml_renderer_table::Render() {
-  if (!is_valid_table_json_) return false;
+  if (!is_valid_wml_json_) return false;
 
   wml_ = std::string(kWRunLhs);
 

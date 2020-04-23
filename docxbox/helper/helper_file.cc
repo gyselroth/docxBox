@@ -25,7 +25,7 @@ std::string File::GetFileContents(const std::string &filename) {
 std::string File::GetFileContents(std::ifstream &file) {
   std::streampos length = GetFileSize(file);
 
-  // Read the whole file into the buffer
+  // Read whole file into the buffer
   std::vector<char> buffer(static_cast<u_int32_t>(length));
   file.read(&buffer[0], length);
 
@@ -65,12 +65,6 @@ std::streampos File::GetFileSize(std::ifstream &file) {
   return length;
 }
 
-std::ifstream::pos_type File::GetFileSize(const char* filename) {
-  std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
-
-  return in.tellg();
-}
-
 bool File::WriteToNewFile(
     const std::string &filename,
     const std::string &content) {
@@ -105,7 +99,7 @@ std::string File::GetLastPathSegment(std::string path) {
   if (helper::String::Contains(path, "/")) {
     std::vector<std::string> parts = helper::String::Explode(path, '/');
 
-    return parts[parts.size()-1];
+    return parts[parts.size() - 1];
   }
 
   return path;

@@ -15,7 +15,7 @@ class docx_wml_renderer {
  protected:
   std::string json_;
 
-  bool is_valid_table_json_;
+  bool is_valid_wml_json_;
 
   std::string wml_;
 };

@@ -34,7 +34,6 @@ extern std::string ResolvePath(
     bool must_exist = false);
 
 extern std::streampos GetFileSize(std::ifstream &file);
-extern std::ifstream::pos_type GetFileSize(const char* filename);
 
 extern std::string GetFileContents(const std::string &filename);
 extern std::string GetFileContents(std::ifstream &file);
