@@ -10,7 +10,7 @@ Linux tool for DOCX (OpenXML) analysis and manipulation.
 
 * [Planned features](#planned-features)
 * [Commands](#commands)
-  * [List DOCX contents](#list-docx-contents)
+  * [Output DOCX contents](#output-docx-contents)
     + [List files](#list-files)
     + [List meta data](#list-meta-data)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
@@ -54,7 +54,7 @@ Planned Features
 Commands
 --------
 
-### List DOCX contents
+### Output DOCX contents
 
 #### List files
 
@@ -64,9 +64,9 @@ Lists files (and directories) contained within a given DOCX, and their attribute
 
 To output as JSON:
 
-````docxbox ls foo.docx --json````  
+````docxbox lsj foo.docx````  
 or ````docxbox ls foo.docx -j````  
-or ````docxbox lsj foo.docx````
+or ````docxbox ls foo.docx --json````  
 
 #### List meta data
 
@@ -75,18 +75,19 @@ DOCX file (this differs by DOCX version and application), also if given empty.
 
 Output meta data of given DOCX:  
 
-````docxbox ls foo.docx --meta````  
+````docxbox lsm foo.docx````  
 or ````docxbox ls foo.docx -m````  
-or ````docxbox lsm foo.docx````
+or ````docxbox ls foo.docx --meta````
 
 To output as JSON:
 
-````docxbox ls foo.docx --meta --json````  
-or ````docxbox ls foo.docx -mj````  
-or ````docxbox lsm foo.docx --json````  
+````docxbox lsmj foo.docx````  
 or ````docxbox lsm foo.docx -j````  
-or ````docxbox lsmj foo.docx````
+or ````docxbox ls foo.docx -mj````
+or ````docxbox lsm foo.docx --json````
+or ````docxbox ls foo.docx --meta --json````  
 
+  
 #### Reference: Recognized meta attributes
 
 * **Authors:** Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
@@ -103,46 +104,47 @@ or ````docxbox lsmj foo.docx````
 
 #### List referenced fonts
 
-````docxbox ls foo.docx --fonts````  
+````docxbox lsf foo.docx````  
 or ````docxbox ls foo.docx -f````  
-or ````docxbox lsf foo.docx````  
+or ````docxbox ls foo.docx --fonts````  
 
 To output as JSON:
 
-````docxbox ls foo.docx --fonts --json````  
+````docxbox lsfj foo.docx````  
+or ````docxbox lsf foo.docx -j````
 or ````docxbox ls foo.docx -fj````  
 or ````docxbox lsf foo.docx --json````  
-or ````docxbox lsf foo.docx -j````  
-or ````docxbox lsfj foo.docx````
+or ````docxbox ls foo.docx --fonts --json````
+
 
 #### List images information
 
 Output list of contained images
 
-````docxbox ls foo.docx --images````  
+````docxbox lsi foo.docx````  
 or ````docxbox ls foo.docx -i````  
-or ````docxbox lsi foo.docx````
+or ````docxbox ls foo.docx --images````  
 
 To output as JSON:
 
-````docxbox ls foo.docx --images --json````  
-````docxbox ls foo.docx -ij````  
-or ````docxbox lsi foo.docx --json````  
+````docxbox lsij foo.docx````  
 or ````docxbox lsi foo.docx -j````  
-or ````docxbox lsij foo.docx````
+or ````docxbox ls foo.docx -ij````  
+or ````docxbox lsi foo.docx --json````  
+or ````docxbox ls foo.docx --images --json````  
 
 #### List fields
 
-````docxbox ls foo.docx --fields````  
+````docxbox lsd foo.docx````  
 or ````docxbox ls foo.docx -d````  
-or ````docxbox lsd foo.docx````  
+or ````docxbox ls foo.docx --fields````  
 
 To output as JSON:  
 
-````docxbox ls foo.docx --fields --json````  
+````docxbox lsdj foo.docx````  
 or ````docxbox ls foo.docx -dj````  
 or ````docxbox lsd foo.docx --json````  
-or ````docxbox lsdj foo.docx````  
+or ````docxbox ls foo.docx --fields --json````  
 
 
 ### Output plaintext
@@ -151,8 +153,8 @@ or ````docxbox lsdj foo.docx````
 
 #### Output plaintext segments 
 
-````docxbox txt foo.docx --segments````   
-or ````docxbox txt foo.docx -s```` 
+````docxbox txt foo.docx -s````   
+or ````docxbox txt foo.docx --segments````   
 
 Outputs the text from document, w/ markup sections separated by newlines.
 This can be helpful to identify "segmented" sentences:
@@ -260,14 +262,14 @@ purposes:
 **Unzip all files:** ````docxbox uz foo.docx````  
 
 **Unzip only media files:**  
-````docxbox uz foo.docx --media````  
+````docxbox uzm foo.docx````
 or ````docxbox uz foo.docx -m````  
-or ````docxbox uzm foo.docx````
+or ````docxbox uz foo.docx --media````    
 
 **Unzip all files and indent XML files:**  
-````docxbox uz foo.docx --indent````  
+````docxbox uzi foo.docx````  
 or ````docxbox uz foo.docx -i````  
-or ````docxbox uzi foo.docx````
+or ````docxbox uz foo.docx --indent````  
 
 
 ### Zip files into DOCX
