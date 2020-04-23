@@ -221,7 +221,7 @@ The image specification as JSON looks like:
 
 ##### Specification rules:
 * JSON must be wrapped within ``{...}``
-* The type specifier (``image``) is mandatory
+* The type specifier (``img``) is mandatory
 * When adding a new image file resource, the ``filename`` parameter is optional,
   it specifies a different filename to be used within DOCX 
 * The ``offset`` argument is optional
