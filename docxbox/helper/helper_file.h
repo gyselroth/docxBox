@@ -58,6 +58,8 @@ extern std::vector<std::string> ScanDirRecursive(
 
 extern std::string GetTmpName();
 
+extern bool IsWordCompatibleImage(const std::string &filename);
+
 }  // namespace File
 }  // namespace helper
 

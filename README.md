@@ -3,34 +3,35 @@
 docxBox
 =======
 
-Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
+Linux tool for DOCX (OpenXML) analysis and manipulation.
 
 
 ## Table of contents
 
 * [Planned features](#planned-features)
 * [Commands](#commands)
-  * [List DOCX contents](#list-docx-contents)
-    + [Output list of files](#output-list-of-files)
-    + [Output list of referenced fonts](#output-list-of-referenced-fonts)
-    + [List images information](#list-images-information)
-    + [List fields](#list-fields)
+  * [Output DOCX contents](#output-docx-contents)
+    + [List files](#list-files)
     + [List meta data](#list-meta-data)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
+    + [List referenced fonts](#List-referenced-fonts)
+    + [List images information](#list-images-information)
+    + [List fields](#list-fields)
   * [Output plaintext](#output-plaintext)
       + [Output plaintext segments](#output-plaintext-segments)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
-      + [Replace images](#replace-images)
+      + [Replace image](#replace-image)
       + [Replace text by text](#replace-text-by-text)
       + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
       + [Randomize document text](#randomize-document-text)
-  * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
+  * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
+* [Code Convention](#code-convention)
 * [Changelog](#changelog)
 * [Bug Reporting and Feature Requests](#bug-reporting-and-feature-requests)
 * [Third Party References](#third-party-references)
@@ -43,7 +44,7 @@ Planned Features
 * v0.0.3: Replace text by image
 * v0.0.3: Replace field by text, table and image
 * v0.0.4: Batch process sequences of manipulation operations
-* v0.0.5: Ensure microsoft word compatiblity
+* v0.0.5: Ensure microsoft word compatibility
 * v0.1.0: Add optional configuration options via environment vars
 * v0.1.0: (Optional) logging of operations
 * v1.0.0: Libre-Office compatible appending of two DOCX files into a single one 
@@ -53,9 +54,9 @@ Planned Features
 Commands
 --------
 
-### List DOCX contents
+### Output DOCX contents
 
-#### Output list of files
+#### List files
 
 Lists files (and directories) contained within a given DOCX, and their attributes:
 
@@ -63,52 +64,9 @@ Lists files (and directories) contained within a given DOCX, and their attribute
 
 To output as JSON:
 
-````docxbox ls foo.docx --json````  
+````docxbox lsj foo.docx````  
 or ````docxbox ls foo.docx -j````  
-or ````docxbox lsj foo.docx````
-
-#### Output list of referenced fonts
-
-````docxbox ls foo.docx --fonts````  
-or ````docxbox ls foo.docx -f````  
-or ````docxbox lsf foo.docx````  
-
-To output as JSON:
-
-````docxbox ls foo.docx --fonts --json````  
-or ````docxbox ls foo.docx -fj````  
-or ````docxbox lsf foo.docx --json````  
-or ````docxbox lsf foo.docx -j````  
-or ````docxbox lsfj foo.docx````
-
-#### List images information
-
-Output list of contained images
-
-````docxbox ls foo.docx --images````  
-or ````docxbox ls foo.docx -i````  
-or ````docxbox lsi foo.docx````
-
-To output as JSON:
-
-````docxbox ls foo.docx --images --json````  
-````docxbox ls foo.docx -ij````  
-or ````docxbox lsi foo.docx --json````  
-or ````docxbox lsi foo.docx -j````  
-or ````docxbox lsij foo.docx````
-
-#### List fields
-
-````docxbox ls foo.docx --fields````  
-or ````docxbox ls foo.docx -d````  
-or ````docxbox lsd foo.docx````  
-
-To output as JSON:  
-
-````docxbox ls foo.docx --fields --json````  
-or ````docxbox ls foo.docx -dj````  
-or ````docxbox lsd foo.docx --json````  
-or ````docxbox lsdj foo.docx````  
+or ````docxbox ls foo.docx --json````  
 
 #### List meta data
 
@@ -117,18 +75,19 @@ DOCX file (this differs by DOCX version and application), also if given empty.
 
 Output meta data of given DOCX:  
 
-````docxbox ls foo.docx --meta````  
+````docxbox lsm foo.docx````  
 or ````docxbox ls foo.docx -m````  
-or ````docxbox lsm foo.docx````
+or ````docxbox ls foo.docx --meta````
 
 To output as JSON:
 
-````docxbox ls foo.docx --meta --json````  
+````docxbox lsmj foo.docx````  
+or ````docxbox lsm foo.docx -j````  
 or ````docxbox ls foo.docx -mj````  
 or ````docxbox lsm foo.docx --json````  
-or ````docxbox lsm foo.docx -j````  
-or ````docxbox lsmj foo.docx````
+or ````docxbox ls foo.docx --meta --json````    
 
+  
 #### Reference: Recognized meta attributes
 
 * **Authors:** Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
@@ -143,14 +102,59 @@ or ````docxbox lsmj foo.docx````
   ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
 
 
+#### List referenced fonts
+
+````docxbox lsf foo.docx````  
+or ````docxbox ls foo.docx -f````  
+or ````docxbox ls foo.docx --fonts````  
+
+To output as JSON:
+
+````docxbox lsfj foo.docx````  
+or ````docxbox lsf foo.docx -j````
+or ````docxbox ls foo.docx -fj````  
+or ````docxbox lsf foo.docx --json````  
+or ````docxbox ls foo.docx --fonts --json````
+
+
+#### List images information
+
+Output list of contained images
+
+````docxbox lsi foo.docx````  
+or ````docxbox ls foo.docx -i````  
+or ````docxbox ls foo.docx --images````  
+
+To output as JSON:
+
+````docxbox lsij foo.docx````  
+or ````docxbox lsi foo.docx -j````  
+or ````docxbox ls foo.docx -ij````  
+or ````docxbox lsi foo.docx --json````  
+or ````docxbox ls foo.docx --images --json````  
+
+#### List fields
+
+````docxbox lsd foo.docx````  
+or ````docxbox ls foo.docx -d````  
+or ````docxbox ls foo.docx --fields````  
+
+To output as JSON:  
+
+````docxbox lsdj foo.docx````  
+or ````docxbox ls foo.docx -dj````  
+or ````docxbox lsd foo.docx --json````  
+or ````docxbox ls foo.docx --fields --json````  
+
+
 ### Output plaintext
 
 ````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and footer)
 
 #### Output plaintext segments 
 
-````docxbox txt foo.docx --segments````   
-or ````docxbox txt foo.docx -s```` 
+````docxbox txt foo.docx -s````   
+or ````docxbox txt foo.docx --segments````   
 
 Outputs the text from document, w/ markup sections separated by newlines.
 This can be helpful to identify "segmented" sentences:
@@ -180,7 +184,7 @@ To alter/insert an attribute and save the modified document to a new file:
 ````docxbox mm foo.docx <attribute> <value> new.docx````
 
 
-#### Replace images
+#### Replace image
 
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
 This overwrites the original DOCX with the modified document.
@@ -203,9 +207,9 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 | A  | B  | C  |
 |----|----|----|
-| a1 | a2 | a3 |
-| b1 | b2 | b3 |
-| c1 | c2 | c3 | 
+| a1 | b1 | c1 |
+| a2 | b2 | c2 |
+| a3 | b3 | c3 | 
 
 the table specification as JSON looks like:
 ````
@@ -215,9 +219,9 @@ the table specification as JSON looks like:
         "rows":3,
         "header":["A","B","C"],
         "content":[
-            ["a1","a2","a3"],
-            ["b1","b2","b3"],
-            ["c1","c2","c3"]
+            ["a1","b1","c1"],
+            ["a2","b2","c2"],
+            ["a3","b3","c3"]
         ]
     }
 }
@@ -253,14 +257,19 @@ purposes:
 ````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
 
 
-### Unzip DOCX: Extract all files, or only media files
+### Unzip DOCX: All files, or only media files, format XML
 
-Unzip all files: ````docxbox uz foo.docx````  
+**Unzip all files:** ````docxbox uz foo.docx````  
 
-Unzip only media files:  
-````docxbox uz foo.docx --media````  
+**Unzip only media files:**  
+````docxbox uzm foo.docx````
 or ````docxbox uz foo.docx -m````  
-or ````docxbox uzm foo.docx````
+or ````docxbox uz foo.docx --media````    
+
+**Unzip all files and indent XML files:**  
+````docxbox uzi foo.docx````  
+or ````docxbox uz foo.docx -i````  
+or ````docxbox uz foo.docx --indent````  
 
 
 ### Zip files into DOCX
@@ -291,6 +300,13 @@ Running tests
 In order to run functional tests, [Bats](https://github.com/sstephenson/bats) must be installed.
 
 Run all tests: `./test.sh`
+
+
+Code Convention
+---------------
+
+The source code of docxBox follows the Google C++ Style Guide, see: https://google.github.io/styleguide/cppguide.html  
+The source code of functional tests mostly (excluding rule for maximum characters per line) follows the Google Shell Style Guide, see https://google.github.io/styleguide/shell.xml
 
 
 Changelog

@@ -25,7 +25,7 @@ std::string File::GetFileContents(const std::string &filename) {
 std::string File::GetFileContents(std::ifstream &file) {
   std::streampos length = GetFileSize(file);
 
-  // Read the whole file into the buffer
+  // Read whole file into the buffer
   std::vector<char> buffer(static_cast<u_int32_t>(length));
   file.read(&buffer[0], length);
 
@@ -99,7 +99,7 @@ std::string File::GetLastPathSegment(std::string path) {
   if (helper::String::Contains(path, "/")) {
     std::vector<std::string> parts = helper::String::Explode(path, '/');
 
-    return parts[parts.size()-1];
+    return parts[parts.size() - 1];
   }
 
   return path;
@@ -192,6 +192,20 @@ std::string File::GetTmpName() {
   snprintf(buffer, max_len+1, "%d", timestamp);
 
   return std::string(buffer);
+}
+
+bool File::IsWordCompatibleImage(const std::string &filename) {
+  auto str = helper::String::ToLower(filename);
+
+  return (helper::String::EndsWith(str, ".bmp")
+      || helper::String::EndsWith(str, ".emg")
+      || helper::String::EndsWith(str, ".gif")
+      || helper::String::EndsWith(str, ".jpeg")
+      || helper::String::EndsWith(str, ".jpg")
+      || helper::String::EndsWith(str, ".png")
+      || helper::String::EndsWith(str, ".tif")
+      || helper::String::EndsWith(str, ".tiff")
+      || helper::String::EndsWith(str, ".wmf"));
 }
 
 }  // namespace helper

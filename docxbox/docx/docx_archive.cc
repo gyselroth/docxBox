@@ -1,125 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/docx/docx_archive.h>
-
-#include <vendor/miniz-cpp/zip_file.hpp>
-
-// Static extension methods to miniz-cpp
-//
-// Necessarily inlined here: this is the single place of "zip_file.hpp"
-// inclusion.
-// Multiple inclusion would fail w/ a "multiple definitions" linker error,
-// but including these methods within docx_archive.h would make it necessary to
-// including "zip_file.hpp" also there.
-class miniz_cpp_ext {
- public:
-  static void CreateSubDirectories(
-      const std::string &path_extract,
-      const std::vector<miniz_cpp::zip_info> &file_list) {
-    for (const auto& file_in_zip : file_list) {
-      if (helper::String::Contains(file_in_zip.filename, "/")) {
-        auto directories = helper::String::Explode(file_in_zip.filename, '/');
-
-        std::string path = path_extract;
-        int amount_directories = directories.size();
-
-        for (int i = 0; i < amount_directories - 1; i++) {
-          path += "/" + directories[i];
-          mkdir(path.c_str(), 0777);
-        }
-      }
-    }
-  }
-
-  static void ReduceExtractToImages(
-      const std::string &path_extract,
-      const std::vector<miniz_cpp::zip_info> &file_list) {
-    for (const auto &file_in_zip : file_list) {
-      const char *path_file_within_docx = file_in_zip.filename.c_str();
-
-      const std::basic_string<char,
-                              std::char_traits<char>,
-                              std::allocator<char>>
-          &path_file_absolute = path_extract + "/" + path_file_within_docx;
-
-      if (
-          helper::String::EndsWith(file_in_zip.filename, ".xml")
-              || helper::String::EndsWith(file_in_zip.filename, ".rels")) {
-        // Remove all .xml and .rels files
-        helper::File::Remove(path_file_absolute.c_str());
-      } else {
-        // Move all other (=media) files into root of extraction directory
-        std::string path_extract_file =
-            path_extract + "/"
-                + helper::File::GetLastPathSegment(file_in_zip.filename);
-
-        rename(path_file_absolute.c_str(), path_extract_file.c_str());
-      }
-    }
-
-    // Remove all (now empty) sub-directories
-    miniz_cpp_ext::RemoveSubDirectories(path_extract, file_list);
-  }
-
-  // Precondition: the directories contain no (more) files
-  static void RemoveSubDirectories(
-      const std::string &path_extract,
-      const std::vector<miniz_cpp::zip_info> &file_list) {
-    for (const auto& file_in_zip : file_list) {
-      if (helper::String::Contains(file_in_zip.filename, "/")) {
-        auto directories = helper::String::Explode(file_in_zip.filename, '/');
-
-        int amount_directories = directories.size();
-
-        for (int i = amount_directories - 1; i > 0; i--) {
-          std::string path_remove = path_extract;
-
-          for (int j = 0; j < i; j++) {
-            path_remove += "/" + directories[j];
-          }
-
-          helper::File::Remove(path_remove.c_str());
-        }
-      }
-    }
-  }
-
-  static bool RemoveExtract(const std::string &path_extract,
-                            const std::vector<miniz_cpp::zip_info> &file_list) {
-    // Remove all files
-    for (const auto &file_in_zip : file_list)
-      helper::File::Remove(
-          std::string(path_extract + "/" + file_in_zip.filename).c_str());
-
-    RemoveSubDirectories(path_extract, file_list);
-
-    return helper::File::Remove(path_extract.c_str());
-  }
-
-  static void PrintDirAsJson(miniz_cpp::zip_file &docx_file) {
-    std::cout << "[";
-
-    int index_file = 0;
-
-    for (auto &member : docx_file.infolist()) {
-      std::cout
-          << (index_file == 0 ? "" : ",") << "{"
-          << R"("file":")" << member.filename << "\","
-          << R"("length":)" << member.file_size << ","
-          << R"("date":")"
-          << member.date_time.month << "/"
-          << member.date_time.day << "/" << member.date_time.year
-          << "\","
-          << R"("time":")"
-          << member.date_time.hours << ":" << member.date_time.minutes << "\""
-          << "}";
-
-      index_file++;
-    }
-
-    std::cout << "]";
-  }
-};
+#include <docxbox/ext/ext_miniz_cpp.hpp>
 
 docx_archive::docx_archive(int argc, char **argv) {
   argc_ = argc;
@@ -144,7 +26,7 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
 }
 
 // Output paths of files (and directories) within DOCX file
-bool docx_archive::ListFiles(bool as_json) {
+bool docx_archive::ListFiles(bool as_json, bool images_only) {
   if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX filename"))
     return false;
 
@@ -159,11 +41,24 @@ bool docx_archive::ListFiles(bool as_json) {
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   if (as_json)
-    miniz_cpp_ext::PrintDirAsJson(docx_file);
+    miniz_cpp_ext::PrintDir(docx_file, true, images_only);
   else
     docx_file.printdir();
 
   return true;
+}
+
+// List contained images and their attributes
+bool docx_archive::ListImages(bool as_json) {
+  if (as_json) return ListFiles(as_json, true);
+
+  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+
+  miniz_cpp_ext::PrintDir(docx_file, false, true);
+
+  return miniz_cpp_ext::RemoveExtract(path_extract_, docx_file.infolist());
 }
 
 // Render path (string) where to extract given DOCX file
@@ -178,7 +73,8 @@ void docx_archive::InitExtractionPath(const std::string &directory_appendix,
 
 // Unzip all files of DOCX file
 bool docx_archive::UnzipDocx(const std::string &directory_appendix,
-                             bool ensure_is_docx) {
+                             bool ensure_is_docx,
+                             bool format_xml_files) {
   if (!docxbox::AppArguments::IsArgumentGiven(
       argc_,
       2,
@@ -210,7 +106,9 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
     return false;
   }
 
-  return true;
+  return format_xml_files
+    ? miniz_cpp_ext::IndentXmlFiles(path_extract_, file_list)
+    : true;
 }
 
 // Check formal structure of DOCX archive - mandatory files given?
@@ -351,48 +249,6 @@ bool docx_archive::ModifyMeta() {
       path_docx_out.c_str());
 
   return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-}
-
-// List contained images and their attributes and exif data
-bool docx_archive::ListImages(bool as_json) {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-
-  auto file_list = docx_file.infolist();
-
-  miniz_cpp_ext::ReduceExtractToImages(path_extract_, file_list);
-
-  auto images = helper::File::ScanDir(path_extract_.c_str());
-
-  if (as_json) std::cout << "[";
-
-  int index_image = 0;
-
-  for (const auto &path_image : images) {
-    std::string filename = helper::File::GetLastPathSegment(path_image);
-
-    std::string path_jpeg = path_extract_ + "/" + path_image;
-
-    if (as_json)
-      std::cout << (index_image > 0 ? "," : "") << "\"" << filename << "\"\n";
-    else
-      std::cout << filename << "\n";
-
-    // TODO(kay): output file size, image dimension, aspect ration,
-    //  used scaled size(s), exif data
-
-    index_image++;
-  }
-
-  std::cout << (as_json ? "]" :"\n");
-
-  for (const auto &path_image : images)
-    helper::File::Remove(path_image.c_str());
-
-  helper::File::Remove(path_extract_.c_str());
-
-  return true;
 }
 
 // List referenced fonts and their metrics

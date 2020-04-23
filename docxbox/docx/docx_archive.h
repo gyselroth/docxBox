@@ -28,7 +28,8 @@ class docx_archive {
 
   bool UnzipDocx(
       const std::string &directory_appendix = "",
-      bool ensure_is_docx = true);
+      bool ensure_is_docx = true,
+      bool format_xml_files = false);
 
   // Check formal structure of DOCX archive - mandatory files given?
   bool IsDocx();
@@ -44,9 +45,12 @@ class docx_archive {
       bool update_created = false,
       bool update_modified = false);
 
-  bool ListFiles(bool as_json);
-  bool ListFonts(bool as_json);
+  // List files inside DOCX archive and their attributes
+  bool ListFiles(bool as_json, bool images_only = false);
   bool ListImages(bool as_json);
+
+  // List data stored within XML(s) of DOCX
+  bool ListFonts(bool as_json);
   bool ListMergeFields(bool as_json);
   bool ListMeta(bool as_json);
 

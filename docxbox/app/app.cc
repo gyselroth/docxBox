@@ -78,6 +78,9 @@ AppCommands::Commands App::PreProcess(
         ? AppCommands::Command_ListMetaAsJson
         : command;
     case AppCommands::Command_Unzip:
+      if (arguments->Matches(3, "-f", "--format"))
+        return AppCommands::Command_UnzipAndIndentXml;
+
       return arguments->Matches(3, "-m", "--media")
         ? AppCommands::Command_UnzipMedia
         : command;
@@ -166,6 +169,9 @@ bool App::Process() {
       break;
     case AppCommands::Command_Unzip:
       result = docx_archive->UnzipDocx();
+      break;
+    case AppCommands::Command_UnzipAndIndentXml:
+      result = docx_archive->UnzipDocx("", true, true);
       break;
     case AppCommands::Command_UnzipMedia:
       result = docx_archive->UnzipMedia();
