@@ -12,16 +12,16 @@ Linux tool for DOCX (OpenXML) analysis and manipulation.
 * [Commands](#commands)
   * [List DOCX contents](#list-docx-contents)
     + [Output list of files](#output-list-of-files)
+    + [List meta data](#list-meta-data)
+    + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
     + [Output list of referenced fonts](#output-list-of-referenced-fonts)
     + [List images information](#list-images-information)
     + [List fields](#list-fields)
-    + [List meta data](#list-meta-data)
-    + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
   * [Output plaintext](#output-plaintext)
       + [Output plaintext segments](#output-plaintext-segments)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
-      + [Replace images](#replace-images)
+      + [Replace image](#replace-image)
       + [Replace text by text](#replace-text-by-text)
       + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
@@ -68,6 +68,39 @@ To output as JSON:
 or ````docxbox ls foo.docx -j````  
 or ````docxbox lsj foo.docx````
 
+#### List meta data
+
+docxBox displays only attributes that are contained within the current 
+DOCX file (this differs by DOCX version and application), also if given empty.
+
+Output meta data of given DOCX:  
+
+````docxbox ls foo.docx --meta````  
+or ````docxbox ls foo.docx -m````  
+or ````docxbox lsm foo.docx````
+
+To output as JSON:
+
+````docxbox ls foo.docx --meta --json````  
+or ````docxbox ls foo.docx -mj````  
+or ````docxbox lsm foo.docx --json````  
+or ````docxbox lsm foo.docx -j````  
+or ````docxbox lsmj foo.docx````
+
+#### Reference: Recognized meta attributes
+
+* **Authors:** Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
+* **Dates** (ISO 8601): Creation-, modification and print-date  
+  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml) 
+* **Descriptions:** Description, Keywords, Subject, Title   
+  (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
+* **Language** (``<dc:language>`` of core.xml) 
+* **Revision** (``<cp:revision>`` of core.xml)
+* **Application** created with and its version, name of used template, company,
+  XML schema of document (``<Application>``, ``<AppVersion>``, ``<Template>``, 
+  ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
+
+
 #### Output list of referenced fonts
 
 ````docxbox ls foo.docx --fonts````  
@@ -111,38 +144,6 @@ or ````docxbox ls foo.docx -dj````
 or ````docxbox lsd foo.docx --json````  
 or ````docxbox lsdj foo.docx````  
 
-#### List meta data
-
-docxBox displays only attributes that are contained within the current 
-DOCX file (this differs by DOCX version and application), also if given empty.
-
-Output meta data of given DOCX:  
-
-````docxbox ls foo.docx --meta````  
-or ````docxbox ls foo.docx -m````  
-or ````docxbox lsm foo.docx````
-
-To output as JSON:
-
-````docxbox ls foo.docx --meta --json````  
-or ````docxbox ls foo.docx -mj````  
-or ````docxbox lsm foo.docx --json````  
-or ````docxbox lsm foo.docx -j````  
-or ````docxbox lsmj foo.docx````
-
-#### Reference: Recognized meta attributes
-
-* **Authors:** Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
-* **Dates** (ISO 8601): Creation-, modification and print-date  
-  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml) 
-* **Descriptions:** Description, Keywords, Subject, Title   
-  (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
-* **Language** (``<dc:language>`` of core.xml) 
-* **Revision** (``<cp:revision>`` of core.xml)
-* **Application** created with and its version, name of used template, company,
-  XML schema of document (``<Application>``, ``<AppVersion>``, ``<Template>``, 
-  ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
-
 
 ### Output plaintext
 
@@ -181,7 +182,7 @@ To alter/insert an attribute and save the modified document to a new file:
 ````docxbox mm foo.docx <attribute> <value> new.docx````
 
 
-#### Replace images
+#### Replace image
 
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
 This overwrites the original DOCX with the modified document.
