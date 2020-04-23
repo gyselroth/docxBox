@@ -165,6 +165,18 @@ bool String::IsJson(const std::string &str) {
        && Contains(kStr, ":");
 }
 
+std::string String::ToLower(std::string str) {
+  std::transform(
+      str.begin(),
+      str.end(),
+      str.begin(),
+      [](unsigned char c) {
+        return std::tolower(c);
+      });
+
+  return str;
+}
+
 std::string String::ToUpper(const std::string& str) {
   std::string upper;
 

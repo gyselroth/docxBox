@@ -34,6 +34,7 @@ extern std::string ResolvePath(
     bool must_exist = false);
 
 extern std::streampos GetFileSize(std::ifstream &file);
+extern std::ifstream::pos_type GetFileSize(const char* filename);
 
 extern std::string GetFileContents(const std::string &filename);
 extern std::string GetFileContents(std::ifstream &file);
@@ -57,6 +58,8 @@ extern std::vector<std::string> ScanDirRecursive(
     const std::string& remove_prefix = "");
 
 extern std::string GetTmpName();
+
+extern bool IsWordCompatibleImage(const std::string &filename);
 
 }  // namespace File
 }  // namespace helper

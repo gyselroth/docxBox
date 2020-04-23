@@ -8,4 +8,8 @@ bool Numeric::IsEven(int n) {
   return n % 2 == 0;
 }
 
+int Numeric::GetAmountDigits(int n) {
+  return floor (log10 (abs (n))) + 1;
+}
+
 }  // namespace helper

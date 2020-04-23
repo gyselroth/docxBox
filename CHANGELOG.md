@@ -3,7 +3,7 @@ docxBox Changelog
 
 V0.0.3 - Not finished yet
 -------------------------
-
+* Improve list images (lsi): output file attributes
 
 V0.0.2 - 2020-04-22
 -------------------

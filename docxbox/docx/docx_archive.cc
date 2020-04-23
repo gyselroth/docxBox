@@ -96,28 +96,82 @@ class miniz_cpp_ext {
     return helper::File::Remove(path_extract.c_str());
   }
 
-  static void PrintDirAsJson(miniz_cpp::zip_file &docx_file) {
-    std::cout << "[";
+  static void PrintDir(
+      miniz_cpp::zip_file &docx_file,
+      bool as_json = false,
+      bool images_only = false) {
+    if (as_json) {
+      std::cout << "[";
+    } else {
+      std::cout
+        << "   Length        Date  Time   Name\n"
+        << "---------  ---------- -----   ----\n";
+    }
 
     int index_file = 0;
 
+    uint32_t size_total = 0;
+
+    std::vector<std::string> filenames;
+    std::vector<uint32_t> sizes;
+    std::vector<std::string> dates;
+    std::vector<std::string> times;
+
     for (auto &member : docx_file.infolist()) {
-      std::cout
-          << (index_file == 0 ? "" : ",") << "{"
-          << R"("file":")" << member.filename << "\","
-          << R"("length":)" << member.file_size << ","
-          << R"("date":")"
+      if (images_only && !helper::File::IsWordCompatibleImage(member.filename))
+        continue;
+
+      if (as_json) {
+        std::cout
+            << (index_file == 0 ? "" : ",") << "{"
+            << R"("file":")" << member.filename << "\","
+            << R"("length":)" << member.file_size << ","
+            << R"("date":")"
+            << member.date_time.month << "/"
+            << member.date_time.day << "/" << member.date_time.year
+            << "\","
+            << R"("time":")"
+            << member.date_time.hours << ":" << member.date_time.minutes << "\""
+            << "}";
+      } else {
+        int amount_digits = helper::Numeric::GetAmountDigits(member.file_size);
+
+        if (amount_digits < 9)
+          std::cout << helper::String::Repeat(" ", 9 - amount_digits);
+
+        std::cout
+          << member.file_size << "  "
+
           << member.date_time.month << "/"
-          << member.date_time.day << "/" << member.date_time.year
-          << "\","
-          << R"("time":")"
-          << member.date_time.hours << ":" << member.date_time.minutes << "\""
-          << "}";
+          << member.date_time.day << "/"
+          << member.date_time.year << " "
+
+          << member.date_time.hours << ":"
+          << member.date_time.minutes << "     "
+
+          << member.filename << "\n";
+      }
+
+      size_total += member.file_size;
 
       index_file++;
     }
 
-    std::cout << "]";
+    if (as_json) {
+      std::cout << "]";
+    } else {
+      std::cout << "---------                     -------\n";
+
+      int amount_digits = helper::Numeric::GetAmountDigits(size_total);
+
+      if (amount_digits < 9)
+        std::cout << helper::String::Repeat(" ", 9 - amount_digits);
+
+      std::cout
+        << size_total << "                     "
+        << index_file << " file" << (index_file == 1 ? "" : "s")
+        << "\n";
+    }
   }
 };
 
@@ -144,7 +198,7 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
 }
 
 // Output paths of files (and directories) within DOCX file
-bool docx_archive::ListFiles(bool as_json) {
+bool docx_archive::ListFiles(bool as_json, bool images_only) {
   if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX filename"))
     return false;
 
@@ -159,11 +213,24 @@ bool docx_archive::ListFiles(bool as_json) {
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   if (as_json)
-    miniz_cpp_ext::PrintDirAsJson(docx_file);
+    miniz_cpp_ext::PrintDir(docx_file, true, images_only);
   else
     docx_file.printdir();
 
   return true;
+}
+
+// List contained images and their attributes
+bool docx_archive::ListImages(bool as_json) {
+  if (as_json) return ListFiles(as_json, true);
+
+  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+
+  miniz_cpp_ext::PrintDir(docx_file, false, true);
+
+  return miniz_cpp_ext::RemoveExtract(path_extract_, docx_file.infolist());
 }
 
 // Render path (string) where to extract given DOCX file
@@ -351,48 +418,6 @@ bool docx_archive::ModifyMeta() {
       path_docx_out.c_str());
 
   return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-}
-
-// List contained images and their attributes and exif data
-bool docx_archive::ListImages(bool as_json) {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-
-  auto file_list = docx_file.infolist();
-
-  miniz_cpp_ext::ReduceExtractToImages(path_extract_, file_list);
-
-  auto images = helper::File::ScanDir(path_extract_.c_str());
-
-  if (as_json) std::cout << "[";
-
-  int index_image = 0;
-
-  for (const auto &path_image : images) {
-    std::string filename = helper::File::GetLastPathSegment(path_image);
-
-    std::string path_jpeg = path_extract_ + "/" + path_image;
-
-    if (as_json)
-      std::cout << (index_image > 0 ? "," : "") << "\"" << filename << "\"\n";
-    else
-      std::cout << filename << "\n";
-
-    // TODO(kay): output file size, image dimension, aspect ration,
-    //  used scaled size(s), exif data
-
-    index_image++;
-  }
-
-  std::cout << (as_json ? "]" :"\n");
-
-  for (const auto &path_image : images)
-    helper::File::Remove(path_image.c_str());
-
-  helper::File::Remove(path_extract_.c_str());
-
-  return true;
 }
 
 // List referenced fonts and their metrics

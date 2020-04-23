@@ -5,11 +5,14 @@
 
 #include <cstdio>
 #include <cstdint>
+#include <cmath>
 
 namespace helper {
 namespace Numeric {
 
 bool IsEven(int number);
+
+int GetAmountDigits(int n);
 
 }  // namespace Numeric
 }  // namespace helper

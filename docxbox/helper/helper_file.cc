@@ -65,6 +65,12 @@ std::streampos File::GetFileSize(std::ifstream &file) {
   return length;
 }
 
+std::ifstream::pos_type File::GetFileSize(const char* filename) {
+  std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+
+  return in.tellg();
+}
+
 bool File::WriteToNewFile(
     const std::string &filename,
     const std::string &content) {
@@ -192,6 +198,20 @@ std::string File::GetTmpName() {
   snprintf(buffer, max_len+1, "%d", timestamp);
 
   return std::string(buffer);
+}
+
+bool File::IsWordCompatibleImage(const std::string &filename) {
+  auto str = helper::String::ToLower(filename);
+
+  return (helper::String::EndsWith(str, ".bmp")
+      || helper::String::EndsWith(str, ".emg")
+      || helper::String::EndsWith(str, ".gif")
+      || helper::String::EndsWith(str, ".jpeg")
+      || helper::String::EndsWith(str, ".jpg")
+      || helper::String::EndsWith(str, ".png")
+      || helper::String::EndsWith(str, ".tif")
+      || helper::String::EndsWith(str, ".tiff")
+      || helper::String::EndsWith(str, ".wmf"));
 }
 
 }  // namespace helper
