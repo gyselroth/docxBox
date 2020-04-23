@@ -257,17 +257,17 @@ purposes:
 
 ### Unzip DOCX: All files, or only media files, format XML
 
-Unzip all files: ````docxbox uz foo.docx````  
+**Unzip all files:** ````docxbox uz foo.docx````  
 
-Unzip only media files:  
+**Unzip only media files:**  
 ````docxbox uz foo.docx --media````  
 or ````docxbox uz foo.docx -m````  
 or ````docxbox uzm foo.docx````
 
-Unzip all files, format (indent) all XML files:  
-````docxbox uz foo.docx --format````  
-or ````docxbox uz foo.docx -f````  
-or ````docxbox uzf foo.docx````
+**Unzip all files and indent XML files:**  
+````docxbox uz foo.docx --indent````  
+or ````docxbox uz foo.docx -i````  
+or ````docxbox uzi foo.docx````
 
 
 ### Zip files into DOCX
