@@ -11,10 +11,10 @@ Linux tool for DOCX (OpenXML) analysis and manipulation.
 * [Planned features](#planned-features)
 * [Commands](#commands)
   * [List DOCX contents](#list-docx-contents)
-    + [Output list of files](#output-list-of-files)
+    + [List files](#list-files)
     + [List meta data](#list-meta-data)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
-    + [Output list of referenced fonts](#output-list-of-referenced-fonts)
+    + [List referenced fonts](#List-referenced-fonts)
     + [List images information](#list-images-information)
     + [List fields](#list-fields)
   * [Output plaintext](#output-plaintext)
@@ -56,7 +56,7 @@ Commands
 
 ### List DOCX contents
 
-#### Output list of files
+#### List files
 
 Lists files (and directories) contained within a given DOCX, and their attributes:
 
@@ -101,7 +101,7 @@ or ````docxbox lsmj foo.docx````
   ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
 
 
-#### Output list of referenced fonts
+#### List referenced fonts
 
 ````docxbox ls foo.docx --fonts````  
 or ````docxbox ls foo.docx -f````  
