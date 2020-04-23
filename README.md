@@ -83,9 +83,9 @@ To output as JSON:
 
 ````docxbox lsmj foo.docx````  
 or ````docxbox lsm foo.docx -j````  
-or ````docxbox ls foo.docx -mj````
-or ````docxbox lsm foo.docx --json````
-or ````docxbox ls foo.docx --meta --json````  
+or ````docxbox ls foo.docx -mj````  
+or ````docxbox lsm foo.docx --json````  
+or ````docxbox ls foo.docx --meta --json````    
 
   
 #### Reference: Recognized meta attributes
