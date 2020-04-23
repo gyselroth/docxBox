@@ -30,7 +30,12 @@ class AppHelp {
   static bool PrintHelpOnReplaceText();
   static bool PrintHelpOnRemoveBetweenText();
   static bool PrintHelpOnGetPlainText();
-  static bool PrintHelpOnUnzip(bool with_uz = true);
+
+  static bool PrintHelpOnUnzip(
+      bool with_uz = true,
+      bool with_uzm = true,
+      bool with_uzi = true);
+
   static bool PrintHelpOnVersion();
   static bool PrintHelpOnZip();
 

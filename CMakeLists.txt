@@ -38,6 +38,7 @@ add_executable(docxbox
 
         docxbox/docx/xml/docx_xml.cc
         docxbox/docx/xml/docx_xml_fields.cc
+        docxbox/docx/xml/docx_xml_indent.cc
         docxbox/docx/xml/docx_xml_lorem.cc
         docxbox/docx/xml/docx_xml_to_plaintext.cc
         docxbox/docx/xml/docx_xml_remove.cc

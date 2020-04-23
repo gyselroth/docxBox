@@ -51,9 +51,11 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_ReplaceImage:return PrintHelpOnReplaceImage();
     case AppCommands::Command_ReplaceText:return PrintHelpOnReplaceText();
 
-    case AppCommands::Command_Unzip:return PrintHelpOnUnzip(true);
-    case AppCommands::Command_UnzipMedia:return PrintHelpOnUnzip(false);
-
+    case AppCommands::Command_Unzip:return PrintHelpOnUnzip();
+    case AppCommands::Command_UnzipAndIndentXml:
+      return PrintHelpOnUnzip(false, false, true);
+    case AppCommands::Command_UnzipMedia:
+      return PrintHelpOnUnzip(false, true, false);
     case AppCommands::Command_Version:return PrintHelpOnVersion();
     case AppCommands::Command_Zip:return PrintHelpOnZip();
     case AppCommands::Command_Invalid:
@@ -99,6 +101,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n"
             << "\n  4. Extract and create DOCX:"
             << "\n    uz         - Unzip files from DOCX"
+            << "\n    uzi        - Unzip DOCX and indent XML files"
             << "\n    uzm        - Unzip only media files from DOCX"
             << "\n    zip        - Create (zip) DOCX from files"
             << "\n"
@@ -301,21 +304,29 @@ bool AppHelp::PrintHelpOnVersion() {
   return true;
 }
 
-bool AppHelp::PrintHelpOnUnzip(bool with_uz) {
+bool AppHelp::PrintHelpOnUnzip(bool with_uz, bool with_uzm, bool with_uzi) {
   if (with_uz) {
     std::cout << "Command: uz - Unzip given DOCX file:\n"
                  "------------------------------------\n"
                  "Unzip all files from DOCX:\n"
-                 "  docxbox uz foo.docx \n\n"
-                 "Output only media files from DOCX document:\n";
-  } else {
-    std::cout << "Command: uzm - Unzip only media files DOCX file:\n"
-                 "------------------------------------------------\n";
+                 "  docxbox uz foo.docx \n\n";
   }
 
-  std::cout << "  docxbox uzm foo.docx\n"
-               "  or: docxbox uz foo.docx -m\n"
-               "  or: docxbox uz foo.docx --media\n\n";
+  if (with_uzm) {
+    std::cout << "Command: uzm - Unzip only media files DOCX file:\n"
+                 "------------------------------------------------\n"
+                 "  docxbox uzm foo.docx\n"
+                 "  or: docxbox uz foo.docx -m\n"
+                 "  or: docxbox uz foo.docx --media\n\n";
+  }
+
+  if (with_uzi){
+    std::cout << "Command: uzi - Unzip DOCX and indent XML files:\n"
+                 "-----------------------------------------------\n"
+                 "  docxbox uzi foo.docx\n"
+                 "  or: docxbox uz foo.docx -i\n"
+                 "  or: docxbox uz foo.docx --ident\n\n";
+  }
 
   return true;
 }

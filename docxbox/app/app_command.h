@@ -30,6 +30,7 @@ class AppCommands {
     Command_ReplaceImage,
     Command_ReplaceText,
     Command_Unzip,
+    Command_UnzipAndIndentXml,
     Command_UnzipMedia,
     Command_Version,
     Command_Zip,

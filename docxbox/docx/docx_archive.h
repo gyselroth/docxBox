@@ -28,7 +28,8 @@ class docx_archive {
 
   bool UnzipDocx(
       const std::string &directory_appendix = "",
-      bool ensure_is_docx = true);
+      bool ensure_is_docx = true,
+      bool format_xml_files = false);
 
   // Check formal structure of DOCX archive - mandatory files given?
   bool IsDocx();

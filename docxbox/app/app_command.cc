@@ -37,9 +37,10 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "rpi") return Command_ReplaceImage;
   if (command == "rpt") return Command_ReplaceText;
   if (command == "txt") return Command_GetPlainText;
+  if (command == "uz") return Command_Unzip;
+  if (command == "uzi") return Command_UnzipAndIndentXml;
   if (command == "uzm") return Command_UnzipMedia;
   if (command == "v") return Command_Version;
-  if (command == "uz") return Command_Unzip;
   if (command == "zip") return Command_Zip;
 
   return Command_Invalid;

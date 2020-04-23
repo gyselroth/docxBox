@@ -26,7 +26,7 @@ Linux tool for DOCX (OpenXML) analysis and manipulation.
       + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
       + [Randomize document text](#randomize-document-text)
-  * [Unzip DOCX: Extract all files, or only media files](#unzip-docx-extract-all-files-or-only-media-files)
+  * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
@@ -255,7 +255,7 @@ purposes:
 ````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
 
 
-### Unzip DOCX: Extract all files, or only media files
+### Unzip DOCX: All files, or only media files, format XML
 
 Unzip all files: ````docxbox uz foo.docx````  
 
@@ -263,6 +263,11 @@ Unzip only media files:
 ````docxbox uz foo.docx --media````  
 or ````docxbox uz foo.docx -m````  
 or ````docxbox uzm foo.docx````
+
+Unzip all files, format (indent) all XML files:  
+````docxbox uz foo.docx --format````  
+or ````docxbox uz foo.docx -f````  
+or ````docxbox uzf foo.docx````
 
 
 ### Zip files into DOCX
