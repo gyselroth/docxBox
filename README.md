@@ -31,6 +31,7 @@ Linux tool for DOCX (OpenXML) analysis and manipulation.
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
+* [Code Convention](#code-convention)
 * [Changelog](#changelog)
 * [Bug Reporting and Feature Requests](#bug-reporting-and-feature-requests)
 * [Third Party References](#third-party-references)
@@ -291,6 +292,13 @@ Running tests
 In order to run functional tests, [Bats](https://github.com/sstephenson/bats) must be installed.
 
 Run all tests: `./test.sh`
+
+
+Code Convention
+---------------
+
+The source code of docxBox follows the Google C++ Style Guide, see: https://google.github.io/styleguide/cppguide.html  
+The source code of functional tests mostly (excluding rule for maximum characters per line) follows the Google Shell Style Guide, see https://google.github.io/styleguide/shell.xml
 
 
 Changelog
