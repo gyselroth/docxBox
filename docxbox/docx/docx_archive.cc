@@ -334,11 +334,11 @@ bool docx_archive::ModifyMeta() {
     path_docx_out = path_docx_in_;
   }
 
+  auto attribute = meta->GetAttribute();
+
   if (!Zip(path_extract_, path_docx_out + "tmp",
-      // TODO(kay): vary the follow arguments depending of attribute,
-      //  = when explicitly modifying "created" or "modified"
-      //  via CLI invocation - don't override it
-      true, true)) {
+      attribute != docx_meta::Attribute_Created,
+      attribute != docx_meta::Attribute_Modified)) {
     std::cerr << "DOCX creation failed.\n";
 
     return false;
@@ -593,25 +593,13 @@ bool docx_archive::ReplaceText() {
   std::string search = argv_[3];
   std::string replacement = argv_[4];
 
-  bool is_replacement_xml = helper::String::IsJson(replacement);
-
-  if (is_replacement_xml) {
-    try {
-      replacement = RenderTableMarkup(replacement);
-    } catch (std::string &message) {
-      std::cerr << message;
-
-      return false;
-    }
-  }
-
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto file_list = docx_file.infolist();
 
-  auto parser = new docx_xml_replace(argc_, argv_, is_replacement_xml);
+  auto parser = new docx_xml_replace(argc_, argv_);
 
   for (const auto &file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
@@ -652,22 +640,6 @@ bool docx_archive::ReplaceText() {
       path_docx_out.c_str());
 
   return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-}
-
-std::string docx_archive::RenderTableMarkup(const std::string& json) {
-  auto renderer = new docx_wml_renderer_table(json);
-
-  if (!renderer->Render()) {
-    delete renderer;
-
-    throw "Failed render table markup.\n";
-  }
-
-  auto markup = renderer->GetWml();
-
-  delete renderer;
-
-  return markup;
 }
 
 bool docx_archive::RemoveBetweenText() {

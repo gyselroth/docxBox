@@ -40,8 +40,10 @@ Linux CLI tool for DOCX (OpenXML) analysis and manipulation.
 Planned Features
 ----------------
 
-* v0.0.2: Generate and insert/replace more complex DOCX markup elements (fields, tables)
-* v0.1.0: Batch process sequences of manipulation operations
+* v0.0.3: Replace text by image
+* v0.0.3: Replace field by text, table and image
+* v0.0.4: Batch process sequences of manipulation operations
+* v0.0.5: Ensure microsoft word compatiblity
 * v0.1.0: Add optional configuration options via environment vars
 * v0.1.0: (Optional) logging of operations
 * v1.0.0: Libre-Office compatible appending of two DOCX files into a single one 

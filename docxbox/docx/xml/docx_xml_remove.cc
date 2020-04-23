@@ -91,11 +91,11 @@ void docx_xml_remove::LocateNodesBetweenText(
 
 void docx_xml_remove::RemoveNodes() {
   for (auto node : nodes_to_be_removed_) {
-    if (nullptr != node) {
-      tinyxml2::XMLNode *kParent = node->Parent();
+    if (nullptr == node) continue;
 
-      if (kParent) kParent->DeleteChild(node);
-    }
+    tinyxml2::XMLNode *kParent = node->Parent();
+
+    if (kParent) kParent->DeleteChild(node);
   }
 }
 

@@ -61,6 +61,8 @@ class docx_meta {
 
   docx_meta(int argc, char **argv);
 
+  Attribute GetAttribute() const;
+
   void SetAttribute(Attribute attribute);
   void SetValue(const std::string &value);
 
