@@ -205,7 +205,7 @@ To alter/insert an attribute and save the modified document to a new file:
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg```` overwrites the 
 DOCX w/ the modified document.
 
-**Note:** For now the original and replacement image must be of the same format 
+**Note:** The original and replacement image must be of the same format 
 (bmp, gif, jpg, etc.).
 
 ````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg new.docx````  
