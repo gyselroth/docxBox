@@ -40,13 +40,37 @@ bool docx_archive::ListFiles(bool as_json, bool images_only) {
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
-  std::string file_ending;
+  std::string file_ending = ParseFileWildcard(3);
 
-  if (argc_ >= 4 && argv_[3][0] == '*' && argv_[3][1] == '.') {
-    file_ending = std::string(argv_[3]).substr(2);
+  std::string files_list =
+      miniz_cpp_ext::PrintDir(docx_file, as_json, images_only, file_ending);
+
+  if (file_ending.empty()
+      && argc_ >= 4
+      && helper::String::EndsWith(argv_[3], ".docx")
+      && helper::File::FileExists(argv_[3])) {
+    // Output two DOCX files lists side-by-side
+    const std::string
+        &path_docx_in_2 = docxbox::AppArguments::ResolvePathFromArgument(
+        path_working_directory_,
+        argc_,
+        argv_,
+        4);
+
+    miniz_cpp::zip_file docx_file_2(path_docx_in_2);
+
+    std::string files_list_2 =
+        path_docx_in_2 + "\n\n"
+        + miniz_cpp_ext::PrintDir(docx_file_2, as_json, images_only, file_ending);
+
+    std::cout << helper::String::RenderSideBySide(
+        path_docx_in_ + "\n\n" + files_list,
+        files_list_2,
+        8);
+  } else {
+    // Output single DOCX files list
+    std::cout << files_list;
   }
-
-  miniz_cpp_ext::PrintDir(docx_file, as_json, images_only, file_ending);
 
   return true;
 }
@@ -59,7 +83,8 @@ bool docx_archive::ListImages(bool as_json) {
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
-  miniz_cpp_ext::PrintDir(docx_file, false, true);
+  std::cout
+      << miniz_cpp_ext::PrintDir(docx_file, false, true);
 
   return miniz_cpp_ext::RemoveExtract(path_extract_, docx_file.infolist());
 }
@@ -72,6 +97,14 @@ void docx_archive::InitExtractionPath(const std::string &directory_appendix,
           + (directory_appendix.empty()
              ? "-extracted"
              : directory_appendix);
+}
+
+std::string docx_archive::ParseFileWildcard(int index_argument) const {
+  return argc_ >= index_argument + 1
+             && argv_[3][0] == '*'
+             && argv_[3][1] == '.'
+         ? std::string(argv_[3]).substr(2)
+         : "";
 }
 
 // Unzip all files of DOCX file

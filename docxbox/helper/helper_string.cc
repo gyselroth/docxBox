@@ -223,6 +223,60 @@ std::string String::Repeat(const std::string& str, u_int16_t amount) {
   return out;
 }
 
+std::string String::RenderSideBySide(
+    const std::string &left,
+    const std::string &right,
+    int amount_spaces_gap) {
+  auto lines_left = Explode(left, '\n');
+  auto lines_right = Explode(right, '\n');
+
+  unsigned long amount_lines_right = lines_right.size();
+
+  int index = 0;
+
+  std::string gap = amount_spaces_gap < 1
+      ? ""
+      : Repeat(" ", amount_spaces_gap);
+
+  std::string out;
+
+  int len_left_max = GetMaxLength(lines_left);
+  int len_right_max = GetMaxLength(lines_right);
+
+  for (auto line_left : lines_left) {
+    auto line_right = amount_lines_right > index ? lines_right[index] : "";
+
+    unsigned long len_left = line_left.length();
+    unsigned long len_right = line_right.length();
+
+    std::string left_margin_right = len_left < len_left_max
+        ? Repeat(" ", len_left_max - len_left)
+        : "";
+
+    std::string right_margin_right = len_right < len_right_max
+        ? Repeat(" ", len_right_max - len_right)
+        : "";
+
+    std::string style_on;
+    std::string style_off;
+
+    if (line_left != line_right) {
+      style_on = kAnsiReverse;
+      style_off = kAnsiReset;
+    }
+
+    out += style_on + line_left.append(left_margin_right).append(style_off)
+        .append(gap)
+        .append(style_on).append(line_right).append(right_margin_right)
+          .append(style_off)
+        .append("\n");
+
+    ++index;
+  }
+
+  return out;
+}
+
 std::string String::GetRandomNumericString(
     u_int32_t length,
     bool starts_with_zero) {

@@ -3,7 +3,7 @@
 docxBox
 =======
 
-Linux tool for DOCX (OpenXML) analysis and manipulation.
+Linux tool for DOCX (Office Open XML) analysis and manipulation.
 
 
 ## Table of contents
@@ -17,6 +17,7 @@ Linux tool for DOCX (OpenXML) analysis and manipulation.
     + [List referenced fonts](#List-referenced-fonts)
     + [List images information](#list-images-information)
     + [List fields](#list-fields)
+    + [Compare two DOCX documents](#compare-two-docx-documents)
   * [Output plaintext](#output-plaintext)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
@@ -150,6 +151,17 @@ To output as JSON:
 or ````docxbox ls foo.docx -dj````  
 or ````docxbox lsd foo.docx --json````  
 or ````docxbox ls foo.docx --fields --json````  
+
+
+### Compare two DOCX documents
+
+When given two DOCX files, the ``ls`` displays a side-by-side comparison of the
+contained files' attributes, with a all non-identical items highlighted:
+
+````docxbox ls foo1.docx foo2.docx````  
+
+This is helpful for retracing changes to the internal level of documents, 
+when having using word processor applications. 
 
 
 ### Output plaintext

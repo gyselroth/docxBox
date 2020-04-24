@@ -81,6 +81,8 @@ class docx_archive {
   void InitExtractionPath(const std::string &directory_appendix,
                           const std::string &path_docx);
 
+  std::string ParseFileWildcard(int index_argument) const;
+
   // Update given meta date attribute and immediately save updated core.xml
   bool UpdateCoreXmlDate(docx_meta::Attribute attribute);
 };

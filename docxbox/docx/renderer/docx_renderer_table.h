@@ -4,7 +4,6 @@
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_
 
 #include <docxbox/docx/renderer/docx_renderer.h>
-#include <docxbox/helper/helper_string.h>
 
 #include <string>
 #include <vector>

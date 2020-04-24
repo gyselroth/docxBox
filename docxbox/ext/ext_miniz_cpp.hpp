@@ -98,17 +98,18 @@ class miniz_cpp_ext {
     return helper::File::Remove(path_extract.c_str());
   }
 
-  static void PrintDir(
+  static std::string PrintDir(
       miniz_cpp::zip_file &docx_file,
       bool as_json = false,
       bool images_only = false,
       const std::string& file_ending = "") {
+    std::string out;
+    
     if (as_json) {
-      std::cout << "[";
+      out += "[";
     } else {
-      std::cout
-          << "   Length        Date  Time   Name\n"
-          << "---------  ---------- -----   ----\n";
+      out += "   Length        Date  Time   Name\n"
+             "---------  ---------- -----   ----\n";
     }
 
     int index_file = 0;
@@ -130,34 +131,35 @@ class miniz_cpp_ext {
         continue;
 
       if (as_json) {
-        std::cout
-            << (index_file == 0 ? "" : ",") << "{"
-            << R"("file":")" << member.filename << "\","
-            << R"("length":)" << member.file_size << ","
-            << R"("date":")"
-            << member.date_time.month << "/"
-            << member.date_time.day << "/" << member.date_time.year
-            << "\","
-            << R"("time":")"
-            << member.date_time.hours << ":" << member.date_time.minutes << "\""
-            << "}";
+        out += (index_file == 0 ? "" : ",");
+
+        out += R"({"file":")" + member.filename + "\",";
+
+        out += "\"length\":" + std::to_string(member.file_size) + ",";
+
+        out += R"("date":")"
+            + std::to_string(member.date_time.month) + "/"
+            + std::to_string(member.date_time.day) + "/"
+            + std::to_string(member.date_time.year) + "\",";
+
+        out += R"("time":")" + std::to_string(member.date_time.hours) + ":"
+                + std::to_string(member.date_time.minutes) + "\"}";
       } else {
         int amount_digits = helper::Numeric::GetAmountDigits(member.file_size);
 
         if (amount_digits < 9)
-          std::cout << helper::String::Repeat(" ", 9 - amount_digits);
+          out += helper::String::Repeat(" ", 9 - amount_digits);
 
-        std::cout
-            << member.file_size << "  "
+        out += std::to_string(member.file_size) + "  ";
 
-            << member.date_time.month << "/"
-            << member.date_time.day << "/"
-            << member.date_time.year << " "
+        out += std::to_string(member.date_time.month) + "/"
+               + std::to_string(member.date_time.day) + "/"
+               + std::to_string(member.date_time.year) + " ";
 
-            << member.date_time.hours << ":"
-            << member.date_time.minutes << "     "
+        out += std::to_string(member.date_time.hours) + ":"
+               + std::to_string(member.date_time.minutes) + "     ";
 
-            << member.filename << "\n";
+        out += member.filename + "\n";
       }
 
       size_total += member.file_size;
@@ -165,20 +167,20 @@ class miniz_cpp_ext {
       index_file++;
     }
 
-    if (as_json) {
-      std::cout << "]";
-    } else {
-      std::cout << "---------                     -------\n";
+    if (as_json) return out + "]";
 
-      int amount_digits = helper::Numeric::GetAmountDigits(size_total);
+    out += "---------                     -------\n";
 
-      if (amount_digits < 9)
-        std::cout << helper::String::Repeat(" ", 9 - amount_digits);
+    int amount_digits = helper::Numeric::GetAmountDigits(size_total);
 
-      std::cout
-          << size_total << "                     "
-          << index_file << " file" << (index_file == 1 ? "" : "s") << "\n";
-    }
+    if (amount_digits < 9)
+      out += helper::String::Repeat(" ", 9 - amount_digits);
+
+    out += std::to_string(size_total) + "                     "
+             + std::to_string(index_file)
+             + " file" + (index_file == 1 ? "" : "s") + "\n";
+
+    return out;
   }
 
   // Indent all contained XML files
