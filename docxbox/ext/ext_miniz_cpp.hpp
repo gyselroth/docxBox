@@ -101,7 +101,8 @@ class miniz_cpp_ext {
   static void PrintDir(
       miniz_cpp::zip_file &docx_file,
       bool as_json = false,
-      bool images_only = false) {
+      bool images_only = false,
+      const std::string& file_ending = "") {
     if (as_json) {
       std::cout << "[";
     } else {
@@ -119,8 +120,13 @@ class miniz_cpp_ext {
     std::vector<std::string> dates;
     std::vector<std::string> times;
 
+    bool filter_by_ending = !file_ending.empty();
+
     for (auto &member : docx_file.infolist()) {
-      if (images_only && !helper::File::IsWordCompatibleImage(member.filename))
+
+      if ((images_only && !helper::File::IsWordCompatibleImage(member.filename))
+          || (filter_by_ending
+              && !helper::String::EndsWith(member.filename, file_ending)))
         continue;
 
       if (as_json) {

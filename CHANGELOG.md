@@ -6,6 +6,7 @@ V0.0.3 - Not finished yet
 * Add Compress XMLs and zip (zpc)
 * Rename commands: rem -> rmt, zip -> zp
 * Add unzip and indent XML (uzi)
+* Improve list (ls): add optional wildcard filter
 * Improve list images (lsi): output file attributes
 
 V0.0.2 - 2020-04-22

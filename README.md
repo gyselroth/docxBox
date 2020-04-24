@@ -68,6 +68,11 @@ To output as JSON:
 or ````docxbox ls foo.docx -j````  
 or ````docxbox ls foo.docx --json````  
 
+**Filter by file ending:**
+
+````docxbox ls foo.docx *.xml```` Lists only files ending w/ ``.xml`` 
+
+
 #### List meta data
 
 docxBox displays only attributes that are contained within the current 

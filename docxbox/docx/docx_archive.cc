@@ -40,10 +40,13 @@ bool docx_archive::ListFiles(bool as_json, bool images_only) {
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
-  if (as_json)
-    miniz_cpp_ext::PrintDir(docx_file, true, images_only);
-  else
-    docx_file.printdir();
+  std::string file_ending;
+
+  if (argc_ >= 4 && argv_[3][0] == '*' && argv_[3][1] == '.') {
+    file_ending = std::string(argv_[3]).substr(2);
+  }
+
+  miniz_cpp_ext::PrintDir(docx_file, as_json, images_only, file_ending);
 
   return true;
 }
