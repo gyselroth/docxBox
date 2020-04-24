@@ -59,7 +59,7 @@ Commands
 
 #### List files: All, filter by ending, images only
 
-Lists files (and directories) contained within a given DOCX, and their attributes:
+**Lists files** (and directories) contained within a given DOCX, and their attributes:
 
 ````docxbox ls foo.docx````
 
@@ -202,8 +202,8 @@ To alter/insert an attribute and save the modified document to a new file:
 
 #### Replace image
 
-````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg````  
-This overwrites the original DOCX with the modified document.
+````docxbox rpi foo.docx image1.jpeg /home/replacement.jpeg```` overwrites the 
+DOCX w/ the modified document.
 
 **Note:** For now the original and replacement image must be of the same format 
 (bmp, gif, jpg, etc.).
