@@ -172,17 +172,17 @@ parent elements for formatting.
 
 DocxBox allows to modify existing attributes, or adds attributes if not present.
 
-* Set creation-date:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
-* Set creator attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
-* Set description attribute:    ````docxbox mm foo.docx description "Foo bar baz"````  
-* Set keywords attribute:       ````docxbox mm foo.docx keywords "Foo bar baz"````  
-* Set language attribute:       ````docxbox mm foo.docx language "en-US"````  
-* Set lastModifiedBy attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
-* Set lastPrinted attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
-* Set modification-date:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
-* Set revision attribute:       ````docxbox mm foo.docx revision 2````
-* Set subject attribute:        ````docxbox mm foo.docx subject "Foo bar"````
-* Set title attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````
+* Set **creation-date**:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
+* Set **creator** attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
+* Set **description** attribute:    ````docxbox mm foo.docx description "Foo bar baz"````  
+* Set **keywords** attribute:       ````docxbox mm foo.docx keywords "Foo bar baz"````  
+* Set **language** attribute:       ````docxbox mm foo.docx language "en-US"````  
+* Set **lastModifiedBy** attribute: ````docxbox mm foo.docx lastModifiedBy "docxBox v0.0.1"````
+* Set **lastPrinted** attribute:    ````docxbox mm foo.docx lastPrinted "2020-01-10T10:31:00Z"````
+* Set **modification-date**:        ````docxbox mm foo.docx modified "2020-01-29T09:21:00Z"````
+* Set **revision** attribute:       ````docxbox mm foo.docx revision 2````
+* Set **subject** attribute:        ````docxbox mm foo.docx subject "Foo bar"````
+* Set **title** attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````
 
 To alter/insert an attribute and save the modified document to a new file:  
 ````docxbox mm foo.docx <attribute> <value> new.docx````
