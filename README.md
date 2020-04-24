@@ -17,7 +17,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
     + [List referenced fonts](#List-referenced-fonts)
     + [List images information](#list-images-information)
     + [List fields](#list-fields)
-    + [Compare two DOCX documents](#compare-two-docx-documents)
+  + [Compare two DOCX documents](#compare-two-docx-documents)
   * [Output plaintext](#output-plaintext)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
