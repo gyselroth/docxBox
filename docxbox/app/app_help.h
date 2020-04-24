@@ -15,6 +15,7 @@ class AppHelp {
  public:
   static bool PrintVersion();
 
+  static bool PrintHelpOnDiff();
   static bool PrintHelp(bool with_title,
                         AppCommands::Commands command,
                         const std::string &command_identifier = "");

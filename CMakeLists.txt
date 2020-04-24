@@ -45,6 +45,7 @@ add_executable(docxbox
         docxbox/docx/xml/docx_xml_remove.cc
         docxbox/docx/xml/docx_xml_replace.cc
 
+        docxbox/helper/helper_cli.cc
         docxbox/helper/helper_dateTime.cc
         docxbox/helper/helper_file.cc
         docxbox/helper/helper_string.cc

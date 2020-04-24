@@ -102,6 +102,7 @@ bool App::Process() {
 
   // Process
   switch (command) {
+    case AppCommands::Command_FileDiff:return docx_archive->ViewFilesDiff("");
     case AppCommands::Command_Help: {
       AppCommands::Commands kCommand;
       std::string command_identifier;

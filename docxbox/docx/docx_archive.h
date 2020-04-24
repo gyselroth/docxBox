@@ -13,6 +13,7 @@
 #include <docxbox/docx/xml/docx_xml_replace.h>
 #include <docxbox/docx/xml/docx_xml_to_plaintext.h>
 #include <docxbox/docx/xml/docx_xml.h>
+#include <docxbox/helper/helper_cli.h>
 #include <docxbox/helper/helper_dateTime.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
@@ -25,6 +26,8 @@
 class docx_archive {
  public:
   docx_archive(int argc, char **argv);
+
+  bool ViewFilesDiff(const std::string &directory_appendix);
 
   bool UnzipDocx(
       const std::string &directory_appendix = "",

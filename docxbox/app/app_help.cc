@@ -19,6 +19,7 @@ bool AppHelp::PrintHelp(bool with_title,
                         AppCommands::Commands command,
                         const std::string &command_identifier) {
   switch (command) {
+    case AppCommands::Command_FileDiff:return PrintHelpOnDiff();
     case AppCommands::Command_Help:return PrintOverview(true);
 
     case AppCommands::Command_GetPlainText:
@@ -97,8 +98,9 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    mm         - Modify or set meta attribute in DOCX"
             << "\n    lorem      - Replace all text by random dummy text"
             << "\n"
-            << "\n  3. Convert DOCX:"
+            << "\n  3. Convert and compare DOCX:"
             << "\n    txt        - Output DOCX document as plaintext"
+            << "\n    diff       - Side-by-side compare file from two DOCX archives"
             << "\n"
             << "\n  4. Extract and create DOCX:"
             << "\n    uz         - Unzip files from DOCX"
@@ -216,6 +218,14 @@ bool AppHelp::PrintHelpOnListMergeFields(bool with_title) {
                "  or: docxbox lsd foo.docx --json\n"
                "  or: docxbox ls foo.docx -dj\n"
                "  or: docxbox ls foo.docx --fields -- json\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnDiff() {
+  std::cout << "Command diff - Side-by-side compare file from two DOCX archives:\n"
+               "----------------------------------------------------------------\n"
+               "docxbox diff foo_v1.docx foo_v2.docx word/settings.xml\n\n";
 
   return true;
 }

@@ -11,6 +11,7 @@ namespace docxbox {
 class AppCommands {
  public:
   enum Commands {
+    Command_FileDiff,
     Command_Help,
     Command_GetPlainText,
     Command_GetPlainTextSegments,
