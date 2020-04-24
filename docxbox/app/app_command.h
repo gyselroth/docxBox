@@ -34,6 +34,7 @@ class AppCommands {
     Command_UnzipMedia,
     Command_Version,
     Command_Zip,
+    Command_ZipCompressed,
     Command_Invalid
   };
 

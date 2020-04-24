@@ -308,6 +308,14 @@ or ````docxbox uz foo.docx --indent````
 
 ````docxbox zp path/to/directory out.docx````
 
+**Compress XML, than zip files into DOCX:**
+
+When having indented XML (i.e. via ``uzi`` command) for manual manipulation,
+the ``zpc`` command compresses (= unindents) all XML files before zipping them 
+into a new DOCX:
+
+````docxbox zpc path/to/directory out.docx````  
+
 
 ### Output docxBox help or version number
 
@@ -371,10 +379,13 @@ docxBox was built using the following third party libraries and tools:
 | Tool                                                            | Description                                                                | License                                                                                                   |
 | --------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | [Bats](https://github.com/sstephenson/bats)                     | Bash Automated Testing System                                              | [MIT License](https://opensource.org/licenses/MIT)                                                        |      
-| [Clang](https://clang.llvm.org/)                                | A C language family frontend for LLVM                                      | [Apache License](https://www.apache.org/licenses/)                                                        |      
-| [Cmake](https://cmake.org/)                                     | Family of tools designed to build, test and package software               | [New BSD License](https://en.wikipedia.org/wiki/New_BSD_License)                                          |      
-| [GCC](https://gcc.gnu.org/)                                     | GCC, the GNU Compiler Collection                                           | [GNU General Public License version 3](https://gcc.gnu.org/onlinedocs/libstdc++/manual/appendix_gpl.html) |      
+| [Clang](https://clang.llvm.org)                                 | A C language family frontend for LLVM                                      | [Apache License](https://www.apache.org/licenses/)                                                        |      
+| [Cmake](https://cmake.org)                                      | Family of tools designed to build, test and package software               | [New BSD License](https://en.wikipedia.org/wiki/New_BSD_License)                                          |      
+| [Cppcheck](http://cppcheck.sourceforge.net/)                    | Static analysis tool for C/C++ code                                        | [GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.html)                         |      
+| [cpplint](https://github.com/cpplint/cpplint)                   | Static code checker for C++                                                | [BSD-3 Clause](https://opensource.org/licenses/BSD-3-Clause)                                              |      
+| [GCC](https://gcc.gnu.org)                                      | GCC, the GNU Compiler Collection                                           | [GNU General Public License version 3](https://gcc.gnu.org/onlinedocs/libstdc++/manual/appendix_gpl.html) |      
 | [Travis CI](https://travis-ci.org)                              | Hosted Continuous Integration Service                                      | [MIT License](https://opensource.org/licenses/MIT)                                                        |
+| [Valgrind](https://valgrind.org)                                | System for debugging and profiling Linux programs                          | [GNU General Public License, version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)           |
 
 Thanks a lot!
 

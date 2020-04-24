@@ -182,6 +182,9 @@ bool App::Process() {
     case AppCommands::Command_Zip:
       result = docx_archive->Zip();
       break;
+    case AppCommands::Command_ZipCompressed:
+      result = docx_archive->Zip(true);
+      break;
     case AppCommands::Command_Invalid:
     default:
       AppHelp::PrintUnknownArgumentMessage(argv_[1]);

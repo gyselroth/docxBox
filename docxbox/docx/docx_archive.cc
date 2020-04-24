@@ -234,7 +234,7 @@ bool docx_archive::ModifyMeta() {
 
   auto attribute = meta->GetAttribute();
 
-  if (!Zip(path_extract_, path_docx_out + "tmp",
+  if (!Zip(false, path_extract_, path_docx_out + "tmp",
       attribute != docx_meta::Attribute_Created,
       attribute != docx_meta::Attribute_Modified)) {
     std::cerr << "DOCX creation failed.\n";
@@ -416,7 +416,7 @@ bool docx_archive::ReplaceImage() {
         // Overwrite original DOCX
         : path_docx_in_;
 
-    if (!Zip(path_extract_, path_docx_out + "tmp"))
+    if (!Zip(false, path_extract_, path_docx_out + "tmp"))
       throw "DOCX creation failed.\n";
 
     if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
@@ -483,7 +483,7 @@ bool docx_archive::ReplaceText() {
       // Overwrite original DOCX
       : path_docx_in_;
 
-  if (!Zip(path_extract_, path_docx_out + "tmp")) {
+  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
     std::cerr << "DOCX creation failed.\n";
 
     return false;
@@ -546,7 +546,7 @@ bool docx_archive::RemoveBetweenText() {
       // Overwrite original DOCX
       : path_docx_in_;
 
-  if (!Zip(path_extract_, path_docx_out + "tmp")) {
+  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
     std::cerr << "DOCX creation failed.\n";
 
     return false;
@@ -594,7 +594,7 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
       // Overwrite original DOCX
       : path_docx_in_;
 
-  if (!Zip(path_extract_, path_docx_out + "tmp")) {
+  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
     std::cerr << "DOCX creation failed.\n";
 
     return false;
@@ -613,6 +613,7 @@ bool docx_archive::ReplaceAllTextByLoremIpsum() {
 // Optionally update "creation" and "modified" meta attributes (core.xml)
 // to current date-time value
 bool docx_archive::Zip(
+    bool compress_xml,
     std::string path_directory,
     std::string path_docx_result,
     bool update_created,
@@ -663,9 +664,11 @@ bool docx_archive::Zip(
     std::string path_file_absolute =
         std::string(path_directory + "/").append(file_in_zip);
 
-    file.writestr(
-        file_in_zip,
-        helper::File::GetFileContents(path_file_absolute));
+    std::string xml = helper::File::GetFileContents(path_file_absolute);
+
+    if (compress_xml) docx_xml_indent::CompressXml(xml);
+
+    file.writestr(file_in_zip, xml);
   }
 
   file.save(path_docx_result);

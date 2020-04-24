@@ -40,6 +40,7 @@ class docx_archive {
   // Optionally update "creation" and "modified" meta attributes (core.xml)
   // to current date-time value
   bool Zip(
+      bool compress_xml = false,
       std::string path_directory = "",
       std::string path_docx_result = "",
       bool update_created = false,

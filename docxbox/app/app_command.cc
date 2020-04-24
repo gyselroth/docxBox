@@ -42,6 +42,7 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "uzm") return Command_UnzipMedia;
   if (command == "v") return Command_Version;
   if (command == "zp") return Command_Zip;
+  if (command == "zpc") return Command_ZipCompressed;
 
   return Command_Invalid;
 }

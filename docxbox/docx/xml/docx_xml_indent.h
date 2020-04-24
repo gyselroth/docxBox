@@ -18,6 +18,8 @@ class docx_xml_indent:docx_xml {
   docx_xml_indent(int argc, char **argv);
 
   static bool IndentXml(const std::string& path_xml);
+
+  static bool CompressXml(std::string &xml);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_INDENT_H_

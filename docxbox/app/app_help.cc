@@ -57,7 +57,8 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_UnzipMedia:
       return PrintHelpOnUnzip(false, true, false);
     case AppCommands::Command_Version:return PrintHelpOnVersion();
-    case AppCommands::Command_Zip:return PrintHelpOnZip();
+    case AppCommands::Command_Zip:return PrintHelpOnZip(true);
+    case AppCommands::Command_ZipCompressed:return PrintHelpOnZip(false);
     case AppCommands::Command_Invalid:
       if (!command_identifier.empty()) {
         std::cerr << "Unknown command: " << command_identifier << ".\n\n";
@@ -104,6 +105,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    uzi        - Unzip DOCX and indent XML files"
             << "\n    uzm        - Unzip only media files from DOCX"
             << "\n    zp         - Create (zip) DOCX from files"
+            << "\n    zpc        - Compress XML, than create DOCX from files"
             << "\n"
             << "\n  5. Meta commands:"
             << "\n    h          - Help: Describe usage of this program"
@@ -331,11 +333,17 @@ bool AppHelp::PrintHelpOnUnzip(bool with_uz, bool with_uzm, bool with_uzi) {
   return true;
 }
 
-bool AppHelp::PrintHelpOnZip() {
-  std::cout << "Command: zp - Create (zip) DOCX from files:\n"
-               "--------------------------------------------\n"
-               "Create DOCX from files in given (directory) path to new DOCX:\n"
-               "  docxbox zp foo foo.docx\n\n";
+bool AppHelp::PrintHelpOnZip(bool with_zip) {
+  if (with_zip) {
+    std::cout << "Command: zp - Create (zip) DOCX from files:\n"
+                 "--------------------------------------------\n"
+                 "Create DOCX from files in given (directory) path to new DOCX:\n"
+                 "  docxbox zp foo foo.docx\n\n";
+  }
+
+  std::cout << "Command: zpc - Compress XML, than create DOCX from files:\n"
+               "---------------------------------------------------------\n"
+               "  docxbox zpc foo foo.docx\n\n";
 
   return true;
 }

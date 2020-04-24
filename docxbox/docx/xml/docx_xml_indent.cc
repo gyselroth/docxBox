@@ -21,3 +21,15 @@ bool docx_xml_indent::IndentXml(const std::string& path_xml) {
 
   return true;
 }
+
+bool docx_xml_indent::CompressXml(std::string &xml) {
+  tinyxml2::XMLDocument doc;
+
+  doc.Parse(xml.c_str());
+
+  tinyxml2::XMLPrinter printer;
+  doc.Print( &printer );
+  xml = printer.CStr();
+
+  return true;
+}

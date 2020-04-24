@@ -37,7 +37,7 @@ class AppHelp {
       bool with_uzi = true);
 
   static bool PrintHelpOnVersion();
-  static bool PrintHelpOnZip();
+  static bool PrintHelpOnZip(bool with_zp = true);
 
   static void PrintUnknownArgumentMessage(const char *arg);
 };
