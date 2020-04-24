@@ -164,6 +164,8 @@ highlighted:
 
 ````docxbox ls foo_v1.docx foo_v2.docx````  
 
+#### Side-by-side compare file from two DOCX archives
+
 Files that have changed between versions of a given document can than be 
 inspected using the ``diff`` tool (which must be installed on your system).  
  
