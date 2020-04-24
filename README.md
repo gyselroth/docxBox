@@ -159,7 +159,7 @@ docxBox helps retracing changes to the files contained within DOCX archives,
 made when manipulating documents in word processor applications.
 
 When given two DOCX files, the ``ls`` command displays a side-by-side 
-comparison of the contained files' attributes, with a all non-identical items 
+comparison of the contained files' attributes, with non-identical items 
 highlighted:
 
 ````docxbox ls foo_v1.docx foo_v2.docx````  
