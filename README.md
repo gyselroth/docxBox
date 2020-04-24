@@ -166,13 +166,13 @@ highlighted:
 
 #### Side-by-side compare file from two DOCX archives
 
-Files that have changed between versions of a given document can than be 
+Files that have changed between versions of a given document, can be 
 inspected using the ``diff`` tool (which must be installed on your system).  
  
 The following shorthand:
 ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml````  
 displays a side-by-side comparison of the formatted XML of the given file 
-(``word/settings.xml``), with differences indicated.    
+(``word/settings.xml``), with differences indicated.
 
 
 ### Output plaintext
