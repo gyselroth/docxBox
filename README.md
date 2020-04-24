@@ -170,7 +170,7 @@ parent elements for formatting.
 
 #### Modify meta data
 
-DocxBox allows to modify existing attributes, or adds attributes if not present.
+docxBox allows to modify existing attributes, or adds attributes if not present.
 
 * Set **creation-date**:            ````docxbox mm foo.docx created "2020-01-29T09:21:00Z"````
 * Set **creator** attribute:        ````docxbox mm foo.docx creator "docxBox v0.0.1"````  
