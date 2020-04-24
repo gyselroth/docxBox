@@ -11,7 +11,7 @@ Linux tool for DOCX (OpenXML) analysis and manipulation.
 * [Planned features](#planned-features)
 * [Commands](#commands)
   * [Output DOCX contents](#output-docx-contents)
-    + [List files](#list-files)
+    + [List files: All, filter by ending, images only](#list-files-all-filter-by-ending-images-only)
     + [List meta data](#list-meta-data)
     + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
     + [List referenced fonts](#List-referenced-fonts)
@@ -56,7 +56,7 @@ Commands
 
 ### Output DOCX contents
 
-#### List files
+#### List files: All, filter by ending, images only
 
 Lists files (and directories) contained within a given DOCX, and their attributes:
 
@@ -68,9 +68,25 @@ To output as JSON:
 or ````docxbox ls foo.docx -j````  
 or ````docxbox ls foo.docx --json````  
 
-**Filter by file ending:**
+##### Filter by file ending
 
 ````docxbox ls foo.docx *.xml```` Lists only files ending w/ ``.xml`` 
+
+##### List images only
+
+Output list of contained images
+
+````docxbox lsi foo.docx````  
+or ````docxbox ls foo.docx -i````  
+or ````docxbox ls foo.docx --images````  
+
+To output as JSON:
+
+````docxbox lsij foo.docx````  
+or ````docxbox lsi foo.docx -j````  
+or ````docxbox ls foo.docx -ij````  
+or ````docxbox lsi foo.docx --json````  
+or ````docxbox ls foo.docx --images --json````  
 
 
 #### List meta data
@@ -121,22 +137,6 @@ or ````docxbox ls foo.docx -fj````
 or ````docxbox lsf foo.docx --json````  
 or ````docxbox ls foo.docx --fonts --json````
 
-
-#### List images information
-
-Output list of contained images
-
-````docxbox lsi foo.docx````  
-or ````docxbox ls foo.docx -i````  
-or ````docxbox ls foo.docx --images````  
-
-To output as JSON:
-
-````docxbox lsij foo.docx````  
-or ````docxbox lsi foo.docx -j````  
-or ````docxbox ls foo.docx -ij````  
-or ````docxbox lsi foo.docx --json````  
-or ````docxbox ls foo.docx --images --json````  
 
 #### List fields
 
