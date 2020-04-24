@@ -462,7 +462,7 @@ bool docx_archive::ReplaceText() {
 
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
 
-    if (!parser->ReplaceStringInXml(path_file_absolute, search, replacement)) {
+    if (!parser->ReplaceInXml(path_file_absolute, search, replacement)) {
       std::cerr << "Error: Failed replace string in: "
                 << file_in_zip.filename << "\n";
 

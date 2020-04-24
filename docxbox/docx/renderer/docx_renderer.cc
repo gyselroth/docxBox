@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <docxbox/docx/wml_renderer/docx_wml_renderer.h>
+#include <docxbox/docx/renderer/docx_renderer.h>
 
-docx_wml_renderer::Elements docx_wml_renderer::DetectElementType(
+docx_renderer::Elements docx_renderer::DetectElementType(
     const std::string& json) {
   int offset_end_identifier = helper::String::OffsetChar(json, '"', 2) - 2;
 

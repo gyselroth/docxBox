@@ -1,20 +1,26 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
+#include <docxbox/docx/renderer/docx_renderer_table.h>
 
 #include <iostream>
 
 // Constructor
-docx_wml_renderer_table::docx_wml_renderer_table(const std::string &json) {
-  json_ = json;
-  is_valid_wml_json_ = helper::String::IsJson(json);
+docx_renderer_table::docx_renderer_table(
+    int argc,
+    char **argv,
+    const std::string &json) {
+  argc_ = argc;
+  argv_ = argv;
 
-  if (is_valid_wml_json_) InitSpecs();
+  json_ = json;
+  is_json_valid_markup_config_ = helper::String::IsJson(json);
+
+  if (is_json_valid_markup_config_) InitSpecs();
 }
 
-std::string docx_wml_renderer_table::RenderMarkup(
-    const std::string& json) {
-  auto renderer = new docx_wml_renderer_table(json);
+std::string docx_renderer_table::RenderMarkup(
+    int argc, char **argv, const std::string& json) {
+  auto renderer = new docx_renderer_table(argc, argv, json);
 
   if (!renderer->Render()) {
     delete renderer;
@@ -29,14 +35,14 @@ std::string docx_wml_renderer_table::RenderMarkup(
   return markup;
 }
 
-std::string docx_wml_renderer_table::GetWml() {
+std::string docx_renderer_table::GetWml() {
   return wml_;
 }
 
 // Collect table specs from JSON
-void docx_wml_renderer_table::InitSpecs() {
+void docx_renderer_table::InitSpecs() {
   if (!helper::String::Contains(json_, "table")) {
-    is_valid_wml_json_ = false;
+    is_json_valid_markup_config_ = false;
 
     return;
   }
@@ -88,12 +94,12 @@ void docx_wml_renderer_table::InitSpecs() {
     }
   }
 
-  is_valid_wml_json_ = amount_columns_ > 0 && amount_rows_ > 0;
+  is_json_valid_markup_config_ = amount_columns_ > 0 && amount_rows_ > 0;
 }
 
 // @see http://officeopenxml.com/WPtable.php
-bool docx_wml_renderer_table::Render() {
-  if (!is_valid_wml_json_) return false;
+bool docx_renderer_table::Render() {
+  if (!is_json_valid_markup_config_) return false;
 
   wml_ = std::string(kWRunLhs);
 
@@ -109,7 +115,7 @@ bool docx_wml_renderer_table::Render() {
   return true;
 }
 
-std::string docx_wml_renderer_table::RenderTableProperties() {
+std::string docx_renderer_table::RenderTableProperties() {
   return
     "<w:tblPr>"
       "<w:tblStyle w:val=\"TableGrid\"/>"
@@ -117,7 +123,7 @@ std::string docx_wml_renderer_table::RenderTableProperties() {
     "</w:tblPr>";
 }
 
-std::string docx_wml_renderer_table::RenderTableGrid() {
+std::string docx_renderer_table::RenderTableGrid() {
   std::string markup = "<w:tblGrid>";
 
   for (int i = 0; i < amount_columns_; i++) {
@@ -127,7 +133,7 @@ std::string docx_wml_renderer_table::RenderTableGrid() {
   return markup + "</w:tblGrid>";
 }
 
-std::string docx_wml_renderer_table::RenderTableRowsAndCells() {
+std::string docx_renderer_table::RenderTableRowsAndCells() {
   std::string markup;
 
   int index_cell = 0;
@@ -147,7 +153,7 @@ std::string docx_wml_renderer_table::RenderTableRowsAndCells() {
   return markup;
 }
 
-std::string docx_wml_renderer_table::RenderTableCell(int index_cell) {
+std::string docx_renderer_table::RenderTableCell(int index_cell) {
   return
       "<w:tc>"
         "<w:tcPr>"

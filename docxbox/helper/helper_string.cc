@@ -94,9 +94,9 @@ int String::OffsetChar(const std::string &str, char c, int offset) {
 
   do {
     ch = str[offset];
-    
+
     if (ch == c) return offset;
-    
+
     ++offset;
   } while (offset < len);
 

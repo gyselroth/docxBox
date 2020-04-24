@@ -1,9 +1,9 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef DOCXBOX_DOCX_WML_RENDERER_DOCX_WML_RENDERER_TABLE_H_
-#define DOCXBOX_DOCX_WML_RENDERER_DOCX_WML_RENDERER_TABLE_H_
+#ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_
+#define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_
 
-#include <docxbox/docx/wml_renderer/docx_wml_renderer.h>
+#include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/helper/helper_string.h>
 
 #include <string>
@@ -11,14 +11,17 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-class docx_wml_renderer_table:docx_wml_renderer {
+class docx_renderer_table: docx_renderer {
  public:
   // Constructor
-  explicit docx_wml_renderer_table(const std::string &json);
+  explicit docx_renderer_table(int argc, char **argv, const std::string &json);
 
   std::string GetWml();
 
-  static std::string RenderMarkup(const std::string& json);
+  static std::string RenderMarkup(
+      int argc,
+      char **argv,
+      const std::string& json);
 
   bool Render();
 
@@ -45,4 +48,4 @@ class docx_wml_renderer_table:docx_wml_renderer {
   std::string RenderTableRowsAndCells();
 };
 
-#endif  // DOCXBOX_DOCX_WML_RENDERER_DOCX_WML_RENDERER_TABLE_H_
+#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_

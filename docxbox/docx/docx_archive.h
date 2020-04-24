@@ -6,7 +6,7 @@
 #include <docxbox/app/app_argument.h>
 #include <docxbox/docx/docx_fontTable.h>
 #include <docxbox/docx/docx_meta.h>
-#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
+#include <docxbox/docx/renderer/docx_renderer_table.h>
 #include <docxbox/docx/xml/docx_xml_fields.h>
 #include <docxbox/docx/xml/docx_xml_lorem.h>
 #include <docxbox/docx/xml/docx_xml_remove.h>

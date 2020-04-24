@@ -1,7 +1,15 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <vendor/miniz-cpp/zip_file.hpp>
+#ifndef DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
+#define DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
+
 #include <docxbox/docx/xml/docx_xml_indent.h>
+
+#include <memory>
+#include <string>
+#include <vector>
+
+#include <vendor/miniz-cpp/zip_file.hpp>
 
 // Static extension methods to miniz-cpp
 
@@ -181,3 +189,5 @@ class miniz_cpp_ext {
     return true;
   }
 };
+
+#endif  // DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_

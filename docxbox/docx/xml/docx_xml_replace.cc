@@ -12,7 +12,7 @@ docx_xml_replace::docx_xml_replace(
 // 2. A string containing JSON: will be interpreted for rendering word markup,
 //   which will than replace the <w:r> that contained the <w:t> node,
 //   which contained the search-string
-bool docx_xml_replace::ReplaceStringInXml(
+bool docx_xml_replace::ReplaceInXml(
     const std::string& path_xml,
     const std::string& search,
     const std::string& replacement,
@@ -230,12 +230,14 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
 }
 
 std::string docx_xml_replace::RenderMarkupFromJson(const std::string& json) {
-  auto type = docx_wml_renderer::DetectElementType(json);
+  auto type = docx_renderer::DetectElementType(json);
 
   switch (type) {
-//    case Element_Image: return docx_wml_renderer_image::RenderMarkup(json);
-    case docx_wml_renderer::Element_Table: return docx_wml_renderer_table::RenderMarkup(json);
-    case docx_wml_renderer::Element_None:default:
+    case docx_renderer::Element_Image:
+      return docx_renderer_image::RenderMarkup(argc_, argv_, json);
+    case docx_renderer::Element_Table:
+      return docx_renderer_table::RenderMarkup(argc_, argv_, json);
+    case docx_renderer::Element_None:default:
       throw "Invalid markup config, failed to identify element type.";
   }
 }
