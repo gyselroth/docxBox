@@ -26,6 +26,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Replace text by image](#replace-text-by-image)
       + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
+      + [Arbitrary manual and scripted modifications](#arbitrary-manual-and-scripted-modifications)
       + [Randomize document text](#randomize-document-text)
   * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
   * [Zip files into DOCX](#zip-files-into-docx)  
@@ -305,6 +306,27 @@ Remove content between (and including) given strings (``left`` and ``right``):
 
 ````docxbox rem foo.docx left right```` updates foo.docx  
 ````docxbox rem foo.docx left right new.docx```` creates a new file new.docx
+
+
+#### Arbitrary manual and scripted modifications
+
+docxBox eases conducting arbitrary modifications on files contained within a 
+DOCX, manually and scripted. All steps besides the actual modification are 
+automated via docxBox, with the respective user-defined modification inserted.
+
+**Example - Edit XML file manually:**
+
+````docxbox cmd foo.docx "nano *DOCX*/word/document.xml"````  
+
+docxBox in the above example does:
+1. Unzip ``foo.docx``
+2. Indent all extracted XML files
+3. Render (= replace ``*DOCX*`` w/ the resp. extraction path)  
+  and **execute** the command: ``nano *DOCX*/word/document.xml``.  
+  -> Thereby opening ``document.xml`` for editing in nano, halting docxBox until 
+  exiting the editor.
+4. Unindent all extracted XML files
+5. Zip the extracted files back into ``foo.docx``   
 
 
 #### Randomize document text
