@@ -27,7 +27,9 @@ class docx_archive {
  public:
   docx_archive(int argc, char **argv);
 
-  bool ViewFilesDiff(const std::string &directory_appendix);
+  bool ExecuteUserCommand();
+
+  bool ViewFilesDiff();
 
   bool UnzipDocx(
       const std::string &directory_appendix = "",

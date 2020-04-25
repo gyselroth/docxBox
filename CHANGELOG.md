@@ -3,6 +3,7 @@ docxBox Changelog
 
 V0.0.3 - Not finished yet
 -------------------------
+* Add execute user-defined command on contained files (cmd)
 * Add side-by-side comparison of file from two DOCX archives (diff)
 * Add side-by-side comparison of two DOCX documents (ls)
 * Add Compress XMLs and zip (zpc)

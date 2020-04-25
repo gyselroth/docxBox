@@ -107,17 +107,42 @@ std::string docx_archive::ParseFileWildcard(int index_argument) const {
          : "";
 }
 
-bool docx_archive::ViewFilesDiff(const std::string &directory_appendix) {
+bool docx_archive::ExecuteUserCommand() {
   // TODO(kay): add safeguard: verify all arguments being given + valid
 
-  if (!UnzipDocx(directory_appendix, true, true)) return false;
+  if (!UnzipDocx("", true, true)) return false;
+
+  std::string command = argv_[3];
+  helper::String::ReplaceAll(command, "*DOCX*", path_extract_);
+
+  helper::Cli::Execute(command.c_str());
+
+  std::cout << "\nHit [Enter] when done.";
+
+  getchar();
+
+  Zip(true, path_extract_, "", true, true);
+
+  std::cout << "\n";
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+  auto file_list = docx_file.infolist();
+  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+
+  return true;
+}
+
+bool docx_archive::ViewFilesDiff() {
+  // TODO(kay): add safeguard: verify all arguments being given + valid
+
+  if (!UnzipDocx("", true, true)) return false;
 
   std::string path_in_left = path_docx_in_;
   std::string path_extract_left = path_extract_;
 
   argv_[2] = argv_[3];
 
-  if (!UnzipDocx(directory_appendix, true, true)) return false;
+  if (!UnzipDocx("", true, true)) return false;
 
   std::string path_in_right = path_docx_in_;
   std::string path_extract_right = path_extract_;
