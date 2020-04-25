@@ -26,8 +26,8 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Replace text by image](#replace-text-by-image)
       + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
-      + [Arbitrary manual and scripted modifications](#arbitrary-manual-and-scripted-modifications)
       + [Randomize document text](#randomize-document-text)
+  * [Arbitrary manual and scripted modifications](#arbitrary-manual-and-scripted-modifications)
   * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
@@ -308,7 +308,17 @@ Remove content between (and including) given strings (``left`` and ``right``):
 ````docxbox rem foo.docx left right new.docx```` creates a new file new.docx
 
 
-#### Arbitrary manual and scripted modifications
+#### Randomize document text
+
+Replace all text of an existing document by similarly structured random 
+"Lorem Ipsum" dummy text, helpful for generating DOCX documents for testing 
+purposes:
+
+````docxbox lorem foo.docx```` updates foo.docx  
+````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
+
+
+### Arbitrary manual and scripted modifications
 
 docxBox eases conducting arbitrary modifications on files contained within a 
 DOCX, manually and scripted. All steps besides the actual modification are 
@@ -326,17 +336,7 @@ docxBox in the above example does:
   -> Thereby opening ``document.xml`` for editing in nano, halting docxBox until 
   exiting the editor.
 4. **Unindent** all extracted XML files
-5. **Zip** the extracted files back into ``foo.docx``   
-
-
-#### Randomize document text
-
-Replace all text of an existing document by similarly structured random 
-"Lorem Ipsum" dummy text, helpful for generating DOCX documents for testing 
-purposes:
-
-````docxbox lorem foo.docx```` updates foo.docx  
-````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
+5. **Zip** the extracted files back into ``foo.docx``
 
 
 ### Unzip DOCX: All files, or only media files, format XML
