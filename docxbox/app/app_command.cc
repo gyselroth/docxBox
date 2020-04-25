@@ -20,6 +20,7 @@ AppCommands::Commands AppCommands::Resolve() {
 
 AppCommands::Commands AppCommands::ResolveCommandByName(
     const std::string &command) {
+  if (command == "cmd") return Command_ExecuteUserCommand;
   if (command == "diff") return Command_FileDiff;
   if (command == "h" || command == "?") return Command_Help;
   if (command == "lorem") return Command_LoremIpsum;

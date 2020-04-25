@@ -19,6 +19,8 @@ bool AppHelp::PrintHelp(bool with_title,
                         AppCommands::Commands command,
                         const std::string &command_identifier) {
   switch (command) {
+    case AppCommands::Command_ExecuteUserCommand:
+      return PrintHelpOnUserCommand();
     case AppCommands::Command_FileDiff:return PrintHelpOnDiff();
     case AppCommands::Command_Help:return PrintOverview(true);
 
@@ -98,18 +100,21 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    mm         - Modify or set meta attribute in DOCX"
             << "\n    lorem      - Replace all text by random dummy text"
             << "\n"
-            << "\n  3. Convert and compare DOCX:"
+            << "\n  3. Run user-defined command on contained file(s):"
+            << "\n    cmd        - Execute given command on given DOCX"
+            << "\n"
+            << "\n  4. Convert and compare DOCX:"
             << "\n    txt        - Output DOCX document as plaintext"
             << "\n    diff       - Side-by-side compare file from two DOCX archives"
             << "\n"
-            << "\n  4. Extract and create DOCX:"
+            << "\n  5. Extract and create DOCX:"
             << "\n    uz         - Unzip files from DOCX"
             << "\n    uzi        - Unzip DOCX and indent XML files"
             << "\n    uzm        - Unzip only media files from DOCX"
             << "\n    zp         - Create (zip) DOCX from files"
             << "\n    zpc        - Compress XML, than create DOCX from files"
             << "\n"
-            << "\n  5. Meta commands:"
+            << "\n  6. Meta commands:"
             << "\n    h          - Help: Describe usage of this program"
             << "\n    v          - Version: Output version number"
             << "\n\n"
@@ -218,6 +223,15 @@ bool AppHelp::PrintHelpOnListMergeFields(bool with_title) {
                "  or: docxbox lsd foo.docx --json\n"
                "  or: docxbox ls foo.docx -dj\n"
                "  or: docxbox ls foo.docx --fields -- json\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnUserCommand() {
+  std::cout << "Command cmd - Execute given command on given DOCX:\n"
+               "-------------------------------------------------\n"
+               "Example: Edit contained XML file w/ nano\n"
+               "  docxbox cmd foo.docx \"nano *DOCX*/word/settings.xml\"\n\n";
 
   return true;
 }
