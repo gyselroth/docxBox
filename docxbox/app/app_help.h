@@ -25,6 +25,7 @@ class AppHelp {
   static bool PrintHelpOnListFonts(bool with_title = true);
   static bool PrintHelpOnListMergeFields(bool with_title = true);
   static bool PrintHelpOnListMeta(bool with_title = true);
+  static bool PrintHelpOnLocateFilesContaining();
   static bool PrintHelpOnLoremIpsum();
   static bool PrintHelpOnModifyMeta();
   static bool PrintHelpOnReplaceImage();

@@ -72,7 +72,7 @@ or ````docxbox ls foo.docx --json````
 
 ````docxbox ls foo.docx *.xml```` Lists only files ending w/ ``.xml`` 
 
-##### List all files containing search-string
+##### List all files containing string or regular expression
 
 ````docxbox lsl foo.docx foo```` Lists all files containing the string ``foo``  
 or ````docxbox ls foo.docx -l foo````  
@@ -80,7 +80,7 @@ or ````docxbox ls foo.docx --locate foo````
 
 This command is a shorthand to the grep tool (must be installed on your system 
 when using this command).  
-The search-string therefor can also be given as a regular expression.
+The search-string therefor can also be given as a regular expression:
 
 ````docxbox lsl foo.docx '/[0-9A-Z]\{8\}/'````  
 Lists all files containing 8-digit IDs, e.g. word recent session IDs 

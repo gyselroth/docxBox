@@ -32,7 +32,7 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "lsi") return Command_ListImages;
   if (command == "lsij") return Command_ListImagesAsJson;
   if (command == "lsj") return Command_ListAsJson;
-  if (command == "lsl") return Command_LocateFilesContainingString;
+  if (command == "lsl") return Command_LocateFilesContaining;
   if (command == "lsm") return Command_ListMeta;
   if (command == "lsmj") return Command_ListMetaAsJson;
   if (command == "mm") return Command_ModifyMeta;
@@ -61,8 +61,8 @@ bool AppCommands::IsListCommand(Commands command) {
       || command == Command_ListMergeFieldsAsJson
       || command == Command_ListMeta
       || command == Command_ListMetaAsJson
-      || command == Command_LocateFilesContainingString
-      || command == Command_LocateFilesContainingStringAsJson;
+      || command == Command_LocateFilesContaining
+      || command == Command_LocateFilesContainingAsJson;
 }
 
 }  // namespace docxbox

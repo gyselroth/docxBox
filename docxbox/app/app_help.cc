@@ -45,6 +45,10 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_ListMeta:
     case AppCommands::Command_ListMetaAsJson:return PrintHelpOnListMeta(true);
 
+    case AppCommands::Command_LocateFilesContaining:
+    case AppCommands::Command_LocateFilesContainingAsJson:
+      return PrintHelpOnLocateFilesContaining();
+
     case AppCommands::Command_LoremIpsum:return PrintHelpOnLoremIpsum();
 
     case AppCommands::Command_RemoveBetweenText:
@@ -240,6 +244,25 @@ bool AppHelp::PrintHelpOnDiff() {
   std::cout << "Command diff - Side-by-side compare file from two DOCX archives:\n"
                "----------------------------------------------------------------\n"
                "docxbox diff foo_v1.docx foo_v2.docx word/settings.xml\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnLocateFilesContaining() {
+  std::cout << "List all files containing search-string or regular expression:\n"
+               "-----------------------------------------------\n"
+               "Lists all files containing the string foo:\n"
+               "  docxbox lsl foo.docx foo\n"
+               "  or: docxbox ls foo.docx -l foo\n"
+               "  or: docxbox ls foo.docx --locate foo\n\n"
+
+               "Lists all files containing the string foo, as JSON:"
+               "  docxbox lslj foo.docx foo\n"
+               "  or: docxbox lslj foo.docx foo\n"
+               "  or: docxbox ls foo.docx --lj foo\n"
+               "  or: docxbox lsl foo.docx --json foo\n"
+               "  or: docxbox ls foo.docx --locate -j foo\n"
+               "  or: docxbox ls foo.docx --locate --json foo\n\n";
 
   return true;
 }

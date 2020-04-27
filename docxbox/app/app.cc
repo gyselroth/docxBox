@@ -40,7 +40,7 @@ AppCommands::Commands App::PreProcess(
         return AppCommands::Command_ListImagesAsJson;
 
       if (arguments->Matches(3, "-lj"))
-        return AppCommands::Command_LocateFilesContainingString;
+        return AppCommands::Command_LocateFilesContaining;
 
       if (arguments->Matches(3, "-mj"))
         return AppCommands::Command_ListMetaAsJson;
@@ -62,8 +62,8 @@ AppCommands::Commands App::PreProcess(
 
       if (arguments->Matches(3, "-l", "--locate"))
         return arguments->Matches(4, "-j", "--json")
-               ? AppCommands::Command_LocateFilesContainingStringAsJson
-               : AppCommands::Command_LocateFilesContainingString;
+               ? AppCommands::Command_LocateFilesContainingAsJson
+               : AppCommands::Command_LocateFilesContaining;
 
       if (arguments->Matches(3, "-m", "--meta"))
         return arguments->Matches(4, "-j", "--json")
@@ -141,10 +141,10 @@ bool App::Process() {
       case AppCommands::Command_ListMetaAsJson:
         result = docx_archive->ListMeta(true);
         break;
-      case AppCommands::Command_LocateFilesContainingString:
+      case AppCommands::Command_LocateFilesContaining:
         result = docx_archive->LocateFilesContainingString();
         break;
-      case AppCommands::Command_LocateFilesContainingStringAsJson:
+      case AppCommands::Command_LocateFilesContainingAsJson:
         result = docx_archive->LocateFilesContainingString(true);
         break;
       case AppCommands::Command_Invalid:
