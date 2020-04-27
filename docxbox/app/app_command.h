@@ -47,6 +47,7 @@ class AppCommands {
   static Commands ResolveCommandByName(const std::string &command);
 
   static bool IsListCommand(Commands command);
+  static bool IsReplaceCommand(Commands command);
 
   Commands GetResolved();
 

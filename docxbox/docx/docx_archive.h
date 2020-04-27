@@ -18,20 +18,16 @@
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
 
-#include <docxbox/ext/ext_miniz_cpp.hpp>
-
 #include <iostream>
 #include <vector>
 #include <memory>
 #include <string>
 
+#include <docxbox/ext/ext_miniz_cpp.hpp>
+
 class docx_archive {
  public:
   docx_archive(int argc, char **argv);
-
-  bool ExecuteUserCommand();
-
-  bool ViewFilesDiff();
 
   bool UnzipDocx(
       const std::string &directory_appendix = "",
@@ -55,12 +51,11 @@ class docx_archive {
 
   bool GetText(bool newline_at_segments);
 
-  bool ModifyMeta();
+  bool ExecuteUserCommand();
 
-  bool ReplaceImage();
-  bool ReplaceText();
-  bool RemoveBetweenText();
-  bool ReplaceAllTextByLoremIpsum();
+  bool ViewFilesDiff();
+
+  bool ModifyMeta();
 
  protected:
   int argc_;

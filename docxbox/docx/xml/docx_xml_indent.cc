@@ -28,7 +28,7 @@ bool docx_xml_indent::CompressXml(std::string &xml) {
   doc.Parse(xml.c_str());
 
   tinyxml2::XMLPrinter printer;
-  doc.Print( &printer );
+  doc.Print(&printer);
   xml = printer.CStr();
 
   return true;

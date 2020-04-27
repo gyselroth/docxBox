@@ -37,6 +37,7 @@ std::string File::GetFileContents(std::ifstream &file) {
 }
 
 u_int32_t File::GetLongestLineLength(const std::string &filename) {
+  // TODO(kay) add variation w/ arbitrary amount of filenames as vector
   std::string contents = GetFileContents(filename);
   std::vector<std::string> lines = helper::String::Explode(contents, '\n');
 

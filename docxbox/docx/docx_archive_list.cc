@@ -2,7 +2,9 @@
 
 #include <docxbox/docx/docx_archive_list.h>
 
-docx_archive_list::docx_archive_list(int argc, char **argv) : docx_archive(argc, argv) {}
+docx_archive_list::docx_archive_list(
+    int argc,
+    char **argv) : docx_archive(argc, argv) {}
 
 // Output paths of files (and directories) within DOCX file
 bool docx_archive_list::ListFiles(bool as_json, bool images_only) {
@@ -40,7 +42,11 @@ bool docx_archive_list::ListFiles(bool as_json, bool images_only) {
 
     std::string files_list_2 =
         path_docx_in_2 + "\n\n"
-        + miniz_cpp_ext::PrintDir(docx_file_2, as_json, images_only, file_ending);
+        + miniz_cpp_ext::PrintDir(
+            docx_file_2,
+            as_json,
+            images_only,
+            file_ending);
 
     std::cout << helper::String::RenderSideBySide(
         path_docx_in_ + "\n\n" + files_list,

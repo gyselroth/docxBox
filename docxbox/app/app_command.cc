@@ -65,4 +65,11 @@ bool AppCommands::IsListCommand(Commands command) {
       || command == Command_LocateFilesContainingAsJson;
 }
 
+bool AppCommands::IsReplaceCommand(Commands command) {
+  return command == Command_ReplaceText
+      || command == Command_ReplaceImage
+      || command == Command_RemoveBetweenText
+      || command == Command_LoremIpsum;
+}
+
 }  // namespace docxbox

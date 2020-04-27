@@ -105,7 +105,7 @@ class miniz_cpp_ext {
       const std::string& filter_ending = "",
       const std::vector<std::string>& filter_filenames = {}) {
     std::string out;
-    
+
     if (as_json) {
       out += "[";
     } else {
@@ -127,9 +127,11 @@ class miniz_cpp_ext {
 
     for (auto &member : docx_file.infolist()) {
       if (filter_by_filenames) {
-        if (!helper::String::IsAnyOf(member.filename, filter_filenames)) continue;
+        if (!helper::String::IsAnyOf(member.filename, filter_filenames))
+          continue;
       } else {
-        if ((images_only && !helper::File::IsWordCompatibleImage(member.filename))
+        if ((images_only
+             && !helper::File::IsWordCompatibleImage(member.filename))
             || (filter_by_ending
                 && !helper::String::EndsWith(member.filename, filter_ending)))
           continue;
