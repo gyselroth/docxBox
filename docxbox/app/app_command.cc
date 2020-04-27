@@ -50,4 +50,19 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   return Command_Invalid;
 }
 
+bool AppCommands::IsListCommand(Commands command) {
+  return command == Command_List
+      || command == Command_ListAsJson
+      || command == Command_ListFonts
+      || command == Command_ListFontsAsJson
+      || command == Command_ListImages
+      || command == Command_ListImagesAsJson
+      || command == Command_ListMergeFields
+      || command == Command_ListMergeFieldsAsJson
+      || command == Command_ListMeta
+      || command == Command_ListMetaAsJson
+      || command == Command_LocateFilesContainingString
+      || command == Command_LocateFilesContainingStringAsJson;
+}
+
 }  // namespace docxbox

@@ -18,6 +18,8 @@
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
 
+#include <docxbox/ext/ext_miniz_cpp.hpp>
+
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -28,7 +30,6 @@ class docx_archive {
   docx_archive(int argc, char **argv);
 
   bool ExecuteUserCommand();
-  bool LocateFilesContainingString(bool as_json = false);
 
   bool ViewFilesDiff();
 
@@ -52,15 +53,6 @@ class docx_archive {
       bool update_created = false,
       bool update_modified = false);
 
-  // List files inside DOCX archive and their attributes
-  bool ListFiles(bool as_json, bool images_only = false);
-  bool ListImages(bool as_json);
-
-  // List data stored within XML(s) of DOCX
-  bool ListFonts(bool as_json);
-  bool ListMergeFields(bool as_json);
-  bool ListMeta(bool as_json);
-
   bool GetText(bool newline_at_segments);
 
   bool ModifyMeta();
@@ -70,7 +62,7 @@ class docx_archive {
   bool RemoveBetweenText();
   bool ReplaceAllTextByLoremIpsum();
 
- private:
+ protected:
   int argc_;
   char **argv_;
 
@@ -87,10 +79,9 @@ class docx_archive {
   void InitExtractionPath(const std::string &directory_appendix,
                           const std::string &path_docx);
 
-  void InitLocateFilesContaining(bool &as_json, std::string &needle) const;
-
   std::string ParseFileWildcard(int index_argument) const;
 
+ private:
   // Update given meta date attribute and immediately save updated core.xml
   bool UpdateCoreXmlDate(docx_meta::Attribute attribute);
 };

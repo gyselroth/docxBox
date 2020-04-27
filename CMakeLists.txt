@@ -29,6 +29,7 @@ add_executable(docxbox
         docxbox/app/app_help.h
 
         docxbox/docx/docx_archive.cc
+        docxbox/docx/docx_archive_list.cc
         docxbox/docx/docx_contentTypes.cc
         docxbox/docx/docx_fontTable.cc
         docxbox/docx/docx_meta.cc
@@ -51,4 +52,5 @@ add_executable(docxbox
         docxbox/helper/helper_string.cc
         docxbox/helper/helper_numeric.cc
 
+        vendor/miniz-cpp/zip_file.hpp
         vendor/tinyxml2/tinyxml2.cpp)

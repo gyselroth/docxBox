@@ -1,7 +1,6 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/docx/docx_archive.h>
-#include <docxbox/ext/ext_miniz_cpp.hpp>
 
 docx_archive::docx_archive(int argc, char **argv) {
   argc_ = argc;
@@ -23,70 +22,6 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
     throw "Error - File not found: " + path_docx_in_ + "\n";
 
   return true;
-}
-
-// Output paths of files (and directories) within DOCX file
-bool docx_archive::ListFiles(bool as_json, bool images_only) {
-  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX filename"))
-    return false;
-
-  try {
-    InitPathDocxByArgV(3);
-  } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
-  }
-
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-
-  std::string file_ending = ParseFileWildcard(3);
-
-  std::string files_list =
-      miniz_cpp_ext::PrintDir(docx_file, as_json, images_only, file_ending);
-
-  if (file_ending.empty()
-      && argc_ >= 4
-      && helper::String::EndsWith(argv_[3], ".docx")
-      && helper::File::FileExists(argv_[3])) {
-    // Output two DOCX files lists side-by-side
-    const std::string
-        &path_docx_in_2 = docxbox::AppArguments::ResolvePathFromArgument(
-        path_working_directory_,
-        argc_,
-        argv_,
-        4);
-
-    miniz_cpp::zip_file docx_file_2(path_docx_in_2);
-
-    std::string files_list_2 =
-        path_docx_in_2 + "\n\n"
-        + miniz_cpp_ext::PrintDir(docx_file_2, as_json, images_only, file_ending);
-
-    std::cout << helper::String::RenderSideBySide(
-        path_docx_in_ + "\n\n" + files_list,
-        files_list_2,
-        8);
-  } else {
-    // Output single DOCX files list
-    std::cout << files_list;
-  }
-
-  return true;
-}
-
-// List contained images and their attributes
-bool docx_archive::ListImages(bool as_json) {
-  if (as_json) return ListFiles(as_json, true);
-
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-
-  std::cout
-      << miniz_cpp_ext::PrintDir(docx_file, false, true);
-
-  return miniz_cpp_ext::RemoveExtract(path_extract_, docx_file.infolist());
 }
 
 // Render path (string) where to extract given DOCX file
@@ -130,80 +65,6 @@ bool docx_archive::ExecuteUserCommand() {
   miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
   return true;
-}
-
-bool docx_archive::LocateFilesContainingString(bool as_json) {
-  std::string needle;
-  InitLocateFilesContaining(as_json, needle);
-
-  if (!UnzipDocx("", true, true)) return false;
-
-  std::string grep = "grep -iRl \"" + needle + "\" " + path_extract_;
-
-  auto files_located = helper::Cli::GetExecutionResponse(grep.c_str());
-  helper::String::ReplaceAll(files_located, path_extract_ + "/", "");
-
-  auto filenames = helper::String::Explode(files_located, '\n');
-
-  Zip(true, path_extract_, "", true, true);
-
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-  auto file_list = docx_file.infolist();
-
-  if (!filenames.empty())
-    std::cout
-      << miniz_cpp_ext::PrintDir(docx_file, as_json, false, "", filenames);
-
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
-  return true;
-}
-void docx_archive::InitLocateFilesContaining(bool &as_json,
-                                             std::string &needle) const {
-  docxbox::AppArguments::EnsureIsArgumentGiven(
-      argc_,
-      3,
-      "String or regular expression to be located");
-
-    needle = argv_[3];
-
-  if (needle == "-l" || needle == "--locate") {
-    docxbox::AppArguments::EnsureIsArgumentGiven(
-        argc_,
-        4,
-        "String or regular expression to be located");
-
-    needle = argv_[4];
-  }
-
-  if (needle == "-lj") {
-    docxbox::AppArguments::EnsureIsArgumentGiven(
-        argc_,
-        4,
-        "String or regular expression to be located");
-
-    needle = argv_[4];
-    as_json = true;
-  }
-
-  if (needle == "-j" || needle == "--json") {
-    docxbox::AppArguments::EnsureIsArgumentGiven(
-        argc_,
-        5,
-        "String or regular expression to be located");
-
-    as_json = true;
-    needle = argv_[5];
-  }
-
-  if (needle == "-lj") {
-    docxbox::AppArguments::EnsureIsArgumentGiven(
-        argc_,
-        4,
-        "String or regular expression to be located");
-
-    needle = argv_[4];
-  }
 }
 
 bool docx_archive::ViewFilesDiff() {
@@ -318,56 +179,6 @@ bool docx_archive::UnzipMedia() {
   return true;
 }
 
-// Output meta data from within given DOCX file:
-// Creation date, revision, title, language, used fonts, contained media files
-bool docx_archive::ListMeta(bool as_json) {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-
-  auto file_list = docx_file.infolist();
-
-  auto *meta = new docx_meta(argc_, argv_);
-  meta->SetPathExtract(path_extract_);
-
-  if (as_json) meta->SetOutputAsJson(true);
-
-  int index_app = 0;
-  int index_core = 0;
-
-  for (const auto &file_in_zip : file_list) {
-    const char *path_file_within_docx = file_in_zip.filename.c_str();
-
-    std::string
-        path_file_absolute = path_extract_ + "/" + path_file_within_docx;
-
-    // Extract meta data from app.xml and core.xml,
-    // data is output when both are collected
-    // or another of the same kind is found (e.g. merged documents)
-    if (helper::String::EndsWith(file_in_zip.filename, "app.xml")) {
-      meta->CollectFromAppXml(
-          file_in_zip.filename,
-          helper::File::GetFileContents(path_file_absolute));
-
-      ++index_app;
-    } else if (helper::String::EndsWith(file_in_zip.filename, "core.xml")) {
-      meta->LoadCoreXml(path_file_absolute);
-      meta->CollectFromCoreXml(file_in_zip.filename);
-
-      ++index_core;
-    }
-  }
-
-  // Output anything that hasn't been yet
-  meta->Output();
-
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
-  delete meta;
-
-  return true;
-}
-
 bool docx_archive::ModifyMeta() {
   auto *meta = new docx_meta(argc_, argv_);
 
@@ -432,54 +243,6 @@ bool docx_archive::ModifyMeta() {
   return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 }
 
-// List referenced fonts and their metrics
-bool docx_archive::ListFonts(bool as_json) {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-
-  auto file_list = docx_file.infolist();
-
-  auto *fontTable = new docx_fontTable();
-
-  if (as_json) std::cout << "[";
-
-  int index_font = 0;
-
-  for (const auto &file_in_zip : file_list) {
-    if (helper::String::EndsWith(file_in_zip.filename, "fontTable.xml")) {
-      // Extract fonts data from all fontTable.xml files
-      const char *path_file_within_docx = file_in_zip.filename.c_str();
-
-      std::string path_file_absolute =
-          path_extract_ + "/" + path_file_within_docx;
-
-      fontTable->CollectFontsMetrics(
-          helper::File::GetFileContents(path_file_absolute));
-
-      if (as_json) {
-        if (index_font > 0) std::cout << ",";
-
-        fontTable->OutputAsJson(file_in_zip.filename);
-      } else {
-        fontTable->OutputPlain(file_in_zip.filename);
-      }
-
-      fontTable->Clear();
-
-      ++index_font;
-    }
-  }
-
-  delete fontTable;
-
-  if (as_json) std::cout << "]";
-
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
-  return true;
-}
-
 bool docx_archive::GetText(bool newline_at_segments) {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
@@ -501,33 +264,6 @@ bool docx_archive::GetText(bool newline_at_segments) {
   }
 
   parser->Output();
-
-  delete parser;
-
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
-  return true;
-}
-
-bool docx_archive::ListMergeFields(bool as_json) {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-
-  auto file_list = docx_file.infolist();
-
-  auto parser = new docx_xml_fields(argc_, argv_);
-
-  for (const auto &file_in_zip : file_list) {
-    // TODO(kay): fetch from all textual XML files, instead only document.xml
-
-    if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml"))
-      continue;
-
-    parser->CollectMergeFields(path_extract_ + "/" + file_in_zip.filename);
-  }
-
-  parser->Output(as_json);
 
   delete parser;
 
