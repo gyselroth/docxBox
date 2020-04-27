@@ -82,7 +82,7 @@ This command is a shorthand to the grep tool (must be installed on your system
 when using this command).  
 The search-string therefor can also be given as a regular expression.
 
-````docxbox lsl foo.docx '/[0-9A-Z]\{8\}/'```` 
+````docxbox lsl foo.docx '/[0-9A-Z]\{8\}/'````  
 Lists all files containing 8-digit IDs, e.g. word recent session IDs 
 (ISO/IEC 29500-1). 
 
