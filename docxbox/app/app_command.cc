@@ -27,11 +27,12 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "ls") return Command_List;
   if (command == "lsd") return Command_ListMergeFields;
   if (command == "lsdj") return Command_ListMergeFieldsAsJson;
+  if (command == "lsf") return Command_ListFonts;
+  if (command == "lsfj") return Command_ListFontsAsJson;
   if (command == "lsi") return Command_ListImages;
   if (command == "lsij") return Command_ListImagesAsJson;
   if (command == "lsj") return Command_ListAsJson;
-  if (command == "lsf") return Command_ListFonts;
-  if (command == "lsfj") return Command_ListFontsAsJson;
+  if (command == "lsl") return Command_LocateFilesContainingString;
   if (command == "lsm") return Command_ListMeta;
   if (command == "lsmj") return Command_ListMetaAsJson;
   if (command == "mm") return Command_ModifyMeta;

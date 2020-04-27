@@ -102,7 +102,8 @@ class miniz_cpp_ext {
       miniz_cpp::zip_file &docx_file,
       bool as_json = false,
       bool images_only = false,
-      const std::string& file_ending = "") {
+      const std::string& filter_ending = "",
+      const std::vector<std::string>& filter_filenames = {}) {
     std::string out;
     
     if (as_json) {
@@ -121,14 +122,18 @@ class miniz_cpp_ext {
     std::vector<std::string> dates;
     std::vector<std::string> times;
 
-    bool filter_by_ending = !file_ending.empty();
+    auto filter_by_ending = !filter_ending.empty();
+    auto filter_by_filenames = !filter_filenames.empty();
 
     for (auto &member : docx_file.infolist()) {
-
-      if ((images_only && !helper::File::IsWordCompatibleImage(member.filename))
-          || (filter_by_ending
-              && !helper::String::EndsWith(member.filename, file_ending)))
-        continue;
+      if (filter_by_filenames) {
+        if (!helper::String::IsAnyOf(member.filename, filter_filenames)) continue;
+      } else {
+        if ((images_only && !helper::File::IsWordCompatibleImage(member.filename))
+            || (filter_by_ending
+                && !helper::String::EndsWith(member.filename, filter_ending)))
+          continue;
+      }
 
       if (as_json) {
         out += (index_file == 0 ? "" : ",");
@@ -188,7 +193,9 @@ class miniz_cpp_ext {
       const std::string &path_extract,
       const std::vector<miniz_cpp::zip_info> &file_list) {
     for (const auto& file_in_zip : file_list) {
-      if (!helper::String::EndsWith(file_in_zip.filename, ".xml")) continue;
+      if (!helper::String::EndsWith(file_in_zip.filename, ".xml")
+          && !helper::String::EndsWith(file_in_zip.filename, ".xml.rels"))
+        continue;
 
       if (!docx_xml_indent::IndentXml(
           path_extract + "/" + file_in_zip.filename)) return false;

@@ -36,6 +36,13 @@ std::string File::GetFileContents(std::ifstream &file) {
   return str;
 }
 
+u_int32_t File::GetLongestLineLength(const std::string &filename) {
+  std::string contents = GetFileContents(filename);
+  std::vector<std::string> lines = helper::String::Explode(contents, '\n');
+
+  return helper::String::GetMaxLength(lines);
+}
+
 // Resolve path: keep absolute or make relative from given (binary) path
 std::string File::ResolvePath(
     const std::string &pwd,

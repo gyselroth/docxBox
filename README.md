@@ -11,11 +11,9 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 * [Planned features](#planned-features)
 * [Commands](#commands)
   * [Output DOCX contents](#output-docx-contents)
-    + [List files: All, filter by ending, images only](#list-files-all-filter-by-ending-images-only)
+    + [List files: All, filtered, images only](#list-files-all-filtered-images-only)
     + [List meta data](#list-meta-data)
-    + [Reference: Recognized meta attributes](#reference-recognized-meta-attributes)
     + [List referenced fonts](#List-referenced-fonts)
-    + [List images information](#list-images-information)
     + [List fields](#list-fields)
   + [Compare DOCX documents](#compare-docx-documents)
   * [Output plaintext](#output-plaintext)
@@ -58,7 +56,7 @@ Commands
 
 ### Output DOCX contents
 
-#### List files: All, filter by ending, images only
+#### List files: All, filtered, images only
 
 **Lists files** (and directories) contained within a given DOCX, and their attributes:
 
@@ -74,7 +72,31 @@ or ````docxbox ls foo.docx --json````
 
 ````docxbox ls foo.docx *.xml```` Lists only files ending w/ ``.xml`` 
 
-##### List images only
+##### List all files containing search-string
+
+````docxbox lsl foo.docx foo```` Lists all files containing the string ``foo``  
+or ````docxbox ls foo.docx -l foo````  
+or ````docxbox ls foo.docx --locate foo````  
+
+This command is a shorthand to the grep tool (must be installed on your system 
+when using this command).  
+The search-string therefor can also be given as a regular expression.
+
+````docxbox lsl foo.docx '/[0-9A-Z]\{8\}/'``` 
+Lists all files containing 8-digit IDs, e.g. word recent session IDs 
+(ISO/IEC 29500-1). 
+
+**List all files containing search-string as JSON**
+
+````docxbox lslj foo.docx foo````  
+or ````docxbox lsl foo.docx -j foo````  
+or ````docxbox ls foo.docx --lj foo````  
+or ````docxbox lsl foo.docx --json foo````  
+or ````docxbox ls foo.docx --locate -j foo````  
+or ````docxbox ls foo.docx --locate --json foo````  
+
+
+##### List image files
 
 Output list of contained images
 
@@ -304,8 +326,8 @@ The table configuration must be passed as escaped JSON:
 
 Remove content between (and including) given strings (``left`` and ``right``):    
 
-````docxbox rem foo.docx left right```` updates foo.docx  
-````docxbox rem foo.docx left right new.docx```` creates a new file new.docx
+````docxbox rmt foo.docx left right```` updates foo.docx  
+````docxbox rmt foo.docx left right new.docx```` creates a new file new.docx
 
 
 #### Randomize document text

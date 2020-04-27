@@ -28,6 +28,7 @@ class docx_archive {
   docx_archive(int argc, char **argv);
 
   bool ExecuteUserCommand();
+  bool LocateFilesContainingString(bool as_json = false);
 
   bool ViewFilesDiff();
 
@@ -85,6 +86,8 @@ class docx_archive {
 
   void InitExtractionPath(const std::string &directory_appendix,
                           const std::string &path_docx);
+
+  void InitLocateFilesContaining(bool &as_json, std::string &needle) const;
 
   std::string ParseFileWildcard(int index_argument) const;
 

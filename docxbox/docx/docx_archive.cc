@@ -132,6 +132,80 @@ bool docx_archive::ExecuteUserCommand() {
   return true;
 }
 
+bool docx_archive::LocateFilesContainingString(bool as_json) {
+  std::string needle;
+  InitLocateFilesContaining(as_json, needle);
+
+  if (!UnzipDocx("", true, true)) return false;
+
+  std::string grep = "grep -iRl \"" + needle + "\" " + path_extract_;
+
+  auto files_located = helper::Cli::GetExecutionResponse(grep.c_str());
+  helper::String::ReplaceAll(files_located, path_extract_ + "/", "");
+
+  auto filenames = helper::String::Explode(files_located, '\n');
+
+  Zip(true, path_extract_, "", true, true);
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+  auto file_list = docx_file.infolist();
+
+  if (!filenames.empty())
+    std::cout
+      << miniz_cpp_ext::PrintDir(docx_file, as_json, false, "", filenames);
+
+  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+
+  return true;
+}
+void docx_archive::InitLocateFilesContaining(bool &as_json,
+                                             std::string &needle) const {
+  docxbox::AppArguments::EnsureIsArgumentGiven(
+      argc_,
+      3,
+      "String or regular expression to be located");
+
+    needle = argv_[3];
+
+  if (needle == "-l" || needle == "--locate") {
+    docxbox::AppArguments::EnsureIsArgumentGiven(
+        argc_,
+        4,
+        "String or regular expression to be located");
+
+    needle = argv_[4];
+  }
+
+  if (needle == "-lj") {
+    docxbox::AppArguments::EnsureIsArgumentGiven(
+        argc_,
+        4,
+        "String or regular expression to be located");
+
+    needle = argv_[4];
+    as_json = true;
+  }
+
+  if (needle == "-j" || needle == "--json") {
+    docxbox::AppArguments::EnsureIsArgumentGiven(
+        argc_,
+        5,
+        "String or regular expression to be located");
+
+    as_json = true;
+    needle = argv_[5];
+  }
+
+  if (needle == "-lj") {
+    docxbox::AppArguments::EnsureIsArgumentGiven(
+        argc_,
+        4,
+        "String or regular expression to be located");
+
+    needle = argv_[4];
+  }
+}
+
 bool docx_archive::ViewFilesDiff() {
   // TODO(kay): add safeguard: verify all arguments being given + valid
 
@@ -149,8 +223,17 @@ bool docx_archive::ViewFilesDiff() {
 
   std::string file = argv_[4];
 
+  int width = helper::File::GetLongestLineLength(path_extract_left + "/" + file);
+  int width2 = helper::File::GetLongestLineLength(path_extract_right + "/" + file);
+
+  if (width2 > width) width = width2;
+
+  if (width > 200) width = 200;
+
   helper::Cli::Execute(
-      std::string("diff -y " + path_extract_left + "/" + file + " "
+      std::string("diff -y "
+                  "--width=" + std::to_string(width) + " "
+                  + path_extract_left + "/" + file + " "
                   + path_extract_right + "/" + file).c_str());
 
   std::cout << "\nHit [Enter] when done.";

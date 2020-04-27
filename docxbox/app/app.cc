@@ -33,11 +33,14 @@ AppCommands::Commands App::PreProcess(
       if (arguments->Matches(3, "-fj"))
         return AppCommands::Command_ListFontsAsJson;
 
+      if (arguments->Matches(3, "-dj"))
+        return AppCommands::Command_ListMergeFieldsAsJson;
+
       if (arguments->Matches(3, "-ij"))
         return AppCommands::Command_ListImagesAsJson;
 
-      if (arguments->Matches(3, "-dj"))
-        return AppCommands::Command_ListMergeFieldsAsJson;
+      if (arguments->Matches(3, "-lj"))
+        return AppCommands::Command_LocateFilesContainingString;
 
       if (arguments->Matches(3, "-mj"))
         return AppCommands::Command_ListMetaAsJson;
@@ -56,6 +59,11 @@ AppCommands::Commands App::PreProcess(
         return arguments->Matches(4, "-j", "--json")
                ? AppCommands::Command_ListImagesAsJson
                : AppCommands::Command_ListImages;
+
+      if (arguments->Matches(3, "-l", "--locate"))
+        return arguments->Matches(4, "-j", "--json")
+               ? AppCommands::Command_LocateFilesContainingStringAsJson
+               : AppCommands::Command_LocateFilesContainingString;
 
       if (arguments->Matches(3, "-m", "--meta"))
         return arguments->Matches(4, "-j", "--json")
@@ -154,6 +162,12 @@ bool App::Process() {
       break;
     case AppCommands::Command_ListMetaAsJson:
       result = docx_archive->ListMeta(true);
+      break;
+    case AppCommands::Command_LocateFilesContainingString:
+      result = docx_archive->LocateFilesContainingString();
+      break;
+    case AppCommands::Command_LocateFilesContainingStringAsJson:
+      result = docx_archive->LocateFilesContainingString(true);
       break;
     case AppCommands::Command_LoremIpsum:
       result = docx_archive->ReplaceAllTextByLoremIpsum();

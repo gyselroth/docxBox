@@ -23,10 +23,19 @@ std::string AppArguments::ResolvePathFromArgument(
   return helper::File::ResolvePath(pwd, argv[index_argument-1]);
 }
 
-bool AppArguments::IsArgumentGiven(int argc,
+bool AppArguments::EnsureIsArgumentGiven(int argc,
                                    int index,
                                    const std::string &argument_description) {
+  IsArgumentGiven(argc, index, argument_description, true);
+}
+
+bool AppArguments::IsArgumentGiven(int argc,
+                                   int index,
+                                   const std::string &argument_description,
+                                   bool do_throw) {
   if (argc <= index) {
+    if (do_throw) throw "Missing argument: " + argument_description + "\n";
+
     std::cerr << "Missing argument: " << argument_description << "\n";
 
     return false;

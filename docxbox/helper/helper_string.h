@@ -30,6 +30,8 @@ bool EndsWith(std::string const &value, std::string const &ending);
 // Check whether given string starts w/ given prefix
 extern bool StartsWith(const char *str, const char *prefix);
 
+extern bool IsAnyOf(std::string str, std::vector<std::string> endings);
+
 extern bool Contains(const std::string &haystack, const char *needle);
 
 extern void Replace(

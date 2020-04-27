@@ -23,6 +23,7 @@ namespace helper {
 namespace Cli {
 
 extern void Execute(const char *command);
+extern std::string GetExecutionResponse(const char *command);
 
 }  // namespace Cli
 }  // namespace helper

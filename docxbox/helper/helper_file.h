@@ -38,6 +38,8 @@ extern std::streampos GetFileSize(std::ifstream &file);
 extern std::string GetFileContents(const std::string &filename);
 extern std::string GetFileContents(std::ifstream &file);
 
+extern u_int32_t GetLongestLineLength(const std::string &filename);
+
 extern bool WriteToNewFile(
     const std::string &filename,
     const std::string &content);

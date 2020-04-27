@@ -1,6 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/helper/helper_string.h>
+#include <iostream>
 
 namespace helper {
 
@@ -13,6 +14,18 @@ bool String::StartsWith(const char *str, const char *prefix) {
 bool String::EndsWith(std::string const &value, std::string const &ending) {
   return ending.size() <= value.size()
       && std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
+bool String::IsAnyOf(
+    std::string str,
+    std::vector<std::string> endings) {
+  unsigned long amount_endings = endings.size();
+
+  for (int i = 0; i < amount_endings; ++i) {
+    if (str == endings[i]) return true;
+  }
+
+  return false;
 }
 
 bool String::Contains(const std::string &haystack, const char *needle) {
