@@ -86,7 +86,7 @@ The search-string therefor can also be given as a regular expression:
 Lists all files containing 8-digit IDs, e.g. word recent session IDs 
 (ISO/IEC 29500-1). 
 
-**List all files containing search-string as JSON**
+##### List all files containing string or regular expression as JSON
 
 ````docxbox lslj foo.docx foo````  
 or ````docxbox lsl foo.docx -j foo````  
