@@ -338,7 +338,7 @@ When setting a merge fields' value, it is reduced to its textual component
 the same field, as the former field has turned into a text element.  
 
 ````docxbox sfv foo.docx "MERGEFIELD  foo" bar````  
-Changes all merge fields', whose identifier begins with ``foo``, 
+Changes all merge fields, whose identifier begins with ``foo``, 
 into the text ``bar``.  
 
 **Hint:** To find out field identifiers use docxBox's ``lsd`` command.
