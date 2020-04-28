@@ -39,6 +39,7 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "rmt") return Command_RemoveBetweenText;
   if (command == "rpi") return Command_ReplaceImage;
   if (command == "rpt") return Command_ReplaceText;
+  if (command == "sfv") return Command_SetFieldValue;
   if (command == "txt") return Command_GetPlainText;
   if (command == "uz") return Command_Unzip;
   if (command == "uzi") return Command_UnzipAndIndentXml;

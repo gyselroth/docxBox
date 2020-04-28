@@ -31,6 +31,7 @@ class AppHelp {
   static bool PrintHelpOnReplaceImage();
   static bool PrintHelpOnReplaceText();
   static bool PrintHelpOnRemoveBetweenText();
+  static bool PrintHelpOnSetFieldValue();
 
   static bool PrintHelpOnUnzip(
       bool with_uz = true,

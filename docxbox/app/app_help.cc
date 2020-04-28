@@ -54,6 +54,9 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_RemoveBetweenText:
       return PrintHelpOnRemoveBetweenText();
 
+    case AppCommands::Command_SetFieldValue:
+      return PrintHelpOnSetFieldValue();
+
     case AppCommands::Command_ModifyMeta:return PrintHelpOnModifyMeta();
     case AppCommands::Command_ReplaceImage:return PrintHelpOnReplaceImage();
     case AppCommands::Command_ReplaceText:return PrintHelpOnReplaceText();
@@ -102,6 +105,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    rpt        - Replace text in DOCX"
             << "\n    rmt        - Remove DOCX content between given strings"
             << "\n    mm         - Modify or set meta attribute in DOCX"
+            << "\n    sfv        - Set field value"
             << "\n    lorem      - Replace all text by random dummy text"
             << "\n"
             << "\n  3. Run user-defined command on contained file(s):"
@@ -329,6 +333,24 @@ bool AppHelp::PrintHelpOnRemoveBetweenText() {
        "    docxbox rmt foo.docx left-hand-side right-hand-side\n\n"
        "  Save to new DOCX file:\n"
        "    docxbox rmt foo.docx left-hand-side right-hand-side new.docx\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnSetFieldValue() {
+  std::cout
+    << "Command: sfv - Set field value:\n"
+       "-------------------------------\n"
+       "Update shown text of all print-date fields' to 10.01.2020:"
+       "  Update existing DOCX file:\n"
+       "    docxbox sfv foo.docx \"PRINTDATE\" \"10.01.2020\"\n\n"
+       "  Save to new DOCX file:\n"
+       "    docxbox sfv foo.docx \"PRINTDATE\" \"10.01.2020\" new.docx\n\n"
+
+       "Set shown text of all merge fields', whose identifier begins with foo, to bar:\n"
+       "    docxbox sfv foo.docx \"MERGEFIELD foo\" bar\n\n"
+       "  Save to new DOCX file:\n"
+       "    docxbox sfv foo.docx \"MERGEFIELD foo\" bar new.docx\n\n";
 
   return true;
 }

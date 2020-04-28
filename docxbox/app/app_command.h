@@ -33,6 +33,7 @@ class AppCommands {
     Command_RemoveBetweenText,
     Command_ReplaceImage,
     Command_ReplaceText,
+    Command_SetFieldValue,
     Command_Unzip,
     Command_UnzipAndIndentXml,
     Command_UnzipMedia,
