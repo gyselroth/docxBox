@@ -20,9 +20,9 @@ class AppArguments {
                                              char **argv,
                                              int index_argument);
 
-  static bool EnsureIsArgumentGiven(int argc,
-                              int index,
-                              const std::string &argument_description);
+  static bool EnsureArgumentGiven(int argc,
+                                  int index,
+                                  const std::string &argument_description);
 
   static bool IsArgumentGiven(int argc,
                               int index,

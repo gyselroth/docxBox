@@ -103,7 +103,7 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
 
 void docx_archive_list::InitLocateFilesContaining(bool &as_json,
                                              std::string &needle) const {
-  docxbox::AppArguments::EnsureIsArgumentGiven(
+  docxbox::AppArguments::EnsureArgumentGiven(
       argc_,
       3,
       "String or regular expression to be located");
@@ -111,7 +111,7 @@ void docx_archive_list::InitLocateFilesContaining(bool &as_json,
     needle = argv_[3];
 
   if (needle == "-l" || needle == "--locate") {
-    docxbox::AppArguments::EnsureIsArgumentGiven(
+    docxbox::AppArguments::EnsureArgumentGiven(
         argc_,
         4,
         "String or regular expression to be located");
@@ -120,7 +120,7 @@ void docx_archive_list::InitLocateFilesContaining(bool &as_json,
   }
 
   if (needle == "-lj") {
-    docxbox::AppArguments::EnsureIsArgumentGiven(
+    docxbox::AppArguments::EnsureArgumentGiven(
         argc_,
         4,
         "String or regular expression to be located");
@@ -130,7 +130,7 @@ void docx_archive_list::InitLocateFilesContaining(bool &as_json,
   }
 
   if (needle == "-j" || needle == "--json") {
-    docxbox::AppArguments::EnsureIsArgumentGiven(
+    docxbox::AppArguments::EnsureArgumentGiven(
         argc_,
         5,
         "String or regular expression to be located");
@@ -140,7 +140,7 @@ void docx_archive_list::InitLocateFilesContaining(bool &as_json,
   }
 
   if (needle == "-lj") {
-    docxbox::AppArguments::EnsureIsArgumentGiven(
+    docxbox::AppArguments::EnsureArgumentGiven(
         argc_,
         4,
         "String or regular expression to be located");

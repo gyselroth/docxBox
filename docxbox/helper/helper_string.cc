@@ -17,9 +17,9 @@ bool String::EndsWith(std::string const &value, std::string const &ending) {
 }
 
 bool String::IsAnyOf(
-    std::string str,
+    const std::string& str,
     std::vector<std::string> endings) {
-  unsigned long amount_endings = endings.size();
+  uint16_t amount_endings = endings.size();
 
   for (int i = 0; i < amount_endings; ++i) {
     if (str == endings[i]) return true;
@@ -243,7 +243,7 @@ std::string String::RenderSideBySide(
   auto lines_left = Explode(left, '\n');
   auto lines_right = Explode(right, '\n');
 
-  unsigned long amount_lines_right = lines_right.size();
+  uint32_t amount_lines_right = lines_right.size();
 
   int index = 0;
 
@@ -259,8 +259,8 @@ std::string String::RenderSideBySide(
   for (auto line_left : lines_left) {
     auto line_right = amount_lines_right > index ? lines_right[index] : "";
 
-    unsigned long len_left = line_left.length();
-    unsigned long len_right = line_right.length();
+    uint32_t len_left = line_left.length();
+    uint32_t len_right = line_right.length();
 
     std::string left_margin_right = len_left < len_left_max
         ? Repeat(" ", len_left_max - len_left)

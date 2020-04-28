@@ -232,7 +232,14 @@ bool docx_archive::ExecuteUserCommand() {
 }
 
 bool docx_archive::ViewFilesDiff() {
-  // TODO(kay): add safeguard: verify all arguments being given + valid
+  if (!docxbox::AppArguments::IsArgumentGiven(
+      argc_,
+      3,
+      "DOCX file to compare with")
+      || !docxbox::AppArguments::IsArgumentGiven(
+          argc_,
+          4,
+          "File within DOCX archives to be compared")) return false;
 
   if (!UnzipDocx("", true, true)) return false;
 
@@ -247,6 +254,13 @@ bool docx_archive::ViewFilesDiff() {
   std::string path_extract_right = path_extract_;
 
   std::string file = argv_[4];
+
+  if (!helper::File::FileExists(path_extract_left + "/" + file)
+      || !helper::File::FileExists(path_extract_right + "/" + file)) {
+    std::cerr << "File not given in both DOCX archives: " << file << "\n";
+
+    return false;
+  }
 
   int width =
       helper::File::GetLongestLineLength(path_extract_left + "/" + file);
