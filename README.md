@@ -333,6 +333,8 @@ Remove content between (and including) given strings (``left`` and ``right``):
 
 #### Set field value
 
+##### Merge fields
+
 When setting the value of a **merge field**, the merge field is reduced to its 
 textual component (maintaining its visual style).  
 Each merge field can therefor not be merged more than once, as the former field 
@@ -343,6 +345,8 @@ Changes all merge fields, whose identifier begins with ``foo``,
 into the text ``bar``.  
 
 **Hint:** To find out field identifiers use docxBox's ``lsd`` command.
+
+##### Generic fields
 
 Setting field values includes also preview texts of otherwise
 **generic fields**, which in some word processing applications have to be
