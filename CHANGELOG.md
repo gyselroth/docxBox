@@ -3,7 +3,8 @@ docxBox Changelog
 
 V0.0.3 - Not finished yet
 -------------------------
-* Add DOCX check before attempting to extract: must be a zip archive
+* Ensure re-zipped DOCX is rated valid when opened in MS word
+* Add DOCX check before attempting to extract: must be a ZIP archive
 * Add list files containing search-string (lsl)
 * Add execute user-defined command on contained files (cmd)
 * Add side-by-side comparison of file from two DOCX archives (diff)

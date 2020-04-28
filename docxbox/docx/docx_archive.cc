@@ -170,28 +170,9 @@ bool docx_archive::Zip(
   if (update_modified)
     UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Modified);
 
-  // Get relative paths of all files to be zipped
-  std::vector<std::string> files_in_zip;
+// ZipUsingMinizCpp(compress_xml, path_directory, path_docx_result);
 
-  files_in_zip = helper::File::ScanDirRecursive(
-      path_directory.c_str(),
-      files_in_zip,
-      path_directory + "/");
-
-  miniz_cpp::zip_file file;
-
-  for (const auto &file_in_zip : files_in_zip) {
-    std::string path_file_absolute =
-        std::string(path_directory + "/").append(file_in_zip);
-
-    std::string xml = helper::File::GetFileContents(path_file_absolute);
-
-    if (compress_xml) docx_xml_indent::CompressXml(xml);
-
-    file.writestr(file_in_zip, xml);
-  }
-
-  file.save(path_docx_result);
+  ZipUsingCLi(path_directory, path_docx_result);
 
   return helper::File::FileExists(path_docx_result);
 }
@@ -382,4 +363,41 @@ bool docx_archive::UpdateCoreXmlDate(docx_meta::Attribute attribute) {
   delete meta;
 
   return result;
+}
+
+void docx_archive::ZipUsingCLi(const std::string &path_directory,
+                               const std::string &path_docx_result) const {
+  std::string cmd =
+    "cd " + path_directory + ";"
+    "zip tmp.zip -r .;"
+    "mv tmp.zip " + path_docx_result;
+
+  helper::Cli::Execute(cmd.c_str());
+}
+
+void docx_archive::ZipUsingMinizCpp(bool compress_xml,
+                                    const std::string &path_directory,
+                                    const std::string &path_docx_result) const {
+  // Get relative paths of all files to be zipped
+  std::vector<std::string> files_in_zip;
+
+  files_in_zip = helper::File::ScanDirRecursive(
+      path_directory.c_str(),
+      files_in_zip,
+      path_directory + "/");
+
+  miniz_cpp::zip_file file;
+
+  for (const auto &file_in_zip : files_in_zip) {
+    std::string path_file_absolute =
+        std::string(path_directory + "/").append(file_in_zip);
+
+    std::string xml = helper::File::GetFileContents(path_file_absolute);
+
+    if (compress_xml) docx_xml_indent::CompressXml(xml);
+
+    file.writestr(file_in_zip, xml);
+  }
+
+  file.save(path_docx_result);
 }

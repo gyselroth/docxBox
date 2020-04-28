@@ -81,6 +81,17 @@ class docx_archive {
  private:
   // Update given meta date attribute and immediately save updated core.xml
   bool UpdateCoreXmlDate(docx_meta::Attribute attribute);
+
+  // TODO(kay): unused for now, ms word refuses to open the file.
+  //  check: needs to use other compression algorithm (zip base64)?
+  void ZipUsingMinizCpp(bool compress_xml,
+                        const std::string &path_directory,
+                        const std::string &path_docx_result) const;
+
+  // TODO(kay): remove workaround when minizCpp-compressed DOCX is valid
+  //  also according to MS word
+  void ZipUsingCLi(const std::string &path_directory,
+                   const std::string &path_docx_result) const;
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_ARCHIVE_H_
