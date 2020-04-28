@@ -136,8 +136,10 @@ bool docx_archive::Zip(
     bool compress_xml,
     std::string path_directory,
     std::string path_docx_result,
-    bool update_created,
-    bool update_modified) {
+    bool set_date_created_to_now,
+    bool set_date_modified_to_now,
+    const std::string& date_created,
+    const std::string& date_modified) {
   if (path_directory.empty()) {
     if (argc_ <= 2) {
       std::cerr << "Missing argument: path of directory to be zipped\n";
@@ -164,15 +166,23 @@ bool docx_archive::Zip(
     }
   }
 
-  if (update_created)
-    UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Created);
+  if (!date_created.empty()) {
+    UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Created, date_created);
+  } else {
+    if (set_date_created_to_now)
+      UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Created);
+  }
 
-  if (update_modified)
-    UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Modified);
+  if (!date_created.empty()) {
+    UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Modified, date_modified);
+  } else {
+    if (set_date_modified_to_now)
+      UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Modified);
+  }
 
 // ZipUsingMinizCpp(compress_xml, path_directory, path_docx_result);
 
-  ZipUsingCLi(path_directory, path_docx_result);
+  ZipUsingCLi(path_directory, path_docx_result, compress_xml);
 
   return helper::File::FileExists(path_docx_result);
 }
@@ -327,8 +337,6 @@ bool docx_archive::ModifyMeta() {
     std::cerr << message;
   }
 
-  delete meta;
-
   std::string path_docx_out;
 
   if (argc_ >= 6) {
@@ -342,13 +350,33 @@ bool docx_archive::ModifyMeta() {
 
   auto attribute = meta->GetAttribute();
 
-  if (!Zip(false, path_extract_, path_docx_out + "tmp",
-           attribute != docx_meta::Attribute_Created,
-           attribute != docx_meta::Attribute_Modified)) {
-    std::cerr << "DOCX creation failed.\n";
+  /*if (attribute == docx_meta::Attribute_LastPrinted) {
+    std::string date = meta->GetValue();
 
-    return false;
-  }
+    if (!Zip(false, path_extract_, path_docx_out + "tmp",
+             false,
+             false,
+             date,
+             date)) {
+      std::cerr << "DOCX creation failed.\n";
+
+      delete meta;
+
+      return false;
+    }
+  } else {*/
+    if (!Zip(false, path_extract_, path_docx_out + "tmp",
+             attribute != docx_meta::Attribute_Created,
+             attribute != docx_meta::Attribute_Modified)) {
+      std::cerr << "DOCX creation failed.\n";
+
+      delete meta;
+
+      return false;
+    }
+  /*}*/
+
+  delete meta;
 
   if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
 
@@ -362,15 +390,20 @@ bool docx_archive::ModifyMeta() {
 // Update given meta date attribute and immediately save updated core.xml
 // TODO(kay): add multi-attributes variation of method
 //  to load/save only once than
-bool docx_archive::UpdateCoreXmlDate(docx_meta::Attribute attribute) {
+bool docx_archive::UpdateCoreXmlDate(
+    docx_meta::Attribute attribute,
+    const std::string& value) {
   // TODO(kay): add gate - ensure attribute is a date
 
   auto meta = new docx_meta(argc_, argv_);
 
   meta->SetPathExtract(path_extract_);
-
   meta->SetAttribute(attribute);
-  meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
+
+  meta->SetValue(
+      value.empty()
+        ? helper::DateTime::GetCurrentDateTimeInIso8601()
+        : value);
 
   auto result = meta->UpsertAttribute(true);
 
@@ -380,10 +413,13 @@ bool docx_archive::UpdateCoreXmlDate(docx_meta::Attribute attribute) {
 }
 
 void docx_archive::ZipUsingCLi(const std::string &path_directory,
-                               const std::string &path_docx_result) const {
+                               const std::string &path_docx_result,
+                               bool compress_xml) const {
+  if (compress_xml) CompressXmlFiles(path_directory);
+
   std::string cmd =
     "cd " + path_directory + ";"
-    "zip tmp.zip -r .;"
+    "zip tmp.zip -rq *;"
     "mv tmp.zip " + path_docx_result;
 
   helper::Cli::Execute(cmd.c_str());
@@ -414,4 +450,25 @@ void docx_archive::ZipUsingMinizCpp(bool compress_xml,
   }
 
   file.save(path_docx_result);
+}
+
+void docx_archive::CompressXmlFiles(const std::string &path_directory) const {
+  std::vector<std::string> files;
+
+  files = helper::File::ScanDirRecursive(
+      path_directory.c_str(),
+      files,
+      path_directory + "/");
+
+  for (const auto &file_in_zip : files) {
+    std::string path_file_absolute =
+        std::string(path_directory + "/").append(file_in_zip);
+
+    std::string xml = helper::File::GetFileContents(path_file_absolute);
+
+    docx_xml_indent::CompressXml(xml);
+
+    helper::File::Remove(path_file_absolute.c_str());
+    helper::File::WriteToNewFile(path_file_absolute, xml);
+  }
 }

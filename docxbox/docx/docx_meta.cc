@@ -11,6 +11,10 @@ docx_meta::Attribute docx_meta::GetAttribute() const {
   return attribute_;
 }
 
+const std::string &docx_meta::GetValue() const {
+  return value_;
+}
+
 void docx_meta::SetAttribute(docx_meta::Attribute attribute) {
   attribute_ = attribute;
 }
