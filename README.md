@@ -334,9 +334,9 @@ Remove content between (and including) given strings (``left`` and ``right``):
 #### Set field value
 
 When setting the value of a **merge field**, the merge field is reduced to its 
-textual component (maintaining its visual style). Merge field can therefor not 
-be merged more than once for the same field, as the former field has turned into
-a text element.  
+textual component (maintaining its visual style).  
+Each merge field can therefor not be merged more than once, as the former field 
+has turned into a text element.  
 
 ````docxbox sfv foo.docx "MERGEFIELD  foo" bar````  
 Changes all merge fields, whose identifier begins with ``foo``, 
