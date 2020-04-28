@@ -40,10 +40,10 @@ void docx_xml_fields::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 
-bool docx_xml_fields::SetFieldValue(
+bool docx_xml_fields::SetFieldText(
     const std::string& path_xml,
     const std::string &field_identifier,
-    const std::string &value) {
+    const std::string &text) {
   tinyxml2::XMLDocument doc;
   doc.LoadFile(path_xml.c_str());
 
@@ -54,18 +54,13 @@ bool docx_xml_fields::SetFieldValue(
 
   is_inside_searched_field_ = false;
 
-  SetFieldTextAndCollectFieldNodes(body, field_identifier, value);
+  SetFieldTextAndCollectFieldNodes(body, field_identifier, text);
 
-  if (!nodes_to_be_removed_.empty()) {
-    previous_run_ = nullptr;
+  // TODO(kay): save only if changed
+  if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
+    std::cerr << "Error - Failed saving: " << path_xml << "\n";
 
-    RemoveNodes(nodes_to_be_removed_);
-
-    if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
-      std::cerr << "Error - Failed saving: " << path_xml << "\n";
-
-      return false;
-    }
+    return false;
   }
 
   return true;
@@ -84,18 +79,17 @@ void docx_xml_fields::SetFieldTextAndCollectFieldNodes(
   do {
     const char *value = sub_node->Value();
 
-    if (value) {
-      if (0 == strcmp(value, "w:r")) {
-        previous_run_ = sub_node;
-      } else if (0 == strcmp(value, "w:fldChar")) {
-        std::string type = sub_node->Attribute("w:fldCharType");
+    bool found_field_end = false;
 
-        if (type == "begin") {
-          //previous_field_begin_ = sub_node;
-          run_around_field_begin_ = previous_run_;
-        } else if (type == "end") {
-          //previous_field_end_ = sub_node;
-          run_around_field_end_ = previous_run_;
+    if (value) {
+      if (0 == strcmp(value, "w:fldChar")) {
+        if (is_inside_searched_field_) {
+          std::string type = sub_node->Attribute("w:fldCharType");
+
+          if (type == "end") {
+            found_field_end = true;
+            is_inside_searched_field_ = false;
+          }
         }
       } else if (0 == strcmp(value, "w:instrText")) {
         std::string iterated_field_identifier = sub_node->GetText();
@@ -104,22 +98,37 @@ void docx_xml_fields::SetFieldTextAndCollectFieldNodes(
         if (helper::String::StartsWith(
             iterated_field_identifier.c_str(),
             field_identifier.c_str())) {
-          run_around_field_instrText_ = previous_run_;
           is_inside_searched_field_ = true;
+
+          // Remove rel. fldChar:separate if given
+          auto prev_fldChar =
+              sub_node->Parent()->PreviousSibling()->FirstChildElement("w:fldChar");
+
+          if (prev_fldChar)
+            prev_fldChar->Parent()->DeleteChild(prev_fldChar);
+
+          // Remove rel. fldChar:begin if given
+          prev_fldChar =
+            sub_node->Parent()->PreviousSibling()->FirstChildElement("w:fldChar");
+
+          if (prev_fldChar)
+            prev_fldChar->Parent()->DeleteChild(prev_fldChar);
+
+          // Remove instrText of field
+          sub_node->Parent()->DeleteChild(sub_node);
+
+          continue;
         }
       } else if (is_inside_searched_field_ && 0 == strcmp(value, "w:t")) {
         sub_node->SetText(field_value.c_str());
       }
     }
 
-    if (is_inside_searched_field_) {
-      // Merge field found, text has been set.
-      // Mark field nodes to be removed to reduce field to textual component
-      nodes_to_be_removed_.push_back(run_around_field_begin_);
-      nodes_to_be_removed_.push_back(run_around_field_instrText_);
-      nodes_to_be_removed_.push_back(run_around_field_end_);
+    if (found_field_end) {
+      // Remove fldChar:end
+      sub_node->Parent()->DeleteChild(sub_node);
 
-      is_inside_searched_field_ = false;
+      continue;
     }
 
     SetFieldTextAndCollectFieldNodes(sub_node, field_identifier, field_value);

@@ -22,6 +22,8 @@ class docx_xml_remove:docx_xml {
       const std::string& lhs,
       const std::string& rhs);
 
+  static bool RemoveNodes(std::vector<tinyxml2::XMLElement*> nodes);
+
  private:
   bool found_lhs_ = false;
   bool found_rhs_ = false;

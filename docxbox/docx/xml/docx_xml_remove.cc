@@ -89,3 +89,23 @@ void docx_xml_remove::LocateNodesBetweenText(
 }
 
 // TODO(kay): add removal based on segmented texts
+
+bool docx_xml_remove::RemoveNodes(std::vector<tinyxml2::XMLElement*> nodes) {
+  int amount_removed = 0;
+
+  for (auto node : nodes) {
+    if (nullptr == node) continue;
+
+    tinyxml2::XMLNode *kParent = node->Parent();
+
+    if (kParent) {
+      node->DeleteChildren();
+
+//      kParent->DeleteChild(node);
+
+      ++amount_removed;
+    }
+  }
+
+  return amount_removed > 0;
+}

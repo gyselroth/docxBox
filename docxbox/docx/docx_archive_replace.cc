@@ -287,7 +287,7 @@ bool docx_archive_replace::SetFieldValue() {
     if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml"))
       continue;
 
-    if (!parser->SetFieldValue(
+    if (!parser->SetFieldText(
         path_extract_ + "/" + file_in_zip.filename,
         field_identifier,
         value)) {
