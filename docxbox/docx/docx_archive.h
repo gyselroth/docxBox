@@ -34,8 +34,10 @@ class docx_archive {
       bool ensure_is_docx = true,
       bool format_xml_files = false);
 
+  bool IsZipArchive(const std::string& path_file);
+
   // Check formal structure of DOCX archive - mandatory files given?
-  bool IsDocx();
+  bool IsUnzippedDocx();
 
   bool UnzipMedia();
 

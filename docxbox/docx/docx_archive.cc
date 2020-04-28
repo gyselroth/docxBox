@@ -60,6 +60,8 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
     return false;
   }
 
+  if (!IsZipArchive(path_docx_in_)) return false;
+
   InitExtractionPath(directory_appendix, path_docx_in_);
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -71,7 +73,7 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
 
   docx_file.extractall(path_working_directory_ + "/" + path_extract_);
 
-  if (ensure_is_docx && IsDocx()) {
+  if (ensure_is_docx && IsUnzippedDocx()) {
     std::cerr << "Error: " << path_docx_in_ << " is not a DOCX document.\n";
 
     return false;
@@ -82,8 +84,27 @@ bool docx_archive::UnzipDocx(const std::string &directory_appendix,
          : true;
 }
 
+// Ensure given file is a ZIP archive (must begin w/ "PK^C^D^T")
+bool docx_archive::IsZipArchive(const std::string& path_file) {
+  if (!helper::File::FileExists(path_file)) {
+    std::cerr << "File not found: " << path_file << "\n";
+
+    return false;
+  }
+
+  if (!helper::String::StartsWith(
+      helper::File::GetFileContents(path_file).c_str(),
+      "PK\003\004\024")) {
+    std::cerr << "Not a valid DOX (ZIP) archive: " << path_file << "\n";
+
+    return false;
+  }
+
+  return true;
+}
+
 // Check formal structure of DOCX archive - mandatory files given?
-bool docx_archive::IsDocx() {
+bool docx_archive::IsUnzippedDocx() {
   return
       helper::File::IsDirectory(path_extract_ + "/rels")
           && helper::File::IsDirectory(path_extract_ + "/docProps")
