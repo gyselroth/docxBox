@@ -30,7 +30,7 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(
   if (!nodes_to_be_removed_.empty()
       && found_lhs_
       && found_rhs_) {
-    RemoveNodes();
+    RemoveNodes(nodes_to_be_removed_);
 
     if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
       std::cerr << "Error - Failed saving: " << path_xml << "\n";
@@ -86,17 +86,6 @@ void docx_xml_remove::LocateNodesBetweenText(
     LocateNodesBetweenText(sub_node, lhs, rhs);
   } while (!(found_lhs_ && found_rhs_)
       && (sub_node = sub_node->NextSiblingElement()));
-}
-
-
-void docx_xml_remove::RemoveNodes() {
-  for (auto node : nodes_to_be_removed_) {
-    if (nullptr == node) continue;
-
-    tinyxml2::XMLNode *kParent = node->Parent();
-
-    if (kParent) kParent->DeleteChild(node);
-  }
 }
 
 // TODO(kay): add removal based on segmented texts

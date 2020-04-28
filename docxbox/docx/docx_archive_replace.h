@@ -35,6 +35,8 @@ class docx_archive_replace:docx_archive {
 
   bool ReplaceAllTextByLoremIpsum();
 
+  bool SetFieldValue();
+
  private:
 };
 

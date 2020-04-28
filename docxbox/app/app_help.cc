@@ -38,8 +38,8 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_ListFontsAsJson:
     case AppCommands::Command_ListFonts:return PrintHelpOnListFonts(true);
 
-    case AppCommands::Command_ListMergeFields:
-    case AppCommands::Command_ListMergeFieldsAsJson:
+    case AppCommands::Command_ListFields:
+    case AppCommands::Command_ListFieldsAsJson:
       return PrintHelpOnListMergeFields(true);
 
     case AppCommands::Command_ListMeta:
@@ -113,7 +113,8 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n"
             << "\n  4. Convert and compare DOCX:"
             << "\n    txt        - Output DOCX document as plaintext"
-            << "\n    diff       - Side-by-side compare file from two DOCX archives"
+            << "\n    diff       - Side-by-side compare file from two DOCX "
+               "archives"
             << "\n"
             << "\n  5. Extract and create DOCX:"
             << "\n    uz         - Unzip files from DOCX"
@@ -245,15 +246,18 @@ bool AppHelp::PrintHelpOnUserCommand() {
 }
 
 bool AppHelp::PrintHelpOnDiff() {
-  std::cout << "Command diff - Side-by-side compare file from two DOCX archives:\n"
-               "----------------------------------------------------------------\n"
+  std::cout << "Command diff - Side-by-side compare file from two DOCX "
+               "archives:\n"
+               "-------------------------------------------------------"
+               "---------\n"
                "docxbox diff foo_v1.docx foo_v2.docx word/settings.xml\n\n";
 
   return true;
 }
 
 bool AppHelp::PrintHelpOnLocateFilesContaining() {
-  std::cout << "List all files containing search-string or regular expression:\n"
+  std::cout << "List all files containing search-string or regular "
+               "expression:\n"
                "-----------------------------------------------\n"
                "Lists all files containing the string foo:\n"
                "  docxbox lsl foo.docx foo\n"
@@ -347,7 +351,8 @@ bool AppHelp::PrintHelpOnSetFieldValue() {
        "  Save to new DOCX file:\n"
        "    docxbox sfv foo.docx \"PRINTDATE\" \"10.01.2020\" new.docx\n\n"
 
-       "Set shown text of all merge fields', whose identifier begins with foo, to bar:\n"
+       "Set shown text of all merge fields', whose identifier begins with foo, "
+       "to bar:\n"
        "    docxbox sfv foo.docx \"MERGEFIELD foo\" bar\n\n"
        "  Save to new DOCX file:\n"
        "    docxbox sfv foo.docx \"MERGEFIELD foo\" bar new.docx\n\n";
@@ -391,7 +396,7 @@ bool AppHelp::PrintHelpOnUnzip(bool with_uz, bool with_uzm, bool with_uzi) {
                  "  or: docxbox uz foo.docx --media\n\n";
   }
 
-  if (with_uzi){
+  if (with_uzi) {
     std::cout << "Command: uzi - Unzip DOCX and indent XML files:\n"
                  "-----------------------------------------------\n"
                  "  docxbox uzi foo.docx\n"
@@ -406,7 +411,8 @@ bool AppHelp::PrintHelpOnZip(bool with_zip) {
   if (with_zip) {
     std::cout << "Command: zp - Create (zip) DOCX from files:\n"
                  "--------------------------------------------\n"
-                 "Create DOCX from files in given (directory) path to new DOCX:\n"
+                 "Create DOCX from files in given (directory) path "
+                 "to new DOCX:\n"
                  "  docxbox zp foo foo.docx\n\n";
   }
 

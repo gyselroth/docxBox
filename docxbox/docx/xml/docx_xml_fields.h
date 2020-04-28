@@ -19,6 +19,11 @@ class docx_xml_fields:docx_xml {
 
   void CollectMergeFields(const std::string& path_xml);
 
+  bool SetFieldValue(
+      const std::string& path_xml,
+      const std::string &field_identifier,
+      const std::string &value);
+
   void Output(bool as_json);
  private:
   std::vector <std::string> fields_in_current_xml_;
@@ -28,7 +33,24 @@ class docx_xml_fields:docx_xml {
   // Vector of vectors: fields per XML file
   std::vector <std::vector<std::string>> fields_in_xml_files_;
 
+  tinyxml2::XMLElement *previous_run_;
+  //tinyxml2::XMLElement *previous_field_begin_;
+  //tinyxml2::XMLElement *previous_field_end_;
+
+  tinyxml2::XMLElement *run_around_field_begin_;
+  tinyxml2::XMLElement *run_around_field_instrText_;
+  tinyxml2::XMLElement *run_around_field_end_;
+
+  bool is_inside_searched_field_ = false;
+
+  std::vector<tinyxml2::XMLElement*> nodes_to_be_removed_;
+
   void CollectFieldsFromNodes(tinyxml2::XMLElement *node);
+
+  void SetFieldTextAndCollectFieldNodes(tinyxml2::XMLElement *node,
+                                        const std::string &field_identifier,
+                                        const std::string &field_value);
+
   void OutputAsJson();
 };
 

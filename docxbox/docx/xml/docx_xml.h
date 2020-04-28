@@ -22,6 +22,8 @@ class docx_xml {
   char **argv_;
 
   std::string document_text_;
+
+  bool RemoveNodes(std::vector<tinyxml2::XMLElement*> nodes);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_H_

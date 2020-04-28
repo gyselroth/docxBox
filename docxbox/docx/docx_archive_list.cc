@@ -247,7 +247,7 @@ bool docx_archive_list::ListFonts(bool as_json) {
   return true;
 }
 
-bool docx_archive_list::ListMergeFields(bool as_json) {
+bool docx_archive_list::ListFields(bool as_json) {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);

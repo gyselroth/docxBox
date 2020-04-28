@@ -259,3 +259,64 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 
   return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 }
+
+bool docx_archive_replace::SetFieldValue() {
+  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+
+  if (!docxbox::AppArguments::IsArgumentGiven(
+          argc_,
+          3,
+          "Field identifier")
+      || !docxbox::AppArguments::IsArgumentGiven(
+          argc_,
+          4,
+          "Value to be set")) return false;
+
+  std::string field_identifier = argv_[3];
+  std::string value = argv_[4];
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+
+  auto file_list = docx_file.infolist();
+
+  auto parser = new docx_xml_fields(argc_, argv_);
+
+  for (const auto &file_in_zip : file_list) {
+    // TODO(kay): fetch from all textual XML files, instead only document.xml
+
+    if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml"))
+      continue;
+
+    if (!parser->SetFieldValue(
+        path_extract_ + "/" + file_in_zip.filename,
+        field_identifier,
+        value)) {
+      delete parser;
+
+      return false;
+    }
+  }
+
+  delete parser;
+
+  std::string path_docx_out =
+      argc_ >= 5
+      // Result filename is given as argument
+      ? helper::File::ResolvePath(path_working_directory_, argv_[5])
+      // Overwrite original DOCX
+      : path_docx_in_;
+
+  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
+    std::cerr << "DOCX creation failed.\n";
+
+    return false;
+  }
+
+  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+
+  std::rename(
+      std::string(path_docx_out).append("tmp").c_str(),
+      path_docx_out.c_str());
+
+  return true;
+}

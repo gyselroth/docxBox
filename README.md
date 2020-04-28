@@ -333,15 +333,21 @@ Remove content between (and including) given strings (``left`` and ``right``):
 
 #### Set field value
 
+When setting a merge fields' value, it is reduced to its textual component 
+(maintaining its visual style) - this process can therefor not be repeated on 
+the same field, as the former field has turned into a text element.  
+
+````docxbox sfv foo.docx "MERGEFIELD  foo" bar````  
+Changes all merge fields', whose identifier begins with ``foo``, 
+into the text ``bar``.  
+
+**Hint:** To find out field identifiers use docxBox's ``lsd`` command.
+
 Setting field values includes also preview texts of otherwise generic fields, 
 which in some word processing applications have to be updated manually.
 
 ````docxbox sfv foo.docx "PRINTDATE" "10.01.2020"````  
 Updates the shown text of all print-date fields' to ``10.01.2020``.
-
-````docxbox sfv foo.docx "MERGEFIELD foo" bar````  
-Updates the shown text of all merge fields', whose identifier begins with 
-``foo``, to ``bar``.
 
 
 #### Randomize document text

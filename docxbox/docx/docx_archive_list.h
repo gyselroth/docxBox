@@ -36,7 +36,7 @@ class docx_archive_list:docx_archive {
 
   // List data stored within XML(s) of DOCX
   bool ListFonts(bool as_json);
-  bool ListMergeFields(bool as_json);
+  bool ListFields(bool as_json);
   bool ListMeta(bool as_json);
 
  private:

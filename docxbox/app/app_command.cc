@@ -25,8 +25,8 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "h" || command == "?") return Command_Help;
   if (command == "lorem") return Command_LoremIpsum;
   if (command == "ls") return Command_List;
-  if (command == "lsd") return Command_ListMergeFields;
-  if (command == "lsdj") return Command_ListMergeFieldsAsJson;
+  if (command == "lsd") return Command_ListFields;
+  if (command == "lsdj") return Command_ListFieldsAsJson;
   if (command == "lsf") return Command_ListFonts;
   if (command == "lsfj") return Command_ListFontsAsJson;
   if (command == "lsi") return Command_ListImages;
@@ -58,8 +58,8 @@ bool AppCommands::IsListCommand(Commands command) {
       || command == Command_ListFontsAsJson
       || command == Command_ListImages
       || command == Command_ListImagesAsJson
-      || command == Command_ListMergeFields
-      || command == Command_ListMergeFieldsAsJson
+      || command == Command_ListFields
+      || command == Command_ListFieldsAsJson
       || command == Command_ListMeta
       || command == Command_ListMetaAsJson
       || command == Command_LocateFilesContaining
@@ -70,7 +70,8 @@ bool AppCommands::IsReplaceCommand(Commands command) {
   return command == Command_ReplaceText
       || command == Command_ReplaceImage
       || command == Command_RemoveBetweenText
-      || command == Command_LoremIpsum;
+      || command == Command_LoremIpsum
+      || command == Command_SetFieldValue;
 }
 
 }  // namespace docxbox

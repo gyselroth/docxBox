@@ -23,19 +23,15 @@ class docx_xml_remove:docx_xml {
       const std::string& rhs);
 
  private:
-  tinyxml2::XMLElement *current_run_;
-
-  std::vector<tinyxml2::XMLElement*> nodes_to_be_removed_;
-
   bool found_lhs_ = false;
   bool found_rhs_ = false;
+
+  std::vector<tinyxml2::XMLElement*> nodes_to_be_removed_;
 
   void LocateNodesBetweenText(
       tinyxml2::XMLElement *node,
       const std::string &lhs,
       const std::string &rhs);
-
-  void RemoveNodes();
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_REMOVE_H_

@@ -34,7 +34,7 @@ AppCommands::Commands App::PreProcess(
         return AppCommands::Command_ListFontsAsJson;
 
       if (arguments->Matches(3, "-dj"))
-        return AppCommands::Command_ListMergeFieldsAsJson;
+        return AppCommands::Command_ListFieldsAsJson;
 
       if (arguments->Matches(3, "-ij"))
         return AppCommands::Command_ListImagesAsJson;
@@ -47,8 +47,8 @@ AppCommands::Commands App::PreProcess(
 
       if (arguments->Matches(3, "-d", "--fields"))
         return arguments->Matches(4, "-j", "--json")
-               ? AppCommands::Command_ListMergeFieldsAsJson
-               : AppCommands::Command_ListMergeFields;
+               ? AppCommands::Command_ListFieldsAsJson
+               : AppCommands::Command_ListFields;
 
       if (arguments->Matches(3, "-f", "--fonts"))
         return arguments->Matches(4, "-j", "--json")
@@ -178,6 +178,12 @@ bool App::ProcessList(AppCommands::Commands command) {
       break;
     case AppCommands::Command_ListAsJson:result = docx_archive->ListFiles(true);
       break;
+    case AppCommands::Command_ListFields:
+      result = docx_archive->ListFields(false);
+      break;
+    case AppCommands::Command_ListFieldsAsJson:
+      result = docx_archive->ListFields(true);
+      break;
     case AppCommands::Command_ListImages:
       result = docx_archive->ListImages(false);
       break;
@@ -188,12 +194,6 @@ bool App::ProcessList(AppCommands::Commands command) {
       break;
     case AppCommands::Command_ListFontsAsJson:
       result = docx_archive->ListFonts(true);
-      break;
-    case AppCommands::Command_ListMergeFields:
-      result = docx_archive->ListMergeFields(false);
-      break;
-    case AppCommands::Command_ListMergeFieldsAsJson:
-      result = docx_archive->ListMergeFields(true);
       break;
     case AppCommands::Command_ListMeta:result = docx_archive->ListMeta(false);
       break;
@@ -232,6 +232,9 @@ bool App::ProcessReplace(AppCommands::Commands command) {
       result = docx_archive->ReplaceImage();
       break;
     case AppCommands::Command_ReplaceText:result = docx_archive->ReplaceText();
+      break;
+    case AppCommands::Command_SetFieldValue:
+      result = docx_archive->SetFieldValue();
       break;
     case AppCommands::Command_Invalid:
     default:AppHelp::PrintUnknownArgumentMessage(argv_[1]);
