@@ -339,7 +339,7 @@ which in some word processing applications have to be updated manually.
 ````docxbox sfv foo.docx "PRINTDATE" "10.01.2020"````  
 Updates the shown text of all print-date fields' to ``10.01.2020``.
 
-````docxbox sfv foo.docx "MERGEFIELD foo" "bar"````  
+````docxbox sfv foo.docx "MERGEFIELD foo" bar````  
 Updates the shown text of all merge fields', whose identifier begins with 
 ``foo``, to ``bar``.
 
