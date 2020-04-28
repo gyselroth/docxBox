@@ -38,9 +38,11 @@ class docx_xml_fields:docx_xml {
 
   void CollectFieldsFromNodes(tinyxml2::XMLElement *node);
 
-  void SetFieldTextAndCollectFieldNodes(tinyxml2::XMLElement *node,
-                                        const std::string &field_identifier,
-                                        const std::string &field_value);
+  // Set field text within children of given node
+  // If within merge field: remove its field nodes to transform into text
+  void SetFieldTextInNodes(tinyxml2::XMLElement *node,
+                           const std::string &field_identifier,
+                           const std::string &field_value);
 
   void OutputAsJson();
 };

@@ -54,7 +54,7 @@ bool docx_xml_fields::SetFieldText(
 
   is_inside_searched_field_ = false;
 
-  SetFieldTextAndCollectFieldNodes(body, field_identifier, text);
+  SetFieldTextInNodes(body, field_identifier, text);
 
   // TODO(kay): save only if changed
   if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
@@ -66,7 +66,9 @@ bool docx_xml_fields::SetFieldText(
   return true;
 }
 
-void docx_xml_fields::SetFieldTextAndCollectFieldNodes(
+// Set field text within children of given node
+// If within merge field: remove its field nodes to transform into text
+void docx_xml_fields::SetFieldTextInNodes(
     tinyxml2::XMLElement *node,
     const std::string &field_identifier,
     const std::string &field_value) {
@@ -131,7 +133,7 @@ void docx_xml_fields::SetFieldTextAndCollectFieldNodes(
       continue;
     }
 
-    SetFieldTextAndCollectFieldNodes(sub_node, field_identifier, field_value);
+    SetFieldTextInNodes(sub_node, field_identifier, field_value);
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 
