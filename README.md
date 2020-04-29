@@ -23,7 +23,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Replace text by image](#replace-text-by-image)
       + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
-      + [Set field value](#set-field-value)
+      + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
   * [Arbitrary manual and scripted modifications](#arbitrary-manual-and-scripted-modifications)
   * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
@@ -318,7 +318,7 @@ Remove content between (and including) given strings (``left`` and ``right``):
 ````docxbox rmt foo.docx left right new.docx```` creates a new file new.docx
 
 
-#### Set field value
+#### Set field value: Merge fields, generic fields
 
 ##### Merge fields
 
