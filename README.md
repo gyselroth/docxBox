@@ -334,9 +334,12 @@ to its textual component (maintaining its visual style).
 merging turns the former field into a text element (the field subsequently 
 does not exist as such any more).  
 
-````docxbox sfv foo.docx "MERGEFIELD  foo" bar````  
+````docxbox sfv foo.docx "MERGEFIELD  foo" bar```` (Updates ``foo.docx``)  
 Changes all merge fields, whose identifier begins with ``foo``, 
 into the text ``bar``.  
+
+````docxbox sfv foo.docx "MERGEFIELD  foo" bar new.docx````
+Saves the resulting DOCX to a new DOCX file: ``new.docx``
 
 **Hint:** To find out field identifiers use docxBox's ``lsd`` command.
 
