@@ -34,6 +34,7 @@ void docx_archive::InitExtractionPath(const std::string &directory_appendix,
              : directory_appendix);
 }
 
+// TODO(kay): handle more variations of wildcards, not only file-ending
 std::string docx_archive::ParseFileWildcard(int index_argument) const {
   return argc_ >= index_argument + 1
              && argv_[3][0] == '*'
