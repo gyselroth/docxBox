@@ -3,7 +3,8 @@ docxBox Changelog
 
 V0.0.3 - Not finished yet
 -------------------------
-* Add set field value (sfv)
+* Add set generic field value - set preview text (sfv)
+* Add set merge field value - transform field into text (sfv)
 * Ensure re-zipped DOCX is rated valid when opened in MS word
 * Add DOCX check before attempting to extract: must be a ZIP archive
 * Add list files containing search-string (lsl)

@@ -49,6 +49,9 @@ class docx_xml_field: docx_xml {
                                         const std::string &field_identifier,
                                         const std::string &field_value);
 
+  // Remove fldChar nodes from merge-field: reduce it into it's text
+  void RemoveFldCharsFromMergeField(tinyxml2::XMLElement *sub_node);
+
   void OutputAsJson();
 };
 

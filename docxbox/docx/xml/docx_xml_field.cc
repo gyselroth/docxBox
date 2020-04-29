@@ -140,24 +140,7 @@ void docx_xml_field::TransformMergeFieldToTextInNodes(
             field_identifier.c_str())) {
           is_inside_searched_field_ = true;
 
-          // Remove rel. fldChar:separate if given
-          auto prev_fldChar = sub_node->Parent()
-              ->PreviousSibling()
-              ->FirstChildElement("w:fldChar");
-
-          if (prev_fldChar)
-            prev_fldChar->Parent()->DeleteChild(prev_fldChar);
-
-          // Remove rel. fldChar:begin if given
-          prev_fldChar = sub_node->Parent()
-              ->PreviousSibling()
-              ->FirstChildElement("w:fldChar");
-
-          if (prev_fldChar)
-            prev_fldChar->Parent()->DeleteChild(prev_fldChar);
-
-          // Remove instrText of field
-          sub_node->Parent()->DeleteChild(sub_node);
+          RemoveFldCharsFromMergeField(sub_node);
 
           continue;
         }
@@ -175,6 +158,39 @@ void docx_xml_field::TransformMergeFieldToTextInNodes(
 
     TransformMergeFieldToTextInNodes(sub_node, field_identifier, field_value);
   } while ((sub_node = sub_node->NextSiblingElement()));
+}
+
+// Remove fldChar nodes from merge-field: reduce it into it's text
+void docx_xml_field::RemoveFldCharsFromMergeField(
+    tinyxml2::XMLElement *sub_node) {
+  auto prev_fldChar = sub_node->Parent()
+      ->PreviousSibling()
+      ->FirstChildElement("w:fldChar");
+
+  if (prev_fldChar) {
+    std::string type = prev_fldChar->Attribute("w:fldCharType");
+
+    if (type == "begin") {
+      prev_fldChar->Parent()->DeleteChild(prev_fldChar);
+    } else if (type == "separate") {
+      // Maintain separation fldChar in place,
+      // remove fldChar marking merge-field's beginning
+      prev_fldChar = sub_node->Parent()
+          ->PreviousSibling()
+          ->PreviousSibling()
+          ->FirstChildElement("w:fldChar");
+
+      if (prev_fldChar) {
+        type = prev_fldChar->Attribute("w:fldCharType");
+
+        if (type == "begin")
+          prev_fldChar->Parent()->DeleteChild(prev_fldChar);
+      }
+    }
+  }
+
+  // Remove instrText of field
+  sub_node->Parent()->DeleteChild(sub_node);
 }
 
 void docx_xml_field::Output(bool as_json) {
