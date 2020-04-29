@@ -46,7 +46,8 @@ Commands
 
 #### List files: All, filtered, images only
 
-**Lists files** (and directories) contained within a given DOCX, and their attributes:
+**Lists files** (and directories) contained within a given DOCX, and their 
+attributes:
 
 ````docxbox ls foo.docx````
 
@@ -123,11 +124,14 @@ or ````docxbox ls foo.docx --meta --json````
   
 #### Reference: Recognized meta attributes
 
-* **Authors:** Creator, lastModifiedBy (``<dc:creator>`` and ``<cp:lastModifiedBy>`` of core.xml)
+* **Authors:** Creator, lastModifiedBy (``<dc:creator>`` 
+  and ``<cp:lastModifiedBy>`` of core.xml)
 * **Dates** (ISO 8601): Creation-, modification and print-date  
-  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` of core.xml) 
+  (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` 
+  of core.xml) 
 * **Descriptions:** Description, Keywords, Subject, Title   
-  (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` of core.xml)
+  (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` 
+  of core.xml)
 * **Language** (``<dc:language>`` of core.xml) 
 * **Revision** (``<cp:revision>`` of core.xml)
 * **Application** created with and its version, name of used template, company,
@@ -188,7 +192,8 @@ displays a side-by-side comparison of the formatted XML of the given file
 
 ### Output plaintext
 
-````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and footer)
+````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and 
+footer)
 
 **Output plaintext segments:**  
 ````docxbox txt foo.docx -s````   
@@ -269,7 +274,8 @@ The image specification as JSON looks like:
 * When adding a new image file resource, the ``filename`` parameter is optional,
   it specifies a different filename to be used within DOCX 
 * The ``offset`` argument is optional
-* Embeddable image formats are: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, ``tif``, ``tiff``, ``wmf``
+* Embeddable image formats are: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, 
+  ``png``, ``tif``, ``tiff``, ``wmf``
 * Size is given in EMUs (English Metric Unit) that is: ``pixels * 9525``
 
 The image configuration must be passed as escaped JSON, 
@@ -341,7 +347,8 @@ into the text ``bar``.
 ````docxbox sfv foo.docx "MERGEFIELD  foo" bar new.docx````
 Saves the resulting DOCX to a new DOCX file: ``new.docx``
 
-**Hint:** To find out field identifiers use docxBox's ``lsd`` command.
+**Hint:** To find out field identifiers use docxBox's [``lsd``](#list-fields)
+command.
 
 ##### Generic fields
 
@@ -432,7 +439,8 @@ Build Instructions
 Running tests
 -------------
 
-In order to run functional tests, [Bats](https://github.com/sstephenson/bats) must be installed.
+In order to run functional tests, 
+[Bats](https://github.com/sstephenson/bats) must be installed.
 
 Run all tests: `./test.sh`
 
@@ -440,8 +448,11 @@ Run all tests: `./test.sh`
 Code Convention
 ---------------
 
-The source code of docxBox follows the Google C++ Style Guide, see: https://google.github.io/styleguide/cppguide.html  
-The source code of functional tests mostly (excluding rule for maximum characters per line) follows the Google Shell Style Guide, see https://google.github.io/styleguide/shell.xml
+The source code of docxBox follows the Google C++ Style Guide, 
+see: https://google.github.io/styleguide/cppguide.html  
+The source code of functional tests mostly (excluding rule for maximum 
+characters per line) follows the Google Shell Style Guide, 
+see https://google.github.io/styleguide/shell.xml
 
 
 Changelog
@@ -501,4 +512,5 @@ Thanks a lot!
 License
 -------
 
-docxBox is licensed under [The MIT License (MIT)](https://opensource.org/licenses/MIT)
+docxBox is licensed under
+[The MIT License (MIT)](https://opensource.org/licenses/MIT)
