@@ -327,8 +327,8 @@ Remove content between (and including) given strings (``left`` and ``right``):
 
 ##### Merge fields
 
-When setting the value of a **merge field**, the merge field is reduced to its 
-textual component (maintaining its visual style).
+When setting the value (text) of a **merge field**, the merge field is reduced 
+to its textual component (maintaining its visual style).
   
 **Note:** A particular merge field can NOT be merged repeatedly: 
 merging turns the former field into a text element (the field subsequently 
