@@ -467,6 +467,7 @@ Roadmap
 
 * v0.0.4: Replace text by image
 * v0.0.4: Replace field by text, table and image
+* v0.0.5: Add JSON / base-64 encoded output of arbitrary command outputs (cmd)
 * v0.0.5: Batch process sequences of manipulation operations
 * v0.0.6: Ensure microsoft word compatibility
 * v0.1.0: Add optional configuration options via environment vars
