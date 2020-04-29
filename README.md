@@ -373,8 +373,9 @@ purposes:
 ### Arbitrary manual and scripted modifications
 
 docxBox eases conducting arbitrary modifications on files contained within a 
-DOCX, manually and scripted. All steps besides the actual modification are 
-automated via docxBox, with the respective user-defined modification inserted.
+DOCX, manually and scripted.  
+All steps besides the actual modification are automated via docxBox, with the 
+respective user-defined modification inserted.
 
 **Example - Edit XML file manually:**
 
