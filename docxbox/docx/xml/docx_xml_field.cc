@@ -1,11 +1,11 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#include <docxbox/docx/xml/docx_xml_fields.h>
+#include <docxbox/docx/xml/docx_xml_field.h>
 
-docx_xml_fields::docx_xml_fields(int argc, char **argv) : docx_xml(argc, argv) {
+docx_xml_field::docx_xml_field(int argc, char **argv) : docx_xml(argc, argv) {
 }
 
-void docx_xml_fields::CollectMergeFields(const std::string& path_xml) {
+void docx_xml_field::CollectFields(const std::string& path_xml) {
   fields_in_current_xml_.clear();
 
   tinyxml2::XMLDocument doc;
@@ -23,7 +23,7 @@ void docx_xml_fields::CollectMergeFields(const std::string& path_xml) {
   fields_in_xml_files_.push_back(fields_in_current_xml_);
 }
 
-void docx_xml_fields::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
+void docx_xml_field::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
   if (!node || node->NoChildren()) return;
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
@@ -40,7 +40,7 @@ void docx_xml_fields::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 
-bool docx_xml_fields::SetFieldText(
+bool docx_xml_field::SetFieldText(
     const std::string& path_xml,
     const std::string &field_identifier,
     const std::string &text) {
@@ -54,7 +54,10 @@ bool docx_xml_fields::SetFieldText(
 
   is_inside_searched_field_ = false;
 
-  SetFieldTextInNodes(body, field_identifier, text);
+  if (helper::String::Contains(text, "MERGEFIELD"))
+    TransformMergeFieldToTextInNodes(body, field_identifier, text);
+  else
+    SetFieldTextInNodes(body, field_identifier, text);
 
   // TODO(kay): save only if changed
   if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
@@ -67,8 +70,43 @@ bool docx_xml_fields::SetFieldText(
 }
 
 // Set field text within children of given node
-// If within merge field: remove its field nodes to transform into text
-void docx_xml_fields::SetFieldTextInNodes(
+void docx_xml_field::SetFieldTextInNodes(
+    tinyxml2::XMLElement *node,
+    const std::string &field_identifier,
+    const std::string &field_value) {
+  if (!node || node->NoChildren()) return;
+
+  tinyxml2::XMLElement *sub_node = node->FirstChildElement();
+
+  if (sub_node == nullptr) return;
+
+  do {
+    const char *value = sub_node->Value();
+
+    if (value) {
+      if (0 == strcmp(value, "w:instrText")) {
+        std::string iterated_field_identifier = sub_node->GetText();
+        helper::String::Trim(iterated_field_identifier);
+
+        if (helper::String::StartsWith(
+            iterated_field_identifier.c_str(),
+            field_identifier.c_str())) {
+          is_inside_searched_field_ = true;
+
+          continue;
+        }
+      } else if (is_inside_searched_field_ && 0 == strcmp(value, "w:t")) {
+        sub_node->SetText(field_value.c_str());
+      }
+    }
+
+    TransformMergeFieldToTextInNodes(sub_node, field_identifier, field_value);
+  } while ((sub_node = sub_node->NextSiblingElement()));
+}
+
+// 1. Set field text within merge field of given identifier
+// 2. Remove given merge field's nodes, to transform into text
+void docx_xml_field::TransformMergeFieldToTextInNodes(
     tinyxml2::XMLElement *node,
     const std::string &field_identifier,
     const std::string &field_value) {
@@ -103,15 +141,17 @@ void docx_xml_fields::SetFieldTextInNodes(
           is_inside_searched_field_ = true;
 
           // Remove rel. fldChar:separate if given
-          auto prev_fldChar =
-              sub_node->Parent()->PreviousSibling()->FirstChildElement("w:fldChar");
+          auto prev_fldChar = sub_node->Parent()
+              ->PreviousSibling()
+              ->FirstChildElement("w:fldChar");
 
           if (prev_fldChar)
             prev_fldChar->Parent()->DeleteChild(prev_fldChar);
 
           // Remove rel. fldChar:begin if given
-          prev_fldChar =
-            sub_node->Parent()->PreviousSibling()->FirstChildElement("w:fldChar");
+          prev_fldChar = sub_node->Parent()
+              ->PreviousSibling()
+              ->FirstChildElement("w:fldChar");
 
           if (prev_fldChar)
             prev_fldChar->Parent()->DeleteChild(prev_fldChar);
@@ -133,11 +173,11 @@ void docx_xml_fields::SetFieldTextInNodes(
       continue;
     }
 
-    SetFieldTextInNodes(sub_node, field_identifier, field_value);
+    TransformMergeFieldToTextInNodes(sub_node, field_identifier, field_value);
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 
-void docx_xml_fields::Output(bool as_json) {
+void docx_xml_field::Output(bool as_json) {
   if (as_json) return OutputAsJson();
 
   int i = 0;
@@ -157,7 +197,7 @@ void docx_xml_fields::Output(bool as_json) {
   }
 }
 
-void docx_xml_fields::OutputAsJson() {
+void docx_xml_field::OutputAsJson() {
   std::cout << "{";
 
   int i = 0;

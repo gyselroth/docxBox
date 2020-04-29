@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 
-#ifndef DOCXBOX_DOCX_XML_DOCX_XML_FIELDS_H_
-#define DOCXBOX_DOCX_XML_DOCX_XML_FIELDS_H_
+#ifndef DOCXBOX_DOCX_XML_DOCX_XML_FIELD_H_
+#define DOCXBOX_DOCX_XML_DOCX_XML_FIELD_H_
 
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/docx/xml/docx_xml_remove.h>
@@ -14,11 +14,11 @@
 #include <string>
 #include <vector>
 
-class docx_xml_fields:docx_xml {
+class docx_xml_field: docx_xml {
  public:
-  docx_xml_fields(int argc, char **argv);
+  docx_xml_field(int argc, char **argv);
 
-  void CollectMergeFields(const std::string& path_xml);
+  void CollectFields(const std::string& path_xml);
 
   bool SetFieldText(
       const std::string& path_xml,
@@ -26,6 +26,7 @@ class docx_xml_fields:docx_xml {
       const std::string &text);
 
   void Output(bool as_json);
+
  private:
   std::vector <std::string> fields_in_current_xml_;
 
@@ -38,13 +39,17 @@ class docx_xml_fields:docx_xml {
 
   void CollectFieldsFromNodes(tinyxml2::XMLElement *node);
 
-  // Set field text within children of given node
-  // If within merge field: remove its field nodes to transform into text
   void SetFieldTextInNodes(tinyxml2::XMLElement *node,
                            const std::string &field_identifier,
                            const std::string &field_value);
 
+  // Set field text within children of given node
+  // If within merge field: remove its field nodes to transform into text
+  void TransformMergeFieldToTextInNodes(tinyxml2::XMLElement *node,
+                                        const std::string &field_identifier,
+                                        const std::string &field_value);
+
   void OutputAsJson();
 };
 
-#endif  // DOCXBOX_DOCX_XML_DOCX_XML_FIELDS_H_
+#endif  // DOCXBOX_DOCX_XML_DOCX_XML_FIELD_H_

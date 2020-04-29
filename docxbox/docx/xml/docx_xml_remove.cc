@@ -99,9 +99,7 @@ bool docx_xml_remove::RemoveNodes(std::vector<tinyxml2::XMLElement*> nodes) {
     tinyxml2::XMLNode *kParent = node->Parent();
 
     if (kParent) {
-      node->DeleteChildren();
-
-//      kParent->DeleteChild(node);
+      kParent->DeleteChild(node);
 
       ++amount_removed;
     }

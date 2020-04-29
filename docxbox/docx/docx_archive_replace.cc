@@ -279,7 +279,7 @@ bool docx_archive_replace::SetFieldValue() {
 
   auto file_list = docx_file.infolist();
 
-  auto parser = new docx_xml_fields(argc_, argv_);
+  auto parser = new docx_xml_field(argc_, argv_);
 
   for (const auto &file_in_zip : file_list) {
     // TODO(kay): fetch from all textual XML files, instead only document.xml

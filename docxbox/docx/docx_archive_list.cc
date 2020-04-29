@@ -254,7 +254,7 @@ bool docx_archive_list::ListFields(bool as_json) {
 
   auto file_list = docx_file.infolist();
 
-  auto parser = new docx_xml_fields(argc_, argv_);
+  auto parser = new docx_xml_field(argc_, argv_);
 
   for (const auto &file_in_zip : file_list) {
     // TODO(kay): fetch from all textual XML files, instead only document.xml
@@ -262,7 +262,7 @@ bool docx_archive_list::ListFields(bool as_json) {
     if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml"))
       continue;
 
-    parser->CollectMergeFields(path_extract_ + "/" + file_in_zip.filename);
+    parser->CollectFields(path_extract_ + "/" + file_in_zip.filename);
   }
 
   parser->Output(as_json);
