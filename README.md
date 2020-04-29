@@ -218,7 +218,7 @@ docxBox allows to modify existing attributes, or adds attributes if not present.
 * Set **subject** attribute:        ````docxbox mm foo.docx subject "Foo bar"````
 * Set **title** attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````
 
-**Note:** Altering meta data does not automatically update preview texts of
+**Note:** Altering meta data does NOT automatically update preview texts of
 generic fields, which display respective meta data.  
 For updating field values, use the [``sfv``](#set-field-value-merge-fields-generic-fields) 
 command.
