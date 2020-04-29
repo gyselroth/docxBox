@@ -170,7 +170,7 @@ or ````docxbox ls foo.docx --fields --json````
 
 ### Compare DOCX documents
 
-docxBox helps retracing changes to the files contained within DOCX archives,
+docxBox helps tracing changes to the files contained within DOCX archives,
 made when manipulating documents in word processor applications.
 
 When given two DOCX files, the ``ls`` command displays a side-by-side 
