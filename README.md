@@ -8,7 +8,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 
 ## Table of contents
 
-* [Planned features](#planned-features)
+* [Roadmap](#roadmap)
 * [Commands](#commands)
   * [Output DOCX contents](#output-docx-contents)
     + [List files: All, filtered, images only](#list-files-all-filtered-images-only)
@@ -39,13 +39,13 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 * [License](#license)
 
 
-Planned Features
-----------------
+Roadmap
+-------
 
-* v0.0.3: Replace text by image
-* v0.0.3: Replace field by text, table and image
-* v0.0.4: Batch process sequences of manipulation operations
-* v0.0.5: Ensure microsoft word compatibility
+* v0.0.4: Replace text by image
+* v0.0.4: Replace field by text, table and image
+* v0.0.5: Batch process sequences of manipulation operations
+* v0.0.6: Ensure microsoft word compatibility
 * v0.1.0: Add optional configuration options via environment vars
 * v0.1.0: (Optional) logging of operations
 * v1.0.0: Libre-Office compatible appending of two DOCX files into a single one 

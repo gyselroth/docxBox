@@ -1,8 +1,12 @@
 docxBox Changelog
 =================
 
-V0.0.3 - Not finished yet
+V0.0.4 - Not finished yet
 -------------------------
+
+
+V0.0.3 - 2020-04-29
+-------------------
 * Add set generic field value - set preview text (sfv)
 * Add set merge field value - transform field into text (sfv)
 * Ensure re-zipped DOCX is rated valid when opened in MS word

@@ -7,7 +7,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 set (VERSION_MAJOR "0")
 set (VERSION_MINOR "0")
-set (VERSION_PATCH "3")
+set (VERSION_PATCH "4")
 
 # configure config.h to be generated from config.h.in,
 # with injected version number
