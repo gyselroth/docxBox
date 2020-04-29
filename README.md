@@ -357,7 +357,7 @@ Setting field values includes also preview texts of otherwise
 updated manually.
 
 ````docxbox sfv foo.docx "PRINTDATE" "10.01.2020"````  
-Updates the shown text of all print-date fields' to ``10.01.2020``.
+Updates the shown text of all print-date fields to ``10.01.2020``.
 
 
 #### Randomize document text
