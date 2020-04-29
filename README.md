@@ -8,7 +8,6 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 
 ## Table of contents
 
-* [Roadmap](#roadmap)
 * [Commands](#commands)
   * [Output DOCX contents](#output-docx-contents)
     + [List files: All, filtered, images only](#list-files-all-filtered-images-only)
@@ -34,22 +33,10 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 * [Running Tests](#running-tests)
 * [Code Convention](#code-convention)
 * [Changelog](#changelog)
+* [Roadmap](#roadmap)
 * [Bug Reporting and Feature Requests](#bug-reporting-and-feature-requests)
 * [Third Party References](#third-party-references)
 * [License](#license)
-
-
-Roadmap
--------
-
-* v0.0.4: Replace text by image
-* v0.0.4: Replace field by text, table and image
-* v0.0.5: Batch process sequences of manipulation operations
-* v0.0.6: Ensure microsoft word compatibility
-* v0.1.0: Add optional configuration options via environment vars
-* v0.1.0: (Optional) logging of operations
-* v1.0.0: Libre-Office compatible appending of two DOCX files into a single one 
-  (by XML appending, instead of adding sub-documents) 
 
 
 Commands
@@ -451,6 +438,19 @@ Changelog
 ---------
 
 See [Changelog](https://github.com/gyselroth/docxbox/blob/master/CHANGELOG.md)
+
+
+Roadmap
+-------
+
+* v0.0.4: Replace text by image
+* v0.0.4: Replace field by text, table and image
+* v0.0.5: Batch process sequences of manipulation operations
+* v0.0.6: Ensure microsoft word compatibility
+* v0.1.0: Add optional configuration options via environment vars
+* v0.1.0: (Optional) logging of operations
+* v1.0.0: Libre-Office compatible appending of two DOCX files into a single one 
+  (by XML appending, instead of adding sub-documents) 
 
 
 Bug Reporting and Feature Requests
