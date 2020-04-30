@@ -168,17 +168,22 @@ bool docx_archive::Zip(
   }
 
   if (!date_created.empty()) {
-    UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Created, date_created);
+    if (!UpdateCoreXmlDate(
+        docx_meta::Attribute::Attribute_Created, date_created)) return false;
+
   } else {
     if (set_date_created_to_now)
-      UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Created);
+      if (!UpdateCoreXmlDate(
+          docx_meta::Attribute::Attribute_Created)) return false;
   }
 
-  if (!date_created.empty()) {
-    UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Modified, date_modified);
+  if (!date_modified.empty()) {
+    if (!UpdateCoreXmlDate(
+        docx_meta::Attribute::Attribute_Modified, date_modified)) return false;
   } else {
     if (set_date_modified_to_now)
-      UpdateCoreXmlDate(docx_meta::Attribute::Attribute_Modified);
+      if (!UpdateCoreXmlDate(
+          docx_meta::Attribute::Attribute_Modified)) return false;
   }
 
 // ZipUsingMinizCpp(compress_xml, path_directory, path_docx_result);
@@ -397,17 +402,22 @@ bool docx_archive::ModifyMeta() {
 bool docx_archive::UpdateCoreXmlDate(
     docx_meta::Attribute attribute,
     const std::string& value) {
-  // TODO(kay): add gate - ensure attribute is a date
-
   auto meta = new docx_meta(argc_, argv_);
 
   meta->SetPathExtract(path_extract_);
   meta->SetAttribute(attribute);
 
-  meta->SetValue(
-      value.empty()
-        ? helper::DateTime::GetCurrentDateTimeInIso8601()
-        : value);
+  if (value.empty()) {
+    meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
+  } else {
+    if (!helper::DateTime::IsIso8601Date(value)) {
+      std::cerr << "Invalid date (" << value << "), must be ISO 8601.\n";
+
+      return false;
+    }
+
+    meta->SetValue(value);
+  }
 
   auto result = meta->UpsertAttribute(true);
 

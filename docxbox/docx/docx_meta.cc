@@ -198,6 +198,15 @@ bool docx_meta::UpsertAttribute(bool saveXml) {
   bool result;
 
   try {
+    if (IsDateAttribute(attribute_)
+        && !helper::DateTime::IsIso8601Date(value_)) {
+      std::cerr
+        << "Invalid date (" << value_ << "), "
+           "must be given as ISO 8601\n";
+
+      return false;
+    }
+
     bool attribute_exists = AttributeExistsInCoreXml(attribute_);
 
     result = attribute_exists
@@ -295,6 +304,13 @@ bool docx_meta::SaveCoreXml() {
     throw "Failed saving: " + path_core_xml_;
 
   return true;
+}
+
+bool docx_meta::IsDateAttribute(Attribute attribute) {
+  return
+    attribute == Attribute_LastPrinted
+    || attribute == Attribute_Created
+    || attribute == Attribute_Modified;
 }
 
 void docx_meta::CollectFromAppXml(std::string path_app_xml_current,
