@@ -99,8 +99,57 @@ void File::CopyFile(
   close(dest);
 }
 
-bool File::Remove(const char *file_path) {
-  return remove(file_path) == 0;
+bool File::Remove(const char *path) {
+  return remove(path) == 0;
+}
+
+bool File::RemoveRecursive(const char *path) {
+  if (!IsDirectory(path)) return Remove(path);
+
+  DIR *d = opendir(path);
+  size_t path_len = strlen(path);
+
+  int result = -1;
+
+  if (d) {
+    struct dirent *p;
+
+    result = 0;
+    while (!result && (p=readdir(d))) {
+      int r2 = -1;
+      char *buffer;
+      size_t len;
+
+      if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, ".."))
+        continue;
+
+      len = path_len + strlen(p->d_name) + 2;
+      buffer = static_cast<char *>(malloc(len));
+
+      if (buffer) {
+        struct stat stat_buffer{};
+
+        snprintf(buffer, len, "%s/%s", path, p->d_name);
+
+        if (!stat(buffer, &stat_buffer)) {
+          if (S_ISDIR(stat_buffer.st_mode))
+            r2 = RemoveRecursive(buffer);
+          else
+            r2 = unlink(buffer);
+        }
+
+        free(buffer);
+      }
+
+      result = r2;
+    }
+
+    closedir(d);
+  }
+
+  if (!result) result = rmdir(path);
+
+  return result;
 }
 
 std::string File::GetLastPathSegment(std::string path) {

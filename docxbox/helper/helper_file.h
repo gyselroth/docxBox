@@ -48,7 +48,8 @@ extern void CopyFile(
     const std::string &path_image_original,
     const std::string &path_image_replacement);
 
-extern bool Remove(const char *file_path);
+extern bool Remove(const char *path);
+extern bool RemoveRecursive(const char *file_path);
 
 extern std::string GetLastPathSegment(std::string path);
 

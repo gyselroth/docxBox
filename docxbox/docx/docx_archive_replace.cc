@@ -14,7 +14,7 @@ bool docx_archive_replace::ReplaceImage() {
       4, "Filename of replacement image"))
     return false;
 
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
 
   std::string image_original = argv_[3];
 
@@ -88,7 +88,7 @@ bool docx_archive_replace::ReplaceText() {
   std::string search = argv_[3];
   std::string replacement = argv_[4];
 
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -148,7 +148,7 @@ bool docx_archive_replace::RemoveBetweenText() {
   std::string lhs = argv_[3];
   std::string rhs = argv_[4];
 
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -198,7 +198,7 @@ bool docx_archive_replace::RemoveBetweenText() {
 }
 
 bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -246,7 +246,7 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 }
 
 bool docx_archive_replace::SetFieldValue() {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())
       || !docxbox::AppArguments::AreArgumentsGiven(
       argc_,
       3, "Field identifier",

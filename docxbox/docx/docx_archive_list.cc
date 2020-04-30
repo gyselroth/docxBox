@@ -59,17 +59,20 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
   // TODO(kay): detect items that are given only in 1 DOCX,
   //      and insert empty line before their line into the other list
 
-  std::cout << helper::String::RenderSideBySide(
+  std::cout << docx_fileList::RenderListsCompare(
       path_docx_in_ + "\n\n" + file_list_1,
       path_docx_in_2 + "\n\n" + file_list_2,
-      8);
+      8,
+      true,
+      path_docx_in_,
+      path_docx_in_2);
 }
 
 // List contained images and their attributes
 bool docx_archive_list::ListImageFilesInDocx(bool as_json) {
   if (as_json) return ListFilesInDocx(as_json, true);
 
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -83,7 +86,7 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
   std::string needle;
   InitLocateFilesContaining(as_json, needle);
 
-  if (!UnzipDocx("", true, true)) return false;
+  if (!UnzipDocxByArgv("", true, true)) return false;
 
   std::string grep = "grep -iRl \"" + needle + "\" " + path_extract_;
 
@@ -157,7 +160,7 @@ void docx_archive_list::InitLocateFilesContaining(bool &as_json,
 // Output meta data from within given DOCX file:
 // Creation date, revision, title, language, used fonts, contained media files
 bool docx_archive_list::ListMetaFromXmls(bool as_json) {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -206,7 +209,7 @@ bool docx_archive_list::ListMetaFromXmls(bool as_json) {
 
 // List referenced fonts and their metrics
 bool docx_archive_list::ListReferencedFonts(bool as_json) {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -253,7 +256,7 @@ bool docx_archive_list::ListReferencedFonts(bool as_json) {
 }
 
 bool docx_archive_list::ListFieldsFromXmls(bool as_json) {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 

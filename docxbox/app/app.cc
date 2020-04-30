@@ -142,10 +142,10 @@ bool App::Process() {
         break;
       case AppCommands::Command_ModifyMeta:result = docx_archive->ModifyMeta();
         break;
-      case AppCommands::Command_Unzip:result = docx_archive->UnzipDocx();
+      case AppCommands::Command_Unzip:result = docx_archive->UnzipDocxByArgv();
         break;
       case AppCommands::Command_UnzipAndIndentXml:
-        result = docx_archive->UnzipDocx("", true, true);
+        result = docx_archive->UnzipDocxByArgv("", true, true);
         break;
       case AppCommands::Command_UnzipMedia:result = docx_archive->UnzipMedia();
         break;

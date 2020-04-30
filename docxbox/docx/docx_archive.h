@@ -29,12 +29,18 @@ class docx_archive {
  public:
   docx_archive(int argc, char **argv);
 
-  bool UnzipDocx(
+  static std::string UnzipDocx(
+      const std::string &path_docx,
+      const std::string &path_extract_appendix = "",
+      const std::string &path_extract_prefix = "");
+
+  // Unzip all files of DOCX file w/ file argument taken from argv_
+  bool UnzipDocxByArgv(
       const std::string &directory_appendix = "",
       bool ensure_is_docx = true,
       bool format_xml_files = false);
 
-  bool IsZipArchive(const std::string& path_file);
+  static bool IsZipArchive(const std::string& path_file);
 
   // Check formal structure of DOCX archive - mandatory files given?
   bool IsUnzippedDocx();
@@ -75,8 +81,10 @@ class docx_archive {
 
   bool InitPathDocxByArgV(int index_path_argument);
 
-  void InitExtractionPath(const std::string &directory_appendix,
-                          const std::string &path_docx);
+  static std::string InitExtractionPath(
+      const std::string &path_docx,
+      const std::string &path_extract_appendix,
+      const std::string &path_extract_prefix = "");
 
   std::string ParseFileWildcard(int index_argument) const;
 

@@ -3,7 +3,7 @@ docxBox Changelog
 
 V0.0.4 - Not finished yet
 -------------------------
-
+* side-by-side compare (ls) now detects different content (of files w/ identical attributes)
 
 V0.0.3 - 2020-04-29
 -------------------

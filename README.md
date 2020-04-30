@@ -173,9 +173,9 @@ or ````docxbox ls foo.docx --fields --json````
 docxBox helps tracing changes to the files contained within DOCX archives,
 made when manipulating documents in word processor applications.
 
-When given two DOCX files, the ``ls`` command displays a side-by-side 
-comparison of the contained files' attributes, with non-identical items 
-highlighted:
+When given two DOCX files, the ``ls`` command lists all files of both DOCX
+documents side-by-side. docxBox compares all files and highlights files 
+w/ different attributes and content. 
 
 ````docxbox ls foo_v1.docx foo_v2.docx````  
 

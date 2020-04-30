@@ -90,14 +90,9 @@ extern u_int32_t GetMaxLength(const std::vector<std::string>& strings);
 
 extern std::string Repeat(const std::string& str, u_int16_t amount);
 
-extern std::string RenderSideBySide(
-    const std::string &left,
-    const std::string &right,
-    int amount_spaces_gap = 8);
-
 extern std::string GetRandomNumericString(
     u_int32_t length,
-    bool starts_with_zero);
+    bool starts_with_zero = false);
 
 }  // namespace String
 }  // namespace helper
