@@ -218,7 +218,10 @@ bool docx_archive::GetText(bool newline_at_segments) {
 }
 
 bool docx_archive::ExecuteUserCommand() {
-  // TODO(kay): add safeguard: verify all arguments being given + valid
+  if (!docxbox::AppArguments::IsArgumentGiven(
+      argc_,
+      3,
+      "Command")) return false;
 
   if (!UnzipDocx("", true, true)) return false;
 

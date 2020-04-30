@@ -109,7 +109,7 @@ bool AppHelp::PrintOverview(bool with_title) {
             << "\n    lorem      - Replace all text by random dummy text"
             << "\n"
             << "\n  3. Run user-defined command on contained file(s):"
-            << "\n    cmd        - Execute given command on given DOCX"
+            << "\n    cmd        - Execute given command on given DOCX file(s)"
             << "\n"
             << "\n  4. Convert and compare DOCX:"
             << "\n    txt        - Output DOCX document as plaintext"
@@ -237,8 +237,8 @@ bool AppHelp::PrintHelpOnListMergeFields(bool with_title) {
 }
 
 bool AppHelp::PrintHelpOnUserCommand() {
-  std::cout << "Command cmd - Execute given command on given DOCX:\n"
-               "-------------------------------------------------\n"
+  std::cout << "Command cmd - Execute given command on files(s) of given DOCX:\n"
+               "--------------------------------------------------------------\n"
                "Example: Edit contained XML file w/ nano\n"
                "  docxbox cmd foo.docx \"nano *DOCX*/word/settings.xml\"\n\n";
 

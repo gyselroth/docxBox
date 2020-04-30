@@ -41,8 +41,7 @@ bool docx_archive_list::ListFiles(bool as_json, bool images_only) {
     miniz_cpp::zip_file docx_file_2(path_docx_in_2);
 
     std::string files_list_2 =
-        path_docx_in_2 + "\n\n"
-        + miniz_cpp_ext::PrintDir(
+        miniz_cpp_ext::PrintDir(
             docx_file_2,
             as_json,
             images_only,
@@ -50,7 +49,7 @@ bool docx_archive_list::ListFiles(bool as_json, bool images_only) {
 
     std::cout << helper::String::RenderSideBySide(
         path_docx_in_ + "\n\n" + files_list,
-        files_list_2,
+        path_docx_in_2 + "\n\n" + files_list_2,
         8);
   } else {
     // Output single DOCX files list
