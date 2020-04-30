@@ -33,6 +33,7 @@ add_executable(docxbox
         docxbox/docx/docx_archive_replace.cc
 
         docxbox/docx/docx_contentTypes.cc
+        docxbox/docx/docx_fileList.cc
         docxbox/docx/docx_fontTable.cc
         docxbox/docx/docx_meta.cc
 

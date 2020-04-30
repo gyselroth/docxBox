@@ -6,8 +6,8 @@ docx_archive_list::docx_archive_list(
     int argc,
     char **argv) : docx_archive(argc, argv) {}
 
-// Output paths of files (and directories) within DOCX file
-bool docx_archive_list::ListFiles(bool as_json, bool images_only) {
+// List files inside DOCX archive and their attributes
+bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
   if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX filename"))
     return false;
 
@@ -30,27 +30,7 @@ bool docx_archive_list::ListFiles(bool as_json, bool images_only) {
       && argc_ >= 4
       && helper::String::EndsWith(argv_[3], ".docx")
       && helper::File::FileExists(argv_[3])) {
-    // Output two DOCX files lists side-by-side
-    const std::string
-        &path_docx_in_2 = docxbox::AppArguments::ResolvePathFromArgument(
-        path_working_directory_,
-        argc_,
-        argv_,
-        4);
-
-    miniz_cpp::zip_file docx_file_2(path_docx_in_2);
-
-    std::string files_list_2 =
-        miniz_cpp_ext::PrintDir(
-            docx_file_2,
-            as_json,
-            images_only,
-            file_ending);
-
-    std::cout << helper::String::RenderSideBySide(
-        path_docx_in_ + "\n\n" + files_list,
-        path_docx_in_2 + "\n\n" + files_list_2,
-        8);
+    ListFilesInDocxCompare(as_json, images_only, file_ending, files_list);
   } else {
     // Output single DOCX files list
     std::cout << files_list;
@@ -59,9 +39,37 @@ bool docx_archive_list::ListFiles(bool as_json, bool images_only) {
   return true;
 }
 
+// Output two DOCX file lists side-by-side
+void docx_archive_list::ListFilesInDocxCompare(bool as_json,
+                                               bool images_only,
+                                               const std::string &file_ending,
+                                               std::string &file_list_1) {
+  const std::string &path_docx_in_2 =
+      docxbox::AppArguments::ResolvePathFromArgument(
+          path_working_directory_, argc_, argv_, 4);
+
+  miniz_cpp::zip_file docx_file_2(path_docx_in_2);
+
+  std::string file_list_2 = miniz_cpp_ext::PrintDir(
+          docx_file_2, as_json, images_only, file_ending);
+
+  docx_fileList::SortFileListByFilename(file_list_1);
+  docx_fileList::SortFileListByFilename(file_list_2);
+
+  // TODO(kay):
+  //   3. detect items that are given only in 1 DOCX,
+  //      and insert empty lines into the other list
+  //   4. convert lists back to std::string
+
+  std::cout << helper::String::RenderSideBySide(
+      path_docx_in_ + "\n\n" + file_list_1,
+      path_docx_in_2 + "\n\n" + file_list_2,
+      8);
+}
+
 // List contained images and their attributes
 bool docx_archive_list::ListImages(bool as_json) {
-  if (as_json) return ListFiles(as_json, true);
+  if (as_json) return ListFilesInDocx(as_json, true);
 
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 

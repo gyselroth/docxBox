@@ -5,6 +5,7 @@
 
 #include <docxbox/app/app_argument.h>
 #include <docxbox/docx/docx_archive.h>
+#include <docxbox/docx/docx_fileList.h>
 #include <docxbox/docx/docx_fontTable.h>
 #include <docxbox/docx/docx_meta.h>
 #include <docxbox/docx/renderer/docx_renderer_table.h>
@@ -31,7 +32,7 @@ class docx_archive_list:docx_archive {
   bool LocateFilesContainingString(bool as_json = false);
 
   // List files inside DOCX archive and their attributes
-  bool ListFiles(bool as_json, bool images_only = false);
+  bool ListFilesInDocx(bool as_json, bool images_only = false);
   bool ListImages(bool as_json);
 
   // List data stored within XML(s) of DOCX
@@ -41,6 +42,12 @@ class docx_archive_list:docx_archive {
 
  private:
   void InitLocateFilesContaining(bool &as_json, std::string &needle) const;
+
+  // Output two DOCX file lists side-by-side
+  void ListFilesInDocxCompare(bool as_json,
+                              bool images_only,
+                              const std::string &file_ending,
+                              std::string &file_list_1);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_ARCHIVE_LIST_H_

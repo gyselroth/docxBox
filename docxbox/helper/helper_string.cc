@@ -1,13 +1,19 @@
 // Copyright (c) 2020 gyselroth GmbH
 
 #include <docxbox/helper/helper_string.h>
+
 #include <iostream>
+#include <iterator>
 
 namespace helper {
 
 // Check whether given string starts w/ given prefix
 bool String::StartsWith(const char *str, const char *prefix) {
   return 0 == strncmp(str, prefix, strlen(prefix));
+}
+
+bool String::StartsNumeric(const char *str) {
+  return isdigit(str[0]);
 }
 
 // Check whether given string ends w/ given string
@@ -127,6 +133,31 @@ std::vector<std::string> String::Explode(
     result.push_back(std::move(token));
 
   return result;
+}
+
+std::string String::GetTrailingWord(std::string str) {
+  if (str.empty() || !Contains(str, " ")) return str;
+
+  Trim(str);
+
+  while (Contains(str, "  ")) ReplaceAll(str, "  ", " ");
+
+  auto words = Explode(str, ' ');
+
+  return words[words.size() - 1];
+}
+
+std::string String::Implode(
+    std::vector<std::string> strings,
+    const char* const delimiter) {
+  std::ostringstream imploded;
+
+  std::copy(
+      strings.begin(),
+      strings.end(),
+      std::ostream_iterator<std::string>(imploded, delimiter));
+
+  return imploded.str();
 }
 
 // Trim from start (in place)

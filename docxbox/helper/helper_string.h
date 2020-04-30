@@ -30,6 +30,8 @@ bool EndsWith(std::string const &value, std::string const &ending);
 // Check whether given string starts w/ given prefix
 extern bool StartsWith(const char *str, const char *prefix);
 
+extern bool StartsNumeric(const char *str);
+
 extern bool IsAnyOf(const std::string& str, std::vector<std::string> endings);
 
 extern bool Contains(const std::string &haystack, const char *needle);
@@ -60,6 +62,12 @@ extern int OffsetChar(const std::string &str, char c, int offset = 0);
 
 // Split given string by given character delimiter into vector of strings
 extern std::vector<std::string> Explode(std::string const &str, char delimiter);
+
+extern std::string GetTrailingWord(std::string str);
+
+extern std::string Implode(
+    std::vector<std::string> strings,
+    const char* const delimiter = ", ");
 
 extern void LTrim(std::string &s);
 extern void RTrim(std::string &s);

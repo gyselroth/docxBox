@@ -103,7 +103,8 @@ class miniz_cpp_ext {
       bool as_json = false,
       bool images_only = false,
       const std::string& filter_ending = "",
-      const std::vector<std::string>& filter_filenames = {}) {
+      const std::vector<std::string>& filter_filenames = {},
+      bool output_directories = false) {
     std::string out;
 
     if (as_json) {
@@ -126,6 +127,9 @@ class miniz_cpp_ext {
     auto filter_by_filenames = !filter_filenames.empty();
 
     for (auto &member : docx_file.infolist()) {
+      if (!output_directories && helper::String::EndsWith(member.filename, "/"))
+        continue;
+
       if (filter_by_filenames) {
         if (!helper::String::IsAnyOf(member.filename, filter_filenames))
           continue;

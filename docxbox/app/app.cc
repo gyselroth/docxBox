@@ -174,9 +174,10 @@ bool App::ProcessList(AppCommands::Commands command) {
   auto *docx_archive = new docx_archive_list(argc_, argv_);
 
   switch (command) {
-    case AppCommands::Command_List:result = docx_archive->ListFiles(false);
+    case AppCommands::Command_List:result = docx_archive->ListFilesInDocx(false);
       break;
-    case AppCommands::Command_ListAsJson:result = docx_archive->ListFiles(true);
+    case AppCommands::Command_ListAsJson:result =
+                                             docx_archive->ListFilesInDocx(true);
       break;
     case AppCommands::Command_ListFields:
       result = docx_archive->ListFields(false);
