@@ -59,8 +59,8 @@ bool docx_xml_field::SetFieldText(
   else
     SetFieldTextInNodes(body, field_identifier, text);
 
-  // TODO(kay): save only if changed
-  if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
+  if (has_xml_changed_
+      && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
     std::cerr << "Error - Failed saving: " << path_xml << "\n";
 
     return false;
@@ -96,6 +96,7 @@ void docx_xml_field::SetFieldTextInNodes(
           continue;
         }
       } else if (is_inside_searched_field_ && 0 == strcmp(value, "w:t")) {
+        has_xml_changed_ = true;
         sub_node->SetText(field_value.c_str());
       }
     }
@@ -138,6 +139,7 @@ void docx_xml_field::TransformMergeFieldToTextInNodes(
         if (helper::String::StartsWith(
             iterated_field_identifier.c_str(),
             field_identifier.c_str())) {
+          has_xml_changed_ = true;
           is_inside_searched_field_ = true;
 
           RemoveFldCharsFromMergeField(sub_node);
@@ -145,6 +147,7 @@ void docx_xml_field::TransformMergeFieldToTextInNodes(
           continue;
         }
       } else if (is_inside_searched_field_ && 0 == strcmp(value, "w:t")) {
+        has_xml_changed_ = true;
         sub_node->SetText(field_value.c_str());
       }
     }

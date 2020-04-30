@@ -37,6 +37,8 @@ class docx_xml_field: docx_xml {
 
   bool is_inside_searched_field_ = false;
 
+  bool has_xml_changed_ = false;
+
   void CollectFieldsFromNodes(tinyxml2::XMLElement *node);
 
   void SetFieldTextInNodes(tinyxml2::XMLElement *node,

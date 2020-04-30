@@ -14,10 +14,9 @@ void docx_fileList::SortFileListByFilename(std::string &file_list) {
       lines, line_first_file, line_last_file);
 
   // Sort tuples by filename
-  sort(
-      lines_by_filename.begin(),
-      lines_by_filename.end(),
-      CompareFileListItemTuples);
+  sort(lines_by_filename.begin(),
+       lines_by_filename.end(),
+       CompareFileListItemTuples);
 
   // Refill sorted into lines vector
   // (which also has headline, separators, summary)
@@ -156,15 +155,21 @@ std::string docx_fileList::RenderListsCompare(
       are_lines_different = false;
     } else {
       if (compare_content && IsFileItemLine(line_left)) {
+        const std::string &filename_left =
+            helper::String::GetTrailingWord(line_left);
+
+        const std::string &filename_right =
+            helper::String::GetTrailingWord(line_right);
+        
         std::string path_file_left =
-            path_extract_left + "/"
-            + helper::String::GetTrailingWord(line_left);
+            path_extract_left + "/" + filename_left;
 
         std::string path_file_right =
-            path_extract_right + "/"
-            + helper::String::GetTrailingWord(line_right);
+            path_extract_right + "/" + filename_right;
 
-        if (helper::File::FileExists(path_file_left)) {
+        if (filename_left == filename_right
+            && helper::File::FileExists(path_file_left)
+            && helper::File::FileExists(path_file_right)) {
           auto content_left = helper::File::GetFileContents(path_file_left);
           auto content_right = helper::File::GetFileContents(path_file_right);
 
