@@ -4,6 +4,7 @@
 #define DOCXBOX_DOCX_DOCX_FILELIST_H_
 
 #include <string>
+#include <tuple>
 #include <vector>
 
 class docx_fileList {
@@ -28,4 +29,4 @@ class docx_fileList {
                              int line_last_file);
 };
 
-#endif  // #define DOCXBOX_DOCX_DOCX_FILELIST_H_
+#endif  // DOCXBOX_DOCX_DOCX_FILELIST_H_

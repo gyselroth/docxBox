@@ -3,7 +3,7 @@
 #ifndef DOCXBOX_HELPER_HELPER_DATETIME_H_
 #define DOCXBOX_HELPER_HELPER_DATETIME_H_
 
-#include <regex>
+#include <regex> // NOLINT [build/c++11]
 #include <string>
 
 namespace helper {

@@ -176,30 +176,32 @@ bool App::ProcessList(AppCommands::Commands command) {
   switch (command) {
     case AppCommands::Command_List:result = docx_archive->ListFilesInDocx(false);
       break;
-    case AppCommands::Command_ListAsJson:result =
-                                             docx_archive->ListFilesInDocx(true);
+    case AppCommands::Command_ListAsJson:
+      result = docx_archive->ListFilesInDocx(true);
       break;
     case AppCommands::Command_ListFields:
-      result = docx_archive->ListFields(false);
+      result = docx_archive->ListFieldsFromXmls(false);
       break;
     case AppCommands::Command_ListFieldsAsJson:
-      result = docx_archive->ListFields(true);
+      result = docx_archive->ListFieldsFromXmls(true);
       break;
     case AppCommands::Command_ListImages:
-      result = docx_archive->ListImages(false);
+      result = docx_archive->ListImageFilesInDocx(false);
       break;
     case AppCommands::Command_ListImagesAsJson:
-      result = docx_archive->ListImages(true);
+      result = docx_archive->ListImageFilesInDocx(true);
       break;
-    case AppCommands::Command_ListFonts:result = docx_archive->ListFonts(false);
+    case AppCommands::Command_ListFonts:
+      result = docx_archive->ListReferencedFonts(false);
       break;
     case AppCommands::Command_ListFontsAsJson:
-      result = docx_archive->ListFonts(true);
+      result = docx_archive->ListReferencedFonts(true);
       break;
-    case AppCommands::Command_ListMeta:result = docx_archive->ListMeta(false);
+    case AppCommands::Command_ListMeta:
+      result = docx_archive->ListMetaFromXmls(false);
       break;
     case AppCommands::Command_ListMetaAsJson:
-      result = docx_archive->ListMeta(true);
+      result = docx_archive->ListMetaFromXmls(true);
       break;
     case AppCommands::Command_LocateFilesContaining:
       result = docx_archive->LocateFilesContainingString();

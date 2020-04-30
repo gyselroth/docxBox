@@ -33,12 +33,12 @@ class docx_archive_list:docx_archive {
 
   // List files inside DOCX archive and their attributes
   bool ListFilesInDocx(bool as_json, bool images_only = false);
-  bool ListImages(bool as_json);
+  bool ListImageFilesInDocx(bool as_json);
 
   // List data stored within XML(s) of DOCX
-  bool ListFonts(bool as_json);
-  bool ListFields(bool as_json);
-  bool ListMeta(bool as_json);
+  bool ListReferencedFonts(bool as_json);
+  bool ListFieldsFromXmls(bool as_json);
+  bool ListMetaFromXmls(bool as_json);
 
  private:
   void InitLocateFilesContaining(bool &as_json, std::string &needle) const;

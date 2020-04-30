@@ -56,10 +56,8 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
   docx_fileList::SortFileListByFilename(file_list_1);
   docx_fileList::SortFileListByFilename(file_list_2);
 
-  // TODO(kay):
-  //   3. detect items that are given only in 1 DOCX,
-  //      and insert empty lines into the other list
-  //   4. convert lists back to std::string
+  // TODO(kay): detect items that are given only in 1 DOCX,
+  //      and insert empty line before their line into the other list
 
   std::cout << helper::String::RenderSideBySide(
       path_docx_in_ + "\n\n" + file_list_1,
@@ -68,7 +66,7 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
 }
 
 // List contained images and their attributes
-bool docx_archive_list::ListImages(bool as_json) {
+bool docx_archive_list::ListImageFilesInDocx(bool as_json) {
   if (as_json) return ListFilesInDocx(as_json, true);
 
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
@@ -158,7 +156,7 @@ void docx_archive_list::InitLocateFilesContaining(bool &as_json,
 
 // Output meta data from within given DOCX file:
 // Creation date, revision, title, language, used fonts, contained media files
-bool docx_archive_list::ListMeta(bool as_json) {
+bool docx_archive_list::ListMetaFromXmls(bool as_json) {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -207,7 +205,7 @@ bool docx_archive_list::ListMeta(bool as_json) {
 }
 
 // List referenced fonts and their metrics
-bool docx_archive_list::ListFonts(bool as_json) {
+bool docx_archive_list::ListReferencedFonts(bool as_json) {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -254,7 +252,7 @@ bool docx_archive_list::ListFonts(bool as_json) {
   return true;
 }
 
-bool docx_archive_list::ListFields(bool as_json) {
+bool docx_archive_list::ListFieldsFromXmls(bool as_json) {
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
