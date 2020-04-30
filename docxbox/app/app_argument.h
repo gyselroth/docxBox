@@ -29,6 +29,19 @@ class AppArguments {
                               const std::string &argument_description,
                               bool do_throw = false);
 
+  static bool AreArgumentsGiven(
+      int argc,
+      int index_1, const std::string &arg_description_1,
+      int index_2, const std::string &arg_description_2,
+      bool do_throw = false);
+
+  static bool AreArgumentsGiven(
+      int argc,
+      int index_1, const std::string &arg_description_1,
+      int index_2, const std::string &arg_description_2,
+      int index_3, const std::string &arg_description_3,
+      bool do_throw = false);
+
   bool Matches(int offset_argument, const std::string &identifier);
   bool Matches(int offset_argument,
                const std::string &identifier_short,

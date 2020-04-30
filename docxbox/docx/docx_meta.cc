@@ -163,11 +163,11 @@ docx_meta::Attribute docx_meta::ResolveAttributeByName(
 // Explicit meta modification CLI call:
 // Validate CLI arguments and initialize rel. properties
 bool docx_meta::InitModificationArguments() {
-  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX filename")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          3,
-          "Meta attribute to be set")) return false;
+  if (!docxbox::AppArguments::AreArgumentsGiven(
+      argc_,
+      2, "DOCX filename",
+      3, "Meta attribute to be set"))
+    return false;
 
   attribute_ = ResolveAttributeByName(argv_[3]);
 

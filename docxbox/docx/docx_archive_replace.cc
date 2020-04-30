@@ -7,20 +7,11 @@ docx_archive_replace::docx_archive_replace(
     char **argv) : docx_archive(argc, argv) {}
 
 bool docx_archive_replace::ReplaceImage() {
-  if (
-      !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          2,
-          "Filename of DOCX")
-          || !docxbox::AppArguments::IsArgumentGiven(
-              argc_,
-              3,
-              "Filename of image to be replaced")
-          || !docxbox::AppArguments::IsArgumentGiven(
-              argc_,
-              4,
-              "Filename of replacement image")
-      )
+  if (!docxbox::AppArguments::AreArgumentsGiven(
+      argc_,
+      2, "DOCX filename",
+      3, "Filename of image to be replaced",
+      4, "Filename of replacement image"))
     return false;
 
   if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
@@ -87,15 +78,12 @@ bool docx_archive_replace::ReplaceImage() {
 }
 
 bool docx_archive_replace::ReplaceText() {
-  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX Filename")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          3,
-          "String to be found (and replaced)")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          4,
-          "Replacement")) return false;
+  if (!docxbox::AppArguments::AreArgumentsGiven(
+      argc_,
+      2, "DOCX filename",
+      3, "String to be found (and replaced)",
+      4, "Replacement"))
+    return false;
 
   std::string search = argv_[3];
   std::string replacement = argv_[4];
@@ -150,15 +138,12 @@ bool docx_archive_replace::ReplaceText() {
 }
 
 bool docx_archive_replace::RemoveBetweenText() {
-  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX Filename")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          3,
-          "String left-hand-side of part to be removed")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          4,
-          "String right-hand-side of part to be removed")) return false;
+  if (!docxbox::AppArguments::AreArgumentsGiven(
+      argc_,
+      2, "DOCX filename",
+      3, "String left-hand-side of part to be removed",
+      4, "String right-hand-side of part to be removed"))
+    return false;
 
   std::string lhs = argv_[3];
   std::string rhs = argv_[4];
@@ -261,16 +246,12 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 }
 
 bool docx_archive_replace::SetFieldValue() {
-  if (!UnzipDocx("-" + helper::File::GetTmpName())) return false;
-
-  if (!docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          3,
-          "Field identifier")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          4,
-          "Value to be set")) return false;
+  if (!UnzipDocx("-" + helper::File::GetTmpName())
+      || !docxbox::AppArguments::AreArgumentsGiven(
+      argc_,
+      3, "Field identifier",
+      4, "Value to be set"))
+    return false;
 
   std::string field_identifier = argv_[3];
   std::string value = argv_[4];

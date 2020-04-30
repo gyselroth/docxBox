@@ -251,14 +251,11 @@ bool docx_archive::ExecuteUserCommand() {
 }
 
 bool docx_archive::ViewFilesDiff() {
-  if (!docxbox::AppArguments::IsArgumentGiven(
+  if (!docxbox::AppArguments::AreArgumentsGiven(
       argc_,
-      3,
-      "DOCX file to compare with")
-      || !docxbox::AppArguments::IsArgumentGiven(
-          argc_,
-          4,
-          "File within DOCX archives to be compared")) return false;
+      3, "DOCX file to compare with",
+      4, "File within DOCX archives to be compared"))
+    return false;
 
   if (!UnzipDocx("", true, true)) return false;
 

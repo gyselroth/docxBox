@@ -45,6 +45,26 @@ bool AppArguments::IsArgumentGiven(int argc,
   return true;
 }
 
+bool AppArguments::AreArgumentsGiven(
+    int argc,
+    int index_1, const std::string &arg_description_1,
+    int index_2, const std::string &arg_description_2,
+    bool do_throw) {
+  return !(!IsArgumentGiven(argc, index_1, arg_description_1, do_throw)
+      || !IsArgumentGiven(argc, index_2, arg_description_2, do_throw));
+}
+
+bool AppArguments::AreArgumentsGiven(
+    int argc,
+    int index_1, const std::string &arg_description_1,
+    int index_2, const std::string &arg_description_2,
+    int index_3, const std::string &arg_description_3,
+    bool do_throw) {
+  return !(!IsArgumentGiven(argc, index_1, arg_description_1, do_throw)
+      || !IsArgumentGiven(argc, index_2, arg_description_2, do_throw)
+      || !IsArgumentGiven(argc, index_3, arg_description_3, do_throw));
+}
+
 bool AppArguments::Matches(int offset_argument, const std::string &identifier) {
   return argc_ > offset_argument
       && 0 == strcmp(argv_[offset_argument], identifier.c_str());
