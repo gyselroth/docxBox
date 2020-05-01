@@ -234,7 +234,7 @@ std::string docx_fileList::RenderListsCompare(
           helper::String::Repeat(" ", len_right_max - len_right);
     }
 
-    std::string style_on, style_off;
+    std::string style_on_left, style_on_right, style_off;
 
     if ((IsFileItemLine(line_left) || IsFileItemLine(line_right))
         && areLinesDifferent(compare_content,
@@ -242,13 +242,16 @@ std::string docx_fileList::RenderListsCompare(
                           path_extract_right,
                           line_left,
                           line_right)) {
-      style_on = kAnsiReverse;
       style_off = kAnsiReset;
+      style_on_left = style_on_right = kAnsiReverse;
+
+      if (helper::String::IsWhiteSpace(line_left)) style_on_left = "";
+      if (helper::String::IsWhiteSpace(line_right)) style_on_right = "";
     }
 
-    out += style_on + line_left.append(left_margin_right).append(style_off)
+    out += style_on_left + line_left.append(left_margin_right).append(style_off)
         .append(gap)
-        .append(style_on).append(line_right).append(right_margin_right)
+        .append(style_on_right).append(line_right).append(right_margin_right)
         .append(style_off)
         .append("\n");
 

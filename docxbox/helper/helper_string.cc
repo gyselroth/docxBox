@@ -166,6 +166,41 @@ std::string String::Implode(
   return imploded.str();
 }
 
+std::string String::RenderTwoColumns(
+    std::string col_1, std::string col_2, int amount_gap) {
+  auto lines_1 = Explode(col_1, '\n');
+  auto lines_2 = Explode(col_2, '\n');
+  
+  std::string gap = Repeat(" ", amount_gap);
+  
+  int len_longest_line = GetMaxLength(lines_1);
+  
+  std::string out;
+
+  int amount_lines_2 = lines_2.size();
+
+  int index = 0;
+
+  for (const auto& line : lines_1) {
+    out += line;
+
+    uint16_t len_line_1 = line.length();
+
+    if (len_line_1 < len_longest_line)
+      out += Repeat(" ", len_longest_line - len_line_1);
+
+    out += gap;
+
+    if (amount_lines_2 >= index) out += lines_2[index];
+
+    out += "\n";
+
+    ++index;
+  }
+
+  return out;
+}
+
 // Trim from start (in place)
 void String::LTrim(std::string &s) {
   s.erase(
