@@ -51,8 +51,8 @@ class docx_fileList {
                                 const std::string &line_left,
                                 const std::basic_string<char> &line_right);
 
-  // Iterate over longer list,
-  // At lines where filenames of both lists are different:
+  // Iterate over longer of given lists,
+  // at lines where filenames of both lists are different:
   // Insert empty line before alphabetically sorted second filename of both
   static void InsertEmptyLinesAtFilesOnlyInOneLists(
       std::vector<std::string> &lines_1,

@@ -124,8 +124,8 @@ void docx_fileList::ParallelizeListItems(
   list_2 = helper::String::Implode(lines_2, "\n");
 }
 
-// Iterate over longer list,
-// At lines where filenames of both lists are different:
+// Iterate over longer of given lists,
+// at lines where filenames of both lists are different:
 // Insert empty line before alphabetically sorted second filename of both
 void docx_fileList::InsertEmptyLinesAtFilesOnlyInOneLists(
     std::vector<std::string> &lines_1,
