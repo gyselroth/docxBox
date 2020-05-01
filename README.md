@@ -354,7 +354,7 @@ command.
 
 Setting field values includes also preview texts of otherwise
 **generic fields**, which in some word processing applications have to be
-updated manually.
+updated explicitly.
 
 ````docxbox sfv foo.docx "PRINTDATE" "10.01.2020"````  
 Updates the shown text of all print-date fields to ``10.01.2020``.
