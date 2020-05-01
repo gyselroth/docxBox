@@ -56,8 +56,7 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
   docx_fileList::SortFileListByFilename(file_list_1);
   docx_fileList::SortFileListByFilename(file_list_2);
 
-  // TODO(kay): detect items that are given only in 1 DOCX,
-  //      and insert empty line before their line into the other list
+  docx_fileList::ParallelizeListItems(file_list_1, file_list_2);
 
   std::cout << docx_fileList::RenderListsCompare(
       path_docx_in_ + "\n\n" + file_list_1,

@@ -3,7 +3,8 @@ docxBox Changelog
 
 V0.0.4 - Not finished yet
 -------------------------
-* side-by-side compare (ls) now detects different content (of files w/ identical attributes)
+* side-by-side DOCX compare now detects different content (of files w/ identical attributes)
+* side-by-side DOCX compare now marks files present only in one of the documents 
 
 V0.0.3 - 2020-04-29
 -------------------

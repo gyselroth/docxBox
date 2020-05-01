@@ -38,6 +38,12 @@ bool String::Contains(const std::string &haystack, const char *needle) {
   return std::string::npos != haystack.find(needle);
 }
 
+bool String::IsWhiteSpace(const std::string &str) {
+  for (char c : str) if (c != ' ') return false;
+
+  return true;
+}
+
 void String::Replace(
     std::string &haystack,
     const char *needle,
