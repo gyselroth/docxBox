@@ -170,11 +170,11 @@ std::string String::RenderTwoColumns(
     std::string col_1, std::string col_2, int amount_gap) {
   auto lines_1 = Explode(col_1, '\n');
   auto lines_2 = Explode(col_2, '\n');
-  
+
   std::string gap = Repeat(" ", amount_gap);
-  
+
   int len_longest_line = GetMaxLength(lines_1);
-  
+
   std::string out;
 
   int amount_lines_2 = lines_2.size();

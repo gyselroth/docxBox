@@ -25,7 +25,7 @@
 #include <memory>
 #include <string>
 
-class docx_archive_list:docx_archive {
+class docx_archive_list : public docx_archive {
  public:
   docx_archive_list(int argc, char **argv);
 

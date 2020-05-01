@@ -135,8 +135,7 @@ std::string docx_meta::FetchAttributeFromCoreXml(
   if (!helper::String::Contains(core_xml_, lhs_of_value)) return "";
 
   std::string value = helper::String::GetSubStrBetween(
-      core_xml_,
-      lhs_of_value, rhs_of_value);
+      core_xml_, lhs_of_value, rhs_of_value);
 
   if (!label.empty()) attributes_.emplace_back(label, value);
 
@@ -172,18 +171,15 @@ bool docx_meta::InitModificationArguments() {
   attribute_ = ResolveAttributeByName(argv_[3]);
 
   if (attribute_ == Attribute::Attribute_Unknown) {
-    std::cerr
-        << "Invalid argument: Unknown or unsupported attribute: "
-        << argv_[3] << "\n";
+    std::cerr << "Invalid argument: Unknown or unsupported attribute: "
+              << argv_[3] << "\n";
 
     return false;
   }
 
   if (!docxbox::AppArguments::IsArgumentGiven(
       argc_,
-      4,
-      "Value to set attribute to"))
-    return false;
+      4, "Value to set attribute to")) return false;
 
   value_ = argv_[4];
 
@@ -200,9 +196,8 @@ bool docx_meta::UpsertAttribute(bool saveXml) {
   try {
     if (IsDateAttribute(attribute_)
         && !helper::DateTime::IsIso8601Date(value_)) {
-      std::cerr
-        << "Invalid date (" << value_ << "), "
-           "must be given as ISO 8601\n";
+      std::cerr << "Invalid date (" << value_ << "), "
+                   "must be given as ISO 8601\n";
 
       return false;
     }
@@ -356,6 +351,7 @@ std::string docx_meta::ExtractXmlSchemaFromAppXml(std::string &app_xml) const {
       xml_schema,
       (std::string("/") + segments[ segments.size() - 1]).c_str(),
       "");
+
   return xml_schema;
 }
 
@@ -397,9 +393,8 @@ void docx_meta::Output() {
 
 void docx_meta::OutputPlain() {
   for (std::tuple<std::string, std::string> attribute : attributes_) {
-    std::cout
-      << std::get<0>(attribute) << ": "
-      << std::get<1>(attribute) << "\n";
+    std::cout << std::get<0>(attribute) << ": "
+              << std::get<1>(attribute) << "\n";
   }
 }
 
@@ -411,10 +406,8 @@ void docx_meta::OutputJson() {
   for (std::tuple<std::string, std::string> attribute : attributes_) {
     if (i > 0) std::cout << ",";
 
-    std::cout
-      << "\"" << std::get<0>(attribute) << "\": "
-      << "\"" << std::get<1>(attribute) << "\"";
-
+    std::cout << "\"" << std::get<0>(attribute) << "\": "
+              << "\"" << std::get<1>(attribute) << "\"";
     i++;
   }
 

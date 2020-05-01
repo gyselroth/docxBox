@@ -24,7 +24,7 @@
 #include <memory>
 #include <string>
 
-class docx_archive_replace:docx_archive {
+class docx_archive_replace : public docx_archive {
  public:
   docx_archive_replace(int argc, char **argv);
 

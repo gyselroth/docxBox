@@ -175,7 +175,7 @@ made when manipulating documents in word processor applications.
 
 When given two DOCX files, the ``ls`` command lists all files of both DOCX
 documents side-by-side. docxBox compares all files and highlights files 
-w/ different attributes or content. 
+w/ different attributes or (identical attributes but) different content. 
 
 ````docxbox ls foo_v1.docx foo_v2.docx````  
 

@@ -31,8 +31,8 @@ bool docx_archive_replace::ReplaceImage() {
 
       found = true;
 
-      std::string
-          path_image_original = path_extract_ + "/" + file_in_zip.filename;
+      std::string path_image_original =
+          path_extract_ + "/" + file_in_zip.filename;
 
       if (!helper::File::Remove(path_image_original.c_str()))
         throw "Failed replace " + image_original + "\n";
@@ -142,8 +142,7 @@ bool docx_archive_replace::RemoveBetweenText() {
       argc_,
       2, "DOCX filename",
       3, "String left-hand-side of part to be removed",
-      4, "String right-hand-side of part to be removed"))
-    return false;
+      4, "String right-hand-side of part to be removed")) return false;
 
   std::string lhs = argv_[3];
   std::string rhs = argv_[4];
@@ -250,8 +249,7 @@ bool docx_archive_replace::SetFieldValue() {
       || !docxbox::AppArguments::AreArgumentsGiven(
       argc_,
       3, "Field identifier",
-      4, "Value to be set"))
-    return false;
+      4, "Value to be set")) return false;
 
   std::string field_identifier = argv_[3];
   std::string value = argv_[4];
@@ -259,7 +257,6 @@ bool docx_archive_replace::SetFieldValue() {
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto file_list = docx_file.infolist();
-
   auto parser = new docx_xml_field(argc_, argv_);
 
   for (const auto &file_in_zip : file_list) {

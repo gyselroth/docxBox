@@ -20,9 +20,8 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
 
   bool is_document_xml = helper::String::EndsWith(path_xml, "document.xml");
 
-  bool is_header_xml =
-      !is_document_xml
-          && helper::String::EndsWith(path_xml, "header1.xml");
+  bool is_header_xml = !is_document_xml
+                       && helper::String::EndsWith(path_xml, "header1.xml");
 
   if (!is_document_xml && !is_header_xml) return true;
 

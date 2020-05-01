@@ -53,7 +53,7 @@ class miniz_cpp_ext {
         // Move all other (=media) files into root of extraction directory
         std::string path_extract_file =
             path_extract + "/"
-                + helper::File::GetLastPathSegment(file_in_zip.filename);
+            + helper::File::GetLastPathSegment(file_in_zip.filename);
 
         rename(path_file_absolute.c_str(), path_extract_file.c_str());
       }
@@ -76,9 +76,7 @@ class miniz_cpp_ext {
         for (int i = amount_directories - 1; i > 0; i--) {
           std::string path_remove = path_extract;
 
-          for (int j = 0; j < i; j++) {
-            path_remove += "/" + directories[j];
-          }
+          for (int j = 0; j < i; j++) path_remove += "/" + directories[j];
 
           helper::File::Remove(path_remove.c_str());
         }

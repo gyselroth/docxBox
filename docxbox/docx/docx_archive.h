@@ -67,6 +67,8 @@ class docx_archive {
 
   bool ModifyMeta();
 
+  void RemoveTemporaryFiles();
+
  protected:
   int argc_;
   char **argv_;

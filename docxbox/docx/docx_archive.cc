@@ -44,6 +44,15 @@ std::string docx_archive::ParseFileWildcard(int index_argument) const {
          : "";
 }
 
+void docx_archive::RemoveTemporaryFiles() {
+  // TODO(kay):
+  //  remove all temporary files removal from operations,
+  //  and call miniz_cpp_ext::RemoveExtract() and sibling methods exclusively
+  //  from here instead.
+  //  Store all |path_extract_left| and |file_list| data when it accumulates,
+  //  for later removal, into member properties of docx_archive.
+}
+
 std::string docx_archive::UnzipDocx(
     const std::string &path_docx,
     const std::string &path_extract_appendix,
@@ -165,17 +174,11 @@ bool docx_archive::Zip(
     const std::string& date_created,
     const std::string& date_modified) {
   if (path_directory.empty()) {
-    if (argc_ <= 2) {
-      std::cerr << "Missing argument: path of directory to be zipped\n";
-
+    if (!docxbox::AppArguments::AreArgumentsGiven(
+        argc_,
+        2, "Path of directory to be zipped",
+        3, "Filename of docx to be created"))
       return false;
-    }
-
-    if (argc_ <= 3) {
-      std::cerr << "Missing argument: filename of docx to be created\n";
-
-      return false;
-    }
 
     path_directory =
         helper::File::ResolvePath(path_working_directory_, argv_[2]);

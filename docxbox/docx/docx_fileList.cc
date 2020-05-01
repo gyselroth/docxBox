@@ -195,7 +195,8 @@ std::string docx_fileList::RenderListsCompare(
 
   std::string gap;
 
-  if (amount_spaces_gap >= 1) gap = helper::String::Repeat(" ", amount_spaces_gap);
+  if (amount_spaces_gap >= 1)
+    gap = helper::String::Repeat(" ", amount_spaces_gap);
 
   std::string out;
 
@@ -266,11 +267,12 @@ std::string docx_fileList::RenderListsCompare(
   return out;
 }
 
-bool docx_fileList::areLinesDifferent(bool compare_content,
-                                      const std::string &path_extract_left,
-                                      const std::string &path_extract_right,
-                                      const std::string &line_left,
-                                      const std::basic_string<char> &line_right) {
+bool docx_fileList::areLinesDifferent(
+    bool compare_content,
+    const std::string &path_extract_left,
+    const std::string &path_extract_right,
+    const std::string &line_left,
+    const std::basic_string<char> &line_right) {
   if (line_left != line_right) return true;
 
   bool kIs_file_left = IsFileItemLine(line_left);

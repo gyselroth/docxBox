@@ -6,6 +6,7 @@
 #include <docxbox/docx/docx_archive.h>
 #include <docxbox/helper/helper_string.h>
 
+#include <algorithm>
 #include <string>
 #include <tuple>
 #include <vector>

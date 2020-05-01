@@ -160,6 +160,8 @@ bool App::Process() {
         result = false;
     }
 
+    docx_archive->RemoveTemporaryFiles();
+
     delete docx_archive;
   }
 
@@ -214,6 +216,8 @@ bool App::ProcessList(AppCommands::Commands command) {
       result = false;
   }
 
+  docx_archive->RemoveTemporaryFiles();
+
   delete docx_archive;
 
   return result;
@@ -243,6 +247,8 @@ bool App::ProcessReplace(AppCommands::Commands command) {
     default:AppHelp::PrintUnknownArgumentMessage(argv_[1]);
       result = false;
   }
+
+  docx_archive->RemoveTemporaryFiles();
 
   delete docx_archive;
 
