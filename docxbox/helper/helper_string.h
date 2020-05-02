@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #ifndef DOCXBOX_HELPER_HELPER_STRING_H_
 #define DOCXBOX_HELPER_HELPER_STRING_H_

@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_

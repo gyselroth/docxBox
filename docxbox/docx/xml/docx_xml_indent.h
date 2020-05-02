@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #ifndef DOCXBOX_DOCX_XML_DOCX_XML_INDENT_H_
 #define DOCXBOX_DOCX_XML_DOCX_XML_INDENT_H_

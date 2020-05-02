@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #ifndef DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
 #define DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_

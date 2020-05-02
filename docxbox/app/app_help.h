@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #ifndef DOCXBOX_APP_APP_HELP_H_
 #define DOCXBOX_APP_APP_HELP_H_
