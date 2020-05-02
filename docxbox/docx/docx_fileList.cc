@@ -208,12 +208,14 @@ std::string docx_fileList::RenderListsCompare(
 
   std::string path_extract_left, path_extract_right;
 
+  auto *archive = new docx_archive(0, nullptr);
+
   if (compare_content) {
     path_extract_left =
-        docx_archive::UnzipDocx(path_docx_left, "", "cmp_left_");
+        archive->UnzipDocx(path_docx_left, "", "cmp_left_");
 
     path_extract_right =
-        docx_archive::UnzipDocx(path_docx_right, "", "cmp_right_");
+        archive->UnzipDocx(path_docx_right, "", "cmp_right_");
   }
 
   for (auto line_left : lines_left) {
@@ -263,6 +265,12 @@ std::string docx_fileList::RenderListsCompare(
     helper::File::RemoveRecursive(path_extract_left.c_str());
     helper::File::RemoveRecursive(path_extract_right.c_str());
   }
+
+  if (compare_content) {
+    archive->RemoveTemporaryFiles();
+  }
+
+  delete archive;
 
   return out;
 }

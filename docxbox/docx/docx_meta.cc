@@ -179,8 +179,7 @@ bool docx_meta::InitModificationArguments() {
   }
 
   if (!docxbox::AppArguments::IsArgumentGiven(
-      argc_,
-      4, "Value to set attribute to")) return false;
+      argc_, 4, "Value to set attribute to")) return false;
 
   value_ = argv_[4];
 

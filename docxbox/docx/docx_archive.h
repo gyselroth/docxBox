@@ -30,7 +30,7 @@ class docx_archive {
  public:
   docx_archive(int argc, char **argv);
 
-  static std::string UnzipDocx(
+  std::string UnzipDocx(
       const std::string &path_docx,
       const std::string &path_extract_appendix = "",
       const std::string &path_extract_prefix = "");
@@ -82,12 +82,20 @@ class docx_archive {
   // Directory containing extracted XML files of DOCX
   std::string path_extract_;
 
+  // Path(s) of temp. extracted DOCX archives, to be removed at end of docxBox.
+  // 1. Paths are added during initialization in InitExtractionPath()
+  // 2. Before ending docxBox, RemoveTemporaryFiles() must be called to remove
+  //    the no longer needed files
+  std::vector<std::string> paths_temporary_;
+
   bool InitPathDocxByArgV(int index_path_argument);
 
-  static std::string InitExtractionPath(
+  std::string InitExtractionPath(
       const std::string &path_docx,
       const std::string &path_extract_appendix,
       const std::string &path_extract_prefix = "");
+
+  void RememberTemporaryExtractionPath(const std::string& path);
 
   std::string ParseFileWildcard(int index_argument) const;
 

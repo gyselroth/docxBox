@@ -30,10 +30,26 @@ std::string docx_archive::InitExtractionPath(
     const std::string &path_docx,
     const std::string &path_extract_appendix,
     const std::string &path_extract_prefix) {
-  return
-    path_extract_prefix
-    + helper::File::GetLastPathSegment(path_docx)
-    + (path_extract_appendix.empty() ? "-extracted" : path_extract_appendix);
+  bool kIs_temporary_extract = !path_extract_appendix.empty();
+
+  std::string path = path_extract_prefix
+                   + helper::File::GetLastPathSegment(path_docx)
+                   + (kIs_temporary_extract
+                     ? path_extract_appendix
+                     : "-extracted");
+  
+  if (kIs_temporary_extract) RememberTemporaryExtractionPath(path);
+  
+  return path;
+}
+
+void docx_archive::RememberTemporaryExtractionPath(const std::string& path) {
+  auto iterator_end = paths_temporary_.end();
+
+  if (std::find(paths_temporary_.begin(), iterator_end, path) != iterator_end)
+    return;
+
+  paths_temporary_.push_back(path);
 }
 
 // TODO(kay): handle more variations of wildcards, not only file-ending
@@ -46,12 +62,14 @@ std::string docx_archive::ParseFileWildcard(int index_argument) const {
 }
 
 void docx_archive::RemoveTemporaryFiles() {
-  // TODO(kay):
-  //  remove all temporary files removal from operations,
-  //  and call miniz_cpp_ext::RemoveExtract() and sibling methods exclusively
-  //  from here instead.
-  //  Store all |path_extract_left| and |file_list| data when it accumulates,
-  //  for later removal, into member properties of docx_archive.
+  if (paths_temporary_.empty()) return;
+
+  for (const auto& path : paths_temporary_) {
+    if (helper::File::IsDirectory(path))
+      helper::File::RemoveRecursive(path.c_str());
+  }
+
+  paths_temporary_.clear();
 }
 
 std::string docx_archive::UnzipDocx(
@@ -81,10 +99,7 @@ bool docx_archive::UnzipDocxByArgv(const std::string &directory_appendix,
                                    bool ensure_is_docx,
                                    bool format_xml_files) {
   if (!docxbox::AppArguments::IsArgumentGiven(
-      argc_,
-      2,
-      "Filename of DOCX to be extracted"))
-    return false;
+      argc_, 2, "Filename of DOCX to be extracted")) return false;
 
   try {
     InitPathDocxByArgV(3);
@@ -251,9 +266,7 @@ bool docx_archive::GetText(bool newline_at_segments) {
 
 bool docx_archive::ExecuteUserCommand() {
   if (!docxbox::AppArguments::IsArgumentGiven(
-      argc_,
-      3,
-      "Command")) return false;
+      argc_, 3, "Command")) return false;
 
   if (!UnzipDocxByArgv("", true, true)) return false;
 
