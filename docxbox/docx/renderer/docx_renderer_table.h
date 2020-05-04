@@ -32,7 +32,7 @@ class docx_renderer_table: docx_renderer {
   std::vector<std::string> column_headers_;
   std::vector<std::string> cell_content_;
 
-  // TODO(kay): make seizing parametric and/or generic
+  // TODO(kay): make sizing parametric and/or generic
   int table_width_ = 5000;
   int col_width_ = 2880;
 

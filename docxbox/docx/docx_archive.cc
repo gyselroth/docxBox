@@ -318,13 +318,9 @@ bool docx_archive::ViewFilesDiff() {
     return false;
   }
 
-  int width =
-      helper::File::GetLongestLineLength(path_extract_left + "/" + file);
-
-  int width2 =
-      helper::File::GetLongestLineLength(path_extract_right + "/" + file);
-
-  if (width2 > width) width = width2;
+  int width = helper::File::GetLongestLineLength(
+      path_extract_left + "/" + file,
+      path_extract_right + "/" + file);
 
   if (width > 200) width = 200;
 
