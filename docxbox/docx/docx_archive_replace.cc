@@ -15,7 +15,7 @@ bool docx_archive_replace::ReplaceImage() {
       4, "Filename of replacement image"))
     return false;
 
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   std::string image_original = argv_[3];
 
@@ -70,12 +70,10 @@ bool docx_archive_replace::ReplaceImage() {
   } catch (std::string &message) {
     std::cerr << message;
 
-    miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
     return false;
   }
 
-  return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+  return true;
 }
 
 bool docx_archive_replace::ReplaceText() {
@@ -89,7 +87,7 @@ bool docx_archive_replace::ReplaceText() {
   std::string search = argv_[3];
   std::string replacement = argv_[4];
 
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -135,7 +133,7 @@ bool docx_archive_replace::ReplaceText() {
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str());
 
-  return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+  return true;
 }
 
 bool docx_archive_replace::RemoveBetweenText() {
@@ -148,7 +146,7 @@ bool docx_archive_replace::RemoveBetweenText() {
   std::string lhs = argv_[3];
   std::string rhs = argv_[4];
 
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -194,11 +192,11 @@ bool docx_archive_replace::RemoveBetweenText() {
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str());
 
-  return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+  return true;
 }
 
 bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -242,11 +240,11 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str());
 
-  return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+  return true;
 }
 
 bool docx_archive_replace::SetFieldValue() {
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())
       || !docxbox::AppArguments::AreArgumentsGiven(
       argc_,
       3, "Field identifier",
@@ -291,11 +289,7 @@ bool docx_archive_replace::SetFieldValue() {
     return false;
   }
 
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
-  std::rename(
+  return 0 == std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str());
-
-  return true;
 }

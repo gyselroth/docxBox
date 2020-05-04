@@ -4,20 +4,21 @@ load _helper
 
 @test "Running w/o any command displays help" {
   run "$BATS_TEST_DIRNAME"/docxbox
-  [ "$status" -eq 0 ]
-  [ "Usage: docxbox <command> [args]" = "${lines[0]}" ]
+  [ "$status" -ne 0 ]
+  # TODO(lucas): make version number dynamic
+  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h\" displays help" {
   run "$BATS_TEST_DIRNAME"/docxbox h
   [ "$status" -eq 0 ]
-  [ "Usage: docxbox <command> [args]" = "${lines[0]}" ]
+  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}" ]
 }
 
 @test "\"docxbox ?\" displays help" {
   run "$BATS_TEST_DIRNAME"/docxbox h
   [ "$status" -eq 0 ]
-  [ "Usage: docxbox <command> [args]" = "${lines[0]}"  ]
+  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}"  ]
 }
 
 # List DOCX contents:

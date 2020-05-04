@@ -10,6 +10,10 @@ docx_archive::docx_archive(int argc, char **argv) {
   path_working_directory_ = getenv("PWD");
 }
 
+docx_archive::~docx_archive() {
+  RemoveTemporaryFiles();
+}
+
 // Setup path to DOCX file,
 // absolute or relative from execution path, from given argument
 bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
@@ -29,16 +33,15 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
 std::string docx_archive::InitExtractionPath(
     const std::string &path_docx,
     const std::string &path_extract_appendix,
+    bool is_temporary,
     const std::string &path_extract_prefix) {
-  bool kIs_temporary_extract = !path_extract_appendix.empty();
-
   std::string path = path_extract_prefix
                    + helper::File::GetLastPathSegment(path_docx)
-                   + (kIs_temporary_extract
-                     ? path_extract_appendix
-                     : "-extracted");
+                   + (path_extract_appendix.empty()
+                     ? "-extracted"
+                     : path_extract_appendix);
   
-  if (kIs_temporary_extract) RememberTemporaryExtractionPath(path);
+  if (is_temporary) RememberTemporaryExtractionPath(path);
   
   return path;
 }
@@ -75,11 +78,12 @@ void docx_archive::RemoveTemporaryFiles() {
 std::string docx_archive::UnzipDocx(
     const std::string &path_docx,
     const std::string &path_extract_appendix,
-    const std::string &path_extract_prefix) {
+    const std::string &path_extract_prefix,
+    bool is_temporary) {
   if (!IsZipArchive(path_docx)) return "";
 
   auto path_extract = InitExtractionPath(
-      path_docx, path_extract_appendix, path_extract_prefix);
+      path_docx, path_extract_appendix, is_temporary, path_extract_prefix);
 
   miniz_cpp::zip_file docx_file(path_docx);
 
@@ -95,7 +99,8 @@ std::string docx_archive::UnzipDocx(
 }
 
 // Unzip all files of DOCX file w/ file argument taken from argv_
-bool docx_archive::UnzipDocxByArgv(const std::string &directory_appendix,
+bool docx_archive::UnzipDocxByArgv(bool is_temporary,
+                                   const std::string &directory_appendix,
                                    bool ensure_is_docx,
                                    bool format_xml_files) {
   if (!docxbox::AppArguments::IsArgumentGiven(
@@ -111,7 +116,8 @@ bool docx_archive::UnzipDocxByArgv(const std::string &directory_appendix,
 
   if (!IsZipArchive(path_docx_in_)) return false;
 
-  path_extract_ = InitExtractionPath(path_docx_in_, directory_appendix);
+  path_extract_ =
+      InitExtractionPath(path_docx_in_, directory_appendix, is_temporary);
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -167,7 +173,7 @@ bool docx_archive::IsUnzippedDocx() {
 
 // Unzip all (than remove everything but) media files from DOCX file
 bool docx_archive::UnzipMedia() {
-  if (!UnzipDocxByArgv("-media")) return false;
+  if (!UnzipDocxByArgv(false, "-media-extracted")) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -236,7 +242,7 @@ bool docx_archive::Zip(
 }
 
 bool docx_archive::GetText(bool newline_at_segments) {
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -259,8 +265,6 @@ bool docx_archive::GetText(bool newline_at_segments) {
 
   delete parser;
 
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
   return true;
 }
 
@@ -268,7 +272,7 @@ bool docx_archive::ExecuteUserCommand() {
   if (!docxbox::AppArguments::IsArgumentGiven(
       argc_, 3, "Command")) return false;
 
-  if (!UnzipDocxByArgv("", true, true)) return false;
+  if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
   std::string command = argv_[3];
   helper::String::ReplaceAll(command, "*DOCX*", path_extract_);
@@ -283,10 +287,6 @@ bool docx_archive::ExecuteUserCommand() {
 
   std::cout << "\n";
 
-  miniz_cpp::zip_file docx_file(path_docx_in_);
-  auto file_list = docx_file.infolist();
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
   return true;
 }
 
@@ -297,14 +297,14 @@ bool docx_archive::ViewFilesDiff() {
       4, "File within DOCX archives to be compared"))
     return false;
 
-  if (!UnzipDocxByArgv("", true, true)) return false;
+  if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
   std::string path_in_left = path_docx_in_;
   std::string path_extract_left = path_extract_;
 
   argv_[2] = argv_[3];
 
-  if (!UnzipDocxByArgv("", true, true)) return false;
+  if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
   std::string path_in_right = path_docx_in_;
   std::string path_extract_right = path_extract_;
@@ -340,14 +340,6 @@ bool docx_archive::ViewFilesDiff() {
 
   std::cout << "\n";
 
-  miniz_cpp::zip_file docx_file_left(path_in_left);
-  auto file_list = docx_file_left.infolist();
-  miniz_cpp_ext::RemoveExtract(path_extract_left, file_list);
-
-  miniz_cpp::zip_file docx_file_right(path_in_left);
-  file_list = docx_file_right.infolist();
-  miniz_cpp_ext::RemoveExtract(path_extract_right, file_list);
-
   return true;
 }
 
@@ -355,7 +347,7 @@ bool docx_archive::ModifyMeta() {
   auto *meta = new docx_meta(argc_, argv_);
 
   if (!meta->InitModificationArguments()
-      || !UnzipDocxByArgv("-" + helper::File::GetTmpName())) {
+      || !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) {
     std::cerr << "Initialization for meta modification failed.\n";
 
     delete meta;
@@ -426,11 +418,9 @@ bool docx_archive::ModifyMeta() {
 
   if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
 
-  std::rename(
+  return 0 == std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str());
-
-  return miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 }
 
 // Update given meta date attribute and immediately save updated core.xml

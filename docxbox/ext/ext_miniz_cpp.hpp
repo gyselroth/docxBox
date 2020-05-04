@@ -85,18 +85,6 @@ class miniz_cpp_ext {
     }
   }
 
-  static bool RemoveExtract(const std::string &path_extract,
-                            const std::vector<miniz_cpp::zip_info> &file_list) {
-    // Remove all files
-    for (const auto &file_in_zip : file_list)
-      helper::File::Remove(
-          std::string(path_extract + "/" + file_in_zip.filename).c_str());
-
-    RemoveSubDirectories(path_extract, file_list);
-
-    return helper::File::Remove(path_extract.c_str());
-  }
-
   static std::string PrintDir(
       miniz_cpp::zip_file &docx_file,
       bool as_json = false,

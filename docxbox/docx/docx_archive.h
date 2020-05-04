@@ -30,16 +30,19 @@ class docx_archive {
  public:
   docx_archive(int argc, char **argv);
 
+  virtual ~docx_archive();
+
   std::string UnzipDocx(
       const std::string &path_docx,
       const std::string &path_extract_appendix = "",
-      const std::string &path_extract_prefix = "");
+      const std::string &path_extract_prefix = "",
+      bool is_temporary = true);
 
   // Unzip all files of DOCX file w/ file argument taken from argv_
-  bool UnzipDocxByArgv(
-      const std::string &directory_appendix = "",
-      bool ensure_is_docx = true,
-      bool format_xml_files = false);
+  bool UnzipDocxByArgv(bool is_temporary = false,
+                       const std::string &directory_appendix = "",
+                       bool ensure_is_docx = true,
+                       bool format_xml_files = false);
 
   static bool IsZipArchive(const std::string& path_file);
 
@@ -93,6 +96,7 @@ class docx_archive {
   std::string InitExtractionPath(
       const std::string &path_docx,
       const std::string &path_extract_appendix,
+      bool is_temporary = false,
       const std::string &path_extract_prefix = "");
 
   void RememberTemporaryExtractionPath(const std::string& path);

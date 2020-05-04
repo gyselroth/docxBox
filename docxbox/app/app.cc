@@ -146,7 +146,7 @@ bool App::Process() {
       case AppCommands::Command_Unzip:result = docx_archive->UnzipDocxByArgv();
         break;
       case AppCommands::Command_UnzipAndIndentXml:
-        result = docx_archive->UnzipDocxByArgv("", true, true);
+        result = docx_archive->UnzipDocxByArgv(false, "", true, true);
         break;
       case AppCommands::Command_UnzipMedia:result = docx_archive->UnzipMedia();
         break;
@@ -160,8 +160,6 @@ bool App::Process() {
       default:AppHelp::PrintUnknownArgumentMessage(argv_[1]);
         result = false;
     }
-
-    docx_archive->RemoveTemporaryFiles();
 
     delete docx_archive;
   }
@@ -217,8 +215,6 @@ bool App::ProcessList(AppCommands::Commands command) {
       result = false;
   }
 
-  docx_archive->RemoveTemporaryFiles();
-
   delete docx_archive;
 
   return result;
@@ -248,8 +244,6 @@ bool App::ProcessReplace(AppCommands::Commands command) {
     default:AppHelp::PrintUnknownArgumentMessage(argv_[1]);
       result = false;
   }
-
-  docx_archive->RemoveTemporaryFiles();
 
   delete docx_archive;
 

@@ -39,7 +39,7 @@ load _helper
 @test "Unziped files are located in project root" {
   ls | grep -c cp_table_unordered_list_images.docx-media
 
-  if [ -d cp_table_unordered_list_images.docx-media ]; then
-    rm -r cp_table_unordered_list_images.docx-media;
+  if [ -d cp_table_unordered_list_images.docx-media-extracted ]; then
+    rm -r cp_table_unordered_list_images.docx-media-extracted;
   fi
 }

@@ -5,7 +5,7 @@ load _helper
 @test "Output of \"docxbox zp {missing argument}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox zp
   [ "$status" -ne 0 ]
-  [ "Missing argument: path of directory to be zipped" = "${lines[0]}" ]
+  [ "Missing argument: Path of directory to be zipped" = "${lines[0]}" ]
 }
 
 @test "With \"docxbox zp directory /path-to-file/filename.docx\" a directory can be zipped into a docx" {

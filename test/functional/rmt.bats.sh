@@ -5,7 +5,7 @@ load _helper
 @test "Output of \"docxbox rmt {missing filename}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox rmt
   [ "$status" -ne 0 ]
-  [ "Missing argument: DOCX Filename" = "${lines[0]}" ]
+  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox rmt filename.docx {missing arguments}\" is an error message" {

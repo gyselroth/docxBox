@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
   // Process command arguments, display help if no valid command given
   auto *app = new docxbox::App(argc, argv);
 
-  bool success = argc > 1 ? app->Process() : true;
+  bool success = argc > 1 ? app->Process() : false;
 
   delete app;
 

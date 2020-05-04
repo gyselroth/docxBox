@@ -72,21 +72,21 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
 bool docx_archive_list::ListImageFilesInDocx(bool as_json) {
   if (as_json) return ListFilesInDocx(as_json, true);
 
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   std::cout
       << miniz_cpp_ext::PrintDir(docx_file, false, true);
 
-  return miniz_cpp_ext::RemoveExtract(path_extract_, docx_file.infolist());
+  return true;
 }
 
 bool docx_archive_list::LocateFilesContainingString(bool as_json) {
   std::string needle;
   InitLocateFilesContaining(as_json, needle);
 
-  if (!UnzipDocxByArgv("", true, true)) return false;
+  if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
   std::string grep = "grep -iRl \"" + needle + "\" " + path_extract_;
 
@@ -103,8 +103,6 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
   if (!filenames.empty())
     std::cout
       << miniz_cpp_ext::PrintDir(docx_file, as_json, false, "", filenames);
-
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
   return true;
 }
@@ -155,7 +153,7 @@ void docx_archive_list::InitLocateFilesContaining(bool &as_json,
 // Output meta data from within given DOCX file:
 // Creation date, revision, title, language, used fonts, contained media files
 bool docx_archive_list::ListMetaFromXmls(bool as_json) {
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -192,10 +190,7 @@ bool docx_archive_list::ListMetaFromXmls(bool as_json) {
     }
   }
 
-  // Output anything that hasn't been yet
-  meta->Output();
-
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
+  meta->Output();  // Output anything that hasn't been yet
 
   delete meta;
 
@@ -204,7 +199,7 @@ bool docx_archive_list::ListMetaFromXmls(bool as_json) {
 
 // List referenced fonts and their metrics
 bool docx_archive_list::ListReferencedFonts(bool as_json) {
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -245,13 +240,11 @@ bool docx_archive_list::ListReferencedFonts(bool as_json) {
 
   if (as_json) std::cout << "]";
 
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
-
   return true;
 }
 
 bool docx_archive_list::ListFieldsFromXmls(bool as_json) {
-  if (!UnzipDocxByArgv("-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -271,8 +264,6 @@ bool docx_archive_list::ListFieldsFromXmls(bool as_json) {
   parser->Output(as_json);
 
   delete parser;
-
-  miniz_cpp_ext::RemoveExtract(path_extract_, file_list);
 
   return true;
 }
