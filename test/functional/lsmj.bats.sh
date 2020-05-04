@@ -18,7 +18,7 @@ load _helper
 }
 
 @test "Output of \"docxbox lsm filename.docx --json\" contains information about the creation time and date" {
-  $BATS_TEST_DIRNAME/docxbox lsm test/functional/tmp/cp_table_unordered_list_images.docx --json | grep -c "\"created\": \"2017-08-02T11:09:18Z\""
+  "$BATS_TEST_DIRNAME"/docxbox lsm test/functional/tmp/cp_table_unordered_list_images.docx --json | grep -c "\"created\": \"2017-08-02T11:09:18Z\""
 }
 
 @test "Output of \"docxbox lsm filename.docx -j\" contains information about the creation time and date" {

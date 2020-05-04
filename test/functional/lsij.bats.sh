@@ -22,5 +22,5 @@ load _helper
 }
 
 @test "Output of \"docxbox lsi filename.docx -j\" are contained images as JSON" {
-  $BATS_TEST_DIRNAME/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx -j | grep -c "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx -j | grep -c "image1.jpeg"
 }
