@@ -87,21 +87,21 @@ std::string docx_fileList::RenderListsComparison(
   if (len_line_max < len_summary_right) len_line_max = len_summary_right;
 
   // Render headline
-  out += path_docx_left + ":";
+  out = "\n"
+      + path_docx_left + ":";
   out += RenderMargin(len_path_left, len_line_max);
-  out += gap;
-  out += path_docx_right + ":";
-  out += "\n\n";
+  out += gap + path_docx_right + ":\n\n";
 
   out += "   Length        Date  Time   Name";
   out += RenderMargin(34, len_line_max);
-  out += gap;
-  out += "   Length        Date  Time   Name\n";
+  out += gap + "   Length        Date  Time   Name\n";
 
   out += "---------  ---------- -----   ----";
-  out += RenderMargin(34, len_line_max);
+  out += helper::String::Repeat("-", len_line_max - 34);
   out += gap;
-  out += "---------  ---------- -----   ----\n";
+  out += "---------  ---------- -----   ----";
+  out += helper::String::Repeat("-", len_line_max - 34);
+  out += "\n";
 
   // Render file item lines
   while (index_total < amount_lines_total) {
@@ -146,6 +146,10 @@ std::string docx_fileList::RenderListsComparison(
     auto len_left = line_left.length();
     auto len_right = line_right.length();
 
+    if (0 == len_left && 0 == len_right) continue;
+
+    style_on_left = style_on_right = "";
+
     if ((IsFileItemLine(line_left) || IsFileItemLine(line_right))
         && AreFileInLinesDifferent(compare_content,
                                    path_extract_left,
@@ -153,43 +157,52 @@ std::string docx_fileList::RenderListsComparison(
                                    line_left,
                                    line_right)) {
       style_off = kAnsiReset;
+
       style_on_left = style_on_right = kAnsiReverse;
 
-      if (helper::String::IsWhiteSpace(line_left)) {
+      bool is_blank_left = helper::String::IsWhiteSpace(line_left);
+      bool is_blank_right = helper::String::IsWhiteSpace(line_right);
+
+      if (is_blank_left) {
         style_on_left = "";
+
+        if (!is_blank_right) style_on_right += kAnsiDim;
       }
 
-      if (helper::String::IsWhiteSpace(line_right)) {
+      if (is_blank_right) {
         style_on_right = "";
+
+        if (!is_blank_left) style_on_left += kAnsiDim;
       }
     }
 
-    out += style_on_left;
-    out += line_left;
+    out += style_on_left
+        + line_left;
     out += RenderMargin(len_left, len_line_max);
     out += style_off;
 
     out += gap;
 
-    out += style_on_right;
-    out += line_right;
+    out += style_on_right
+        + line_right;
     out += RenderMargin(len_right, len_line_max);
-    out += style_off;
-    out += "\n";
+    out += style_off + "\n";
 
     ++index_total;
   }
 
-  out += "---------                     -------";
-  out += RenderMargin(37, len_line_max);
-  out += gap;
-  out += "---------                     -------\n";
+  out += "---------                     -------"
+      + helper::String::Repeat("-", len_line_max - 37)
+      + gap
+      + "---------                     -------"
+      + helper::String::Repeat("-", len_line_max - 37)
+      + "\n";
 
-  out += summary_1;
-  out += RenderMargin(len_summary_1, len_line_max);
-  out += gap;
-  out += summary_2;
-  out += "\n";
+  out += summary_1
+      + RenderMargin(len_summary_1, len_line_max)
+      + gap
+      + summary_2
+      + "\n";
 
   delete archive;
 

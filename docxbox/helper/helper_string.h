@@ -21,6 +21,7 @@
 #include <vector>
 
 static const char *const kAnsiReverse = "\033[7m";
+static const char *const kAnsiDim = "\033[2m";
 static const char *const kAnsiReset = "\033[0m";
 
 namespace helper {
