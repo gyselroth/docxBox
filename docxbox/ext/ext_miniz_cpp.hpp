@@ -85,28 +85,27 @@ class miniz_cpp_ext {
     }
   }
 
-  // TODO(kay): change into non static,
-  //            clarify parameterization via constructor / default values
-  //            fix calling separately (twice) for getting files / summary
-  //              w/ getters than, needing only a single call
-  static std::string PrintDir(
+  std::string summary;
+
+  const std::string &GetSummary() const {
+    return summary;
+  }
+
+  std::string PrintDir(
       miniz_cpp::zip_file &docx_file,
       bool as_json = false,
       bool images_only = false,
       const std::string& filter_ending = "",
       const std::vector<std::string>& filter_filenames = {},
       bool output_directories = false,
-      bool files_only = false,
-      bool summary_only = false) {
+      bool files_only = false) {
     std::string out;
 
-    if (as_json) {
+    if (as_json)
       out += "[";
-    } else {
-      if (!files_only && !summary_only)
+    else if (!files_only)
         out += "   Length        Date  Time   Name\n"
                "---------  ---------- -----   ----\n";
-    }
 
     int index_file = 0;
 
@@ -135,38 +134,36 @@ class miniz_cpp_ext {
           continue;
       }
 
-      if (!summary_only) {
-        if (as_json) {
-          out += (index_file == 0 ? "" : ",");
+      if (as_json) {
+        out += (index_file == 0 ? "" : ",");
 
-          out += R"({"file":")" + member.filename + "\",";
+        out += R"({"file":")" + member.filename + "\",";
 
-          out += "\"length\":" + std::to_string(member.file_size) + ",";
+        out += "\"length\":" + std::to_string(member.file_size) + ",";
 
-          out += R"("date":")"
-              + std::to_string(member.date_time.month) + "/"
-              + std::to_string(member.date_time.day) + "/"
-              + std::to_string(member.date_time.year) + "\",";
+        out += R"("date":")"
+            + std::to_string(member.date_time.month) + "/"
+            + std::to_string(member.date_time.day) + "/"
+            + std::to_string(member.date_time.year) + "\",";
 
-          out += R"("time":")" + std::to_string(member.date_time.hours) + ":"
-                  + std::to_string(member.date_time.minutes) + "\"}";
-        } else {
-          int amount_digits = helper::Numeric::GetAmountDigits(member.file_size);
+        out += R"("time":")" + std::to_string(member.date_time.hours) + ":"
+                + std::to_string(member.date_time.minutes) + "\"}";
+      } else {
+        int amount_digits = helper::Numeric::GetAmountDigits(member.file_size);
 
-          if (amount_digits < 9)
-            out += helper::String::Repeat(" ", 9 - amount_digits);
+        if (amount_digits < 9)
+          out += helper::String::Repeat(" ", 9 - amount_digits);
 
-          out += std::to_string(member.file_size) + "  ";
+        out += std::to_string(member.file_size) + "  ";
 
-          out += std::to_string(member.date_time.month) + "/"
-                 + std::to_string(member.date_time.day) + "/"
-                 + std::to_string(member.date_time.year) + " ";
+        out += std::to_string(member.date_time.month) + "/"
+               + std::to_string(member.date_time.day) + "/"
+               + std::to_string(member.date_time.year) + " ";
 
-          out += std::to_string(member.date_time.hours) + ":"
-                 + std::to_string(member.date_time.minutes) + "     ";
+        out += std::to_string(member.date_time.hours) + ":"
+               + std::to_string(member.date_time.minutes) + "     ";
 
-          out += member.filename + "\n";
-        }
+        out += member.filename + "\n";
       }
 
       size_total += member.file_size;
@@ -176,22 +173,20 @@ class miniz_cpp_ext {
 
     if (as_json) return out + "]";
 
-    if (!files_only || summary_only) {
-      if (!summary_only) {
-        out += "---------                     -------\n";
-      }
+    if (!files_only) out += "---------                     -------\n";
 
-      int amount_digits = helper::Numeric::GetAmountDigits(size_total);
+    int amount_digits = helper::Numeric::GetAmountDigits(size_total);
 
-      if (amount_digits < 9)
-        out += helper::String::Repeat(" ", 9 - amount_digits);
+    if (amount_digits < 9)
+      summary = helper::String::Repeat(" ", 9 - amount_digits);
 
-      out += std::to_string(size_total) + "                     "
-          + std::to_string(index_file)
-          + " file" + (index_file == 1 ? "" : "s");
+    summary += std::to_string(size_total) + "                     "
+        + std::to_string(index_file)
+        + " file" + (index_file == 1 ? "" : "s");
 
-      if (!summary_only) out += "\n";
-    }
+    if (!files_only) out += summary;
+
+    out += "\n";
 
     return out;
   }

@@ -155,8 +155,13 @@ std::string docx_fileList::RenderListsComparison(
       style_off = kAnsiReset;
       style_on_left = style_on_right = kAnsiReverse;
 
-      if (helper::String::IsWhiteSpace(line_left)) style_on_left = "";
-      if (helper::String::IsWhiteSpace(line_right)) style_on_right = "";
+      if (helper::String::IsWhiteSpace(line_left)) {
+        style_on_left = "";
+      }
+
+      if (helper::String::IsWhiteSpace(line_right)) {
+        style_on_right = "";
+      }
     }
 
     out += style_on_left;

@@ -40,9 +40,9 @@ std::string docx_archive::InitExtractionPath(
                    + (path_extract_appendix.empty()
                      ? "-extracted"
                      : path_extract_appendix);
-  
+
   if (is_temporary) RememberTemporaryExtractionPath(path);
-  
+
   return path;
 }
 

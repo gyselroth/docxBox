@@ -33,11 +33,12 @@ class docx_fileList {
 
   static std::string RenderMargin(int len_str, int len_max);
 
-  static bool AreFileInLinesDifferent(bool compare_content,
-                                      const std::string &path_extract_left,
-                                      const std::string &path_extract_right,
-                                      const std::string &line_left,
-                                      const std::basic_string<char> &line_right);
+  static bool AreFileInLinesDifferent(
+      bool compare_content,
+      const std::string &path_extract_left,
+      const std::string &path_extract_right,
+      const std::string &line_left,
+      const std::basic_string<char> &line_right);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_FILELIST_H_

@@ -29,34 +29,24 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
       && helper::String::EndsWith(argv_[3], ".docx")
       && helper::File::FileExists(argv_[3]);
 
-  std::string files_list = miniz_cpp_ext::PrintDir(docx_file,
-                                                   as_json,
-                                                   images_only,
-                                                   file_ending,
-                                                   {},
-                                                   false,
-                                                   compare_two_docx);
+  auto miniz_ext = new miniz_cpp_ext();
+
+  std::string files_list = miniz_ext->PrintDir(
+      docx_file,
+      as_json, images_only, file_ending, {},
+      false, compare_two_docx);
 
   if (compare_two_docx) {
-    std::string files_summary = miniz_cpp_ext::PrintDir(docx_file,
-                                                        as_json,
-                                                        images_only,
-                                                        file_ending,
-                                                        {},
-                                                        false,
-                                                        false,
-                                                        true);
+    std::string kSummary1 = miniz_ext->GetSummary();
 
     ListFilesInDocxCompare(
-        as_json,
-        images_only,
-        file_ending,
-        files_list,
-        files_summary);
+        as_json, images_only, file_ending, files_list, kSummary1);
   } else {
-    // Output single DOCX files list
+    // Output files list of single DOCX
     std::cout << files_list;
   }
+
+  delete miniz_ext;
 
   return true;
 }
@@ -73,32 +63,25 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
 
   miniz_cpp::zip_file docx_file_2(path_docx_in_2);
 
-  std::string file_list_2 = miniz_cpp_ext::PrintDir(docx_file_2,
-                                                    as_json,
-                                                    images_only,
-                                                    file_ending,
-                                                    {},
-                                                    false,
-                                                    true);
+  auto miniz_ext = new miniz_cpp_ext();
 
-  std::string summary_2 = miniz_cpp_ext::PrintDir(docx_file_2,
-                                                    as_json,
-                                                    images_only,
-                                                    file_ending,
-                                                    {},
-                                                    false,
-                                                    false,
-                                                    true);
+  std::string file_list_2 = miniz_ext->PrintDir(docx_file_2,
+                                                as_json,
+                                                images_only,
+                                                file_ending,
+                                                {},
+                                                false,
+                                                true);
+
+  std::string summary_2 = miniz_ext->GetSummary();
 
   std::cout << docx_fileList::RenderListsComparison(
-      file_list_1,
-      summary_1,
-      file_list_2,
-      summary_2,
-      8,
-      true,
-      path_docx_in_,
-      path_docx_in_2);
+      file_list_1, summary_1,
+      file_list_2, summary_2,
+      8, true,
+      path_docx_in_, path_docx_in_2);
+
+  delete miniz_ext;
 }
 
 // List contained images and their attributes
@@ -109,8 +92,11 @@ bool docx_archive_list::ListImageFilesInDocx(bool as_json) {
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
-  std::cout
-      << miniz_cpp_ext::PrintDir(docx_file, false, true);
+  auto miniz_ext = new miniz_cpp_ext();
+
+  std::cout << miniz_ext->PrintDir(docx_file, false, true);
+
+  delete miniz_ext;
 
   return true;
 }
@@ -133,9 +119,13 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
   miniz_cpp::zip_file docx_file(path_docx_in_);
   auto file_list = docx_file.infolist();
 
-  if (!filenames.empty())
-    std::cout
-      << miniz_cpp_ext::PrintDir(docx_file, as_json, false, "", filenames);
+  if (!filenames.empty()) {
+    auto miniz_ext = new miniz_cpp_ext();
+
+    std::cout << miniz_ext->PrintDir(docx_file, as_json, false, "", filenames);
+
+    delete miniz_ext;
+  }
 
   return true;
 }
