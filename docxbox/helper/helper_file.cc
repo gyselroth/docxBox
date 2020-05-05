@@ -1,23 +1,24 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/helper/helper_file.h>
 
 namespace helper {
 
-bool File::IsDirectory(const std::string& file_path) {
+bool File::IsDirectory(const std::string& path) {
   struct stat buffer;
 
-  stat(file_path.c_str(), &buffer);
+  stat(path.c_str(), &buffer);
 
   return S_ISDIR(buffer.st_mode);
 }
 
-bool File::FileExists(const std::string &name) {
-  return access(name.c_str(), F_OK) != -1;
+bool File::FileExists(const std::string &path_file) {
+  return access(path_file.c_str(), F_OK) != -1;
 }
 
-std::string File::GetFileContents(const std::string &filename) {
-  std::ifstream file(filename);
+std::string File::GetFileContents(const std::string &path_file) {
+  std::ifstream file(path_file);
 
   return GetFileContents(file);
 }
@@ -34,6 +35,31 @@ std::string File::GetFileContents(std::ifstream &file) {
   file.close();
 
   return str;
+}
+
+u_int32_t File::GetLongestLineLength(const std::string &path_file_1,
+                                     const std::string &path_file_2,
+                                     bool ensure_files_exist) {
+  u_int32_t len_1 = 0;
+
+  if (!ensure_files_exist || FileExists(path_file_1)) {
+    std::string contents = GetFileContents(path_file_1);
+    std::vector<std::string> lines = helper::String::Explode(contents, '\n');
+
+    len_1 = helper::String::GetMaxLength(lines);
+  }
+
+  if (!path_file_2.empty()
+      && (!ensure_files_exist || FileExists(path_file_2))) {
+    std::string contents = GetFileContents(path_file_2);
+    std::vector<std::string> lines = helper::String::Explode(contents, '\n');
+
+    auto len_2 = helper::String::GetMaxLength(lines);
+
+    if (len_2 > len_1) return len_2;
+  }
+
+  return len_1;
 }
 
 // Resolve path: keep absolute or make relative from given (binary) path
@@ -66,13 +92,13 @@ std::streampos File::GetFileSize(std::ifstream &file) {
 }
 
 bool File::WriteToNewFile(
-    const std::string &filename,
+    const std::string &path_file,
     const std::string &content) {
-  std::ofstream outfile(filename);
+  std::ofstream outfile(path_file);
   outfile << content;
   outfile.close();
 
-  return File::FileExists(filename);
+  return File::FileExists(path_file);
 }
 
 void File::CopyFile(
@@ -91,8 +117,57 @@ void File::CopyFile(
   close(dest);
 }
 
-bool File::Remove(const char *file_path) {
-  return remove(file_path) == 0;
+bool File::Remove(const char *path) {
+  return remove(path) == 0;
+}
+
+bool File::RemoveRecursive(const char *path) {
+  if (!IsDirectory(path)) return Remove(path);
+
+  DIR *d = opendir(path);
+  size_t path_len = strlen(path);
+
+  int result = -1;
+
+  if (d) {
+    struct dirent *p;
+
+    result = 0;
+    while (!result && (p=readdir(d))) {
+      int r2 = -1;
+      char *buffer;
+      size_t len;
+
+      if (!strcmp(p->d_name, ".") || !strcmp(p->d_name, ".."))
+        continue;
+
+      len = path_len + strlen(p->d_name) + 2;
+      buffer = static_cast<char *>(malloc(len));
+
+      if (buffer) {
+        struct stat stat_buffer{};
+
+        snprintf(buffer, len, "%s/%s", path, p->d_name);
+
+        if (!stat(buffer, &stat_buffer)) {
+          if (S_ISDIR(stat_buffer.st_mode))
+            r2 = RemoveRecursive(buffer);
+          else
+            r2 = unlink(buffer);
+        }
+
+        free(buffer);
+      }
+
+      result = r2;
+    }
+
+    closedir(d);
+  }
+
+  if (!result) result = rmdir(path);
+
+  return result;
 }
 
 std::string File::GetLastPathSegment(std::string path) {
@@ -105,20 +180,20 @@ std::string File::GetLastPathSegment(std::string path) {
   return path;
 }
 
-std::vector<std::string> File::ScanDir(const char *pathname) {
+std::vector<std::string> File::ScanDir(const char *path) {
   struct dirent **namelist;
   int filecount;
 
   std::vector<std::string> files;
 
-  filecount = scandir(pathname, &namelist, nullptr, alphasort);
+  filecount = scandir(path, &namelist, nullptr, alphasort);
 
   if (filecount > 0) {
     for (int i = 0; i < filecount; i++) {
       std::string path_file;
 
       if (namelist[i]->d_name[0] != '.') {
-        path_file += pathname;
+        path_file += path;
         path_file  += "/";
         path_file  += namelist[i]->d_name;
 
@@ -137,7 +212,7 @@ std::vector<std::string> File::ScanDir(const char *pathname) {
 }
 
 std::vector<std::string> File::ScanDirRecursive(
-    const char *pathname,
+    const char *path,
     std::vector<std::string> files,
     const std::string& remove_prefix
 ) {
@@ -146,14 +221,14 @@ std::vector<std::string> File::ScanDirRecursive(
 
   bool do_remove_prefix = !remove_prefix.empty();
 
-  filecount = scandir(pathname, &namelist, nullptr, alphasort);
+  filecount = scandir(path, &namelist, nullptr, alphasort);
 
   if (filecount > 0) {
     for (int i = 0; i < filecount; i++) {
       std::string path_file;
 
       if (namelist[i]->d_name[0] != '.') {
-        path_file += pathname;
+        path_file += path;
         path_file  += "/";
         path_file  += namelist[i]->d_name;
 

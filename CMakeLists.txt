@@ -7,7 +7,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 set (VERSION_MAJOR "0")
 set (VERSION_MINOR "0")
-set (VERSION_PATCH "3")
+set (VERSION_PATCH "4")
 
 # configure config.h to be generated from config.h.in,
 # with injected version number
@@ -29,24 +29,31 @@ add_executable(docxbox
         docxbox/app/app_help.h
 
         docxbox/docx/docx_archive.cc
+        docxbox/docx/docx_archive_list.cc
+        docxbox/docx/docx_archive_replace.cc
+
         docxbox/docx/docx_contentTypes.cc
+        docxbox/docx/docx_fileList.cc
         docxbox/docx/docx_fontTable.cc
         docxbox/docx/docx_meta.cc
 
-        docxbox/docx/wml_renderer/docx_wml_renderer.cc
-        docxbox/docx/wml_renderer/docx_wml_renderer_table.cc
+        docxbox/docx/renderer/docx_renderer.cc
+        docxbox/docx/renderer/docx_renderer_image.cc
+        docxbox/docx/renderer/docx_renderer_table.cc
 
         docxbox/docx/xml/docx_xml.cc
-        docxbox/docx/xml/docx_xml_fields.cc
+        docxbox/docx/xml/docx_xml_field.cc
         docxbox/docx/xml/docx_xml_indent.cc
         docxbox/docx/xml/docx_xml_lorem.cc
         docxbox/docx/xml/docx_xml_to_plaintext.cc
         docxbox/docx/xml/docx_xml_remove.cc
         docxbox/docx/xml/docx_xml_replace.cc
 
+        docxbox/helper/helper_cli.cc
         docxbox/helper/helper_dateTime.cc
         docxbox/helper/helper_file.cc
         docxbox/helper/helper_string.cc
         docxbox/helper/helper_numeric.cc
 
+        vendor/miniz-cpp/zip_file.hpp
         vendor/tinyxml2/tinyxml2.cpp)

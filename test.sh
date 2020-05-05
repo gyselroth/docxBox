@@ -1,11 +1,11 @@
 #!/bin/bash
 
-########################################################################################################################
-# Run functional tests written with bats - https://github.com/sstephenson/bats                                         #
-#                                                                                                                      #
-# Install bats on Linux: sudo apt-get install bats                                                                     #
-# Install bats on Mac: brew install bats                                                                               #
-########################################################################################################################
+################################################################################
+# Run functional tests written with bats - https://github.com/sstephenson/bats #
+#                                                                              #
+# Install bats on Linux: sudo apt-get install bats                             #
+# Install bats on Mac: brew install bats                                       #
+################################################################################
 
 START_TIME=$SECONDS
 
@@ -52,7 +52,7 @@ printf "\n\033[4mTest replacing text in DOCX\033[0m\n"
 bats ./test/functional/rpt.bats.sh
 
 printf "\n\033[4mTest removing text between (and including) given strings in DOCX\033[0m\n"
-bats ./test/functional/rem.bats.sh
+bats ./test/functional/rmt.bats.sh
 
 printf "\n\033[4mTest modyfing or setting meta attributes in DOCX\033[0m\n"
 bats ./test/functional/mm.bats.sh
@@ -70,7 +70,7 @@ printf "\n\033[4mTest unziping only media files from DOCX\033[0m\n"
 bats ./test/functional/uzm.bats.sh
 
 printf "\n\033[4mTest creating (zip) DOCX from files\033[0m\n"
-bats ./test/functional/zip.bats.sh
+bats ./test/functional/zp.bats.sh
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
 printf "\nDone. Bats tests ran for $ELAPSED_TIME seconds.\n\n";

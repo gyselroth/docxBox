@@ -1,9 +1,11 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #ifndef DOCXBOX_DOCX_DOCX_META_H_
 #define DOCXBOX_DOCX_DOCX_META_H_
 
 #include <docxbox/app/app_argument.h>
+#include <docxbox/helper/helper_dateTime.h>
 #include <docxbox/helper/helper_string.h>
 #include <docxbox/docx/xml/docx_xml.h>
 
@@ -63,6 +65,8 @@ class docx_meta {
 
   Attribute GetAttribute() const;
 
+  const std::string &GetValue() const;
+
   void SetAttribute(Attribute attribute);
   void SetValue(const std::string &value);
 
@@ -71,6 +75,8 @@ class docx_meta {
 
   void LoadCoreXml(const std::string& path);
   bool SaveCoreXml();
+
+  static bool IsDateAttribute(Attribute);
 
   std::string FetchAttributeFromAppXml(
       const char* tag_name,

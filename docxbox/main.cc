@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/app/app.h>
 #include <docxbox/helper/helper_dateTime.h>
@@ -11,7 +12,7 @@ int main(int argc, char **argv) {
   // Process command arguments, display help if no valid command given
   auto *app = new docxbox::App(argc, argv);
 
-  bool success = argc > 1 ? app->Process() : true;
+  bool success = argc > 1 ? app->Process() : false;
 
   delete app;
 

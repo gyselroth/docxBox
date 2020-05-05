@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/helper/helper_dateTime.h>
 
@@ -23,7 +24,16 @@ std::string DateTime::GetCurrentDateTimeFormatted(const char *format) {
 // @return dateTime in ISO 8601 format, e.g. "1994-11-05T13:15:30Z"
 // @see ISO-8601 https://www.w3.org/TR/NOTE-datetime
 std::string DateTime::GetCurrentDateTimeInIso8601() {
-  return GetCurrentDateTimeFormatted(kFormatIso8601);
+  return GetCurrentDateTimeFormatted(kFormatIso8601DateTime);
+}
+
+// Verify given string being ISO8601 date. Ex: 2016-02-22T10:31:00Z
+bool DateTime::IsIso8601Date(const std::string &str) {
+  if (str.empty()) return false;
+
+  std::regex pattern(kRegExIso8601DateTime);
+
+  return std::regex_match (str, pattern);
 }
 
 }  // namespace helper

@@ -1,6 +1,10 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/helper/helper_string.h>
+
+#include <iostream>
+#include <iterator>
 
 namespace helper {
 
@@ -9,14 +13,36 @@ bool String::StartsWith(const char *str, const char *prefix) {
   return 0 == strncmp(str, prefix, strlen(prefix));
 }
 
+bool String::StartsNumeric(const char *str) {
+  return isdigit(str[0]);
+}
+
 // Check whether given string ends w/ given string
 bool String::EndsWith(std::string const &value, std::string const &ending) {
   return ending.size() <= value.size()
       && std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
 
+bool String::IsAnyOf(
+    const std::string& str,
+    std::vector<std::string> endings) {
+  uint16_t amount_endings = endings.size();
+
+  for (int i = 0; i < amount_endings; ++i) {
+    if (str == endings[i]) return true;
+  }
+
+  return false;
+}
+
 bool String::Contains(const std::string &haystack, const char *needle) {
   return std::string::npos != haystack.find(needle);
+}
+
+bool String::IsWhiteSpace(const std::string &str) {
+  for (char c : str) if (c != ' ') return false;
+
+  return true;
 }
 
 void String::Replace(
@@ -87,6 +113,22 @@ std::string String::GetSubStrBetween(
   return GetSubStrBetween(str, lhs, rhs, offset);
 }
 
+int String::OffsetChar(const std::string &str, char c, int offset) {
+  char ch;
+
+  int16_t len = str.length();
+
+  do {
+    ch = str[offset];
+
+    if (ch == c) return offset;
+
+    ++offset;
+  } while (offset < len);
+
+  return -1;
+}
+
 // Split given string by given character delimiter into vector of strings
 std::vector<std::string> String::Explode(
     std::string const &str,
@@ -98,6 +140,66 @@ std::vector<std::string> String::Explode(
     result.push_back(std::move(token));
 
   return result;
+}
+
+std::string String::GetTrailingWord(std::string str) {
+  if (str.empty() || !Contains(str, " ")) return str;
+
+  Trim(str);
+
+  while (Contains(str, "  ")) ReplaceAll(str, "  ", " ");
+
+  auto words = Explode(str, ' ');
+
+  return words[words.size() - 1];
+}
+
+std::string String::Implode(
+    std::vector<std::string> strings,
+    const char* const delimiter) {
+  std::ostringstream imploded;
+
+  std::copy(
+      strings.begin(),
+      strings.end(),
+      std::ostream_iterator<std::string>(imploded, delimiter));
+
+  return imploded.str();
+}
+
+std::string String::RenderTwoColumns(
+    std::string col_1, std::string col_2, int amount_gap) {
+  auto lines_1 = Explode(col_1, '\n');
+  auto lines_2 = Explode(col_2, '\n');
+
+  std::string gap = Repeat(" ", amount_gap);
+
+  int len_longest_line = GetMaxLength(lines_1);
+
+  std::string out;
+
+  int amount_lines_2 = lines_2.size();
+
+  int index = 0;
+
+  for (const auto& line : lines_1) {
+    out += line;
+
+    uint16_t len_line_1 = line.length();
+
+    if (len_line_1 < len_longest_line)
+      out += Repeat(" ", len_longest_line - len_line_1);
+
+    out += gap;
+
+    if (amount_lines_2 >= index) out += lines_2[index];
+
+    out += "\n";
+
+    ++index;
+  }
+
+  return out;
 }
 
 // Trim from start (in place)

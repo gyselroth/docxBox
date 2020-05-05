@@ -1,7 +1,16 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
+
+#ifndef DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
+#define DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
+
+#include <docxbox/docx/xml/docx_xml_indent.h>
+
+#include <memory>
+#include <string>
+#include <vector>
 
 #include <vendor/miniz-cpp/zip_file.hpp>
-#include <docxbox/docx/xml/docx_xml_indent.h>
 
 // Static extension methods to miniz-cpp
 
@@ -45,7 +54,7 @@ class miniz_cpp_ext {
         // Move all other (=media) files into root of extraction directory
         std::string path_extract_file =
             path_extract + "/"
-                + helper::File::GetLastPathSegment(file_in_zip.filename);
+            + helper::File::GetLastPathSegment(file_in_zip.filename);
 
         rename(path_file_absolute.c_str(), path_extract_file.c_str());
       }
@@ -68,9 +77,7 @@ class miniz_cpp_ext {
         for (int i = amount_directories - 1; i > 0; i--) {
           std::string path_remove = path_extract;
 
-          for (int j = 0; j < i; j++) {
-            path_remove += "/" + directories[j];
-          }
+          for (int j = 0; j < i; j++) path_remove += "/" + directories[j];
 
           helper::File::Remove(path_remove.c_str());
         }
@@ -78,28 +85,20 @@ class miniz_cpp_ext {
     }
   }
 
-  static bool RemoveExtract(const std::string &path_extract,
-                            const std::vector<miniz_cpp::zip_info> &file_list) {
-    // Remove all files
-    for (const auto &file_in_zip : file_list)
-      helper::File::Remove(
-          std::string(path_extract + "/" + file_in_zip.filename).c_str());
-
-    RemoveSubDirectories(path_extract, file_list);
-
-    return helper::File::Remove(path_extract.c_str());
-  }
-
-  static void PrintDir(
+  static std::string PrintDir(
       miniz_cpp::zip_file &docx_file,
       bool as_json = false,
-      bool images_only = false) {
+      bool images_only = false,
+      const std::string& filter_ending = "",
+      const std::vector<std::string>& filter_filenames = {},
+      bool output_directories = false) {
+    std::string out;
+
     if (as_json) {
-      std::cout << "[";
+      out += "[";
     } else {
-      std::cout
-          << "   Length        Date  Time   Name\n"
-          << "---------  ---------- -----   ----\n";
+      out += "   Length        Date  Time   Name\n"
+             "---------  ---------- -----   ----\n";
     }
 
     int index_file = 0;
@@ -111,39 +110,54 @@ class miniz_cpp_ext {
     std::vector<std::string> dates;
     std::vector<std::string> times;
 
+    auto filter_by_ending = !filter_ending.empty();
+    auto filter_by_filenames = !filter_filenames.empty();
+
     for (auto &member : docx_file.infolist()) {
-      if (images_only && !helper::File::IsWordCompatibleImage(member.filename))
+      if (!output_directories && helper::String::EndsWith(member.filename, "/"))
         continue;
 
+      if (filter_by_filenames) {
+        if (!helper::String::IsAnyOf(member.filename, filter_filenames))
+          continue;
+      } else {
+        if ((images_only
+             && !helper::File::IsWordCompatibleImage(member.filename))
+            || (filter_by_ending
+                && !helper::String::EndsWith(member.filename, filter_ending)))
+          continue;
+      }
+
       if (as_json) {
-        std::cout
-            << (index_file == 0 ? "" : ",") << "{"
-            << R"("file":")" << member.filename << "\","
-            << R"("length":)" << member.file_size << ","
-            << R"("date":")"
-            << member.date_time.month << "/"
-            << member.date_time.day << "/" << member.date_time.year
-            << "\","
-            << R"("time":")"
-            << member.date_time.hours << ":" << member.date_time.minutes << "\""
-            << "}";
+        out += (index_file == 0 ? "" : ",");
+
+        out += R"({"file":")" + member.filename + "\",";
+
+        out += "\"length\":" + std::to_string(member.file_size) + ",";
+
+        out += R"("date":")"
+            + std::to_string(member.date_time.month) + "/"
+            + std::to_string(member.date_time.day) + "/"
+            + std::to_string(member.date_time.year) + "\",";
+
+        out += R"("time":")" + std::to_string(member.date_time.hours) + ":"
+                + std::to_string(member.date_time.minutes) + "\"}";
       } else {
         int amount_digits = helper::Numeric::GetAmountDigits(member.file_size);
 
         if (amount_digits < 9)
-          std::cout << helper::String::Repeat(" ", 9 - amount_digits);
+          out += helper::String::Repeat(" ", 9 - amount_digits);
 
-        std::cout
-            << member.file_size << "  "
+        out += std::to_string(member.file_size) + "  ";
 
-            << member.date_time.month << "/"
-            << member.date_time.day << "/"
-            << member.date_time.year << " "
+        out += std::to_string(member.date_time.month) + "/"
+               + std::to_string(member.date_time.day) + "/"
+               + std::to_string(member.date_time.year) + " ";
 
-            << member.date_time.hours << ":"
-            << member.date_time.minutes << "     "
+        out += std::to_string(member.date_time.hours) + ":"
+               + std::to_string(member.date_time.minutes) + "     ";
 
-            << member.filename << "\n";
+        out += member.filename + "\n";
       }
 
       size_total += member.file_size;
@@ -151,21 +165,20 @@ class miniz_cpp_ext {
       index_file++;
     }
 
-    if (as_json) {
-      std::cout << "]";
-    } else {
-      std::cout << "---------                     -------\n";
+    if (as_json) return out + "]";
 
-      int amount_digits = helper::Numeric::GetAmountDigits(size_total);
+    out += "---------                     -------\n";
 
-      if (amount_digits < 9)
-        std::cout << helper::String::Repeat(" ", 9 - amount_digits);
+    int amount_digits = helper::Numeric::GetAmountDigits(size_total);
 
-      std::cout
-          << size_total << "                     "
-          << index_file << " file" << (index_file == 1 ? "" : "s")
-          << "\n";
-    }
+    if (amount_digits < 9)
+      out += helper::String::Repeat(" ", 9 - amount_digits);
+
+    out += std::to_string(size_total) + "                     "
+             + std::to_string(index_file)
+             + " file" + (index_file == 1 ? "" : "s") + "\n";
+
+    return out;
   }
 
   // Indent all contained XML files
@@ -173,7 +186,9 @@ class miniz_cpp_ext {
       const std::string &path_extract,
       const std::vector<miniz_cpp::zip_info> &file_list) {
     for (const auto& file_in_zip : file_list) {
-      if (!helper::String::EndsWith(file_in_zip.filename, ".xml")) continue;
+      if (!helper::String::EndsWith(file_in_zip.filename, ".xml")
+          && !helper::String::EndsWith(file_in_zip.filename, ".xml.rels"))
+        continue;
 
       if (!docx_xml_indent::IndentXml(
           path_extract + "/" + file_in_zip.filename)) return false;
@@ -182,3 +197,5 @@ class miniz_cpp_ext {
     return true;
   }
 };
+
+#endif  // DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_

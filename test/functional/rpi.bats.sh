@@ -5,7 +5,7 @@ load _helper
 @test "Output of \"docxbox rpi {missing filename}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox rpi
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX" = "${lines[0]}" ]
+  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox rpi filename.docx {missing argument}\" is an error message" {

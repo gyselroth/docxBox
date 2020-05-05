@@ -10,7 +10,7 @@ load _helper
 @test "Output of \"docxbox lsij {missing argument}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox lsij
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox lsij filename.docx\" is contained images as JSON" {
@@ -22,5 +22,5 @@ load _helper
 }
 
 @test "Output of \"docxbox lsi filename.docx -j\" are contained images as JSON" {
-  $BATS_TEST_DIRNAME/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx -j | grep -c "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx -j | grep -c "image1.jpeg"
 }

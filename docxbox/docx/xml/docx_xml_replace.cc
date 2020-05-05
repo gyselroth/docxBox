@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/docx_xml_replace.h>
-#include <docxbox/docx/wml_renderer/docx_wml_renderer_table.h>
 
 docx_xml_replace::docx_xml_replace(
     int argc,
@@ -13,7 +13,7 @@ docx_xml_replace::docx_xml_replace(
 // 2. A string containing JSON: will be interpreted for rendering word markup,
 //   which will than replace the <w:r> that contained the <w:t> node,
 //   which contained the search-string
-bool docx_xml_replace::ReplaceStringInXml(
+bool docx_xml_replace::ReplaceInXml(
     const std::string& path_xml,
     const std::string& search,
     const std::string& replacement,
@@ -45,10 +45,10 @@ bool docx_xml_replace::ReplaceStringInXml(
 
     try {
       // Render and inject markup before body
-      std::string xml_insert =
-          docx_wml_renderer_table::RenderTableMarkup(replacement) + "<w:body>";
-
-        helper::String::ReplaceAll(doc_xml, "<w:body>", xml_insert);
+      helper::String::ReplaceAll(
+          doc_xml,
+          "<w:body>",
+          RenderMarkupFromJson(replacement) + "<w:body>");
     } catch (std::string &message) {
       std::cerr << message;
 
@@ -66,8 +66,8 @@ bool docx_xml_replace::ReplaceStringInXml(
     replacement_xml_element_ =
         doc.FirstChildElement()->FirstChildElement("w:r");
 
-  tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")
-      ->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body =
+      doc.FirstChildElement("w:document")->FirstChildElement("w:body");
 
   if (replace_segmented) {
     do {
@@ -228,4 +228,17 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
 
     ReplaceOrLocateStringInXml(sub_node, search, replacement);
   } while ((sub_node = sub_node->NextSiblingElement()));
+}
+
+std::string docx_xml_replace::RenderMarkupFromJson(const std::string& json) {
+  auto type = docx_renderer::DetectElementType(json);
+
+  switch (type) {
+    case docx_renderer::Element_Image:
+      return docx_renderer_image::RenderMarkup(argc_, argv_, json);
+    case docx_renderer::Element_Table:
+      return docx_renderer_table::RenderMarkup(argc_, argv_, json);
+    case docx_renderer::Element_None:default:
+      throw "Invalid markup config, failed to identify element type.";
+  }
 }

@@ -1,8 +1,12 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #ifndef DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
 #define DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
 
+#include <docxbox/docx/renderer/docx_renderer.h>
+#include <docxbox/docx/renderer/docx_renderer_image.h>
+#include <docxbox/docx/renderer/docx_renderer_table.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
@@ -17,7 +21,7 @@ class docx_xml_replace:docx_xml {
  public:
   docx_xml_replace(int argc, char **argv);
 
-  bool ReplaceStringInXml(
+  bool ReplaceInXml(
       const std::string& path_xml,
       const std::string& search,
       const std::string& replacement,
@@ -55,6 +59,8 @@ class docx_xml_replace:docx_xml {
                                          const std::string &replacement);
 
   void ReplaceRunsByXmlElement();
+
+  std::string RenderMarkupFromJson(const std::string& json);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_

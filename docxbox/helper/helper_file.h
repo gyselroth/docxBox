@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #ifndef DOCXBOX_HELPER_HELPER_FILE_H_
 #define DOCXBOX_HELPER_HELPER_FILE_H_
@@ -22,10 +23,10 @@
 namespace helper {
 namespace File {
 
-extern bool IsDirectory(const std::string& file_path);
+extern bool IsDirectory(const std::string& path);
 
 // Check whether given file exists
-extern bool FileExists(const std::string &name);
+extern bool FileExists(const std::string &path_file);
 
 // Resolve path: keep absolute or make relative from given (binary) path
 extern std::string ResolvePath(
@@ -35,24 +36,29 @@ extern std::string ResolvePath(
 
 extern std::streampos GetFileSize(std::ifstream &file);
 
-extern std::string GetFileContents(const std::string &filename);
+extern std::string GetFileContents(const std::string &path_file);
 extern std::string GetFileContents(std::ifstream &file);
 
+extern u_int32_t GetLongestLineLength(const std::string &path_file_1,
+                                      const std::string &path_file_2 = "",
+                                      bool ensure_files_exist = false);
+
 extern bool WriteToNewFile(
-    const std::string &filename,
+    const std::string &path_file,
     const std::string &content);
 
 extern void CopyFile(
     const std::string &path_image_original,
     const std::string &path_image_replacement);
 
-extern bool Remove(const char *file_path);
+extern bool Remove(const char *path);
+extern bool RemoveRecursive(const char *file_path);
 
 extern std::string GetLastPathSegment(std::string path);
 
-extern std::vector<std::string> ScanDir(const char *pathname);
+extern std::vector<std::string> ScanDir(const char *path);
 extern std::vector<std::string> ScanDirRecursive(
-    const char *pathname,
+    const char *path,
     std::vector<std::string> files,
     const std::string& remove_prefix = "");
 

@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/docx_xml_remove.h>
 
@@ -30,7 +31,7 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(
   if (!nodes_to_be_removed_.empty()
       && found_lhs_
       && found_rhs_) {
-    RemoveNodes();
+    RemoveNodes(nodes_to_be_removed_);
 
     if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
       std::cerr << "Error - Failed saving: " << path_xml << "\n";
@@ -88,15 +89,22 @@ void docx_xml_remove::LocateNodesBetweenText(
       && (sub_node = sub_node->NextSiblingElement()));
 }
 
+// TODO(kay): add removal based on segmented texts
 
-void docx_xml_remove::RemoveNodes() {
-  for (auto node : nodes_to_be_removed_) {
+bool docx_xml_remove::RemoveNodes(std::vector<tinyxml2::XMLElement*> nodes) {
+  int amount_removed = 0;
+
+  for (auto node : nodes) {
     if (nullptr == node) continue;
 
     tinyxml2::XMLNode *kParent = node->Parent();
 
-    if (kParent) kParent->DeleteChild(node);
-  }
-}
+    if (kParent) {
+      kParent->DeleteChild(node);
 
-// TODO(kay): add removal based on segmented texts
+      ++amount_removed;
+    }
+  }
+
+  return amount_removed > 0;
+}

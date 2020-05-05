@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/app/app_help.h>
 
@@ -19,6 +20,9 @@ bool AppHelp::PrintHelp(bool with_title,
                         AppCommands::Commands command,
                         const std::string &command_identifier) {
   switch (command) {
+    case AppCommands::Command_ExecuteUserCommand:
+      return PrintHelpOnUserCommand();
+    case AppCommands::Command_FileDiff:return PrintHelpOnDiff();
     case AppCommands::Command_Help:return PrintOverview(true);
 
     case AppCommands::Command_GetPlainText:
@@ -35,17 +39,24 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_ListFontsAsJson:
     case AppCommands::Command_ListFonts:return PrintHelpOnListFonts(true);
 
-    case AppCommands::Command_ListMergeFields:
-    case AppCommands::Command_ListMergeFieldsAsJson:
+    case AppCommands::Command_ListFields:
+    case AppCommands::Command_ListFieldsAsJson:
       return PrintHelpOnListMergeFields(true);
 
     case AppCommands::Command_ListMeta:
     case AppCommands::Command_ListMetaAsJson:return PrintHelpOnListMeta(true);
 
+    case AppCommands::Command_LocateFilesContaining:
+    case AppCommands::Command_LocateFilesContainingAsJson:
+      return PrintHelpOnLocateFilesContaining();
+
     case AppCommands::Command_LoremIpsum:return PrintHelpOnLoremIpsum();
 
     case AppCommands::Command_RemoveBetweenText:
       return PrintHelpOnRemoveBetweenText();
+
+    case AppCommands::Command_SetFieldValue:
+      return PrintHelpOnSetFieldValue();
 
     case AppCommands::Command_ModifyMeta:return PrintHelpOnModifyMeta();
     case AppCommands::Command_ReplaceImage:return PrintHelpOnReplaceImage();
@@ -57,7 +68,8 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_UnzipMedia:
       return PrintHelpOnUnzip(false, true, false);
     case AppCommands::Command_Version:return PrintHelpOnVersion();
-    case AppCommands::Command_Zip:return PrintHelpOnZip();
+    case AppCommands::Command_Zip:return PrintHelpOnZip(true);
+    case AppCommands::Command_ZipCompressed:return PrintHelpOnZip(false);
     case AppCommands::Command_Invalid:
       if (!command_identifier.empty()) {
         std::cerr << "Unknown command: " << command_identifier << ".\n\n";
@@ -75,43 +87,59 @@ bool AppHelp::PrintHelp(bool with_title,
 
 bool AppHelp::PrintOverview(bool with_title) {
   if (with_title)
-    std::cout << "Usage: docxbox <command> [args]" << "\n\nAvailable commands:";
+    std::cout
+      << "docxBox v" << DOCXBOX_VERSION_MAJOR << "."
+      << DOCXBOX_VERSION_MINOR << "." << DOCXBOX_VERSION_PATCH
+      << " - Usage: docxbox <command> [args]" << "\n\n"
+      "Available commands:\n";
 
-  std::cout << "\n  1. List DOCX contents:"
-            << "\n    ls         - Output list of files in DOCX"
-            << "\n    lsj        - Output list of files in DOCX as JSON"
-            << "\n    lsf        - Output list of fonts in DOCX"
-            << "\n    lsd        - Output list of fields in DOCX"
-            << "\n    lsdj       - Output list of fields in DOCX as JSON"
-            << "\n    lsfj       - Output list of fonts in DOCX as JSON"
-            << "\n    lsi        - Output list of images in DOCX"
-            << "\n    lsij       - Output list of images in DOCX as JSON"
-            << "\n    lsm        - Output DOCX meta of data"
-            << "\n    lsmj       - Output DOCX meta data as JSON"
-            << "\n"
-            << "\n  2. Manipulate DOCX document:"
-            << "\n    rpi        - Replace image in DOCX"
-            << "\n    rpt        - Replace text in DOCX"
-            << "\n    rem        - Remove DOCX content between given strings"
-            << "\n    mm         - Modify or set meta attribute in DOCX"
-            << "\n    lorem      - Replace all text by random dummy text"
-            << "\n"
-            << "\n  3. Convert DOCX:"
-            << "\n    txt        - Output DOCX document as plaintext"
-            << "\n"
-            << "\n  4. Extract and create DOCX:"
-            << "\n    uz         - Unzip files from DOCX"
-            << "\n    uzi        - Unzip DOCX and indent XML files"
-            << "\n    uzm        - Unzip only media files from DOCX"
-            << "\n    zip        - Create (zip) DOCX from files"
-            << "\n"
-            << "\n  5. Meta commands:"
-            << "\n    h          - Help: Describe usage of this program"
-            << "\n    v          - Version: Output version number"
-            << "\n\n"
-            << "Type 'docxbox help <command>' "
-               "for more help on a specific command."
-            << "\n\n";
+  std::string column_1 =
+      "\n  List DOCX contents:"
+      "\n    ls    - Output list of files in DOCX"
+      "\n    lsj   - Output list of files in DOCX as JSON"
+      "\n    lsf   - Output list of fonts in DOCX"
+      "\n    lsfj  - Output list of fonts in DOCX as JSON"
+      "\n    lsd   - Output list of fields in DOCX"
+      "\n    lsdj  - Output list of fields in DOCX as JSON"
+      "\n    lsi   - Output list of images in DOCX"
+      "\n    lsij  - Output list of images in DOCX as JSON"
+      "\n    lsl   - Output list of files containing given string"
+      "\n    lsm   - Output DOCX meta of data"
+      "\n    lsmj  - Output DOCX meta data as JSON"
+      "\n"
+      "\n  Convert and compare DOCX:"
+      "\n    txt   - Output DOCX document as plaintext"
+      "\n    diff  - Side-by-side compare file from two DOCX "
+      "archives"
+      "\n"
+      "\n  Meta commands:"
+      "\n    h     - Help: Describe usage of this program"
+      "\n    v     - Version: Output version number"
+      "\n\n"
+      "Type 'docxbox help <command>' "
+      "for more help on a specific command."
+      "\n\n";
+
+  std::string column_2 =
+      "\n  Manipulate DOCX document:"
+      "\n    rpi   - Replace image in DOCX"
+      "\n    rpt   - Replace text in DOCX"
+      "\n    rmt   - Remove DOCX content between given strings"
+      "\n    mm    - Modify or set meta attribute in DOCX"
+      "\n    sfv   - Set field value"
+      "\n    lorem - Replace all text by random dummy text"
+      "\n"
+      "\n  Run user-defined command on contained file(s):"
+      "\n    cmd   - Execute given command on given DOCX file(s)"
+      "\n"
+      "\n  Extract and create DOCX:"
+      "\n    uz    - Unzip files from DOCX"
+      "\n    uzi   - Unzip DOCX and indent XML files"
+      "\n    uzm   - Unzip only media files from DOCX"
+      "\n    zp    - Create (zip) DOCX from files"
+      "\n    zpc   - Compress XML, than create DOCX from files";
+
+  std::cout << helper::String::RenderTwoColumns(column_1, column_2);
 
   return true;
 }
@@ -218,6 +246,46 @@ bool AppHelp::PrintHelpOnListMergeFields(bool with_title) {
   return true;
 }
 
+bool AppHelp::PrintHelpOnUserCommand() {
+  std::cout << "Command cmd - Execute given command on files(s) of given DOCX:\n"
+               "--------------------------------------------------------------\n"
+               "Example: Edit contained XML file w/ nano\n"
+               "  docxbox cmd foo.docx \"nano *DOCX*/word/settings.xml\"\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnDiff() {
+  std::cout << "Command diff - Side-by-side compare file from two DOCX "
+               "archives:\n"
+               "-------------------------------------------------------"
+               "---------\n"
+               "docxbox diff foo_v1.docx foo_v2.docx word/settings.xml\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnLocateFilesContaining() {
+  std::cout << "List all files containing search-string or regular "
+               "expression:\n"
+               "--------------------------------------------------------------"
+               "\n"
+               "Lists all files containing the string foo:\n"
+               "  docxbox lsl foo.docx foo\n"
+               "  or: docxbox ls foo.docx -l foo\n"
+               "  or: docxbox ls foo.docx --locate foo\n\n"
+
+               "Lists all files containing the string foo, as JSON:"
+               "  docxbox lslj foo.docx foo\n"
+               "  or: docxbox lslj foo.docx foo\n"
+               "  or: docxbox ls foo.docx --lj foo\n"
+               "  or: docxbox lsl foo.docx --json foo\n"
+               "  or: docxbox ls foo.docx --locate -j foo\n"
+               "  or: docxbox ls foo.docx --locate --json foo\n\n";
+
+  return true;
+}
+
 bool AppHelp::PrintHelpOnLoremIpsum() {
   std::cout << "Replace all text by \"Lorem Ipsum\" dummy text:\n"
                "-----------------------------------------------\n"
@@ -272,14 +340,33 @@ bool AppHelp::PrintHelpOnReplaceText() {
 
 bool AppHelp::PrintHelpOnRemoveBetweenText() {
   std::cout
-    << "Command: rem - Remove DOCX content between given strings:\n"
+    << "Command: rmt - Remove DOCX content between given strings:\n"
        "----------------------------------------------\n"
        "Replace all content between \"left-hand-side\" and "
        "\"right-hand-side\":\n"
        "  Update existing DOCX file:\n"
-       "    docxbox rem foo.docx left-hand-side right-hand-side\n\n"
+       "    docxbox rmt foo.docx left-hand-side right-hand-side\n\n"
        "  Save to new DOCX file:\n"
-       "    docxbox rem foo.docx left-hand-side right-hand-side new.docx\n\n";
+       "    docxbox rmt foo.docx left-hand-side right-hand-side new.docx\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnSetFieldValue() {
+  std::cout
+    << "Command: sfv - Set field value:\n"
+       "-------------------------------\n"
+       "Update shown text of all print-date fields' to 10.01.2020:"
+       "  Update existing DOCX file:\n"
+       "    docxbox sfv foo.docx \"PRINTDATE\" \"10.01.2020\"\n\n"
+       "  Save to new DOCX file:\n"
+       "    docxbox sfv foo.docx \"PRINTDATE\" \"10.01.2020\" new.docx\n\n"
+
+       "Set shown text of all merge fields', whose identifier begins with foo, "
+       "to bar:\n"
+       "    docxbox sfv foo.docx \"MERGEFIELD foo\" bar\n\n"
+       "  Save to new DOCX file:\n"
+       "    docxbox sfv foo.docx \"MERGEFIELD foo\" bar new.docx\n\n";
 
   return true;
 }
@@ -320,7 +407,7 @@ bool AppHelp::PrintHelpOnUnzip(bool with_uz, bool with_uzm, bool with_uzi) {
                  "  or: docxbox uz foo.docx --media\n\n";
   }
 
-  if (with_uzi){
+  if (with_uzi) {
     std::cout << "Command: uzi - Unzip DOCX and indent XML files:\n"
                  "-----------------------------------------------\n"
                  "  docxbox uzi foo.docx\n"
@@ -331,11 +418,18 @@ bool AppHelp::PrintHelpOnUnzip(bool with_uz, bool with_uzm, bool with_uzi) {
   return true;
 }
 
-bool AppHelp::PrintHelpOnZip() {
-  std::cout << "Command: zip - Create (zip) DOCX from files:\n"
-               "--------------------------------------------\n"
-               "Create DOCX from files in given (directory) path to new DOCX:\n"
-               "  docxbox zip foo foo.docx\n\n";
+bool AppHelp::PrintHelpOnZip(bool with_zip) {
+  if (with_zip) {
+    std::cout << "Command: zp - Create (zip) DOCX from files:\n"
+                 "--------------------------------------------\n"
+                 "Create DOCX from files in given (directory) path "
+                 "to new DOCX:\n"
+                 "  docxbox zp foo foo.docx\n\n";
+  }
+
+  std::cout << "Command: zpc - Compress XML, than create DOCX from files:\n"
+               "---------------------------------------------------------\n"
+               "  docxbox zpc foo foo.docx\n\n";
 
   return true;
 }

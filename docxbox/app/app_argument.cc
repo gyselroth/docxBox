@@ -1,4 +1,5 @@
 // Copyright (c) 2020 gyselroth GmbH
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/app/app_argument.h>
 
@@ -23,16 +24,46 @@ std::string AppArguments::ResolvePathFromArgument(
   return helper::File::ResolvePath(pwd, argv[index_argument-1]);
 }
 
+bool AppArguments::EnsureArgumentGiven(
+    int argc,
+    int index,
+    const std::string &argument_description) {
+  IsArgumentGiven(argc, index, argument_description, true);
+}
+
 bool AppArguments::IsArgumentGiven(int argc,
                                    int index,
-                                   const std::string &argument_description) {
+                                   const std::string &argument_description,
+                                   bool do_throw) {
   if (argc <= index) {
+    if (do_throw) throw "Missing argument: " + argument_description + "\n";
+
     std::cerr << "Missing argument: " << argument_description << "\n";
 
     return false;
   }
 
   return true;
+}
+
+bool AppArguments::AreArgumentsGiven(
+    int argc,
+    int index_1, const std::string &arg_description_1,
+    int index_2, const std::string &arg_description_2,
+    bool do_throw) {
+  return !(!IsArgumentGiven(argc, index_1, arg_description_1, do_throw)
+      || !IsArgumentGiven(argc, index_2, arg_description_2, do_throw));
+}
+
+bool AppArguments::AreArgumentsGiven(
+    int argc,
+    int index_1, const std::string &arg_description_1,
+    int index_2, const std::string &arg_description_2,
+    int index_3, const std::string &arg_description_3,
+    bool do_throw) {
+  return !(!IsArgumentGiven(argc, index_1, arg_description_1, do_throw)
+      || !IsArgumentGiven(argc, index_2, arg_description_2, do_throw)
+      || !IsArgumentGiven(argc, index_3, arg_description_3, do_throw));
 }
 
 bool AppArguments::Matches(int offset_argument, const std::string &identifier) {
