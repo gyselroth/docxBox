@@ -2,6 +2,7 @@
 
 load _helper
 
+# Meta commands
 @test "Running w/o any command displays help" {
   run "$BATS_TEST_DIRNAME"/docxbox
   [ "$status" -ne 0 ]
