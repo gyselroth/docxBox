@@ -92,7 +92,10 @@ extern bool IsJson(const std::string &str);
 extern std::string ToLower(std::string str);
 extern std::string ToUpper(const std::string &str);
 
-extern u_int32_t GetMaxLength(const std::vector<std::string>& strings);
+extern u_int32_t GetMaxLength(const std::vector<std::string>& str_1);
+
+extern u_int32_t GetMaxLineLength(const std::vector<std::string>& str_1,
+                                  const std::vector<std::string>& str_2);
 
 extern std::string Repeat(const std::string& str, u_int16_t amount);
 

@@ -3,93 +3,27 @@
 
 #include <docxbox/docx/docx_fileList.h>
 
-void docx_fileList::SortFileListByFilename(std::string &file_list) {
+#include <utility>
+
+std::vector<std::string> docx_fileList::SplitIntoSortedLines(
+    std::string &file_list) {
   auto lines = helper::String::Explode(file_list, '\n');
 
-  int line_first_file = 0;
-  int line_last_file = 0;
+  // Sort tuples alphabetic by filename (trailing item within each line)
+  sort(lines.begin(),
+       lines.end(),
+       CompareLinesByFilenames);
 
-  GetFileListFilesRange(lines, line_first_file, line_last_file);
-
-  auto lines_by_filename = GetVectorOfLinesByFilename(
-      lines, line_first_file, line_last_file);
-
-  // Sort tuples by filename
-  sort(lines_by_filename.begin(),
-       lines_by_filename.end(),
-       CompareFileListItemTuples);
-
-  // Refill sorted into lines vector
-  // (which also has headline, separators, summary)
-  int i = 0;
-
-  for (const auto& line : lines_by_filename) {
-    lines[line_first_file + i] = std::get<1>(line);
-
-    ++i;
-  }
-
-  // Update initially given string reference
-  file_list = helper::String::Implode(lines, "\n");
-}
-
-std::vector<std::tuple<std::string, std::string>>
-docx_fileList::GetVectorOfLinesByFilename(
-    const std::vector<std::string> &lines,
-    int line_first_file,
-    int line_last_file) {
-  std::vector<std::tuple<std::string, std::string>> lines_by_filename;
-
-  int i = 0;
-
-  for (const auto& line : lines) {
-    if (i>= line_first_file && i <= line_last_file) {
-      std::string filename = helper::String::GetTrailingWord(line);
-
-      std::tuple<std::string, std::string> t = std::make_tuple(filename, line);
-      lines_by_filename.push_back(t);
-    }
-
-    ++i;
-  }
-
-  return lines_by_filename;
+  return lines;
 }
 
 // Comparator method for sorting
-bool docx_fileList::CompareFileListItemTuples(
-    std::tuple<std::string, std::string> tuple_1,
-    std::tuple<std::string, std::string> tuple_2) {
-  std::string str_1 = std::get<0>(tuple_1);
-  std::string str_2 = std::get<0>(tuple_2);
+bool docx_fileList::CompareLinesByFilenames(
+    std::string str_1, std::string str_2) {
+  auto filename_1 = helper::String::GetTrailingWord(std::move(str_1));
+  auto filename_2 = helper::String::GetTrailingWord(std::move(str_2));
 
-  return std::strcmp(str_1.c_str(), str_2.c_str()) < 0;
-}
-
-// Find lines indexes of 1st and last file item
-// (exclude headline, separators, summary)
-void docx_fileList::GetFileListFilesRange(
-    const std::vector<std::string> &lines,
-    int &line_first_file,
-    int &line_last_file) {
-  int line_number = 0;
-
-  for (auto line : lines) {
-    if (IsFileItemLine(line)) helper::String::Trim(line);
-
-    if (line_first_file == 0) {
-      if (helper::String::StartsNumeric(line.c_str()))
-        line_first_file = line_number;
-    } else {
-      if (!helper::String::StartsNumeric(line.c_str())) {
-        line_last_file = line_number - 1;
-
-        break;
-      }
-    }
-
-    ++line_number;
-  }
+  return std::strcmp(filename_1.c_str(), filename_2.c_str()) < 0;
 }
 
 bool docx_fileList::IsFileItemLine(const std::string &line) {
@@ -98,153 +32,126 @@ bool docx_fileList::IsFileItemLine(const std::string &line) {
           && helper::String::Contains(line, ".");
 }
 
-bool docx_fileList::IsFinalSeparatorLine(int index, std::string line) {
-  return line[0] == '-' && index > 2;
-}
-
-// Fill lines of files present in only one list,  with empty lines on the other
-void docx_fileList::ParallelizeListItems(
-    std::string &list_1, std::string &list_2) {
-  auto lines_1 = helper::String::Explode(list_1, '\n');
-  auto lines_2 = helper::String::Explode(list_2, '\n');
-
-  unsigned long kAmount_lines_1 = lines_1.size();
-  unsigned long kAmount_lines_2 = lines_2.size();
-
-  auto has_more_lines_1 = kAmount_lines_1 > kAmount_lines_2;
-  auto has_more_lines_2 = !has_more_lines_1 &&kAmount_lines_1 < kAmount_lines_2;
-
-  if (has_more_lines_1) {
-    InsertEmptyLinesAtFilesOnlyInOneLists(lines_1, lines_2, kAmount_lines_1);
-  } else if (has_more_lines_2) {
-    InsertEmptyLinesAtFilesOnlyInOneLists(lines_2, lines_1, kAmount_lines_2);
-  }
-
-  list_1 = helper::String::Implode(lines_1, "\n");
-  list_2 = helper::String::Implode(lines_2, "\n");
-}
-
-// Iterate over longer of given lists,
-// at lines where filenames of both lists are different:
-// Insert empty line before alphabetically sorted second filename of both
-void docx_fileList::InsertEmptyLinesAtFilesOnlyInOneLists(
-    std::vector<std::string> &lines_1,
-    std::vector<std::string> &lines_2,
-    unsigned long amount_lines) {
-  for (int index = 0; index < amount_lines; index++) {
-    if (index > amount_lines) break;
-
-    auto line_1 = lines_1[index];
-
-    if (index < 2) {
-      ++index;
-      continue;
-    }
-
-    bool kIs_final_separator_1 = IsFinalSeparatorLine(index, line_1);
-
-    if ((!IsFileItemLine(line_1) && !kIs_final_separator_1)
-        || helper::String::IsWhiteSpace(line_1)) {
-      ++index;
-      continue;
-    }
-
-    auto line_2 = lines_2[index];
-
-    bool kIs_final_separator_2 = IsFinalSeparatorLine(index, line_2);
-
-    if (line_1 != line_2
-        && !line_2.empty()) {
-      auto filename_1 = helper::String::GetTrailingWord(line_1);
-      auto filename_2 = helper::String::GetTrailingWord(line_2);
-
-      if (filename_1 != filename_2) {
-        // Insert empty line before
-        // - alphabetical second filename
-        // - final separator of shorter list
-        if ((kIs_final_separator_2 && !kIs_final_separator_1)
-            || strcmp(filename_1.c_str(), filename_2.c_str()) < 0) {
-          lines_2.insert(lines_2.begin() + index - 1, "");
-          lines_1.insert(lines_1.end(), "");
-        } else {
-          lines_1.insert(lines_1.begin() + index - 1, "");
-          lines_2.insert(lines_2.end(), "");
-        }
-
-        ++amount_lines;
-      }
-    }
-
-    ++index;
-  }
-}
-
-std::string docx_fileList::RenderListsCompare(
-    const std::string &left,
-    const std::string &right,
+std::string docx_fileList::RenderListsComparison(
+    std::string list_1,
+    const std::string& summary_1,
+    std::string list_2,
+    const std::string& summary_2,
     int amount_spaces_gap,
     bool compare_content,
     const std::string &path_docx_left,
     const std::string &path_docx_right) {
-  auto lines_left = helper::String::Explode(left, '\n');
-  auto lines_right = helper::String::Explode(right, '\n');
-
-  uint32_t amount_lines_right = lines_right.size();
-
-  int index = 0;
-
   std::string gap;
+
+  auto *archive = new docx_archive(0, nullptr);
+
+  std::string path_extract_left, path_extract_right;
+
+  if (compare_content) {
+    path_extract_left = archive->UnzipDocx(path_docx_left, "", "cmp_left_");
+    path_extract_right = archive->UnzipDocx(path_docx_right, "", "cmp_right_");
+  }
 
   if (amount_spaces_gap >= 1)
     gap = helper::String::Repeat(" ", amount_spaces_gap);
 
+  auto lines_left = docx_fileList::SplitIntoSortedLines(list_1);
+  auto lines_right = docx_fileList::SplitIntoSortedLines(list_2);
+
+  auto amount_lines_left = lines_left.size();
+  auto amount_lines_right = lines_right.size();
+
+  auto amount_lines_total = amount_lines_left + amount_lines_right;
+
+  int index_total = 0;
+  int index_left = 0;
+  int index_right = 0;
+
+  std::string line_left, line_right, filename_left, filename_right;
+  std::string style_on_left, style_on_right, style_off;
+
   std::string out;
 
-  int len_left_max = helper::String::GetMaxLength(lines_left);
-  int len_right_max = helper::String::GetMaxLength(lines_right);
+  // Get max. line lengths
+  uint32_t len_path_left = path_docx_left.length() + 1;
+  uint32_t len_path_right = path_docx_right.length() + 1;
 
-  if (compare_content && (path_docx_left.empty() || path_docx_right.empty()))
-    compare_content = false;
+  uint32_t len_summary_1 = summary_1.length();
+  uint32_t len_summary_right = summary_2.length();
 
-  std::string path_extract_left, path_extract_right;
+  auto len_line_max = helper::String::GetMaxLineLength(lines_left, lines_right);
 
-  auto *archive = new docx_archive(0, nullptr);
+  if (len_line_max < len_path_left) len_line_max = len_path_left;
+  if (len_line_max < len_path_right) len_line_max = len_path_right;
+  if (len_line_max < len_summary_1) len_line_max = len_summary_1;
+  if (len_line_max < len_summary_right) len_line_max = len_summary_right;
 
-  if (compare_content) {
-    path_extract_left =
-        archive->UnzipDocx(path_docx_left, "", "cmp_left_");
+  // Render headline
+  out += path_docx_left + ":";
+  out += RenderMargin(len_path_left, len_line_max);
+  out += gap;
+  out += path_docx_right + ":";
+  out += "\n\n";
 
-    path_extract_right =
-        archive->UnzipDocx(path_docx_right, "", "cmp_right_");
-  }
+  out += "   Length        Date  Time   Name";
+  out += RenderMargin(34, len_line_max);
+  out += gap;
+  out += "   Length        Date  Time   Name\n";
 
-  for (auto line_left : lines_left) {
-    auto line_right = amount_lines_right > index ? lines_right[index] : "";
+  out += "---------  ---------- -----   ----";
+  out += RenderMargin(34, len_line_max);
+  out += gap;
+  out += "---------  ---------- -----   ----\n";
 
-    uint32_t len_left = line_left.length();
-    uint32_t len_right = line_right.length();
-
-    std::string left_margin_right;
-
-    if (len_left < len_left_max) {
-      left_margin_right = helper::String::Repeat(" ", len_left_max - len_left);
+  // Render file item lines
+  while (index_total < amount_lines_total) {
+    if (index_left < amount_lines_left) {
+      line_left = lines_left[index_left];
+      filename_left = helper::String::GetTrailingWord(line_left);
+    } else {
+      line_left = "";
+      filename_left = "";
     }
 
-    std::string right_margin_right;
-
-    if (len_right < len_right_max) {
-      right_margin_right =
-          helper::String::Repeat(" ", len_right_max - len_right);
+    if (index_right < amount_lines_right) {
+      line_right = lines_right[index_right];
+      filename_right = helper::String::GetTrailingWord(line_right);
+    } else {
+      line_right = "";
+      filename_right = "";
     }
 
-    std::string style_on_left, style_on_right, style_off;
+    // Compare to find alphabetical order
+    int comparator = strcmp(filename_left.c_str(), filename_right.c_str());
+
+    if (comparator < 0) {
+      // left < right  -> output left, empty on right
+      line_right = "";
+
+      ++index_left;
+      ++index_total;
+    } else if (comparator == 0) {
+      // left == right -> output both
+      ++index_left;
+      ++index_right;
+      index_total += 2;
+    } else {
+      // left > right -> empty on left, output right
+      line_left = "";
+
+      ++index_right;
+      ++index_total;
+    }
+
+    auto len_left = line_left.length();
+    auto len_right = line_right.length();
 
     if ((IsFileItemLine(line_left) || IsFileItemLine(line_right))
-        && areLinesDifferent(compare_content,
-                          path_extract_left,
-                          path_extract_right,
-                          line_left,
-                          line_right)) {
+        && AreFileInLinesDifferent(compare_content,
+                                   path_extract_left,
+                                   path_extract_right,
+                                   line_left,
+                                   line_right)) {
       style_off = kAnsiReset;
       style_on_left = style_on_right = kAnsiReverse;
 
@@ -252,30 +159,45 @@ std::string docx_fileList::RenderListsCompare(
       if (helper::String::IsWhiteSpace(line_right)) style_on_right = "";
     }
 
-    out += style_on_left + line_left.append(left_margin_right).append(style_off)
-        .append(gap)
-        .append(style_on_right).append(line_right).append(right_margin_right)
-        .append(style_off)
-        .append("\n");
+    out += style_on_left;
+    out += line_left;
+    out += RenderMargin(len_left, len_line_max);
+    out += style_off;
 
-    ++index;
+    out += gap;
+
+    out += style_on_right;
+    out += line_right;
+    out += RenderMargin(len_right, len_line_max);
+    out += style_off;
+    out += "\n";
+
+    ++index_total;
   }
 
-  if (compare_content) {
-    helper::File::RemoveRecursive(path_extract_left.c_str());
-    helper::File::RemoveRecursive(path_extract_right.c_str());
-  }
+  out += "---------                     -------";
+  out += RenderMargin(37, len_line_max);
+  out += gap;
+  out += "---------                     -------\n";
 
-  if (compare_content) {
-    archive->RemoveTemporaryFiles();
-  }
+  out += summary_1;
+  out += RenderMargin(len_summary_1, len_line_max);
+  out += gap;
+  out += summary_2;
+  out += "\n";
 
   delete archive;
 
   return out;
 }
 
-bool docx_fileList::areLinesDifferent(
+std::string docx_fileList::RenderMargin(int len_str, int len_max) {
+  return len_str < len_max
+    ? helper::String::Repeat(" ", len_max - len_str)
+    : "";
+}
+
+bool docx_fileList::AreFileInLinesDifferent(
     bool compare_content,
     const std::string &path_extract_left,
     const std::string &path_extract_right,

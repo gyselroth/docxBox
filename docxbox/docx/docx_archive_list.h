@@ -48,7 +48,8 @@ class docx_archive_list : public docx_archive {
   void ListFilesInDocxCompare(bool as_json,
                               bool images_only,
                               const std::string &file_ending,
-                              std::string &file_list_1);
+                              std::string &file_list_1,
+                              std::string &summary_1);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_ARCHIVE_LIST_H_

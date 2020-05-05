@@ -24,14 +24,35 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
 
   std::string file_ending = ParseFileWildcard(3);
 
-  std::string files_list =
-      miniz_cpp_ext::PrintDir(docx_file, as_json, images_only, file_ending);
-
-  if (file_ending.empty()
+  bool compare_two_docx = file_ending.empty()
       && argc_ >= 4
       && helper::String::EndsWith(argv_[3], ".docx")
-      && helper::File::FileExists(argv_[3])) {
-    ListFilesInDocxCompare(as_json, images_only, file_ending, files_list);
+      && helper::File::FileExists(argv_[3]);
+
+  std::string files_list = miniz_cpp_ext::PrintDir(docx_file,
+                                                   as_json,
+                                                   images_only,
+                                                   file_ending,
+                                                   {},
+                                                   false,
+                                                   compare_two_docx);
+
+  if (compare_two_docx) {
+    std::string files_summary = miniz_cpp_ext::PrintDir(docx_file,
+                                                        as_json,
+                                                        images_only,
+                                                        file_ending,
+                                                        {},
+                                                        false,
+                                                        false,
+                                                        true);
+
+    ListFilesInDocxCompare(
+        as_json,
+        images_only,
+        file_ending,
+        files_list,
+        files_summary);
   } else {
     // Output single DOCX files list
     std::cout << files_list;
@@ -44,24 +65,36 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
 void docx_archive_list::ListFilesInDocxCompare(bool as_json,
                                                bool images_only,
                                                const std::string &file_ending,
-                                               std::string &file_list_1) {
+                                               std::string &file_list_1,
+                                               std::string &summary_1) {
   const std::string &path_docx_in_2 =
       docxbox::AppArguments::ResolvePathFromArgument(
           path_working_directory_, argc_, argv_, 4);
 
   miniz_cpp::zip_file docx_file_2(path_docx_in_2);
 
-  std::string file_list_2 = miniz_cpp_ext::PrintDir(
-          docx_file_2, as_json, images_only, file_ending);
+  std::string file_list_2 = miniz_cpp_ext::PrintDir(docx_file_2,
+                                                    as_json,
+                                                    images_only,
+                                                    file_ending,
+                                                    {},
+                                                    false,
+                                                    true);
 
-  docx_fileList::SortFileListByFilename(file_list_1);
-  docx_fileList::SortFileListByFilename(file_list_2);
+  std::string summary_2 = miniz_cpp_ext::PrintDir(docx_file_2,
+                                                    as_json,
+                                                    images_only,
+                                                    file_ending,
+                                                    {},
+                                                    false,
+                                                    false,
+                                                    true);
 
-  docx_fileList::ParallelizeListItems(file_list_1, file_list_2);
-
-  std::cout << docx_fileList::RenderListsCompare(
-      path_docx_in_ + "\n\n" + file_list_1,
-      path_docx_in_2 + "\n\n" + file_list_2,
+  std::cout << docx_fileList::RenderListsComparison(
+      file_list_1,
+      summary_1,
+      file_list_2,
+      summary_2,
       8,
       true,
       path_docx_in_,
