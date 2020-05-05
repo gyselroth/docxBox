@@ -19,8 +19,9 @@ bool String::StartsNumeric(const char *str) {
 
 // Check whether given string ends w/ given string
 bool String::EndsWith(std::string const &value, std::string const &ending) {
-  return ending.size() <= value.size()
-      && std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+  return ending.empty()
+      || (ending.size() <= value.size()
+          && std::equal(ending.rbegin(), ending.rend(), value.rbegin()));
 }
 
 bool String::IsAnyOf(

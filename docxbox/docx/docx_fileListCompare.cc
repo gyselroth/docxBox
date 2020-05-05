@@ -8,15 +8,18 @@
 docx_fileListCompare::docx_fileListCompare(
     std::string list_1, std::string summary_1,
     std::string list_2, std::string summary_2,
-    std::string path_docx_in_1, std::string path_docx_in_2) {
+    std::string path_docx_1, std::string path_docx_2) {
   list_1_ = std::move(list_1);
   list_2_ = std::move(list_2);
 
   summary_1_ = std::move(summary_1);
   summary_2_ = std::move(summary_2);
 
-  path_docx_1_ = std::move(path_docx_in_1);
-  path_docx_2_ = std::move(path_docx_in_2);
+  path_docx_1_ = std::move(path_docx_1);
+  path_docx_2_ = std::move(path_docx_2);
+
+  if (amount_spaces_gap_ >= 1)
+    gap_ = helper::String::Repeat(" ", amount_spaces_gap_);
 
   if (compare_content_) {
     auto *archive = new docx_archive(0, nullptr);
@@ -29,17 +32,11 @@ docx_fileListCompare::docx_fileListCompare(
 }
 
 void docx_fileListCompare::Output() {
-  std::string gap;
-
-  if (amount_spaces_gap_ >= 1)
-    gap = helper::String::Repeat(" ", amount_spaces_gap_);
-
   auto lines_left = SplitIntoSortedLines(list_1_);
   auto lines_right = SplitIntoSortedLines(list_2_);
 
   auto amount_lines_left = lines_left.size();
   auto amount_lines_right = lines_right.size();
-
   auto amount_lines_total = amount_lines_left + amount_lines_right;
 
   std::string line_left, line_right, filename_left, filename_right;
@@ -59,25 +56,17 @@ void docx_fileListCompare::Output() {
   if (len_line_max < len_summary_1) len_line_max = len_summary_1;
   if (len_line_max < len_summary_right) len_line_max = len_summary_right;
 
-  OutputHeadline(gap, len_path_left, len_line_max);
+  OutputHeadline(len_path_left, len_line_max);
 
   // Render file item lines
   while (index_total_ < amount_lines_total) {
-    if (index_left_ < amount_lines_left) {
-      line_left = lines_left[index_left_];
-      filename_left = helper::String::GetTrailingWord(line_left);
-    } else {
-      line_left = "";
-      filename_left = "";
-    }
+    GetCurrentLineAndFilename(
+        index_left_, lines_left, amount_lines_left,
+        line_left, filename_left);
 
-    if (index_right_ < amount_lines_right) {
-      line_right = lines_right[index_right_];
-      filename_right = helper::String::GetTrailingWord(line_right);
-    } else {
-      line_right = "";
-      filename_right = "";
-    }
+    GetCurrentLineAndFilename(
+        index_right_, lines_right, amount_lines_right,
+        line_right, filename_right);
 
     AdvanceToAlphabeticalNextItem(
         filename_left, filename_right, line_left, line_right);
@@ -90,59 +79,69 @@ void docx_fileListCompare::Output() {
     style_on_left = style_on_right = "";
 
     if ((IsFileItemLine(line_left) || IsFileItemLine(line_right))
-        && AreFilesInLinesDifferent(line_left, line_right)) {
+        && AreFilesInLinesDifferent(line_left, line_right))
       UpdateColumnStyles(line_left,
                          line_right,
                          style_on_left,
                          style_on_right,
                          style_off);
 
-    }
-
     std::cout << style_on_left + line_left
               << RenderMargin(len_left, len_line_max)
               << style_off
-
-              << gap
-
+              << gap_
               << style_on_right + line_right
               << RenderMargin(len_right, len_line_max)
               << style_off + "\n";
-
-    ++index_total_;
   }
 
+  OutputLine(len_summary_1, len_line_max);
+}
+
+void docx_fileListCompare::OutputLine(uint32_t len_summary_1,
+                                      u_int32_t len_line_max) const {
   std::cout << "---------                     -------"
             << helper::String::Repeat("-", len_line_max - 37)
-            << gap
+            << gap_
             << "---------                     -------"
             << helper::String::Repeat("-", len_line_max - 37) << "\n"
-
             << summary_1_
             << RenderMargin(len_summary_1, len_line_max)
-            << gap
+            << gap_
             << summary_2_ + "\n";
 }
 
-void docx_fileListCompare::OutputHeadline(const std::string &gap,
-                                          uint32_t len_path_left,
-                                          u_int32_t len_line_max) const {
-  std::cout
-      << "\n"
-      << path_docx_1_ << ":"
-      << RenderMargin(len_path_left, len_line_max)
-      << gap << path_docx_2_ << ":\n\n"
+void docx_fileListCompare::GetCurrentLineAndFilename(
+    int index,
+    const std::vector<std::string> &lines,
+    uint16_t amount_lines,
+    std::string &line,
+    std::string &filename) const {
+  if (index < amount_lines) {
+    line = lines[index];
+    filename = helper::String::GetTrailingWord(line);
+  } else {
+    line = "";
+    filename = "";
+  }
+}
 
-      << "   Length        Date  Time   Name"
-      << RenderMargin(34, len_line_max)
-      << gap + "   Length        Date  Time   Name\n"
-
-      << "---------  ---------- -----   ----"
-      << helper::String::Repeat("-", len_line_max - 34)
-      << gap
-      << "---------  ---------- -----   ----"
-      << helper::String::Repeat("-", len_line_max - 34)
-      << "\n";
+void docx_fileListCompare::OutputHeadline(
+    uint32_t len_path_left, u_int32_t len_line_max) const {
+  std::cout << "\n"
+            << path_docx_1_ << ":"
+            << RenderMargin(len_path_left, len_line_max)
+            << gap_ << path_docx_2_ << ":\n\n"
+            << "   Length        Date  Time   Name"
+            << RenderMargin(34, len_line_max)
+            << gap_
+            << "   Length        Date  Time   Name\n"
+            << "---------  ---------- -----   ----"
+            << helper::String::Repeat("-", len_line_max - 34)
+            << gap_
+            << "---------  ---------- -----   ----"
+            << helper::String::Repeat("-", len_line_max - 34)
+            << "\n";
 }
 
 std::vector<std::string> docx_fileListCompare::SplitIntoSortedLines(
@@ -213,15 +212,21 @@ void docx_fileListCompare::UpdateColumnStyles(const std::string &line_left,
   bool is_blank_right = helper::String::IsWhiteSpace(line_right);
 
   if (is_blank_left) {
-    style_on_left = "";
-
-    if (!is_blank_right) style_on_right += kAnsiDim;
+    if (!is_blank_right) {
+      style_on_right += kAnsiDim;
+      style_on_left += kAnsiDim;
+    } else {
+      style_on_left = "";
+    }
   }
 
   if (is_blank_right) {
-    style_on_right = "";
-
-    if (!is_blank_left) style_on_left += kAnsiDim;
+    if (!is_blank_left) {
+      style_on_left += kAnsiDim;
+      style_on_right += kAnsiDim;
+    } else {
+      style_on_right = "";
+    }
   }
 }
 

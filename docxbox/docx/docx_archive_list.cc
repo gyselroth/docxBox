@@ -65,13 +65,10 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
 
   auto miniz_ext = new miniz_cpp_ext();
 
-  std::string file_list_2 = miniz_ext->PrintDir(docx_file_2,
-                                                as_json,
-                                                images_only,
-                                                file_ending,
-                                                {},
-                                                false,
-                                                true);
+  std::string file_list_2 = miniz_ext->PrintDir(
+      docx_file_2,
+      as_json, images_only, file_ending, {},
+      false, true);
 
   std::string summary_2 = miniz_ext->GetSummary();
 
