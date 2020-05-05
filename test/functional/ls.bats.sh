@@ -43,3 +43,8 @@ load _helper
   "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "4/11/2020"
   "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "11:3"
 }
+
+@test "Output of \"docxbox ls filename.docx *.file-ending\" contains files with the given file ending" {
+  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx *.jpeg | grep -c "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx *.xml | grep -c "9 files"
+}
