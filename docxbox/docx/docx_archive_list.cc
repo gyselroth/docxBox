@@ -75,7 +75,7 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
 
   std::string summary_2 = miniz_ext->GetSummary();
 
-  std::cout << docx_fileList::RenderListsComparison(
+  std::cout << docx_fileListCompare::RenderListsComparison(
       file_list_1, summary_1,
       file_list_2, summary_2,
       8, true,

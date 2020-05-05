@@ -6,7 +6,7 @@
 
 #include <docxbox/app/app_argument.h>
 #include <docxbox/docx/docx_archive.h>
-#include <docxbox/docx/docx_fileList.h>
+#include <docxbox/docx/docx_fileListCompare.h>
 #include <docxbox/docx/docx_fontTable.h>
 #include <docxbox/docx/docx_meta.h>
 #include <docxbox/docx/renderer/docx_renderer_table.h>

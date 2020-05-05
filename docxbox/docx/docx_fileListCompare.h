@@ -12,10 +12,8 @@
 #include <tuple>
 #include <vector>
 
-class docx_fileList {
+class docx_fileListCompare {
  public:
-  static std::vector<std::string> SplitIntoSortedLines(std::string &file_list);
-
   static bool CompareLinesByFilenames(std::string str_1, std::string str_2);
 
   static std::string RenderListsComparison(
@@ -29,6 +27,8 @@ class docx_fileList {
       const std::string &path_docx_right = "");
 
  private:
+  static std::vector<std::string> SplitIntoSortedLines(std::string &file_list);
+
   static bool IsFileItemLine(const std::string &line);
 
   static std::string RenderMargin(int len_str, int len_max);
@@ -39,6 +39,20 @@ class docx_fileList {
       const std::string &path_extract_right,
       const std::string &line_left,
       const std::basic_string<char> &line_right);
+
+  static void UpdateColumnStyles(const std::string &line_left,
+                                 const std::string &line_right,
+                                 std::string &style_on_left,
+                                 std::string &style_on_right,
+                                 std::string &style_off);
+
+  static void AdvanceToAlphabeticalNextItem(const std::string &filename_left,
+                                            const std::string &filename_right,
+                                            int &index_total,
+                                            int &index_left,
+                                            int &index_right,
+                                            std::string &line_left,
+                                            std::string &line_right);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_FILELIST_H_

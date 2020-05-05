@@ -1,11 +1,11 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#include <docxbox/docx/docx_fileList.h>
+#include <docxbox/docx/docx_fileListCompare.h>
 
 #include <utility>
 
-std::vector<std::string> docx_fileList::SplitIntoSortedLines(
+std::vector<std::string> docx_fileListCompare::SplitIntoSortedLines(
     std::string &file_list) {
   auto lines = helper::String::Explode(file_list, '\n');
 
@@ -18,7 +18,7 @@ std::vector<std::string> docx_fileList::SplitIntoSortedLines(
 }
 
 // Comparator method for sorting
-bool docx_fileList::CompareLinesByFilenames(
+bool docx_fileListCompare::CompareLinesByFilenames(
     std::string str_1, std::string str_2) {
   auto filename_1 = helper::String::GetTrailingWord(std::move(str_1));
   auto filename_2 = helper::String::GetTrailingWord(std::move(str_2));
@@ -26,13 +26,13 @@ bool docx_fileList::CompareLinesByFilenames(
   return std::strcmp(filename_1.c_str(), filename_2.c_str()) < 0;
 }
 
-bool docx_fileList::IsFileItemLine(const std::string &line) {
+bool docx_fileListCompare::IsFileItemLine(const std::string &line) {
   return line[0]
           && line[0] != '-'
           && helper::String::Contains(line, ".");
 }
 
-std::string docx_fileList::RenderListsComparison(
+std::string docx_fileListCompare::RenderListsComparison(
     std::string list_1,
     const std::string& summary_1,
     std::string list_2,
@@ -55,8 +55,8 @@ std::string docx_fileList::RenderListsComparison(
   if (amount_spaces_gap >= 1)
     gap = helper::String::Repeat(" ", amount_spaces_gap);
 
-  auto lines_left = docx_fileList::SplitIntoSortedLines(list_1);
-  auto lines_right = docx_fileList::SplitIntoSortedLines(list_2);
+  auto lines_left = SplitIntoSortedLines(list_1);
+  auto lines_right = SplitIntoSortedLines(list_2);
 
   auto amount_lines_left = lines_left.size();
   auto amount_lines_right = lines_right.size();
@@ -121,27 +121,14 @@ std::string docx_fileList::RenderListsComparison(
       filename_right = "";
     }
 
-    // Compare to find alphabetical order
-    int comparator = strcmp(filename_left.c_str(), filename_right.c_str());
-
-    if (comparator < 0) {
-      // left < right  -> output left, empty on right
-      line_right = "";
-
-      ++index_left;
-      ++index_total;
-    } else if (comparator == 0) {
-      // left == right -> output both
-      ++index_left;
-      ++index_right;
-      index_total += 2;
-    } else {
-      // left > right -> empty on left, output right
-      line_left = "";
-
-      ++index_right;
-      ++index_total;
-    }
+    AdvanceToAlphabeticalNextItem(
+        filename_left,
+        filename_right,
+        index_total,
+        index_left,
+        index_right,
+        line_left,
+        line_right);
 
     auto len_left = line_left.length();
     auto len_right = line_right.length();
@@ -156,35 +143,21 @@ std::string docx_fileList::RenderListsComparison(
                                    path_extract_right,
                                    line_left,
                                    line_right)) {
-      style_off = kAnsiReset;
+      UpdateColumnStyles(line_left,
+                         line_right,
+                         style_on_left,
+                         style_on_right,
+                         style_off);
 
-      style_on_left = style_on_right = kAnsiReverse;
-
-      bool is_blank_left = helper::String::IsWhiteSpace(line_left);
-      bool is_blank_right = helper::String::IsWhiteSpace(line_right);
-
-      if (is_blank_left) {
-        style_on_left = "";
-
-        if (!is_blank_right) style_on_right += kAnsiDim;
-      }
-
-      if (is_blank_right) {
-        style_on_right = "";
-
-        if (!is_blank_left) style_on_left += kAnsiDim;
-      }
     }
 
-    out += style_on_left
-        + line_left;
+    out += style_on_left + line_left;
     out += RenderMargin(len_left, len_line_max);
     out += style_off;
 
     out += gap;
 
-    out += style_on_right
-        + line_right;
+    out += style_on_right + line_right;
     out += RenderMargin(len_right, len_line_max);
     out += style_off + "\n";
 
@@ -195,27 +168,81 @@ std::string docx_fileList::RenderListsComparison(
       + helper::String::Repeat("-", len_line_max - 37)
       + gap
       + "---------                     -------"
-      + helper::String::Repeat("-", len_line_max - 37)
-      + "\n";
+      + helper::String::Repeat("-", len_line_max - 37) + "\n";
 
   out += summary_1
       + RenderMargin(len_summary_1, len_line_max)
       + gap
-      + summary_2
-      + "\n";
+      + summary_2 + "\n";
 
   delete archive;
 
   return out;
 }
 
-std::string docx_fileList::RenderMargin(int len_str, int len_max) {
+void docx_fileListCompare::AdvanceToAlphabeticalNextItem(
+    const std::string &filename_left,
+    const std::string &filename_right,
+    int &index_total,
+    int &index_left,
+    int &index_right,
+    std::string &line_left,
+    std::string &line_right) {
+  // Compare to find alphabetical order
+  int comparator = strcmp(filename_left.c_str(), filename_right.c_str());
+
+  if (comparator < 0) {
+    // left < right  -> output left, empty on right
+    line_right = "";
+
+    ++index_left;
+    ++index_total;
+  } else if (comparator == 0) {
+    // left == right -> output both
+    ++index_left;
+    ++index_right;
+    index_total += 2;
+  } else {
+    // left > right -> empty on left, output right
+    line_left = "";
+
+    ++index_right;
+    ++index_total;
+  }
+}
+
+void docx_fileListCompare::UpdateColumnStyles(const std::string &line_left,
+                                              const std::string &line_right,
+                                              std::string &style_on_left,
+                                              std::string &style_on_right,
+                                              std::string &style_off) {
+  style_off = kAnsiReset;
+
+  style_on_left = style_on_right = kAnsiReverse;
+
+  bool is_blank_left = helper::String::IsWhiteSpace(line_left);
+  bool is_blank_right = helper::String::IsWhiteSpace(line_right);
+
+  if (is_blank_left) {
+    style_on_left = "";
+
+    if (!is_blank_right) style_on_right += kAnsiDim;
+  }
+
+  if (is_blank_right) {
+    style_on_right = "";
+
+    if (!is_blank_left) style_on_left += kAnsiDim;
+  }
+}
+
+std::string docx_fileListCompare::RenderMargin(int len_str, int len_max) {
   return len_str < len_max
     ? helper::String::Repeat(" ", len_max - len_str)
     : "";
 }
 
-bool docx_fileList::AreFileInLinesDifferent(
+bool docx_fileListCompare::AreFileInLinesDifferent(
     bool compare_content,
     const std::string &path_extract_left,
     const std::string &path_extract_right,
