@@ -101,6 +101,9 @@ bool docx_archive_list::ListImageFilesInDocx(bool as_json) {
 }
 
 bool docx_archive_list::LocateFilesContainingString(bool as_json) {
+  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 3, "String (or regular expression) to be found"))
+    return false;
+
   std::string needle;
   InitLocateFilesContaining(as_json, needle);
 
