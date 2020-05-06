@@ -21,6 +21,7 @@
 #include <vector>
 
 static const char *const kAnsiReverse = "\033[7m";
+static const char *const kAnsiDim = "\033[2m";
 static const char *const kAnsiReset = "\033[0m";
 
 namespace helper {
@@ -92,7 +93,10 @@ extern bool IsJson(const std::string &str);
 extern std::string ToLower(std::string str);
 extern std::string ToUpper(const std::string &str);
 
-extern u_int32_t GetMaxLength(const std::vector<std::string>& strings);
+extern u_int32_t GetMaxLength(const std::vector<std::string>& str_1);
+
+extern u_int32_t GetMaxLineLength(const std::vector<std::string>& str_1,
+                                  const std::vector<std::string>& str_2);
 
 extern std::string Repeat(const std::string& str, u_int16_t amount);
 

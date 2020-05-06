@@ -85,21 +85,27 @@ class miniz_cpp_ext {
     }
   }
 
-  static std::string PrintDir(
+  std::string summary;
+
+  const std::string &GetSummary() const {
+    return summary;
+  }
+
+  std::string PrintDir(
       miniz_cpp::zip_file &docx_file,
       bool as_json = false,
       bool images_only = false,
       const std::string& filter_ending = "",
       const std::vector<std::string>& filter_filenames = {},
-      bool output_directories = false) {
+      bool output_directories = false,
+      bool files_only = false) {
     std::string out;
 
-    if (as_json) {
+    if (as_json)
       out += "[";
-    } else {
-      out += "   Length        Date  Time   Name\n"
-             "---------  ---------- -----   ----\n";
-    }
+    else if (!files_only)
+        out += "   Length        Date  Time   Name\n"
+               "---------  ---------- -----   ----\n";
 
     int index_file = 0;
 
@@ -167,16 +173,20 @@ class miniz_cpp_ext {
 
     if (as_json) return out + "]";
 
-    out += "---------                     -------\n";
+    if (!files_only) out += "---------                     -------\n";
 
     int amount_digits = helper::Numeric::GetAmountDigits(size_total);
 
     if (amount_digits < 9)
-      out += helper::String::Repeat(" ", 9 - amount_digits);
+      summary = helper::String::Repeat(" ", 9 - amount_digits);
 
-    out += std::to_string(size_total) + "                     "
-             + std::to_string(index_file)
-             + " file" + (index_file == 1 ? "" : "s") + "\n";
+    summary += std::to_string(size_total) + "                     "
+        + std::to_string(index_file)
+        + " file" + (index_file == 1 ? "" : "s");
+
+    if (!files_only) out += summary;
+
+    out += "\n";
 
     return out;
   }

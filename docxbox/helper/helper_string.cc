@@ -19,8 +19,9 @@ bool String::StartsNumeric(const char *str) {
 
 // Check whether given string ends w/ given string
 bool String::EndsWith(std::string const &value, std::string const &ending) {
-  return ending.size() <= value.size()
-      && std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+  return ending.empty()
+      || (ending.size() <= value.size()
+          && std::equal(ending.rbegin(), ending.rend(), value.rbegin()));
 }
 
 bool String::IsAnyOf(
@@ -297,6 +298,14 @@ u_int32_t String::GetMaxLength(const std::vector<std::string>& strings) {
   }
 
   return max;
+}
+
+u_int32_t String::GetMaxLineLength(const std::vector<std::string>& str_1,
+                                   const std::vector<std::string>& str_2) {
+  int max_1 = GetMaxLength(str_1);
+  int max_2 = GetMaxLength(str_2);
+
+  return max_1 > max_2 ? max_1 : max_2;
 }
 
 std::string String::Repeat(const std::string& str, u_int16_t amount) {
