@@ -34,6 +34,7 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   if (command == "lsij") return Command_ListImagesAsJson;
   if (command == "lsj") return Command_ListAsJson;
   if (command == "lsl") return Command_LocateFilesContaining;
+  if (command == "lslj") return Command_LocateFilesContainingAsJson;
   if (command == "lsm") return Command_ListMeta;
   if (command == "lsmj") return Command_ListMetaAsJson;
   if (command == "mm") return Command_ModifyMeta;
