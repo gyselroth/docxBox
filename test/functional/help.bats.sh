@@ -4,22 +4,27 @@ load _helper
 
 # Meta commands
 @test "Running w/o any command displays help" {
-  run "$BATS_TEST_DIRNAME"/docxbox
-  [ "$status" -ne 0 ]
-  # TODO(lucas): make version number dynamic
-  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}" ]
+  "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
+}
+
+@test "Running w/o any command displays version" {
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox h\" displays help" {
-  run "$BATS_TEST_DIRNAME"/docxbox h
-  [ "$status" -eq 0 ]
-  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}" ]
+  "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
+}
+
+@test "\"docxbox h\" displays version" {
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox ?\" displays help" {
-  run "$BATS_TEST_DIRNAME"/docxbox h
-  [ "$status" -eq 0 ]
-  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}"  ]
+  "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
+}
+
+@test "\"docxbox ?\" displays version" {
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 # List DOCX contents:
