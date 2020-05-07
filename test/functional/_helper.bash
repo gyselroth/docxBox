@@ -14,7 +14,7 @@ setup() {
   elif [ $OS == "linux" ]; then
     cp "$BATS_TEST_DIRNAME"/../../bin/linux/docxbox "$BATS_TEST_DIRNAME"/docxbox
   fi
-  source ./test/functional/_copy_mockfiles.sh
+  bash ./test/functional/_copy_mockfiles.sh
 }
 
 teardown() {

@@ -9,24 +9,13 @@ load _helper
 }
 
 @test "With \"docxbox zp directory /path-to-file/filename.docx\" a directory can be zipped into a docx" {
-  if [ ! -d test/files/docx/unziped ]; then
-    mkdir test/files/docx/unziped;
-    unzip test/functional/tmp/cp_table_unordered_list_images.docx -d test/files/docx/unziped;
+  if [ ! -d test/functional/tmp/unziped ]; then
+    mkdir test/functional/tmp/unziped;
+    unzip test/functional/tmp/cp_table_unordered_list_images.docx -d test/functional/tmp/unziped;
   fi
 
-  run "$BATS_TEST_DIRNAME"/docxbox zp test/files/docx/unziped test/files/docx/zp_table_unordered_list_images.docx
+  run "$BATS_TEST_DIRNAME"/docxbox zp test/functional/tmp/unziped test/functional/tmp/zp_table_unordered_list_images.docx
   [ "$status" -eq 0 ]
-}
 
-@test "Zipped file is located in project root" {
-  ls test/files/docx | grep -c zp_table_unordered_list_images.docx
-
-# cleanup
-  if [ -d test/files/docx/unziped ]; then
-    rm -r test/files/docx/unziped;
-  fi
-
-  if [ -f test/files/docx/zp_table_unordered_list_images.docx ]; then
-    rm test/files/docx/zp_table_unordered_list_images.docx;
-  fi
+  ls test/functional/tmp | grep -c zp_table_unordered_list_images.docx
 }
