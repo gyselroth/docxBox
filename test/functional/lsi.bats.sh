@@ -16,5 +16,5 @@ load _helper
 @test "Output of \"docxbox lsi filename.docx\" is contained images" {
   run "$BATS_TEST_DIRNAME"/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx
   [ "$status" -eq 0 ]
-  [ "image1.jpeg" = "${lines[0]}" ]
+  "$BATS_TEST_DIRNAME"/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx | grep -c image1.jpeg
 }

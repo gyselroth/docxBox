@@ -2,23 +2,29 @@
 
 load _helper
 
+# Meta commands
 @test "Running w/o any command displays help" {
-  run "$BATS_TEST_DIRNAME"/docxbox
-  [ "$status" -ne 0 ]
-  # TODO(lucas): make version number dynamic
-  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}" ]
+  "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
+}
+
+@test "Running w/o any command displays version" {
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox h\" displays help" {
-  run "$BATS_TEST_DIRNAME"/docxbox h
-  [ "$status" -eq 0 ]
-  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}" ]
+  "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
+}
+
+@test "\"docxbox h\" displays version" {
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox ?\" displays help" {
-  run "$BATS_TEST_DIRNAME"/docxbox h
-  [ "$status" -eq 0 ]
-  [ "docxBox v0.0.4 - Usage: docxbox <command> [args]" = "${lines[0]}"  ]
+  "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
+}
+
+@test "\"docxbox ?\" displays version" {
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 # List DOCX contents:
@@ -32,6 +38,18 @@ load _helper
   run "$BATS_TEST_DIRNAME"/docxbox h lsj
   [ "$status" -eq 0 ]
   [ "Command: ls - List DOCX contents:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h lsl\" displays help for lsl command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h lsl
+  [ "$status" -eq 0 ]
+  [ "List all files containing search-string or regular expression:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h lslj\" displays help for lslj command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h lslj
+  [ "$status" -eq 0 ]
+  [ "List all files containing search-string or regular expression:" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h lsf\" displays help for lsf command" {
@@ -101,10 +119,16 @@ load _helper
   [ "Command: rmt - Remove DOCX content between given strings:" = "${lines[0]}" ]
 }
 
-@test "\"docxbox h rpi\" displays help for mm command" {
+@test "\"docxbox h mm\" displays help for mm command" {
   run "$BATS_TEST_DIRNAME"/docxbox h mm
   [ "$status" -eq 0 ]
   [ "Command: mm - Modify or set meta attribute in DOCX:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h sfv\" displays help for sfv command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h sfv
+  [ "$status" -eq 0 ]
+  [ "Command: sfv - Set field value:" = "${lines[0]}" ]
 }
 
 # Convert DOCX:
@@ -114,11 +138,23 @@ load _helper
   [ "Command: txt - Output plaintext from DOCX document:" = "${lines[0]}" ]
 }
 
+@test "\"docxbox h diff\" displays help for diff command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h diff
+  [ "$status" -eq 0 ]
+  [ "Command diff - Side-by-side compare file from two DOCX archives:" = "${lines[0]}" ]
+}
+
 # Extract and create DOCX:
 @test "\"docxbox h uz\" displays help for uz command" {
   run "$BATS_TEST_DIRNAME"/docxbox h uz
   [ "$status" -eq 0 ]
   [ "Command: uz - Unzip given DOCX file:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h uzi\" displays help for uzi command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h uzi
+  [ "$status" -eq 0 ]
+  [ "Command: uzi - Unzip DOCX and indent XML files:" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h uzm\" displays help for uzm command" {
@@ -131,4 +167,10 @@ load _helper
   run "$BATS_TEST_DIRNAME"/docxbox h zp
   [ "$status" -eq 0 ]
   [ "Command: zp - Create (zip) DOCX from files:" = "${lines[0]}" ]
+}
+
+@test "\"docxbox h zpc\" displays help for zpc command" {
+  run "$BATS_TEST_DIRNAME"/docxbox h zpc
+  [ "$status" -eq 0 ]
+  [ "Command: zpc - Compress XML, than create DOCX from files:" = "${lines[0]}" ]
 }
