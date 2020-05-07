@@ -14,7 +14,7 @@ load _helper
   [ "Missing argument: DOCX file to compare with" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox diff filename.docx {missing argument}\" is an error message" {
+@test "Output of \"docxbox diff filename.docx otherFilename.docx {missing argument}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox diff test/functional/tmp/cp_table_unordered_list_images.docx test/files/docx/table_unordered_list_images.docx
   [ "$status" -ne 0 ]
   [ "Missing argument: File within DOCX archives to be compared" = "${lines[0]}" ]

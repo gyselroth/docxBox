@@ -8,7 +8,7 @@ load _helper
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
-@test "With \"docxbox uzm filename.docx\ only media files are extracted" {
+@test "With \"docxbox uzm filename.docx\" only media files are extracted" {
   run "$BATS_TEST_DIRNAME"/docxbox uzm test/functional/tmp/cp_table_unordered_list_images.docx
 }
 
@@ -20,7 +20,7 @@ load _helper
   fi
 }
 
-@test "With \"docxbox uz filename.docx --media\ only media files are extracted" {
+@test "With \"docxbox uz filename.docx --media\" only media files are extracted" {
   run "$BATS_TEST_DIRNAME"/docxbox uz test/functional/tmp/cp_table_unordered_list_images.docx --media
 }
 
@@ -32,7 +32,7 @@ load _helper
   fi
 }
 
-@test "With \"docxbox uz filename.docx -m\ only media files are extracted" {
+@test "With \"docxbox uz filename.docx -m\" only media files are extracted" {
   run "$BATS_TEST_DIRNAME"/docxbox uz test/functional/tmp/cp_table_unordered_list_images.docx -m
 }
 

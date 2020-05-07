@@ -10,13 +10,13 @@ load _helper
 @test "Output of \"docxbox lsl {missing argument}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox lsl
   [ "$status" -ne 0 ]
-  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
+  [ "Missing argument: String (or regular expression) to be found" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox lsl filename.docx {missing argument}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox lsl
   [ "$status" -ne 0 ]
-  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
+  [ "Missing argument: String (or regular expression) to be found" = "${lines[0]}" ]
 }
 
 @test "\"docxbox lsl filename.docx searchString\" lists all files containing given searchString" {
