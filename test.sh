@@ -44,6 +44,9 @@ bats ./test/functional/lsij.bats.sh
 printf "\n\033[4mTest listing files containing given string\033[0m\n"
 bats ./test/functional/lsl.bats.sh
 
+printf "\n\033[4mTest listing files containing given string as JSON\033[0m\n"
+bats ./test/functional/lslj.bats.sh
+
 printf "\n\033[4mTest listing metadata in DOCX\033[0m\n"
 bats ./test/functional/lsm.bats.sh
 
