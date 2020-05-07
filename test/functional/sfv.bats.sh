@@ -15,12 +15,16 @@ load _helper
 }
 
 @test "Output of \"docxbox sfv filename.docx fieldIdentifier {missing argument} is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox sfv test/functional/tmp/cp_bio_assay.docx "MERGEFILED Schueler_Anrede"
+  run "$BATS_TEST_DIRNAME"/docxbox sfv test/functional/tmp/cp_bio_assay.docx "MERGEFIELD  Schueler_Anrede"
   [ "$status" -ne 0 ]
   [ "Missing argument: Value to be set" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox sfv filename.docx \"fieldIdentifier\" fieldValue is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox sfv test/functional/tmp/cp_bio_assay.docx "MERGEFILED Schueler_Anrede" someName
-  "$BATS_TEST_DIRNAME"/docxbox lsd test/functional/tmp/cp_bio_assay.docx | grep -c "someName"
+@test "Output of \"docxbox sfv filename.docx \"fieldIdentifier\" fieldValue changes the value of the given field" {
+  path_docx="test/functional/tmp/cp_file_with_mergefields.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox sfv $path_docx "MERGEFIELD  Schueler_Anrede" foobar
+  [ "$status" -eq 0 ]
+
+  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | grep -c "foobar"
 }
