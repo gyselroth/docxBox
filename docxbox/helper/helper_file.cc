@@ -111,7 +111,7 @@ void File::CopyFile(
   struct stat stat_source;
   fstat(source, &stat_source);
 
-  sendfile(dest, source, 0, stat_source.st_size);
+  sendfile(dest, source, nullptr, stat_source.st_size);
 
   close(source);
   close(dest);

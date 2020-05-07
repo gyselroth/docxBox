@@ -22,7 +22,7 @@ docx_renderer_image::docx_renderer_image(
   }
 }
 
-bool docx_renderer_image::InsertNewImageFile(std::string path_image) {
+bool docx_renderer_image::InsertNewImageFile(const std::string& path_image) {
   // TODO(kay): implement
   return true;
 }

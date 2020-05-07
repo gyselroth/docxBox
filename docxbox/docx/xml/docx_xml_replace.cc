@@ -29,8 +29,7 @@ bool docx_xml_replace::ReplaceInXml(
 
   tinyxml2::XMLDocument doc;
 
-  std::string kPathXml = path_xml;
-  std::string doc_xml = helper::File::GetFileContents(kPathXml);
+  std::string doc_xml = helper::File::GetFileContents(path_xml);
 
   if (!helper::String::Contains(doc_xml, "w:document")
       || !helper::String::Contains(doc_xml, "w:body")) return true;
