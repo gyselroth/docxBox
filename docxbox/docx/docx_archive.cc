@@ -462,7 +462,12 @@ void docx_archive::ZipUsingCLi(const std::string &path_directory,
     "cd " + path_directory + ";"
     "zip tmp.zip -rq *;";
 
-  if (!path_docx_result.empty()) cmd += "mv tmp.zip " + path_docx_result;
+  if (!path_docx_result.empty()) {
+    if (helper::File::FileExists(path_docx_result))
+      helper::File::Remove(path_docx_result.c_str());
+
+    cmd += "mv tmp.zip " + path_docx_result;
+  }
 
   helper::Cli::Execute(cmd.c_str());
 }
