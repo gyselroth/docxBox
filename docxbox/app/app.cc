@@ -115,13 +115,13 @@ bool App::Process() {
     auto *docx_archive = new class docx_archive(argc_, argv_);
 
     switch (command) {
-      case AppCommands::Command_ExecuteUserCommand:
+      case AppCommands::Command_ExecuteUserCommand:  // cmd
         result = docx_archive->ExecuteUserCommand();
         break;
-      case AppCommands::Command_FileDiff:
+      case AppCommands::Command_FileDiff:  // diff
         result = docx_archive->ViewFilesDiff();
         break;
-      case AppCommands::Command_Help: {
+      case AppCommands::Command_Help: {  // h
         AppCommands::Commands kCommand;
         std::string command_identifier;
 
@@ -135,26 +135,32 @@ bool App::Process() {
         result = AppHelp::PrintHelp(true, kCommand, command_identifier);
       }
         break;
-      case AppCommands::Command_GetPlainText:
+      case AppCommands::Command_GetPlainText:  // txt
         result = docx_archive->GetText(false);
         break;
-      case AppCommands::Command_GetPlainTextSegments:
+      case AppCommands::Command_GetPlainTextSegments:  // txt file.docx -s
         result = docx_archive->GetText(true);
         break;
-      case AppCommands::Command_ModifyMeta:result = docx_archive->ModifyMeta();
+      case AppCommands::Command_ModifyMeta:  // mm
+        result = docx_archive->ModifyMeta();
         break;
-      case AppCommands::Command_Unzip:result = docx_archive->UnzipDocxByArgv();
+      case AppCommands::Command_Unzip:  // uz
+        result = docx_archive->UnzipDocxByArgv();
         break;
-      case AppCommands::Command_UnzipAndIndentXml:
+      case AppCommands::Command_UnzipAndIndentXml:  // uzi
         result = docx_archive->UnzipDocxByArgv(false, "", true, true);
         break;
-      case AppCommands::Command_UnzipMedia:result = docx_archive->UnzipMedia();
+      case AppCommands::Command_UnzipMedia:  // uzm
+        result = docx_archive->UnzipMedia();
         break;
-      case AppCommands::Command_Version:result = AppHelp::PrintVersion();
+      case AppCommands::Command_Version:  // v
+        result = AppHelp::PrintVersion();
         break;
-      case AppCommands::Command_Zip:result = docx_archive->Zip();
+      case AppCommands::Command_Zip:  // zp
+        result = docx_archive->Zip();
         break;
-      case AppCommands::Command_ZipCompressed:result = docx_archive->Zip(true);
+      case AppCommands::Command_ZipCompressed:  // zpc
+        result = docx_archive->Zip(true);
         break;
       case AppCommands::Command_Invalid:
       default:AppHelp::PrintUnknownArgumentMessage(argv_[1]);
@@ -175,39 +181,40 @@ bool App::ProcessList(AppCommands::Commands command) {
   auto *docx_archive = new docx_archive_list(argc_, argv_);
 
   switch (command) {
-    case AppCommands::Command_List:result = docx_archive->ListFilesInDocx(false);
+    case AppCommands::Command_List:  // ls
+      result = docx_archive->ListFilesInDocx(false);
       break;
-    case AppCommands::Command_ListAsJson:
+    case AppCommands::Command_ListAsJson:  // lsj
       result = docx_archive->ListFilesInDocx(true);
       break;
-    case AppCommands::Command_ListFields:
+    case AppCommands::Command_ListFields:  // lsd
       result = docx_archive->ListFieldsFromXmls(false);
       break;
-    case AppCommands::Command_ListFieldsAsJson:
+    case AppCommands::Command_ListFieldsAsJson:  // lsdj
       result = docx_archive->ListFieldsFromXmls(true);
       break;
-    case AppCommands::Command_ListImages:
+    case AppCommands::Command_ListImages:  // lsi
       result = docx_archive->ListImageFilesInDocx(false);
       break;
-    case AppCommands::Command_ListImagesAsJson:
+    case AppCommands::Command_ListImagesAsJson:  // lsij
       result = docx_archive->ListImageFilesInDocx(true);
       break;
-    case AppCommands::Command_ListFonts:
+    case AppCommands::Command_ListFonts:  // lsf
       result = docx_archive->ListReferencedFonts(false);
       break;
-    case AppCommands::Command_ListFontsAsJson:
+    case AppCommands::Command_ListFontsAsJson:  // lsfj
       result = docx_archive->ListReferencedFonts(true);
       break;
-    case AppCommands::Command_ListMeta:
+    case AppCommands::Command_ListMeta:  // lsm
       result = docx_archive->ListMetaFromXmls(false);
       break;
-    case AppCommands::Command_ListMetaAsJson:
+    case AppCommands::Command_ListMetaAsJson:  // lsmj
       result = docx_archive->ListMetaFromXmls(true);
       break;
-    case AppCommands::Command_LocateFilesContaining:
+    case AppCommands::Command_LocateFilesContaining:  // lsl
       result = docx_archive->LocateFilesContainingString();
       break;
-    case AppCommands::Command_LocateFilesContainingAsJson:
+    case AppCommands::Command_LocateFilesContainingAsJson:  // lslj
       result = docx_archive->LocateFilesContainingString(true);
       break;
     case AppCommands::Command_Invalid:
@@ -226,18 +233,19 @@ bool App::ProcessReplace(AppCommands::Commands command) {
   auto *docx_archive = new docx_archive_replace(argc_, argv_);
 
   switch (command) {
-    case AppCommands::Command_LoremIpsum:
+    case AppCommands::Command_LoremIpsum:  // lorem
       result = docx_archive->ReplaceAllTextByLoremIpsum();
       break;
-    case AppCommands::Command_RemoveBetweenText:
+    case AppCommands::Command_RemoveBetweenText:  // rmt
       result = docx_archive->RemoveBetweenText();
       break;
-    case AppCommands::Command_ReplaceImage:
+    case AppCommands::Command_ReplaceImage:  // rpi
       result = docx_archive->ReplaceImage();
       break;
-    case AppCommands::Command_ReplaceText:result = docx_archive->ReplaceText();
+    case AppCommands::Command_ReplaceText:  // rpt
+      result = docx_archive->ReplaceText();
       break;
-    case AppCommands::Command_SetFieldValue:
+    case AppCommands::Command_SetFieldValue:  // sfv
       result = docx_archive->SetFieldValue();
       break;
     case AppCommands::Command_Invalid:
