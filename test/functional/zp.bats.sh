@@ -11,10 +11,13 @@ load _helper
 @test "With \"docxbox zp directory /path-to-file/filename.docx\" a directory can be zipped into a docx" {
   if [ ! -d test/files/docx/unziped ]; then
     mkdir test/files/docx/unziped;
-    unzip test/functional/tmp/cp_table_unordered_list_images.docx -d test/files/docx/unziped;
+    path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+    unzip $path_docx -d test/files/docx/unziped;
   fi
 
-  run "$BATS_TEST_DIRNAME"/docxbox zp test/files/docx/unziped test/files/docx/zp_table_unordered_list_images.docx
+  path_docx="test/files/docx/zp_table_unordered_list_images.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox zp test/files/docx/unziped $path_docx
   [ "$status" -eq 0 ]
 }
 

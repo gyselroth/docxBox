@@ -3,7 +3,9 @@
 load _helper
 
 @test "Exit code of \"docxbox ls filename.docx\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox ls $path_docx
   [ "$status" -eq 0 ]
 }
 
@@ -14,76 +16,98 @@ load _helper
 }
 
 @test "Output of \"docxbox lsfj filename.docx\" contains files' and directories' attributes" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "font"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "altName"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "charset"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "family"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "pitch"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "font"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "altName"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "charset"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "family"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep "pitch"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "pitch"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep "pitch"
 }
 
 @test "Output of \"docxbox lsf filename.docx --json\" contains files' and directories' attributes" {
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx --json | grep "font"
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx --json | grep "altName"
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx --json | grep "charset"
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx --json | grep "family"
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx --json | grep "pitch"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx --json | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx --json | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx --json | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx --json | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx --json | grep "pitch"
 }
 
 @test "Output of \"docxbox lsf filename.docx -j\" contains files' and directories' attributes" {
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx -j | grep "font"
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx -j | grep "altName"
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx -j | grep "charset"
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx -j | grep "family"
-  "$BATS_TEST_DIRNAME"/docxbox lsf test/functional/tmp/cp_table_unordered_list_images.docx -j | grep "pitch"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx -j | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx -j | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx -j | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx -j | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx -j | grep "pitch"
 }
 
 @test "Output of \"docxbox ls filename.docx --fonts --json\" contains files' and directories' attributes" {
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx --fonts --json | grep "altName"
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx --fonts --json | grep "font"
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx --fonts --json | grep "charset"
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx --fonts --json | grep "family"
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx --fonts --json | grep "pitch"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --fonts --json | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --fonts --json | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --fonts --json | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --fonts --json | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --fonts --json | grep "pitch"
 }
 
 @test "Output of \"docxbox ls filename.docx -fj\" contains files' and directories' attributes" {
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx -fj | grep "altName"
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx -fj | grep "font"
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx -fj | grep "charset"
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx -fj | grep "family"
-  "$BATS_TEST_DIRNAME"/docxbox ls test/functional/tmp/cp_table_unordered_list_images.docx -fj | grep "pitch"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -fj | grep "altName"
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -fj | grep "font"
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -fj | grep "charset"
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -fj | grep "family"
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -fj | grep "pitch"
 }
 
 @test "Output of \"docxbox lsfj filename.docx\" contains fontfile-filename" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "fontTable.xml"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "fontTable.xml"
 }
 
 @test "Output of \"docxbox lsfj filename.docx\" contains font names" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "Times New Roman"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "Symbol"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "Arial"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "Liberation Serif"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "Times New Roman"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "Symbol"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "Arial"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "Liberation Serif"
 }
 
 @test "Output of \"docxbox lsfj filename.docx\" can contain alternative font names" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "Arial Unicode MS"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "Arial Unicode MS"
 }
 
 @test "Output of \"docxbox lsfj filename.docx\" contains font-charSets" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "00"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "00"
 }
 
 @test "Output of \"docxbox lsfj filename.docx\" contains font-family" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "roman"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "swiss"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "auto"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "roman"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "swiss"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "auto"
 }
 
 @test "Output of \"docxbox lsfj filename.docx\" contains font-pitch" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "variable"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj test/functional/tmp/cp_table_unordered_list_images.docx | grep -c "default"
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "variable"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "default"
 }
