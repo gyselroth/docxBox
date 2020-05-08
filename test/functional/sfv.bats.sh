@@ -25,7 +25,7 @@ load _helper
 }
 
 @test "Output of \"docxbox sfv filename.docx \"fieldIdentifier\" fieldValue changes the value of the given field" {
-  path_docx="test/functional/tmp/cp_file_with_mergefields.docx"
+  path_docx="test/functional/tmp/cp_mergefields.docx"
 
   run "$BATS_TEST_DIRNAME"/docxbox sfv $path_docx "MERGEFIELD  Schueler_Anrede" foobar
   [ "$status" -eq 0 ]
