@@ -15,9 +15,9 @@ load _helper
     unzip $path_docx -d test/functional/tmp/unziped;
   fi
 
-  path_docx="test/functional/tmp/zp_table_unordered_list_images.docx"
+  path_new_docx="test/functional/tmp/zp_table_unordered_list_images.docx"
 
-  run "$BATS_TEST_DIRNAME"/docxbox zp test/files/docx/unziped $path_docx
+  run "$BATS_TEST_DIRNAME"/docxbox zp test/functional/tmp/unziped $path_new_docx
   [ "$status" -eq 0 ]
 
   ls test/functional/tmp | grep -c zp_table_unordered_list_images.docx
