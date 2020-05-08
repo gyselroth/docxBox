@@ -25,6 +25,7 @@ load _helper
 }
 
 @test "With \"docxbox rpi filename.docx imageName replacementImageName\" an image can be replaced" {
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
   path_jpeg="test/files/images/2100x400.jpeg"
 
   run "$BATS_TEST_DIRNAME"/docxbox rpi $path_docx image1.jpeg $path_jpeg
