@@ -9,13 +9,17 @@ load _helper
 }
 
 @test "Output of \"docxbox sfv filename.docx {missing argument}\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox sfv test/functional/tmp/cp_bio_assay.docx
+  path_docx="test/functional/tmp/cp_bio_assay.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox sfv $path_docx
   [ "$status" -ne 0 ]
   [ "Missing argument: Field identifier" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox sfv filename.docx fieldIdentifier {missing argument} is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox sfv test/functional/tmp/cp_bio_assay.docx "MERGEFIELD  Schueler_Anrede"
+  path_docx="test/functional/tmp/cp_bio_assay.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox sfv $path_docx "MERGEFIELD  Schueler_Anrede"
   [ "$status" -ne 0 ]
   [ "Missing argument: Value to be set" = "${lines[0]}" ]
 }

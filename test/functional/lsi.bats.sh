@@ -3,7 +3,9 @@
 load _helper
 
 @test "Exit code of \"docxbox lsi filename.docx\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx
   [ "$status" -eq 0 ]
 }
 
@@ -14,7 +16,9 @@ load _helper
 }
 
 @test "Output of \"docxbox lsi filename.docx\" is contained images" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx
   [ "$status" -eq 0 ]
-  "$BATS_TEST_DIRNAME"/docxbox lsi test/functional/tmp/cp_table_unordered_list_images.docx | grep -c image1.jpeg
+  "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx | grep -c image1.jpeg
 }

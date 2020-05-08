@@ -25,12 +25,12 @@ AppCommands::Commands App::PreProcess(
     AppArguments *arguments,
     const AppCommands::Commands &command) const {
   switch (command) {
-    case AppCommands::Command_GetPlainText:
+    case AppCommands::Command_GetPlainText:  // txt
       if (arguments->Matches(3, "-s", "--segments"))
         return AppCommands::Command_GetPlainTextSegments;
 
       return command;
-    case AppCommands::Command_List:
+    case AppCommands::Command_List:  // ls
       if (arguments->Matches(3, "-fj"))
         return AppCommands::Command_ListFontsAsJson;
 
@@ -74,19 +74,23 @@ AppCommands::Commands App::PreProcess(
       return arguments->Matches(3, "-j", "--json")
                ? AppCommands::Command_ListAsJson
                : command;
-    case AppCommands::Command_ListImages:
+    case AppCommands::Command_ListImages:  // lsi
       return arguments->Matches(3, "-j", "--json")
                ? AppCommands::Command_ListImagesAsJson
                : command;
-    case AppCommands::Command_ListFonts:
+    case AppCommands::Command_ListFonts:  // lsf
       return arguments->Matches(3, "-j", "--json")
                ? AppCommands::Command_ListFontsAsJson
                : command;
-    case AppCommands::Command_ListMeta:
+    case AppCommands::Command_LocateFilesContaining:  // lsl
+      return arguments->Matches(3, "-j", "--json")
+               ? AppCommands::Command_LocateFilesContainingAsJson
+               : command;
+    case AppCommands::Command_ListMeta:  // lsm
       return arguments->Matches(3, "-j", "--json")
                ? AppCommands::Command_ListMetaAsJson
                : command;
-    case AppCommands::Command_Unzip:
+    case AppCommands::Command_Unzip:  // uz
       if (arguments->Matches(3, "-f", "--format"))
         return AppCommands::Command_UnzipAndIndentXml;
 

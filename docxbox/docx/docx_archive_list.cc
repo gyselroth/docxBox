@@ -101,11 +101,9 @@ bool docx_archive_list::ListImageFilesInDocx(bool as_json) {
 }
 
 bool docx_archive_list::LocateFilesContainingString(bool as_json) {
-  if (!docxbox::AppArguments::IsArgumentGiven(
-      argc_, 3, "String (or regular expression) to be found")) return false;
-
   std::string needle;
-  InitLocateFilesContaining(&as_json, &needle);
+
+  if (!InitLocateFilesContaining(&as_json, needle)) return false;
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
@@ -130,47 +128,65 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
   return true;
 }
 
-void docx_archive_list::InitLocateFilesContaining(
-    bool *as_json, std::string *needle) const {
-  docxbox::AppArguments::EnsureArgumentGiven(
+bool docx_archive_list::InitLocateFilesContaining(
+  bool *as_json, std::string &needle) const {
+
+  if (!docxbox::AppArguments::IsArgumentGiven(
       argc_,
-      3, "String or regular expression to be located");
+      2, "DOCX filename")) return false;
 
-    *needle = argv_[3];
+  if (!docxbox::AppArguments::IsArgumentGiven(
+      argc_,
+      3, "String or regular expression to be located")) return false;
 
-  if (*needle == "-l" || *needle == "--locate") {
-    docxbox::AppArguments::EnsureArgumentGiven(
+  needle = argv_[3];
+
+  if (needle == "-l" || needle == "--locate") {
+    if (!docxbox::AppArguments::IsArgumentGiven(
         argc_,
-        4, "String or regular expression to be located");
+        4, "String or regular expression to be located")) return false;
 
-    *needle = argv_[4];
+    needle = argv_[4];
+
+    if (needle == "-j" || needle == "--json") {
+      if (!docxbox::AppArguments::IsArgumentGiven(
+          argc_,
+          5, "String or regular expression to be located")) return false;
+
+      *as_json = true;
+      needle = argv_[5];
+    }
+
+    return  true;
   }
 
-  if (*needle == "-lj") {
-    docxbox::AppArguments::EnsureArgumentGiven(
+  if (needle == "-lj") {
+    if (!docxbox::AppArguments::IsArgumentGiven(
         argc_,
-        4, "String or regular expression to be located");
+        4, "String or regular expression to be located")) return false;
 
-    *needle = argv_[4];
+    needle = argv_[4];
     *as_json = true;
   }
 
-  if (*needle == "-j" || *needle == "--json") {
-    docxbox::AppArguments::EnsureArgumentGiven(
+  if (needle == "-j" || needle == "--json") {
+    if (!docxbox::AppArguments::IsArgumentGiven(
         argc_,
-        5, "String or regular expression to be located");
+        4, "String or regular expression to be located")) return false;
 
     *as_json = true;
-    *needle = argv_[5];
+    needle = argv_[4];
   }
 
-  if (*needle == "-lj") {
-    docxbox::AppArguments::EnsureArgumentGiven(
+  if (needle == "-lj") {
+    if (!docxbox::AppArguments::IsArgumentGiven(
         argc_,
-        4, "String or regular expression to be located");
+        4, "String or regular expression to be located")) return false;
 
-    *needle = argv_[4];
+    needle = argv_[4];
   }
+
+  return true;
 }
 
 // Output meta data from within given DOCX file:

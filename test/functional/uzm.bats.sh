@@ -9,7 +9,9 @@ load _helper
 }
 
 @test "With \"docxbox uzm filename.docx\" only media files are extracted" {
-  run "$BATS_TEST_DIRNAME"/docxbox uzm test/functional/tmp/cp_table_unordered_list_images.docx
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox uzm $path_docx
 }
 
 @test "Unziped files are located in project root" {
@@ -21,7 +23,9 @@ load _helper
 }
 
 @test "With \"docxbox uz filename.docx --media\" only media files are extracted" {
-  run "$BATS_TEST_DIRNAME"/docxbox uz test/functional/tmp/cp_table_unordered_list_images.docx --media
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox uz $path_docx --media
 }
 
 @test "Unziped files are located in project root" {
@@ -33,7 +37,9 @@ load _helper
 }
 
 @test "With \"docxbox uz filename.docx -m\" only media files are extracted" {
-  run "$BATS_TEST_DIRNAME"/docxbox uz test/functional/tmp/cp_table_unordered_list_images.docx -m
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  run "$BATS_TEST_DIRNAME"/docxbox uz $path_docx -m
 }
 
 @test "Unziped files are located in project root" {
