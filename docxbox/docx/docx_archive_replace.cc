@@ -277,19 +277,19 @@ bool docx_archive_replace::SetFieldValue() {
   delete parser;
 
   std::string path_docx_out =
-      argc_ >= 5
+      argc_ >= 6
       // Result filename is given as argument
       ? helper::File::ResolvePath(path_working_directory_, argv_[5])
       // Overwrite original DOCX
       : path_docx_in_;
 
-  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
+  std::string path_docx_out_tmp = path_docx_out + "tmp";
+
+  if (!Zip(false, path_extract_, path_docx_out_tmp)) {
     std::cerr << "DOCX creation failed.\n";
 
     return false;
   }
 
-  return 0 == std::rename(
-      std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
+  return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out.c_str());
 }

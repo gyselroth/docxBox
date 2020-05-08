@@ -11,7 +11,7 @@ class docx_contentTypes {
  public:
   explicit docx_contentTypes(std::string path_content_types_xml);
 
-  bool ReplacePartname(const std::string &part_name);
+  static bool ReplacePartname(const std::string &part_name);
 
  private:
   std::string path_extract_;

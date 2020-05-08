@@ -116,8 +116,6 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
 
   auto filenames = helper::String::Explode(files_located, '\n');
 
-  Zip(true, path_extract_, "", true, true);
-
   miniz_cpp::zip_file docx_file(path_docx_in_);
   auto file_list = docx_file.infolist();
 

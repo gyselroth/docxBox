@@ -215,6 +215,10 @@ bool docx_archive::Zip(
     }
   }
 
+  if (path_docx_result.empty() && !path_docx_in_.empty())
+    // Overwrite source DOCX
+    path_docx_result = path_docx_in_;
+
   if (!date_created.empty()) {
     if (!UpdateCoreXmlDate(
         docx_meta::Attribute::Attribute_Created, date_created)) return false;
@@ -456,8 +460,14 @@ void docx_archive::ZipUsingCLi(const std::string &path_directory,
 
   std::string cmd =
     "cd " + path_directory + ";"
-    "zip tmp.zip -rq *;"
-    "mv tmp.zip " + path_docx_result;
+    "zip tmp.zip -rq *;";
+
+  if (!path_docx_result.empty()) {
+    if (helper::File::FileExists(path_docx_result))
+      helper::File::Remove(path_docx_result.c_str());
+
+    cmd += "mv tmp.zip " + path_docx_result;
+  }
 
   helper::Cli::Execute(cmd.c_str());
 }

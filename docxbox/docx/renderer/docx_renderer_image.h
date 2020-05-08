@@ -36,7 +36,7 @@ class docx_renderer_image: docx_renderer {
   int width_ = 0;
   int height_ = 0;
 
-  bool InsertNewImageFile(std::string path_image);
+  static bool InsertNewImageFile(const std::string& path_image);
 
   void InitSpecsFromJson();
 };

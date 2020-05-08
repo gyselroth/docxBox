@@ -90,4 +90,4 @@ printf "\n\033[4mTest creating (zip) DOCX from files (zip)\033[0m\n"
 bats ./test/functional/zp.bats.sh
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
-printf "\nDone. Bats tests ran for $ELAPSED_TIME seconds.\n\n";
+printf "\nDone. Bats tests ran for $ELAPSED_TIME seconds.\n\n"
