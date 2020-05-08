@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 
+# Copyright (c) 2020 gyselroth GmbH
+# Licensed under the MIT License - https://opensource.org/licenses/MIT
+
 load _helper
 
 @test "Output of \"docxbox rpt {missing filename}\" is an error message" {

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Copyright (c) 2020 gyselroth GmbH
+# Licensed under the MIT License - https://opensource.org/licenses/MIT
+
 case "$OSTYPE" in
   bsd*)     OS="bsd" ;;
   darwin*)  OS="osx" ;;

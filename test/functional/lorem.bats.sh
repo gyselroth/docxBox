@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 
+# Copyright (c) 2020 gyselroth GmbH
+# Licensed under the MIT License - https://opensource.org/licenses/MIT
+
 load _helper
 
 @test "Exit code of \"docxbox lorem filename.docx\" is zero" {
@@ -21,7 +24,9 @@ load _helper
   "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | grep -vc "Culpa ad eiusmod"
 }
 
-@test "With \"docxbox lorem filename.docx newFilename.docx\" text gets replaced by dummy text and is saved to new file" {
+title="With \"docxbox lorem filename.docx newFilename.docx\" "
+title+="text gets replaced by dummy text and is saved to new file"
+@test "$title" {
   path_docx_1="test/functional/tmp/cp_table_unordered_list_images.docx"
   path_docx_2="test/functional/tmp/lorem.docx"
 
