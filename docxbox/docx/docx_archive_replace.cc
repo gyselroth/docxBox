@@ -222,7 +222,7 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
   delete parser;
 
   std::string path_docx_out =
-      argc_ >= 3
+      argc_ >= 4
       // Result filename is given as argument
       ? helper::File::ResolvePath(path_working_directory_, argv_[3])
       // Overwrite original DOCX
@@ -233,8 +233,6 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 
     return false;
   }
-
-  if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
 
   std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
