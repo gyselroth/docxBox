@@ -89,6 +89,8 @@ bool docx_archive_replace::ReplaceText() {
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
+  if (!AddMediaFileAndRelation(replacement)) return false;
+
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto file_list = docx_file.infolist();
@@ -132,6 +134,32 @@ bool docx_archive_replace::ReplaceText() {
   std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str());
+
+  return true;
+}
+
+bool docx_archive_replace::AddMediaFileAndRelation(
+    const std::string &replacement) const {
+  if (!helper::String::IsJson(replacement)
+      || argc_ < 4
+      || !helper::File::IsWordCompatibleImage(argv_[5])
+      || docx_renderer::Element_Image !=
+          docx_renderer::DetectElementType(replacement)) return true;
+
+  auto relations = new docx_media(path_extract_);
+
+  // 1. Copy image file to word/media/image<number>.<extension>
+  if (!relations->AddImageFile(argv_[5])) {
+    delete relations;
+
+    return false;
+  }
+
+  // 2. Create media relation in _rels/document.xml.rels
+  // TODO(kay): implement
+  //relations->AddImageRelation()
+
+  delete relations;
 
   return true;
 }

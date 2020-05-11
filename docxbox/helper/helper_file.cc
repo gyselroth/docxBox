@@ -102,10 +102,12 @@ bool File::WriteToNewFile(
 }
 
 void File::CopyFile(
-    const std::string &path_image_original,
-    const std::string &path_image_replacement) {
-  int source = open(path_image_replacement.c_str(), O_RDONLY, 0);
-  int dest = open(path_image_original.c_str(), O_WRONLY | O_CREAT, 0644);
+    const std::string &path_source,
+    const std::string &path_destination) {
+  if (!FileExists(path_source)) throw "File not found: " + path_source;
+
+  int source = open(path_destination.c_str(), O_RDONLY, 0);
+  int dest = open(path_source.c_str(), O_WRONLY | O_CREAT, 0644);
 
   // struct required, rationale: function stat() exists also
   struct stat stat_source;
@@ -168,6 +170,16 @@ bool File::RemoveRecursive(const char *path) {
   if (!result) result = rmdir(path);
 
   return result;
+}
+
+std::string File::GetExtension(const std::string& file_path) {
+  if (helper::String::Contains(file_path, ".")) {
+    std::vector<std::string> parts = helper::String::Explode(file_path, '.');
+
+    return parts[parts.size() - 1];
+  }
+
+  return "";
 }
 
 std::string File::GetLastPathSegment(std::string path) {
