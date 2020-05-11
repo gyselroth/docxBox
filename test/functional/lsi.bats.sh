@@ -22,3 +22,15 @@ load _helper
   [ "$status" -eq 0 ]
   "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx | grep -c image1.jpeg
 }
+
+@test "Output of \"docxbox ls filename.docx -i\" is contained images" {
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -i | grep -c image1.jpeg
+}
+
+@test "Output of \"docxbox ls filename.docx --images\" is contained images" {
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --images | grep -c image1.jpeg
+}

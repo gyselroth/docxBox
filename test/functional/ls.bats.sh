@@ -60,5 +60,3 @@ load _helper
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx *.jpeg | grep -c "image1.jpeg"
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx *.xml | grep -c "9 files"
 }
-
-}

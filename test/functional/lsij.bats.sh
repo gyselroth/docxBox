@@ -32,3 +32,15 @@ load _helper
 
   "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx -j | grep -c "image1.jpeg"
 }
+
+@test "Output of \"docxbox ls filename.docx -ij\" are contained images as JSON" {
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx -ij | grep -c "image1.jpeg"
+}
+
+@test "Output of \"docxbox ls filename.docx --images --json\" are contained images as JSON" {
+  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+  "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx --images --json | grep -c "image1.jpeg"
+}
