@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 
+# Copyright (c) 2020 gyselroth GmbH
+# Licensed under the MIT License - https://opensource.org/licenses/MIT
+
 load _helper
 
 @test "Exit code of \"docxbox ls filename.docx\" is zero" {
@@ -15,7 +18,9 @@ load _helper
   [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox ls filename.docx\" contains files' and directories' attributes" {
+title="Output of \"docxbox ls filename.docx\" "
+title+="contains files' and directories' attributes"
+@test "$title" {
   path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
   # shellcheck disable=SC2086
@@ -41,7 +46,9 @@ load _helper
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/styles.xml"
 }
 
-@test "Output of \"docxbox ls filename.docx\" contains amount of contained files" {
+title="Output of \"docxbox ls filename.docx\" "
+title+="contains amount of contained files"
+@test "$title" {
   path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c '11 files'
@@ -54,7 +61,9 @@ load _helper
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "11:3"
 }
 
-@test "Output of \"docxbox ls filename.docx *.file-ending\" contains files with the given file ending" {
+title="Output of \"docxbox ls filename.docx *.file-ending\" "
+title+="contains files with the given file ending"
+@test "$title" {
   path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx *.jpeg | grep -c "image1.jpeg"

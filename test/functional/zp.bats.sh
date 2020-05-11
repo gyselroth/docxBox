@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 
+# Copyright (c) 2020 gyselroth GmbH
+# Licensed under the MIT License - https://opensource.org/licenses/MIT
+
 load _helper
 
 @test "Output of \"docxbox zp {missing argument}\" is an error message" {
@@ -8,9 +11,11 @@ load _helper
   [ "Missing argument: Path of directory to be zipped" = "${lines[0]}" ]
 }
 
-@test "With \"docxbox zp directory /path-to-file/filename.docx\" a directory can be zipped into a docx" {
-  if [ ! -d test/functional/tmp/unziped ]; then
-    mkdir test/functional/tmp/unziped;
+title="With \"docxbox zp directory /path-to-file/filename.docx\" "
+title+="a directory can be zipped into a docx"
+@test "$title" {
+  if [ ! -d test/files/docx/unziped ]; then
+    mkdir test/files/docx/unziped;
     path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
     unzip $path_docx -d test/functional/tmp/unziped;
   fi

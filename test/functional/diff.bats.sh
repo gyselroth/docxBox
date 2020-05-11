@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 
+# Copyright (c) 2020 gyselroth GmbH
+# Licensed under the MIT License - https://opensource.org/licenses/MIT
+
 load _helper
 
 @test "Output of \"docxbox diff {missing argument}\" is an error message" {
@@ -8,7 +11,9 @@ load _helper
   [ "Missing argument: DOCX file to compare with" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox diff filename.docx {missing argument}\" is an error message" {
+title="Output of \"docxbox diff filename.docx {missing argument}\" "
+title+="is an error message"
+@test "$title" {
   path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
   run "$BATS_TEST_DIRNAME"/docxbox diff $path_docx
@@ -16,7 +21,10 @@ load _helper
   [ "Missing argument: DOCX file to compare with" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox diff filename.docx otherFilename.docx {missing argument}\" is an error message" {
+title="Output of "
+title+="\"docxbox diff filename.docx otherFilename.docx {missing argument}\" "
+title+="is an error message"
+@test "$title" {
   path_docx_1="test/functional/tmp/cp_table_unordered_list_images.docx"
   path_docx_2="test/files/docx/table_unordered_list_images.docx"
 

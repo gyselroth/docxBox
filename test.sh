@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright (c) 2020 gyselroth GmbH
+# Licensed under the MIT License - https://opensource.org/licenses/MIT
+
 ################################################################################
 # Run functional tests written with bats - https://github.com/sstephenson/bats #
 #                                                                              #

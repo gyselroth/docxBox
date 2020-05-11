@@ -234,8 +234,6 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
     return false;
   }
 
-  if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
-
   std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str());
