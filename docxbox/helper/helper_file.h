@@ -47,7 +47,7 @@ extern bool WriteToNewFile(
     const std::string &path_file,
     const std::string &content);
 
-extern void CopyFile(
+extern bool CopyFile(
     const std::string &path_source,
     const std::string &path_destination);
 

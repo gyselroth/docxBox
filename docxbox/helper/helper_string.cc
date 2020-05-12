@@ -155,6 +155,32 @@ std::string String::GetTrailingWord(std::string str) {
   return words[words.size() - 1];
 }
 
+extern std::string String::ExtractRightMostNumber(
+    std::string str, std::string default_if_none) {
+  auto offset_end =  str.find_last_of('.');
+
+  if (offset_end == std::string::npos) return default_if_none;
+
+  int offset_start = -1;
+
+  bool was_numeric = false;
+
+  for (uint16_t i = str.length() - 1; i > 0; i--) {
+    if (isdigit(str[i])) {
+      was_numeric = true;
+    } else {
+      if (was_numeric) {
+        offset_start = i + 1;
+        break;
+      }
+    }
+  }
+
+  if (-1 == offset_start) return default_if_none;
+
+  return str.substr(offset_start, offset_end - offset_start);
+}
+
 std::string String::Implode(
     std::vector<std::string> strings,
     const char* const delimiter) {
@@ -259,6 +285,8 @@ bool String::IsAllUpper(const std::string& str) {
 }
 
 bool String::IsJson(const std::string &str) {
+  if (str.empty()) return false;
+
   const char *kStr = str.c_str();
 
   return

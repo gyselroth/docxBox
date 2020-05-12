@@ -184,6 +184,21 @@ bool docx_archive::UnzipMedia() {
   return true;
 }
 
+bool docx_archive::CreateDocxFromExtract(
+    const std::string &path_docx_out, bool overwrite_source_docx) {
+  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
+    std::cerr << "DOCX creation failed.\n";
+
+    return false;
+  }
+
+  if (overwrite_source_docx) helper::File::Remove(path_docx_in_.c_str());
+
+  return 0 == rename(
+      std::string(path_docx_out).append("tmp").c_str(),
+      path_docx_out.c_str());
+}
+
 // Zip files into given path into DOCX of given filename
 // Optionally update "creation" and "modified" meta attributes (core.xml)
 // to current date-time value

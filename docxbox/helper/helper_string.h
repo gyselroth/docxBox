@@ -68,6 +68,8 @@ extern int OffsetChar(const std::string &str, char c, int offset = 0);
 extern std::vector<std::string> Explode(std::string const &str, char delimiter);
 
 extern std::string GetTrailingWord(std::string str);
+extern std::string ExtractRightMostNumber(
+    std::string str, std::string default_if_none = "1");
 
 extern std::string Implode(
     std::vector<std::string> strings,

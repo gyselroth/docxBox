@@ -3,9 +3,11 @@
 
 #include <docxbox/docx/docx_media.h>
 
+#include <utility>
+
 docx_media::docx_media(std::string path_extract) {
+  path_media_ = path_extract + "/word/media";
   path_extract_ = std::move(path_extract);
-  path_media_ = path_extract_ + "/word/media/";
 }
 
 bool docx_media::AddImageFile(const std::string& path_image) {
@@ -16,7 +18,7 @@ bool docx_media::AddImageFile(const std::string& path_image) {
       "image" + number + "." + helper::File::GetExtension(path_image);
 
   try {
-    helper::File::CopyFile(path_image, path_destination);
+    if (!helper::File::CopyFile(path_image, path_destination)) return false;
   } catch (std::string &message) {
     std::cerr << message;
 
@@ -26,10 +28,25 @@ bool docx_media::AddImageFile(const std::string& path_image) {
   return true;
 }
 
-// Get number after highest image-number already given in any image filename
+// Get next highest number, rel. to trailing number within any image filename
 std::string docx_media::GetNextImageNumber() {
-  // TODO(kay): implement read-out from image files
-  std::string number = "99";
+  auto image_files = helper::File::ScanDir(path_media_.c_str());
 
-  return number;
+  int number = 1;
+
+  for (const auto& filename : image_files) {
+    if (!helper::File::IsWordCompatibleImage(filename)) continue;
+
+    std::string no_current = helper::String::ExtractRightMostNumber(filename);
+
+    if (no_current.empty()) continue;
+
+    int number_current = std::stoi(no_current);
+
+    if (number_current > number) number = number_current;
+  }
+
+  ++number;
+
+  return std::to_string(number);
 }

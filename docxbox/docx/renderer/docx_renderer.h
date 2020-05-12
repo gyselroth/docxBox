@@ -33,6 +33,8 @@ class docx_renderer {
 
   static docx_renderer::Elements DetectElementType(const std::string& json);
 
+  static bool IsJsonForImage(const std::string &str);
+
  protected:
   int argc_;
   char **argv_;

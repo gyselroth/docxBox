@@ -51,6 +51,9 @@ class docx_archive {
 
   bool UnzipMedia();
 
+  bool CreateDocxFromExtract(
+      const std::string &path_docx_out, bool overwrite_source_docx);
+
   // Zip files into given path into DOCX of given filename
   // Optionally update "creation" and "modified" meta attributes (core.xml)
   // to current date-time value

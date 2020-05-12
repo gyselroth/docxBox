@@ -39,7 +39,14 @@ class docx_archive_replace : public docx_archive {
   bool SetFieldValue();
 
  private:
-  bool AddMediaFileAndRelation(const std::string &replacement) const;
+  // New image file added, requires adding resp. relation
+  bool added_image_file_ = false;
+
+  bool AddMediaFileAndRelation(const std::string &replacement);
+  bool hasArgOfAdditionalImageFile() const;
+
+  void InitDocxOutPathForReplaceText(
+      std::string &path_docx_out, bool &overwrite_source_docx) const;
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_ARCHIVE_REPLACE_H_

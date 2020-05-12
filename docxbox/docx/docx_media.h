@@ -19,7 +19,7 @@ class docx_media {
   std::string path_extract_;
   std::string path_media_;
 
-  static std::string GetNextImageNumber();
+  std::string GetNextImageNumber();
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_CONTENTTYPES_H_
