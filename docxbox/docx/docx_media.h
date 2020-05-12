@@ -1,13 +1,13 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_DOCX_CONTENTTYPES_H_
-#define DOCXBOX_DOCX_DOCX_CONTENTTYPES_H_
+#ifndef DOCXBOX_DOCX_DOCX_MEDIA_H_
+#define DOCXBOX_DOCX_DOCX_MEDIA_H_
+
+#include <docxbox/helper/helper_file.h>
 
 #include <string>
 #include <utility>
-
-#include <docxbox/helper/helper_file.h>
 
 class docx_media {
  public:
@@ -22,4 +22,4 @@ class docx_media {
   std::string GetNextImageNumber();
 };
 
-#endif  // DOCXBOX_DOCX_DOCX_CONTENTTYPES_H_
+#endif  // DOCXBOX_DOCX_DOCX_MEDIA_H_

@@ -46,17 +46,18 @@ bool String::IsWhiteSpace(const std::string &str) {
   return true;
 }
 
-void String::Replace(
-    std::string &haystack,
-    const char *needle,
-    const char *replacement) {
+bool String::Replace(
+    std::string &haystack, const char *needle, const char *replacement) {
   size_t needle_len = strlen(needle);
 
   size_t index = 0;
   index = haystack.find(needle, index);
 
-  if (std::string::npos != index)
-    haystack.replace(index, needle_len, replacement);
+  if (std::string::npos == index) return false;
+
+  haystack.replace(index, needle_len, replacement);
+
+  return true;
 }
 
 int String::ReplaceAll(
@@ -176,9 +177,9 @@ extern std::string String::ExtractRightMostNumber(
     }
   }
 
-  if (-1 == offset_start) return default_if_none;
-
-  return str.substr(offset_start, offset_end - offset_start);
+  return -1 == offset_start
+    ? default_if_none
+    : str.substr(offset_start, offset_end - offset_start);
 }
 
 std::string String::Implode(

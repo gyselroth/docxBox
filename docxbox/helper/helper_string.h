@@ -40,10 +40,8 @@ extern bool Contains(const std::string &haystack, const char *needle);
 
 extern bool IsWhiteSpace(const std::string &str);
 
-extern void Replace(
-    std::string &haystack,
-    const char *needle,
-    const char *replacement);
+extern bool Replace(
+    std::string &haystack, const char *needle, const char *replacement);
 
 extern int ReplaceAll(
     std::string &haystack,

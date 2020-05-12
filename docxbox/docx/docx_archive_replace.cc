@@ -127,8 +127,8 @@ bool docx_archive_replace::ReplaceText() {
 
 void docx_archive_replace::InitDocxOutPathForReplaceText(
     std::string &path_docx_out, bool &overwrite_source_docx) const {
-  path_docx_out= path_docx_in_;
-  overwrite_source_docx= true;
+  path_docx_out = path_docx_in_;
+  overwrite_source_docx = true;
 
   if (added_image_file_) {
     if (argc_ >= 7) {
@@ -150,7 +150,6 @@ void docx_archive_replace::InitDocxOutPathForReplaceText(
 
 bool docx_archive_replace::AddMediaFileAndRelation(
   const std::string &replacement) {
-
   if (!docx_renderer::IsJsonForImage(replacement)
       || !hasArgOfAdditionalImageFile())
     // No media file given: successfully done (nothing)
@@ -173,7 +172,7 @@ bool docx_archive_replace::AddMediaFileAndRelation(
 
   // 2. Create media relation in _rels/document.xml.rels
   // TODO(kay): implement
-  //relations->AddImageRelation()
+//  relations->AddImageRelation()
 
   delete relations;
 
