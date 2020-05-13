@@ -16,7 +16,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
     + [List fields](#list-fields)
   + [Compare DOCX documents](#compare-docx-documents)
   * [Output XML](#output-xml)
-  * [Output plaintext](#output-plaintext)
+  * [Output document as plaintext](#output-document-as-plaintext)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
       + [Replace image](#replace-image)
@@ -197,7 +197,7 @@ displays a side-by-side comparison of the formatted XML of the given file
 outputs the given file's content.
 
 
-### Output plaintext
+### Output document as plaintext
 
 ````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and 
 footer)
