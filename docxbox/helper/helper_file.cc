@@ -106,8 +106,8 @@ bool File::CopyFile(
     const std::string &path_destination) {
   if (!FileExists(path_source)) throw "File not found: " + path_source;
 
-  int source = open(path_destination.c_str(), O_RDONLY, 0);
-  int dest = open(path_source.c_str(), O_WRONLY | O_CREAT, 0644);
+  int source = open(path_source.c_str(), O_RDONLY, 0);
+  int dest = open(path_destination.c_str(), O_WRONLY | O_CREAT, 0644);
 
   // struct required, rationale: function stat() exists also
   struct stat stat_source{};
