@@ -21,6 +21,9 @@ class docx_xml_rels:docx_xml {
 
  private:
   std::string path_extract_;
+  std::string path_document_xml_rels_;
+
+  std::string xml_;
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_RELS_H_
