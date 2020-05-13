@@ -5,9 +5,10 @@
 
 load _helper
 
-@test "Exit code of \"docxbox ls filename.docx\" is zero" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+base_command="\"docxbox ls filename.docx"
+path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
+@test "Exit code of ${base_command}\" is zero" {
   run "$BATS_TEST_DIRNAME"/docxbox ls $path_docx
   [ "$status" -eq 0 ]
 }
@@ -18,54 +19,44 @@ load _helper
   [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
-title="Output of \"docxbox ls filename.docx\" "
-title+="contains files' and directories' attributes"
-@test "$title" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  # shellcheck disable=SC2086
+@test "Output of ${base_command}\" contains files' and directories' attributes" {
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "Length"
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "Date"
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "Time"
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "Name"
 }
 
-@test "Output of \"docxbox ls filename.docx\" is contained files" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+@test "Output of ${base_command}\" is contained files" {
+search_values=(
+"[Content_Types].xml"
+"docProps/app.xml"
+"docProps/core.xml"
+"word/_rels/document.xml.rels"
+"word/charts/chart1.xml"
+"word/document.xml"
+"word/fontTable.xml"
+"word/media/image1.jpeg"
+"word/numbering.xml"
+"word/settings.xml"
+"word/styles.xml");
 
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "[Content_Types].xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "docProps/app.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "docProps/core.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/_rels/document.xml.rels"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/charts/chart1.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/document.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/fontTable.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/media/image1.jpeg"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/numbering.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/settings.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "word/styles.xml"
+  for f in ${search_values[@]}
+  do
+    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c $f
+  done
 }
 
-title="Output of \"docxbox ls filename.docx\" "
-title+="contains amount of contained files"
-@test "$title" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "Output of ${base_command}\" contains amount of contained files" {
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c '11 files'
 }
 
-@test "Output of \"docxbox ls filename.docx\" contains files' date and time" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "Output of ${base_command}\" contains files' date and time" {
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "4/11/2020"
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "11:3"
 }
 
-title="Output of \"docxbox ls filename.docx *.file-ending\" "
-title+="contains files with the given file ending"
-@test "$title" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+long_description="contains files with the given file ending"
+@test "Output of ${base_command} *.file-ending\" ${long_description}" {
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx *.jpeg | grep -c "image1.jpeg"
   "$BATS_TEST_DIRNAME"/docxbox ls $path_docx *.xml | grep -c "9 files"
 }

@@ -5,9 +5,10 @@
 
 load _helper
 
-@test "Exit code of \"docxbox lsdj filename.docx\" is zero" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+base_command="docxbox lsdj filename.docx"
+path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
+@test "Exit code of \"${base_command}\" is zero" {
   run "$BATS_TEST_DIRNAME"/docxbox lsdj $path_docx
   [ "$status" -eq 0 ]
 }
@@ -18,11 +19,7 @@ load _helper
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
-title="With \"docxbox lsdj filename.docx\" "
-title+="the fields in the docx are listed as JSON"
-@test "$title" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "With \"${base_command}\" the fields in the docx are listed as JSON" {
   pattern="table_unordered_list_images.docx-"
   "$BATS_TEST_DIRNAME/"docxbox lsdj $path_docx | grep -c $pattern
 
@@ -31,10 +28,8 @@ title+="the fields in the docx are listed as JSON"
 }
 
 title="With \"docxbox ls filename.docx --fields --json\" "
-title+="the fields in the docx are listed as JSON"
-@test "$title" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+title+="${long_description_Json}"
+@test "${title}" {
   pattern="table_unordered_list_images.docx-"
   "$BATS_TEST_DIRNAME/"docxbox ls $path_docx --fields --json | grep -c $pattern
 
@@ -42,22 +37,15 @@ title+="the fields in the docx are listed as JSON"
   "$BATS_TEST_DIRNAME/"docxbox ls $path_docx --fields --json | grep -c $pattern
 }
 
-title="With \"docxbox ls filename.docx -dj\" "
-title+="the fields in the docx are listed as JSON"
-@test "$title" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "With \"docxbox ls filename.docx -dj\" ${long_description_Json}" {
   pattern="table_unordered_list_images.docx-"
   "$BATS_TEST_DIRNAME/"docxbox ls $path_docx -dj | grep -c $pattern
 
-  "$BATS_TEST_DIRNAME/"docxbox ls $path_docx -dj | grep -c "/word/document.xml"
+  pattern="/word/document.xml"
+  "$BATS_TEST_DIRNAME/"docxbox ls $path_docx -dj | grep -c $pattern
 }
 
-title="With \"docxbox lsd filename.docx --json\" "
-title+="the fields in the docx are listed as JSON"
-@test "$title" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "With \"docxbox lsd filename.docx --json\" ${long_description_Json}" {
   pattern="table_unordered_list_images.docx-"
   "$BATS_TEST_DIRNAME/"docxbox lsd $path_docx --json | grep -c $pattern
 
