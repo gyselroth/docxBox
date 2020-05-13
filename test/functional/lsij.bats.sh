@@ -5,9 +5,12 @@
 
 load _helper
 
-@test "Exit code of \"docxbox lsij filename.docx\" is zero" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
+base_command="docxbox lsij filename.docx"
+description="are contained images as JSON"
+
+@test "Exit code of \"${base_command}\" is zero" {
   run "$BATS_TEST_DIRNAME"/docxbox lsij $path_docx
   [ "$status" -eq 0 ]
 }
@@ -18,32 +21,22 @@ load _helper
   [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox lsij filename.docx\" is contained images as JSON" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "Output of \"${base_command}\" is contained images as JSON" {
   "$BATS_TEST_DIRNAME"/docxbox lsij $path_docx | grep -c "image1.jpeg"
 }
 
-@test "Output of \"docxbox lsi filename.docx --json\" are contained images as JSON" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "Output of \"docxbox lsi filename.docx --json\" ${description}" {
   "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx --json | grep -c "image1.jpeg"
 }
 
-@test "Output of \"docxbox lsi filename.docx -j\" are contained images as JSON" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "Output of \"docxbox lsi filename.docx -j\" ${description}" {
   "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx -j | grep -c "image1.jpeg"
 }
 
-@test "Output of \"docxbox ls filename.docx -ij\" are contained images as JSON" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "Output of \"docxbox ls filename.docx -ij\" ${description}" {
   "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx -ij | grep -c "image1.jpeg"
 }
 
-@test "Output of \"docxbox ls filename.docx --images --json\" are contained images as JSON" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx --images --json | grep -c "image1.jpeg"
+@test "Output of \"docxbox ls filename.docx --images --json\" ${description}" {
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --images --json | grep "image1.jpeg"
 }
