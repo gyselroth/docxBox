@@ -171,8 +171,7 @@ bool docx_archive_replace::AddMediaFileAndRelation(
   added_image_file_ = true;
 
   // 2. Create media relation in _rels/document.xml.rels
-  // TODO(kay): implement
-//  relations->AddImageRelation()
+  //relations->AddImageRelation()
 
   delete relations;
 

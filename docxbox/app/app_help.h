@@ -16,10 +16,13 @@ class AppHelp {
  public:
   static bool PrintVersion();
 
+  static bool PrintHelpOnCat();
   static bool PrintHelpOnDiff();
+
   static bool PrintHelp(bool with_title,
                         AppCommands::Commands command,
                         const std::string &command_identifier = "");
+
   static bool PrintHelpOnGetPlainText();
   static bool PrintHelpOnList();
   static bool PrintHelpOnListImages(bool with_title = true);

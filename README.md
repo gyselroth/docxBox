@@ -15,6 +15,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
     + [List referenced fonts](#List-referenced-fonts)
     + [List fields](#list-fields)
   + [Compare DOCX documents](#compare-docx-documents)
+  * [Output XML](#output-xml)
   * [Output plaintext](#output-plaintext)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
@@ -188,6 +189,12 @@ The following shorthand:
 ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml````  
 displays a side-by-side comparison of the formatted XML of the given file 
 (``word/settings.xml``), with differences indicated.
+
+
+### Output XML
+
+````docxbox cat foo.docx word/_rels/document.xml.rels````  
+outputs the given file's content.
 
 
 ### Output plaintext

@@ -68,8 +68,8 @@ class docx_archive {
 
   bool GetText(bool newline_at_segments);
 
-  bool ExecuteUserCommand();
-
+  bool ExecuteUserCommand(std::string command = "");
+  bool CatFile();
   bool ViewFilesDiff();
 
   bool ModifyMeta();

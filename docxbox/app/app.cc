@@ -119,6 +119,9 @@ bool App::Process() {
     auto *docx_archive = new class docx_archive(argc_, argv_);
 
     switch (command) {
+      case AppCommands::Command_Cat:  // cat
+        result = docx_archive->CatFile();
+        break;
       case AppCommands::Command_ExecuteUserCommand:  // cmd
         result = docx_archive->ExecuteUserCommand();
         break;

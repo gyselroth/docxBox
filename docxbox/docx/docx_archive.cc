@@ -287,13 +287,18 @@ bool docx_archive::GetText(bool newline_at_segments) {
   return true;
 }
 
-bool docx_archive::ExecuteUserCommand() {
-  if (!docxbox::AppArguments::IsArgumentGiven(
-      argc_, 3, "Command")) return false;
+bool docx_archive::ExecuteUserCommand(std::string command) {
+  if (command.empty()) {
+      if (!docxbox::AppArguments::AreArgumentsGiven(
+        argc_,
+        2, "DOCX filename",
+        3, "Command")) return false;
+
+    command = argv_[3];
+  }
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
-  std::string command = argv_[3];
   helper::String::ReplaceAll(command, "*DOCX*", path_extract_);
 
   helper::Cli::Execute(command.c_str());
@@ -305,6 +310,40 @@ bool docx_archive::ExecuteUserCommand() {
   Zip(true, path_extract_, "", true, true);
 
   std::cout << "\n";
+
+  return true;
+}
+
+bool docx_archive::CatFile() {
+  if (!docxbox::AppArguments::AreArgumentsGiven(
+      argc_,
+      2, "DOCX filename",
+      3, "File to be displayed")) return false;
+
+  if (!UnzipDocxByArgv(true, "", true, true)) return false;
+
+  std::string path_file_relative = argv_[3];
+
+  if (path_file_relative.empty()) {
+    std::cout << "Invalid file path.\n";
+
+    return false;
+  }
+
+  if (path_file_relative[0] == '/')
+    path_file_relative = path_file_relative.substr(1);
+
+  std::string path_file = path_extract_ + "/" + path_file_relative;
+
+  if (!helper::File::FileExists(path_file)) {
+    std::cout << "File not found: " << argv_[3] << "\n";
+
+    return false;
+  }
+
+  auto content = helper::File::GetFileContents(path_file);
+
+  std::cout << content << "\n";
 
   return true;
 }
