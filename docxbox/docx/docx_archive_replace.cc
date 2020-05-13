@@ -171,11 +171,12 @@ bool docx_archive_replace::AddMediaFileAndRelation(
   added_image_file_ = true;
 
   // 2. Create media relation in _rels/document.xml.rels
-  //relations->AddImageRelation()
+  auto relationship_id =
+      relations->GetImageRelationshipId(relations->GetMediaPathNewImage());
 
   delete relations;
 
-  return true;
+  return !relationship_id.empty();
 }
 
 bool docx_archive_replace::hasArgOfAdditionalImageFile() const {

@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_DOCX_MEDIA_H_
 #define DOCXBOX_DOCX_DOCX_MEDIA_H_
 
+#include <docxbox/docx/xml/docx_xml_rels.h>
 #include <docxbox/helper/helper_file.h>
 
 #include <string>
@@ -15,9 +16,17 @@ class docx_media {
 
   bool AddImageFile(const std::string& path_image);
 
+  std::string GetImageRelationshipId(const std::string &path_image);
+
+  std::string GetMediaPathNewImage();
+
  private:
   std::string path_extract_;
+
+ private:
   std::string path_media_;
+
+  std::string media_path_new_image_ = "";
 
   std::string GetNextImageNumber();
 };

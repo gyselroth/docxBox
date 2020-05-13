@@ -13,9 +13,10 @@ docx_media::docx_media(std::string path_extract) {
 bool docx_media::AddImageFile(const std::string& path_image) {
   std::string number = GetNextImageNumber();
 
-  std::string path_destination =
-      path_media_ + "/"
+  std::string filename_image =
       "image" + number + "." + helper::File::GetExtension(path_image);
+
+  std::string path_destination = path_media_ + "/" + filename_image;
 
   try {
     if (!helper::File::CopyFile(path_image, path_destination)) return false;
@@ -24,6 +25,8 @@ bool docx_media::AddImageFile(const std::string& path_image) {
 
     return false;
   }
+
+  media_path_new_image_ = "media/" + filename_image;
 
   return true;
 }
@@ -49,4 +52,19 @@ std::string docx_media::GetNextImageNumber() {
   ++number;
 
   return std::to_string(number);
+}
+
+// Get (or add) media relationship in _rels/document.xml.rels
+std::string docx_media::GetImageRelationshipId(const std::string &path_image) {
+  auto rels = new docx_xml_rels(path_extract_);
+
+  auto relationship_id = rels->GetRelationShipIdByTarget(path_image);
+
+  delete rels;
+
+  return relationship_id;
+}
+
+std::string docx_media::GetMediaPathNewImage() {
+  return media_path_new_image_;
 }
