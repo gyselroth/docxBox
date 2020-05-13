@@ -14,9 +14,9 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
     + [List meta data](#list-meta-data)
     + [List referenced fonts](#List-referenced-fonts)
     + [List fields](#list-fields)
-  + [Compare DOCX documents](#compare-docx-documents)
-  * [Output XML](#output-xml)
-  * [Output document as plaintext](#output-document-as-plaintext)
+    + [Output XML](#output-xml)
+    + [Output document as plaintext](#output-document-as-plaintext)
+  * [Compare DOCX documents](#compare-docx-documents)
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
       + [Replace image](#replace-image)
@@ -169,6 +169,27 @@ or ````docxbox lsd foo.docx --json````
 or ````docxbox ls foo.docx --fields --json````  
 
 
+#### Output XML
+
+````docxbox cat foo.docx word/_rels/document.xml.rels````  
+outputs the given file's content.
+
+
+#### Output document as plaintext
+
+````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and 
+footer)
+
+**Output plaintext segments:**  
+````docxbox txt foo.docx -s````   
+or ````docxbox txt foo.docx --segments````   
+
+Outputs the text from document, w/ markup sections separated by newlines.
+This can be helpful to identify "segmented" sentences:
+Sentences which visually appear as a unit, but are segmented into separate XML 
+parent elements for formatting.
+
+
 ### Compare DOCX documents
 
 docxBox helps tracing changes to the files contained within DOCX archives,
@@ -189,27 +210,6 @@ The following shorthand:
 ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml````  
 displays a side-by-side comparison of the formatted XML of the given file 
 (``word/settings.xml``), with differences indicated.
-
-
-### Output XML
-
-````docxbox cat foo.docx word/_rels/document.xml.rels````  
-outputs the given file's content.
-
-
-### Output document as plaintext
-
-````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and 
-footer)
-
-**Output plaintext segments:**  
-````docxbox txt foo.docx -s````   
-or ````docxbox txt foo.docx --segments````   
-
-Outputs the text from document, w/ markup sections separated by newlines.
-This can be helpful to identify "segmented" sentences:
-Sentences which visually appear as a unit, but are segmented into separate XML 
-parent elements for formatting.
 
 
 ### Modify document
