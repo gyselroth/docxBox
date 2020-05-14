@@ -56,10 +56,9 @@ std::string docx_media::GetNextImageNumber() {
   return std::to_string(number);
 }
 
-// Get (or add) media relationship in _rels/document.xml.rels
+// Get (add if not exists) image relationship in _rels/document.xml.rels
 std::string docx_media::GetImageRelationshipId(const std::string &path_image) {
   auto rels = new docx_xml_rels(path_extract_);
-
   auto relationship_id = rels->GetRelationShipIdByTarget(path_image);
 
   delete rels;

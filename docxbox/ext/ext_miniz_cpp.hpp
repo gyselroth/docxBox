@@ -200,7 +200,7 @@ class miniz_cpp_ext {
           && !helper::String::EndsWith(file_in_zip.filename, ".xml.rels"))
         continue;
 
-      if (!docx_xml_indent::IndentXml(
+      if (!docx_xml_indent::IndentXmlFile(
           path_extract + "/" + file_in_zip.filename)) return false;
     }
 
