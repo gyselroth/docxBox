@@ -23,6 +23,9 @@ base_command="docxbox lorem filename.docx"
 @test "With \"${base_command}\" text gets replaced by dummy text" {
   path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
+  run "$BATS_TEST_DIRNAME"/docxbox lorem $path_docx
+  [ "$status" -eq 0 ]
+
   "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | grep -vc "Culpa ad eiusmod"
 }
 
