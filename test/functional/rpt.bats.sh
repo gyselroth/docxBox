@@ -27,13 +27,6 @@ load _helper
   [ "Missing argument: Replacement" = "${lines[0]}" ]
 }
 
-#@test "With \"docxbox rpt filename.docx search replacementImageAsJSON\" text can be replaced by an image" {
-#  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-#  image_json=
-#
-#  run ""
-#}
-
 # @TODO: reactivate once issue is resolved (tests prevent other tests from running)
 #@test "With \"docxbox rpt filename.docx stringToBeReplaced replacementString\" the stringToBeReplaced gets replaced" {
 #  path_docx="test/functional/tmp/cp_bio_assay.docx"
