@@ -27,9 +27,11 @@ title="Output of \"${base_command} otherFilename.docx {missing argument}\""
   path_docx_1="test/functional/tmp/cp_table_unordered_list_images.docx"
   path_docx_2="test/files/docx/table_unordered_list_images.docx"
 
+  pattern="Missing argument: File within DOCX archives to be compared"
+
   run "$BATS_TEST_DIRNAME"/docxbox diff $path_docx_1 $path_docx_2
   [ "$status" -ne 0 ]
-  [ "Missing argument: File within DOCX archives to be compared" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 #@test "With \"docxbox diff filename_v1.docx filename_v2.docx fileToCompare\" a side-by-side comparison is displayed" {
