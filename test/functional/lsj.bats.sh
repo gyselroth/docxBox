@@ -5,49 +5,59 @@
 
 load _helper
 
-@test "Output of \"docxbox lsj filename.docx\" contains files' and directories' attributes" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "length"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "date"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "time"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "file"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "length"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "date"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "time"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "file"
+longhand_command="docxbox ls filename.docx"
+description="contains files' and directories' attributes"
+
+attributes=(
+  "length"
+  "date"
+  "time"
+  "file")
+
+@test "Output of \"docxbox lsj filename.docx\" ${description}" {
+  for i in ${attributes[@]}
+  do
+    "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c $i
+  done
 }
 
-@test "Output of \"docxbox ls filename.docx --json\" contains files' and directories' attributes" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --json | grep -c "length"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --json | grep -c "date"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --json | grep -c "time"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --json | grep -c "file"
+@test "Output of \"${longhand_command} --json\" ${description}" {
+  for i in ${attributes[@]}
+  do
+    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --json | grep -c $i
+  done
 }
 
-@test "Output of \"docxbox ls filename.docx -j\" contains files' and directories' attributes" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -j | grep -c "length"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -j | grep -c "date"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -j | grep -c "time"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -j | grep -c "file"
+@test "Output of \"${longhand_command} -j\" ${description}" {
+  for i in ${attributes[@]}
+  do
+    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -j | grep -c $i
+  done
 }
 
 @test "Output of \"docxbox lsj filename.docx\" are contained files" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+search_values=(
+"[Content_Types].xml"
+"docProps/app.xml"
+"docProps/core.xml"
+"word/_rels/document.xml.rels"
+"word/charts/chart1.xml"
+"word/document.xml"
+"word/fontTable.xml"
+"word/media/image1.jpeg"
+"word/numbering.xml"
+"word/settings.xml"
+"word/styles.xml")
 
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "[Content_Types].xml"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "word/settings.xml"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "word/_rels/document.xml.rels"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "word/fontTable.xml"
+  for f in ${search_values[@]}
+  do
+    "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c $f
+  done
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
   "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "4/11/2020"
   "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "11:3"
 }

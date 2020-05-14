@@ -5,9 +5,11 @@
 
 load _helper
 
-@test "Exit code of \"docxbox lsd filename.docx\" is zero" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+merge_field="MERGEFIELD"
+merge_format="\* MERGEFORMAT"
+path_docx="test/functional/tmp/cp_mergefields.docx"
 
+@test "Exit code of \"docxbox lsd filename.docx\" is zero" {
   run "$BATS_TEST_DIRNAME"/docxbox lsd $path_docx
   [ "$status" -eq 0 ]
 }
@@ -19,22 +21,18 @@ load _helper
 }
 
 @test "With \"docxbox lsd filename.docx\" the fields in the docx are listed" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME/"docxbox lsd $path_docx | grep -c "table_unordered_list_images.docx-"
-  "$BATS_TEST_DIRNAME/"docxbox lsd $path_docx | grep -c "/word/document.xml"
+  "$BATS_TEST_DIRNAME/"docxbox lsd $path_docx | grep -c "$merge_field"
+  "$BATS_TEST_DIRNAME/"docxbox lsd $path_docx | grep -c "$merge_format"
 }
 
-@test "With \"docxbox ls filename.docx --fields\" the fields in the docx are listed" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME/"docxbox ls $path_docx --fields | grep -c "table_unordered_list_images.docx-"
-  "$BATS_TEST_DIRNAME/"docxbox ls $path_docx --fields | grep -c "/word/document.xml"
+title="With \"docxbox ls filename.docx --fields\" "
+title+="the fields in the docx are listed"
+@test "$title" {
+  "$BATS_TEST_DIRNAME/"docxbox lsd $path_docx | grep -c "$merge_field"
+  "$BATS_TEST_DIRNAME/"docxbox lsd $path_docx | grep -c "$merge_format"
 }
 
-@test "With \"docxbox ls filename.docx --d\" the fields in the docx are listed" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME/"docxbox ls $path_docx -d | grep -c "table_unordered_list_images.docx-"
-  "$BATS_TEST_DIRNAME/"docxbox ls $path_docx -d | grep -c "/word/document.xml"
+@test "With \"docxbox ls filename.docx -d\" the fields in the docx are listed" {
+  "$BATS_TEST_DIRNAME/"docxbox ls $path_docx -d | grep -c "$merge_field"
+  "$BATS_TEST_DIRNAME/"docxbox ls $path_docx -d | grep -c "$merge_format"
 }

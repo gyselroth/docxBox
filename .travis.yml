@@ -1,38 +1,50 @@
-language: cpp
+matrix:
+  include:
+    - language: shell
+    
+      script:
+        # lint functional tests
+        - bash -c 'shopt -s globstar nullglob; shellcheck **/*.sh'
 
-os:
-  - linux
-#  - osx
+    - language: cpp
+    
+      os:
+        - linux
+#        - osx
 
-compiler:
-  - gcc
-  - clang
+      compiler:
+        - gcc
+        - clang
 
-addons:
-  apt:
-    packages:
-      - cppcheck
-      - cmake
-      - gcc-4.9
+      addons:
+        apt:
+          packages:
+            - cppcheck
+            - cmake
+            - gcc-4.9  
 
-before_install:
-  - sudo pip install cpplint
-  - git clone https://github.com/leethomason/tinyxml2.git ./vendor/tinyxml2
-#  - git clone https://github.com/tfussell/miniz-cpp.git ./vendor/miniz-cpp
-  - git clone -b patch-2 https://github.com/kstenschke/miniz-cpp ./vendor/miniz-cpp
+      before_install:
+        - sudo pip install cpplint
+        - git clone https://github.com/leethomason/tinyxml2.git ./vendor/tinyxml2
+#        - git clone https://github.com/tfussell/miniz-cpp.git ./vendor/miniz-cpp
+        - git clone -b patch-2 https://github.com/kstenschke/miniz-cpp ./vendor/miniz-cpp
+#        -git clone https://github.com/nlohmann/json.git ./vendor/json
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo add-apt-repository ppa:duggan/bats --yes; fi
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq; fi
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq bats; fi
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install build-essential; fi
 
-#  -git clone https://github.com/nlohmann/json.git ./vendor/json
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo add-apt-repository ppa:duggan/bats --yes; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq bats; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install build-essential; fi
+      script:
+        # build docxBox
+        - cmake CMakeLists.txt && make
+        # lint c++ source w/ cppcheck
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all --language=c++ ./docxbox/*; fi
+        # lint c++ source for google styleguide breaches
+#        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cpplint docxbox/* --recursive --extensions=cc,h; fi
 
-script:
-  - cmake CMakeLists.txt && make
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all --language=c++ ./docxbox/*; fi
-  #- if [ "$TRAVIS_OS_NAME" = "linux" ]; then cpplint docxbox/* --recursive --extensions=cc,h; fi
-
-after_success:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./bin/linux/docxbox ; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
-#  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/docxbox ; fi
+      after_success:
+        # ensure docxbox can run on linux
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./bin/linux/docxbox ; fi
+        # run functional tests
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
+#        - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/docxbox ; fi
