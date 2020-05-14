@@ -459,11 +459,10 @@ Run all tests: `./test.sh`
 Code Convention
 ---------------
 
-The source code of docxBox follows the Google C++ Style Guide, 
-see: https://google.github.io/styleguide/cppguide.html  
-The source code of functional tests mostly (excluding rule for maximum 
-characters per line) follows the Google Shell Style Guide, 
-see https://google.github.io/styleguide/shell.xml
+The source code of docxBox follows the 
+[Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html),
+The source code of functional tests follows the 
+[Google Shell Style Guide](https://google.github.io/styleguide/shell.xml)
 
 
 Changelog
