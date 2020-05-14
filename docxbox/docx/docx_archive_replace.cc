@@ -88,7 +88,7 @@ bool docx_archive_replace::ReplaceText() {
   std::string replacement = argv_[4];
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())
-      || !AddMediaFileAndRelation(replacement)) return false;
+      || !AddImageFileAndRelation(replacement)) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -148,9 +148,9 @@ void docx_archive_replace::InitDocxOutPathForReplaceText(
   }
 }
 
-bool docx_archive_replace::AddMediaFileAndRelation(
-  const std::string &replacement) {
-  if (!docx_renderer::IsJsonForImage(replacement)
+bool docx_archive_replace::AddImageFileAndRelation(
+  const std::string &image_markup_json) {
+  if (!docx_renderer::IsJsonForImage(image_markup_json)
       || !hasArgOfAdditionalImageFile())
     // No media file given: successfully done (nothing)
     return true;

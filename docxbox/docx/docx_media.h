@@ -16,6 +16,7 @@ class docx_media {
 
   bool AddImageFile(const std::string& path_image);
 
+  // Get (add if not exists) image relationship in _rels/document.xml.rels
   std::string GetImageRelationshipId(const std::string &path_image);
 
   std::string GetMediaPathNewImage();
