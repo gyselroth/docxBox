@@ -28,6 +28,8 @@ class docx_xml_replace:docx_xml {
       const std::string& replacement,
       bool replace_segmented = false);
 
+  void SetImageRelationshipId(std::string &relationship_id);
+
  private:
   // Replacement can be (plain)textual or XML markup
   bool is_replacement_xml_ = false;
@@ -50,6 +52,8 @@ class docx_xml_replace:docx_xml {
   std::vector<tinyxml2::XMLElement *> previous_text_nodes_;
 
   int amount_replaced_ = 0;
+
+  std::string image_relationship_id_ = "";
 
   void ReplaceOrLocateStringInXml(tinyxml2::XMLElement *node,
                                   const std::string &search,

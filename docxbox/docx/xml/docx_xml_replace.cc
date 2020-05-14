@@ -8,6 +8,10 @@ docx_xml_replace::docx_xml_replace(
     char **argv) : docx_xml(argc, argv) {
 }
 
+void docx_xml_replace::SetImageRelationshipId(std::string &relationship_id) {
+  image_relationship_id_ = relationship_id;
+}
+
 // Replace given search string by replacement, which can be:
 // 1. A regular string: will replace the given string
 // 2. A string containing JSON: will be interpreted for rendering word markup,
@@ -232,12 +236,28 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
 std::string docx_xml_replace::RenderMarkupFromJson(const std::string& json) {
   auto type = docx_renderer::DetectElementType(json);
 
+  std::string markup;
+
   switch (type) {
-    case docx_renderer::Element_Image:
-      return docx_renderer_image::RenderMarkup(argc_, argv_, json);
-    case docx_renderer::Element_Table:
-      return docx_renderer_table::RenderMarkup(argc_, argv_, json);
+    case docx_renderer::Element_Image: {
+      auto renderer = new docx_renderer_image(argc_, argv_, json);
+      renderer->SetRelationshipId(image_relationship_id_);
+
+      markup = renderer->Render();
+
+      delete renderer;
+    }
+    break;
+    case docx_renderer::Element_Table: {
+      auto renderer = new docx_renderer_table(argc_, argv_, json);
+
+      markup = renderer->Render();
+      delete renderer;
+    }
+    break;
     case docx_renderer::Element_None:default:
       throw "Invalid markup config, failed to identify element type.";
   }
+
+  return markup;
 }
