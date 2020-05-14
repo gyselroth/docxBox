@@ -41,7 +41,7 @@ bool docx_archive_replace::ReplaceImage() {
       std::string path_image_replacement =
           helper::File::ResolvePath(path_working_directory_, argv_[4]);
 
-      helper::File::CopyFile(path_image_original, path_image_replacement);
+      helper::File::CopyFile(path_image_replacement, path_image_original);
 
       break;
     }
