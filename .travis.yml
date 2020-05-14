@@ -4,7 +4,7 @@ matrix:
     
       script:
         # lint functional tests
-        - bash -c 'shopt -s globstar nullglob; shellcheck **/*.{sh,ksh,bash}'
+        - bash -c 'shopt -s globstar nullglob; shellcheck **/*.sh'
 
     - language: cpp
     
