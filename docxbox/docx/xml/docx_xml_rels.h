@@ -15,7 +15,8 @@
 
 class docx_xml_rels:docx_xml {
  public:
-  docx_xml_rels(std::string path_extract, int argc = 0, char **argv = nullptr);
+  explicit docx_xml_rels(
+      std::string path_extract, int argc = 0, char **argv = nullptr);
 
   std::string GetRelationShipIdByTarget(const std::string &path_target);
 
@@ -24,6 +25,8 @@ class docx_xml_rels:docx_xml {
   std::string path_document_xml_rels_;
 
   std::string xml_;
+  std::string &GetAttributeValueFromRelationship(const tinyxml2::XMLElement *relationship,
+                                                 std::string &relationship_id) const;
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_RELS_H_
