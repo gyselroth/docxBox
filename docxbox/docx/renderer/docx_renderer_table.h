@@ -16,14 +16,7 @@ class docx_renderer_table: docx_renderer {
   // Constructor
   explicit docx_renderer_table(int argc, char **argv, const std::string &json);
 
-  std::string GetWml();
-
-  static std::string RenderMarkup(
-      int argc,
-      char **argv,
-      const std::string& json);
-
-  bool Render();
+  std::string Render();
 
  private:
   // Table specs from JSON

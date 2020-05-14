@@ -87,14 +87,26 @@ bool docx_archive_replace::ReplaceText() {
   std::string search = argv_[3];
   std::string replacement = argv_[4];
 
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())
-      || !AddImageFileAndRelation(replacement)) return false;
+  std::string image_relationship_id;
+
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+
+  try {
+    image_relationship_id = AddImageFileAndRelation(replacement);
+  } catch (std::string &message) {
+    std::cerr << message;
+
+    return false;
+  }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto file_list = docx_file.infolist();
 
   auto parser = new docx_xml_replace(argc_, argv_);
+
+  if (!image_relationship_id.empty())
+    parser->SetImageRelationshipId(image_relationship_id);
 
   for (const auto &file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
@@ -148,12 +160,16 @@ void docx_archive_replace::InitDocxOutPathForReplaceText(
   }
 }
 
-bool docx_archive_replace::AddImageFileAndRelation(
+/**
+ * @param image_markup_json
+ * @return relationship id, e.g. "rId7"
+ */
+std::string docx_archive_replace::AddImageFileAndRelation(
   const std::string &image_markup_json) {
   if (!docx_renderer::IsJsonForImage(image_markup_json)
       || !hasArgOfAdditionalImageFile())
     // No media file given: successfully done (nothing)
-    return true;
+    return "";
 
   std::string path_extract_absolute =
       helper::File::ResolvePath(path_working_directory_, path_extract_);
@@ -165,7 +181,9 @@ bool docx_archive_replace::AddImageFileAndRelation(
       helper::File::ResolvePath(path_working_directory_, argv_[5]))) {
     delete relations;
 
-    return false;
+    std::string message = std::string("Failed adding image file ") + argv_[5];
+
+    throw message;
   }
 
   added_image_file_ = true;
@@ -176,7 +194,7 @@ bool docx_archive_replace::AddImageFileAndRelation(
 
   delete relations;
 
-  return !relationship_id.empty();
+  return relationship_id;
 }
 
 bool docx_archive_replace::hasArgOfAdditionalImageFile() const {

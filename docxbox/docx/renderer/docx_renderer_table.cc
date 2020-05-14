@@ -19,27 +19,6 @@ docx_renderer_table::docx_renderer_table(
   if (is_json_valid_markup_config_) InitSpecs();
 }
 
-std::string docx_renderer_table::RenderMarkup(
-    int argc, char **argv, const std::string& json) {
-  auto renderer = new docx_renderer_table(argc, argv, json);
-
-  if (!renderer->Render()) {
-    delete renderer;
-
-    throw "Failed render table markup.\n";
-  }
-
-  auto markup = renderer->GetWml();
-
-  delete renderer;
-
-  return markup;
-}
-
-std::string docx_renderer_table::GetWml() {
-  return wml_;
-}
-
 // Collect table specs from JSON
 void docx_renderer_table::InitSpecs() {
   if (!helper::String::Contains(json_, "table")) {
@@ -99,8 +78,8 @@ void docx_renderer_table::InitSpecs() {
 }
 
 // @see http://officeopenxml.com/WPtable.php
-bool docx_renderer_table::Render() {
-  if (!is_json_valid_markup_config_) return false;
+std::string docx_renderer_table::Render() {
+  if (!is_json_valid_markup_config_) "Failed render table markup.\n";
 
   wml_ = std::string(kWRunLhs);
 
@@ -113,7 +92,7 @@ bool docx_renderer_table::Render() {
 
   wml_ += std::string(kWRunRhs);
 
-  return true;
+  return wml_;
 }
 
 std::string docx_renderer_table::RenderTableProperties() {

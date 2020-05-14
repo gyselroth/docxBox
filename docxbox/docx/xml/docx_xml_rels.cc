@@ -19,7 +19,7 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
 
   doc.Parse(xml_.c_str());
 
-  if (doc.ErrorID() != 0) return "";
+  if (doc.ErrorID() != 0) throw "Failed parse word/_rels/document.xml.rels\n";
 
   tinyxml2::XMLElement *relationships = doc.FirstChildElement("Relationships");
 
@@ -46,6 +46,7 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
 
   if (target_exists) return relationship_id;
 
+  // TODO(kay): ensure functionality when there aren't any pre-existing nodes
   if (relationship_id.length() < 4) return "";
 
   auto last_id = std::stoi(relationship_id.substr(3));
@@ -58,7 +59,7 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
 
   helper::String::Replace(xml_, "</Relationships>", insert_node_xml.c_str());
 
-  SaveXml(true);
+  if (!SaveXml(true)) throw "Failed save word/_rels/document.xml.rels\n";
 
   return relationship_id;
 }

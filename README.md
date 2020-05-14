@@ -174,6 +174,9 @@ or ````docxbox ls foo.docx --fields --json````
 ````docxbox cat foo.docx word/_rels/document.xml.rels````  
 outputs the given file's content.
 
+**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, use a your 
+favorite text editor via the [cmd command](#arbitrary-manual-and-scripted-modification-and-analysis))
+
 
 #### Output document as plaintext
 
@@ -472,7 +475,6 @@ See [Changelog](https://github.com/gyselroth/docxbox/blob/master/CHANGELOG.md)
 Roadmap
 -------
 
-* v0.0.4: Replace text by image
 * v0.0.4: Replace field by text, table and image
 * v0.0.5: Add JSON / base-64 encoded output of arbitrary command outputs (cmd)
 * v0.0.5: Batch process sequences of manipulation operations
