@@ -45,15 +45,19 @@ regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox h lsl\" displays help for lsl command" {
+  pattern="List all files containing search-string or regular expression:"
+
   run "$BATS_TEST_DIRNAME"/docxbox h lsl
   [ "$status" -eq 0 ]
-  [ "List all files containing search-string or regular expression:" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h lslj\" displays help for lslj command" {
+  pattern="List all files containing search-string or regular expression:"
+
   run "$BATS_TEST_DIRNAME"/docxbox h lslj
   [ "$status" -eq 0 ]
-  [ "List all files containing search-string or regular expression:" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h lsf\" displays help for lsf command" {
@@ -118,9 +122,11 @@ regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox h rmt\" displays help for rmt command" {
+  pattern="Command: rmt - Remove DOCX content between given strings:"
+
   run "$BATS_TEST_DIRNAME"/docxbox h rmt
   [ "$status" -eq 0 ]
-  [ "Command: rmt - Remove DOCX content between given strings:" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 @test "\"docxbox h mm\" displays help for mm command" {
@@ -143,9 +149,11 @@ regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox h diff\" displays help for diff command" {
+  pattern="Command diff - Side-by-side compare file from two DOCX archives:"
+
   run "$BATS_TEST_DIRNAME"/docxbox h diff
   [ "$status" -eq 0 ]
-  [ "Command diff - Side-by-side compare file from two DOCX archives:" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 # Extract and create DOCX:
@@ -174,7 +182,9 @@ regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox h zpc\" displays help for zpc command" {
+  pattern="Command: zpc - Compress XML, than create DOCX from files:"
+
   run "$BATS_TEST_DIRNAME"/docxbox h zpc
   [ "$status" -eq 0 ]
-  [ "Command: zpc - Compress XML, than create DOCX from files:" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
