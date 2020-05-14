@@ -5,9 +5,24 @@
 
 load _helper
 
-@test "Exit code of \"docxbox lsl filename.docx searchString\" is zero" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-  
+path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+base_command="docxbox lsl filename.docx searchString"
+
+description="lists all files containing given searchString"
+regex_description="lists all files containing given regular expression"
+
+regex="/[0-9A-Z]\{8\}/"
+
+search_results=(
+"word/document.xml"
+"word/fontTable.xml"
+"word/numbering.xml"
+"word/styles.xml")
+
+regex_result="docProps/core.xml"
+
+@test "Exit code of \"${base_command}\" is zero" {
   run "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts
   [ "$status" -eq 0 ]
 }
@@ -19,54 +34,40 @@ load _helper
 }
 
 @test "Output of \"docxbox lsl filename.docx {missing argument}\" is an error message" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
   run "$BATS_TEST_DIRNAME"/docxbox lsl path_docx
   [ "$status" -ne 0 ]
   [ "Missing argument: String or regular expression to be located" = "${lines[0]}" ]
 }
 
-@test "\"docxbox lsl filename.docx searchString\" lists all files containing given searchString" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts | grep -c "word/document.xml"
-  "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts | grep -c "word/fontTable.xml"
-  "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts | grep -c "word/numbering.xml"
-  "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts | grep -c "word/styles.xml"
+@test "\"${base_command}\" ${description}" {
+  for i in ${search_results}
+  do
+    "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts | grep -c $i
+  done 
 }
 
-@test "\"docxbox ls filename.docx -l searchString\" lists all files containing given searchString" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -l fonts | grep -c "word/document.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -l fonts | grep -c "word/fontTable.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -l fonts | grep -c "word/numbering.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -l fonts | grep -c "word/styles.xml"
+@test "\"docxbox ls filename.docx -l searchString\" ${description}" {
+  for i in ${search_results}
+  do
+    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx fonts -l | grep -c $i
+  done
 }
 
-@test "\"docxbox ls filename.docx --locate searchString\" lists all files containing given searchString" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate fonts | grep -c "word/document.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate fonts | grep -c "word/fontTable.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate fonts | grep -c "word/numbering.xml"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate fonts | grep -c "word/styles.xml"
+@test "\"docxbox ls filename.docx --locate searchString\" ${description}" {
+  for i in ${search_results}
+  do
+    "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts --locate | grep -c $i
+  done
 }
 
-@test "\"docxbox lsl filename.docx regular-expression\" lists all files containing given regular-expression" {
-  path_docx="test/functional/tmp/cp_bio_assay.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx "/[0-9A-Z]\{8\}/" | grep -c "docProps/core.xml"
+@test "\"docxbox lsl filename.docx regex\" ${regex_description}" {
+  "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx ${regex} | grep -c ${regex_result}
 }
 
-@test "\"docxbox ls filename.docx -l regular-expression\" lists all files containing given regular-expression" {
-  path_docx="test/functional/tmp/cp_bio_assay.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -l "/[0-9A-Z]\{8\}/" | grep -c "docProps/core.xml"
+@test "\"docxbox ls filename.docx -l regex\" ${regex_description}" {
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -l ${regex} | grep -c ${regex_result}
 }
 
-@test "\"docxbox ls filename.docx --locate regular-expression\" lists all files containing given regular-expression" {
-  path_docx="test/functional/tmp/cp_bio_assay.docx"
-
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate "/[0-9A-Z]\{8\}/" | grep -c "docProps/core.xml"
+@test "\"docxbox ls filename.docx --locate regex\" ${regex_description}" {
+  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate ${regex} | grep -c ${regex_result}
 }
