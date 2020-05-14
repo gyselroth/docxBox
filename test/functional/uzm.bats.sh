@@ -5,50 +5,49 @@
 
 load _helper
 
+path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
+description="only media files are extracted"
+unziped_docx="cp_table_unordered_list_images.docx-media-extracted"
+
 @test "Output of \"docxbox uzm {missing argument}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox uzm
   [ "$status" -ne 0 ]
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
-@test "With \"docxbox uzm filename.docx\" only media files are extracted" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "With \"docxbox uzm filename.docx\" ${description}" {
   run "$BATS_TEST_DIRNAME"/docxbox uzm $path_docx
 }
 
 @test "Unziped files are located in project root" {
-  ls | grep -c cp_table_unordered_list_images.docx-media
+  ls | grep -c "${unziped_docx}"
 
-  if [ -d cp_table_unordered_list_images.docx-media ]; then
-    rm -r cp_table_unordered_list_images.docx-media;
+  if [ -d "${unziped_docx}" ]; then
+    rm -r "${unziped_docx}";
   fi
 }
 
-@test "With \"docxbox uz filename.docx --media\" only media files are extracted" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "With \"docxbox uz filename.docx --media\" ${description}" {
   run "$BATS_TEST_DIRNAME"/docxbox uz $path_docx --media
 }
 
-@test "Unziped files are located in project root" {
-  ls | grep -c cp_table_unordered_list_images.docx-media
+@test "Unziped files are located in project root after running uz --media " {
+  ls | grep -c "${unziped_docx}"
 
-  if [ -d cp_table_unordered_list_images.docx-media ]; then
-    rm -r cp_table_unordered_list_images.docx-media;
+  if [ -d "${unziped_docx}" ]; then
+    rm -r "${unziped_docx}";
   fi
 }
 
-@test "With \"docxbox uz filename.docx -m\" only media files are extracted" {
-  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-
+@test "With \"docxbox uz filename.docx -m\" ${description}" {
   run "$BATS_TEST_DIRNAME"/docxbox uz $path_docx -m
 }
 
-@test "Unziped files are located in project root" {
-  ls | grep -c cp_table_unordered_list_images.docx-media
+@test "Unziped files are located in project root after running uz -m" {
+  ls | grep -c "${unziped_docx}"
 
-  if [ -d cp_table_unordered_list_images.docx-media-extracted ]; then
-    rm -r cp_table_unordered_list_images.docx-media-extracted;
+  if [ -d "${unziped_docx}" ]; then
+    rm -r "${unziped_docx}";
   fi
 }
