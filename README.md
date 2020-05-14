@@ -460,7 +460,7 @@ Code Convention
 ---------------
 
 The source code of docxBox follows the 
-[Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html),
+[Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).  
 The source code of functional tests follows the 
 [Google Shell Style Guide](https://google.github.io/styleguide/shell.xml)
 
