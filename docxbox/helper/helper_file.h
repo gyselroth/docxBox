@@ -47,13 +47,14 @@ extern bool WriteToNewFile(
     const std::string &path_file,
     const std::string &content);
 
-extern void CopyFile(
-    const std::string &path_image_original,
-    const std::string &path_image_replacement);
+extern bool CopyFile(
+    const std::string &path_source,
+    const std::string &path_destination);
 
 extern bool Remove(const char *path);
 extern bool RemoveRecursive(const char *file_path);
 
+extern std::string GetExtension(const std::string& file_path);
 extern std::string GetLastPathSegment(std::string path);
 
 extern std::vector<std::string> ScanDir(const char *path);

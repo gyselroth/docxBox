@@ -87,7 +87,8 @@ bool docx_archive_replace::ReplaceText() {
   std::string search = argv_[3];
   std::string replacement = argv_[4];
 
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())
+      || !AddMediaFileAndRelation(replacement)) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -99,6 +100,8 @@ bool docx_archive_replace::ReplaceText() {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
+
+    if (helper::File::IsDirectory(path_file_absolute)) continue;
 
     if (!parser->ReplaceInXml(path_file_absolute, search, replacement)) {
       std::cerr << "Error: Failed replace string in: "
@@ -112,28 +115,73 @@ bool docx_archive_replace::ReplaceText() {
 
   delete parser;
 
-  std::string path_docx_out =
-      argc_ >= 6
-      // Result filename is given as argument
-      ? helper::File::ResolvePath(
-          path_working_directory_,
-          argv_[5])
-      // Overwrite original DOCX
-      : path_docx_in_;
+  std::string path_docx_out;
 
-  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
-    std::cerr << "DOCX creation failed.\n";
+  bool overwrite_source_docx;
+  InitDocxOutPathForReplaceText(path_docx_out, overwrite_source_docx);
+
+  CreateDocxFromExtract(path_docx_out, overwrite_source_docx);
+
+  return true;
+}
+
+void docx_archive_replace::InitDocxOutPathForReplaceText(
+    std::string &path_docx_out, bool &overwrite_source_docx) const {
+  path_docx_out = path_docx_in_;
+  overwrite_source_docx = true;
+
+  if (added_image_file_) {
+    if (argc_ >= 7) {
+      path_docx_out =
+          helper::File::ResolvePath(path_working_directory_, argv_[6]);
+
+      overwrite_source_docx = false;
+    }
+  } else {
+    if (argc_ >= 6) {
+      path_docx_out =
+          helper::File::ResolvePath(path_working_directory_, argv_[5]);
+
+
+      overwrite_source_docx = false;
+    }
+  }
+}
+
+bool docx_archive_replace::AddMediaFileAndRelation(
+  const std::string &replacement) {
+  if (!docx_renderer::IsJsonForImage(replacement)
+      || !hasArgOfAdditionalImageFile())
+    // No media file given: successfully done (nothing)
+    return true;
+
+  std::string path_extract_absolute =
+      helper::File::ResolvePath(path_working_directory_, path_extract_);
+
+  auto relations = new docx_media(path_extract_absolute);
+
+  // 1. Copy image file to word/media/image<number>.<extension>
+  if (!relations->AddImageFile(
+      helper::File::ResolvePath(path_working_directory_, argv_[5]))) {
+    delete relations;
 
     return false;
   }
 
-  if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
+  added_image_file_ = true;
 
-  std::rename(
-      std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
+  // 2. Create media relation in _rels/document.xml.rels
+  auto relationship_id =
+      relations->GetImageRelationshipId(relations->GetMediaPathNewImage());
 
-  return true;
+  delete relations;
+
+  return !relationship_id.empty();
+}
+
+bool docx_archive_replace::hasArgOfAdditionalImageFile() const {
+  return argc_ >= 6
+        && helper::File::IsWordCompatibleImage(argv_[5]);
 }
 
 bool docx_archive_replace::RemoveBetweenText() {
@@ -180,19 +228,7 @@ bool docx_archive_replace::RemoveBetweenText() {
       // Overwrite original DOCX
       : path_docx_in_;
 
-  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
-    std::cerr << "DOCX creation failed.\n";
-
-    return false;
-  }
-
-  if (argc_ < 7) helper::File::Remove(path_docx_in_.c_str());
-
-  std::rename(
-      std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
-
-  return true;
+  return CreateDocxFromExtract(path_docx_out, argc_ < 7);
 }
 
 bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
@@ -221,24 +257,15 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 
   delete parser;
 
-  std::string path_docx_out =
-      argc_ >= 4
+  bool overwrite_source_docx = argc_ < 4;
+
+  std::string path_docx_out = overwrite_source_docx
       // Result filename is given as argument
       ? helper::File::ResolvePath(path_working_directory_, argv_[3])
       // Overwrite original DOCX
       : path_docx_in_;
 
-  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
-    std::cerr << "DOCX creation failed.\n";
-
-    return false;
-  }
-
-  std::rename(
-      std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
-
-  return true;
+  return CreateDocxFromExtract(path_docx_out, overwrite_source_docx);
 }
 
 bool docx_archive_replace::SetFieldValue() {

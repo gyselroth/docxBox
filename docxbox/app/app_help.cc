@@ -20,6 +20,7 @@ bool AppHelp::PrintHelp(bool with_title,
                         AppCommands::Commands command,
                         const std::string &command_identifier) {
   switch (command) {
+    case AppCommands::Command_Cat: return PrintHelpOnCat();
     case AppCommands::Command_ExecuteUserCommand:
       return PrintHelpOnUserCommand();
     case AppCommands::Command_FileDiff:return PrintHelpOnDiff();
@@ -108,6 +109,7 @@ bool AppHelp::PrintOverview(bool with_title) {
       "\n    lsmj  - Output DOCX meta data as JSON"
       "\n"
       "\n  Convert and compare DOCX:"
+      "\n    cat   - Output content of file contained within DOCX"
       "\n    txt   - Output DOCX document as plaintext"
       "\n    diff  - Side-by-side compare file from two DOCX "
       "archives"
@@ -251,6 +253,14 @@ bool AppHelp::PrintHelpOnUserCommand() {
                "--------------------------------------------------------------\n"
                "Example: Edit contained XML file w/ nano\n"
                "  docxbox cmd foo.docx \"nano *DOCX*/word/settings.xml\"\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnCat() {
+  std::cout << "Command cat - Output content of file contained within DOCX\n"
+               "----------------------------------------------------------\n"
+               "docxbox cat foo.docx word/settings.xml\n\n";
 
   return true;
 }
@@ -435,7 +445,7 @@ bool AppHelp::PrintHelpOnZip(bool with_zip) {
 }
 
 void AppHelp::PrintUnknownArgumentMessage(const char *arg) {
-  std::cerr << "Unknown argument: \"" << arg << "\".";
+  std::cerr << "Unknown argument: \"" << arg << "\". ";
   std::cout << "Possible arguments are:\n";
 
   PrintHelp(false, AppCommands::Commands::Command_Invalid);

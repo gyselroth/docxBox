@@ -43,7 +43,7 @@ bool docx_xml_replace::ReplaceInXml(
     runs_to_be_replaced_.clear();
 
     try {
-      // Render and inject markup before body
+      // Render and inject markup (initially) before body
       helper::String::ReplaceAll(
           doc_xml,
           "<w:body>",

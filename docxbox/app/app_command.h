@@ -12,6 +12,7 @@ namespace docxbox {
 class AppCommands {
  public:
   enum Commands {
+    Command_Cat,
     Command_ExecuteUserCommand,
     Command_FileDiff,
     Command_Help,

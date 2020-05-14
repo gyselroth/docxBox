@@ -46,17 +46,18 @@ bool String::IsWhiteSpace(const std::string &str) {
   return true;
 }
 
-void String::Replace(
-    std::string &haystack,
-    const char *needle,
-    const char *replacement) {
+bool String::Replace(
+    std::string &haystack, const char *needle, const char *replacement) {
   size_t needle_len = strlen(needle);
 
   size_t index = 0;
   index = haystack.find(needle, index);
 
-  if (std::string::npos != index)
-    haystack.replace(index, needle_len, replacement);
+  if (std::string::npos == index) return false;
+
+  haystack.replace(index, needle_len, replacement);
+
+  return true;
 }
 
 int String::ReplaceAll(
@@ -153,6 +154,32 @@ std::string String::GetTrailingWord(std::string str) {
   auto words = Explode(str, ' ');
 
   return words[words.size() - 1];
+}
+
+extern std::string String::ExtractRightMostNumber(
+    std::string str, std::string default_if_none) {
+  auto offset_end =  str.find_last_of('.');
+
+  if (offset_end == std::string::npos) return default_if_none;
+
+  int offset_start = -1;
+
+  bool was_numeric = false;
+
+  for (uint16_t i = str.length() - 1; i > 0; i--) {
+    if (isdigit(str[i])) {
+      was_numeric = true;
+    } else {
+      if (was_numeric) {
+        offset_start = i + 1;
+        break;
+      }
+    }
+  }
+
+  return -1 == offset_start
+    ? default_if_none
+    : str.substr(offset_start, offset_end - offset_start);
 }
 
 std::string String::Implode(
@@ -259,6 +286,8 @@ bool String::IsAllUpper(const std::string& str) {
 }
 
 bool String::IsJson(const std::string &str) {
+  if (str.empty()) return false;
+
   const char *kStr = str.c_str();
 
   return
