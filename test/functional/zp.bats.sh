@@ -14,8 +14,8 @@ load _helper
 title="With \"docxbox zp directory /path-to-file/filename.docx\" "
 title+="a directory can be zipped into a docx"
 @test "$title" {
-  if [ ! -d test/files/docx/unziped ]; then
-    mkdir test/files/docx/unziped;
+  if [ ! -d test/functional/tmp/unziped ]; then
+    mkdir test/functional/tmp/unziped;
     path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
     unzip $path_docx -d test/functional/tmp/unziped;
   fi
