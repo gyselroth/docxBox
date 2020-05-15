@@ -21,6 +21,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Modify meta data](#modify-meta-data)
       + [Replace image](#replace-image)
       + [Replace text by text](#replace-text-by-text)
+      + [Replace text by heading](#replace-text-by-heading)
       + [Replace text by image](#replace-text-by-image)
       + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
@@ -262,6 +263,14 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
 
+#### Replace text by heading
+
+**Example:** Replace ``search`` by a Heading 1 with the text ``Heading 1``:
+````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Heading 1\"}}"````
+
+docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
+
+
 #### Replace text by image
 
 **Example:** To replace text by an image: 
@@ -474,8 +483,6 @@ See [Changelog](https://github.com/gyselroth/docxbox/blob/master/CHANGELOG.md)
 Roadmap
 -------
 
-* v0.0.4: Replace field by text, table and image
-* v0.0.5: Add JSON / base-64 encoded output of arbitrary command outputs (cmd)
 * v0.0.5: Batch process sequences of manipulation operations
 * v0.0.6: Ensure microsoft word compatibility
 * v0.1.0: Add optional configuration options via environment vars

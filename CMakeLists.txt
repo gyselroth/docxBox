@@ -38,6 +38,7 @@ add_executable(docxbox
         docxbox/docx/docx_media.cc
 
         docxbox/docx/renderer/docx_renderer.cc
+        docxbox/docx/renderer/docx_renderer_heading.cc
         docxbox/docx/renderer/docx_renderer_image.cc
         docxbox/docx/renderer/docx_renderer_rels.cc
         docxbox/docx/renderer/docx_renderer_table.cc

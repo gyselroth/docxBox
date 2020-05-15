@@ -16,10 +16,7 @@ docx_renderer_image::docx_renderer_image(
   json_ = json;
   is_json_valid_markup_config_ = helper::String::IsJson(json);
 
-  if (is_json_valid_markup_config_) {
-    if (argc >= 6) InsertNewImageFile(argv[5]);
-    InitSpecsFromJson();
-  }
+  if (is_json_valid_markup_config_) InitSpecsFromJson();
 }
 
 void docx_renderer_image::SetRelationshipId(
@@ -27,14 +24,9 @@ void docx_renderer_image::SetRelationshipId(
   relationship_id_ = relationship_id;
 }
 
-bool docx_renderer_image::InsertNewImageFile(const std::string& path_image) {
-  // TODO(kay): implement
-  return true;
-}
-
 // Collect specs from JSON
 void docx_renderer_image::InitSpecsFromJson() {
-  if (!docx_renderer::IsJsonForImage(json_)) {
+  if (!docx_renderer::IsValidJsonForImage(json_)) {
     is_json_valid_markup_config_ = false;
 
     return;

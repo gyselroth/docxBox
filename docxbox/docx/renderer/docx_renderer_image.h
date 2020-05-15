@@ -33,8 +33,6 @@ class docx_renderer_image: docx_renderer {
 
   std::string relationship_id_;
 
-  static bool InsertNewImageFile(const std::string& path_image);
-
   void InitSpecsFromJson();
 };
 

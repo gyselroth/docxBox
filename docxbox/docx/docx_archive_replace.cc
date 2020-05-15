@@ -166,7 +166,7 @@ void docx_archive_replace::InitDocxOutPathForReplaceText(
  */
 std::string docx_archive_replace::AddImageFileAndRelation(
   const std::string &image_markup_json) {
-  if (!docx_renderer::IsJsonForImage(image_markup_json)
+  if (!docx_renderer::IsValidJsonForImage(image_markup_json)
       || !hasArgOfAdditionalImageFile())
     // No media file given: successfully done (nothing)
     return "";

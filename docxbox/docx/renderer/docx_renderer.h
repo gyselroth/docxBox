@@ -18,10 +18,9 @@ static const char *const kWTableRhs = "</w:tbl>";
 class docx_renderer {
  public:
   enum Elements {
-    Element_Header1,
-    Element_Header2,
-    Element_Header3,
-    Element_Header4,
+    Element_Heading1,
+    Element_Heading2,
+    Element_Heading3,
     Element_Link,
     Element_Image,
     Element_OrderedList,
@@ -33,7 +32,8 @@ class docx_renderer {
 
   static docx_renderer::Elements DetectElementType(const std::string& json);
 
-  static bool IsJsonForImage(const std::string &str);
+  static bool IsValidJsonForImage(const std::string &str);
+  static bool IsValidJsonForHeading(const std::string &str);
 
  protected:
   int argc_;
