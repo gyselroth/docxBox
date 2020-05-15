@@ -23,7 +23,7 @@ search_results=(
 regex_result="docProps/core.xml"
 
 @test "Exit code of \"${base_command}\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts
+  run "$BATS_TEST_DIRNAME"/docxbox lsl "${path_docx}" fonts
   [ "$status" -eq 0 ]
 }
 
@@ -34,40 +34,42 @@ regex_result="docProps/core.xml"
 }
 
 @test "Output of \"docxbox lsl filename.docx {missing argument}\" is an error message" {
+  pattern="Missing argument: String or regular expression to be located"
+
   run "$BATS_TEST_DIRNAME"/docxbox lsl path_docx
   [ "$status" -ne 0 ]
-  [ "Missing argument: String or regular expression to be located" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 @test "\"${base_command}\" ${description}" {
-  for i in ${search_results}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsl "${path_docx}" fonts | grep -c "${i}"
   done 
 }
 
 @test "\"docxbox ls filename.docx -l searchString\" ${description}" {
-  for i in ${search_results}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx fonts -l | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" fonts -l | grep -c "${i}"
   done
 }
 
 @test "\"docxbox ls filename.docx --locate searchString\" ${description}" {
-  for i in ${search_results}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx fonts --locate | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsl "${path_docx}" fonts --locate | grep -c "${i}"
   done
 }
 
 @test "\"docxbox lsl filename.docx regex\" ${regex_description}" {
-  "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx ${regex} | grep -c ${regex_result}
+  "$BATS_TEST_DIRNAME"/docxbox lsl "${path_docx}" ${regex} | grep -c ${regex_result}
 }
 
 @test "\"docxbox ls filename.docx -l regex\" ${regex_description}" {
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -l ${regex} | grep -c ${regex_result}
+  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" -l ${regex} | grep -c ${regex_result}
 }
 
 @test "\"docxbox ls filename.docx --locate regex\" ${regex_description}" {
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate ${regex} | grep -c ${regex_result}
+  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" --locate ${regex} | grep -c ${regex_result}
 }
