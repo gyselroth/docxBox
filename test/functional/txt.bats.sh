@@ -16,17 +16,17 @@ base_command="docxbox txt filename.docx"
 }
 
 @test "Output of \"${base_command}\" is the the plain text from given file" {
-  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | grep -c "Officia"
+  "$BATS_TEST_DIRNAME"/docxbox txt "${path_docx}" | grep -c "Officia"
 }
 
 appendix="is the segmented plain text from given file"
 @test "Output of \"${base_command} -s \" ${appendix}" {
-  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx -s | wc -l | grep -c "105"
-  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | wc -l | grep -c "65"
+  "$BATS_TEST_DIRNAME"/docxbox txt "${path_docx}" -s | wc -l | grep -c "105"
+  "$BATS_TEST_DIRNAME"/docxbox txt "${path_docx}" | wc -l | grep -c "65"
 }
 
 appendix="is the segmented plain text from given file"
 @test "Output of \"${base_command} --segments \" ${appendix}" {
-  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx --segments | wc -l | grep -c "105"
-  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | wc -l | grep -c "65"
+  "$BATS_TEST_DIRNAME"/docxbox txt "${path_docx}" --segments | wc -l | grep -c "105"
+  "$BATS_TEST_DIRNAME"/docxbox txt "${path_docx}" | wc -l | grep -c "65"
 }
