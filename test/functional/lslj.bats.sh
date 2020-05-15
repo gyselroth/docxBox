@@ -61,7 +61,7 @@ search_results=(
 }
 
 @test "\"docxbox ls filename.docx --locate --json searchString\" ${description}" {
-for i in "${search_results[@]}"
+  for i in "${search_results[@]}"
   do
     "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" --locate --json fonts | grep -c "${i}"
   done
