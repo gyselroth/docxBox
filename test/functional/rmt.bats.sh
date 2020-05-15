@@ -5,8 +5,10 @@
 
 load _helper
 
+docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+
 @test "Output of \"docxbox rmt {missing filename}\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox rmt
+  run "${docxbox}" rmt
   [ "$status" -ne 0 ]
   [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
@@ -17,7 +19,7 @@ title+="is an error message"
   path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
   pattern="Missing argument: String left-hand-side of part to be removed"
 
-  run "$BATS_TEST_DIRNAME"/docxbox rmt "${path_docx}"
+  run "${docxbox}" rmt "${path_docx}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
@@ -25,8 +27,8 @@ title+="is an error message"
 #@test "With \"docxbox rem filename.docx leftHandString rightHandString\" removes text between and including given strings" {
 #  path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 #
-#  "$BATS_TEST_DIRNAME"/docxbox rem $path_docx Dolore incididunt
-#  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | grep -vc "Dolore labore in dolor incididunt"
-#  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | grep -c "Officia veniam, tempor irure lorem"
-#  "$BATS_TEST_DIRNAME"/docxbox txt $path_docx | grep -c "Velit sint aute deserunt laboris"
+#  "${docxbox}" rem $path_docx Dolore incididunt
+#  "${docxbox}" txt $path_docx | grep -vc "Dolore labore in dolor incididunt"
+#  "${docxbox}" txt $path_docx | grep -c "Officia veniam, tempor irure lorem"
+#  "${docxbox}" txt $path_docx | grep -c "Velit sint aute deserunt laboris"
 #}
