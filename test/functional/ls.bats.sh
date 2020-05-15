@@ -5,16 +5,18 @@
 
 load _helper
 
+docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+
 base_command="\"docxbox ls filename.docx"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
 @test "Exit code of ${base_command}\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}"
+  run "${docxbox}" ls "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox ls {missing argument}\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls
+  run "${docxbox}" ls
   [ "$status" -ne 0 ]
   [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
@@ -28,7 +30,7 @@ path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
   for i in "${attributs[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "${i}"
+    "${docxbox}" ls "${path_docx}" | grep --count "${i}"
   done
 }
 
@@ -48,21 +50,21 @@ search_values=(
 
   for i in "${search_values[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "${i}"
+    "${docxbox}" ls "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of ${base_command}\" contains amount of contained files" {
-  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c '11 files'
+  "${docxbox}" ls "${path_docx}" | grep --count '11 files'
 }
 
 @test "Output of ${base_command}\" contains files' date and time" {
-  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "4/11/2020"
-  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "11:3"
+  "${docxbox}" ls "${path_docx}" | grep --count "4/11/2020"
+  "${docxbox}" ls "${path_docx}" | grep --count "11:3"
 }
 
 long_description="contains files with the given file ending"
 @test "Output of ${base_command} *.file-ending\" ${long_description}" {
-  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" *.jpeg | grep -c "image1.jpeg"
-  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" *.xml | grep -c "9 files"
+  "${docxbox}" ls "${path_docx}" *.jpeg | grep --count "image1.jpeg"
+  "${docxbox}" ls "${path_docx}" *.xml | grep --count "9 files"
 }
