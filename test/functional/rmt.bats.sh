@@ -14,7 +14,7 @@ load _helper
 @test "Output of \"docxbox rmt filename.docx {missing arguments}\" is an error message" {
   path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
-  run "$BATS_TEST_DIRNAME"/docxbox rmt $path_docx
+  run "$BATS_TEST_DIRNAME"/docxbox rmt "${path_docx}"
   [ "$status" -ne 0 ]
   [ "Missing argument: String left-hand-side of part to be removed" = "${lines[0]}" ]
 }

@@ -76,6 +76,9 @@ bats ./test/functional/rpt.bats.sh
 printf "\n\033[4mTest modifying or setting metadata in DOCX (mm)\033[0m\n"
 bats ./test/functional/mm.bats.sh
 
+printf "\n\033[4mTest removing DOCX contens between given strings (rmt)\033[0m\n"
+bats ./test/functional/rmt.bats.sh
+
 printf "\n\033[4mTest setting field value in DOCX (sfv)\033[0m\n"
 bats ./test/functional/sfv.bats.sh
 
