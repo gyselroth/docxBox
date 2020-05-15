@@ -5,14 +5,16 @@
 
 load _helper
 
+docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+
 @test "Output of \"docxbox uz {missing argument}\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox uz
+  run "${docxbox}" uz
   [ "$status" -ne 0 ]
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "With of \"docxbox uz filename.docx\" all files are unziped" {
-  run "$BATS_TEST_DIRNAME"/docxbox uz test/functional/tmp/cp_bio_assay.docx
+  run "${docxbox}" uz test/functional/tmp/cp_bio_assay.docx
   [ "$status" -eq 0 ]
 }
 
