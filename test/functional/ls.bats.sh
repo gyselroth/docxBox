@@ -9,7 +9,7 @@ base_command="\"docxbox ls filename.docx"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
 @test "Exit code of ${base_command}\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls $path_docx
+  run "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
@@ -20,10 +20,16 @@ path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 }
 
 @test "Output of ${base_command}\" contains files' and directories' attributes" {
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "Length"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "Date"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "Time"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "Name"
+  attributes=(
+  "Length"
+  "Date"
+  "Time"
+  "Name")
+
+  for i in "${attributs[@]}"
+  do
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "${i}"
+  done
 }
 
 @test "Output of ${base_command}\" is contained files" {
@@ -38,25 +44,25 @@ search_values=(
 "word/media/image1.jpeg"
 "word/numbering.xml"
 "word/settings.xml"
-"word/styles.xml");
+"word/styles.xml")
 
-  for f in ${search_values[@]}
+  for i in "${search_values[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c $f
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of ${base_command}\" contains amount of contained files" {
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c '11 files'
+  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c '11 files'
 }
 
 @test "Output of ${base_command}\" contains files' date and time" {
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "4/11/2020"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx | grep -c "11:3"
+  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "4/11/2020"
+  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "11:3"
 }
 
 long_description="contains files with the given file ending"
 @test "Output of ${base_command} *.file-ending\" ${long_description}" {
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx *.jpeg | grep -c "image1.jpeg"
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx *.xml | grep -c "9 files"
+  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" *.jpeg | grep -c "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" *.xml | grep -c "9 files"
 }

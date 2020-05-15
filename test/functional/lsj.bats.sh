@@ -17,23 +17,23 @@ attributes=(
   "file")
 
 @test "Output of \"docxbox lsj filename.docx\" ${description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsj "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} --json\" ${description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --json | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" --json | grep -c "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} -j\" ${description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -j | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" -j | grep -c "${i}"
   done
 }
 
@@ -51,15 +51,15 @@ search_values=(
 "word/settings.xml"
 "word/styles.xml")
 
-  for f in ${search_values[@]}
+  for i in "${search_values[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c $f
+    "$BATS_TEST_DIRNAME"/docxbox lsj "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "4/11/2020"
-  "$BATS_TEST_DIRNAME"/docxbox lsj $path_docx | grep -c "11:3"
+  "$BATS_TEST_DIRNAME"/docxbox lsj "${path_docx}" | grep -c "4/11/2020"
+  "$BATS_TEST_DIRNAME"/docxbox lsj "${path_docx}" | grep -c "11:3"
 }
 
 @test "Output of \"docxbox ls {missing argument}\" is an error message" {
