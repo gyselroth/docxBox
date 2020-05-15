@@ -265,8 +265,9 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 #### Replace text by heading
 
-**Example:** Replace ``search`` by a Heading 1 with the text ``Heading 1``:
-````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Heading 1\"}}"````
+**Example:** Replace string ``search`` by a Heading 1 with the text 
+``Hello DOCX 1``:  
+````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Hello DOCX\"}}"````  
 
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
