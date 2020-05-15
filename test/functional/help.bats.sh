@@ -12,7 +12,7 @@ load _helper
 
 regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 @test "Running w/o any command displays version" {
-  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "$regex_version_check"
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "${regex_version_check}"
 }
 
 @test "\"docxbox h\" displays help" {
@@ -20,7 +20,7 @@ regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox h\" displays version" {
-  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "$regex_version_check"
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "${regex_version_check}"
 }
 
 @test "\"docxbox ?\" displays help" {
@@ -28,7 +28,7 @@ regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox ?\" displays version" {
-  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "$regex_version_check"
+  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "${regex_version_check}"
 }
 
 # List DOCX contents:

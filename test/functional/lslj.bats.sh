@@ -20,49 +20,49 @@ search_results=(
 }
 
 @test "Output of \"docxbox lslj filename.docx {missing argument} is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox lslj $path_docx
+  run "$BATS_TEST_DIRNAME"/docxbox lslj "${path_docx}"
   [ "$status" -ne 0 ]
   [ "Missing argument: String or regular expression to be located" = "${lines[0]}" ]
 }
 
 @test "\"docxbox lslj filename.docx searchString\" ${description}" {
-  for i in ${search_results[@]}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lslj $path_docx fonts | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lslj "${path_docx}" fonts | grep -c "${i}"
   done
 }
 
 @test "\"docxbox lsl filename.docx -j searchString\" ${description}" {
-  for i in ${search_results[@]}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx -j fonts | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsl "${path_docx}" -j fonts | grep -c "${i}"
   done
 }
 
 @test "\"docxbox lsl filename.docx --json searchString\" ${description}" {
-  for i in ${search_results[@]}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsl $path_docx --json fonts | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsl "${path_docx}" --json fonts | grep -c "${i}"
   done
 }
 
 @test "\"docxbox ls filename.docx -lj searchString\" ${description}" {
-  for i in ${search_results[@]}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -lj fonts | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" -lj fonts | grep -c "${i}"
   done
 }
 
 @test "\"docxbox ls filename.docx --locate -j searchString\" ${description}" {
-  for i in ${search_results[@]}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate -j fonts | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" --locate -j fonts | grep -c "${i}"
   done
 }
 
 @test "\"docxbox ls filename.docx --locate --json searchString\" ${description}" {
-for i in ${search_results[@]}
+  for i in "${search_results[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --locate --json fonts | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" --locate --json fonts | grep -c "${i}"
   done
 }

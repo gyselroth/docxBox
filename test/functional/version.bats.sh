@@ -5,8 +5,10 @@
 
 load _helper
 
+docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+
 @test "\"docxbox v\" displays version number" {
   pattern="(^|\s)+(docxBox version )\K([0-9]|\.)*(?=\s|$)"
 
-  "$BATS_TEST_DIRNAME"/docxbox v | grep -Po "$pattern"
+  "${docxbox}" v | grep -Po "${pattern}"
 }
