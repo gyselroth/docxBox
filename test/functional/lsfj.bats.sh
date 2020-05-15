@@ -20,7 +20,7 @@ attributes=(
   "pitch")
 
 @test "Exit code of \"docxbox ls filename.docx\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls $path_docx
+  run "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
@@ -31,42 +31,43 @@ attributes=(
 }
 
 @test "Output of \"${base_command}\" ${long_description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} --json\" ${long_description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx --json | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" --json | grep -c "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} -j\" ${long_description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx -j | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" -j | grep -c "${i}"
   done
 }
 
-@test "Output of \"docxbox ls filename.docx --fonts --json\" ${long_description}" {
-  for i in ${attributes[@]}
+longhand="--fonts --json"
+@test "Output of \"docxbox ls filename.docx ${longhand}\" ${long_description}" {
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --fonts --json | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" ${longhand} | grep -c "${i}"
   done
 }
 
 @test "Output of \"docxbox ls filename.docx -fj\" ${long_description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -fj | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" -fj | grep -c "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" contains fontfile-filename" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "fontTable.xml"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}" | grep -c "fontTable.xml"
 }
 
 @test "Output of \"${base_command}\" contains font names" {
@@ -80,18 +81,18 @@ attributes=(
   "DejaVu Sans"
   "OpenSymbol")
 
-  for i in ${font_names[@]}
+  for i in "${font_names[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" can contain alternative font names" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "Arial Unicode MS"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}" | grep -c "Arial Unicode MS"
 }
 
 @test "Output of \"${base_command}\" contains font-charSets" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "00"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}" | grep -c "00"
 }
 
 @test "Output of \"${base_command}\" contains font-family" {
@@ -100,13 +101,13 @@ attributes=(
   "swiss"
   "auto")
 
-  for i in ${font_family[@]}
+  for i in "${font_family[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" contains font-pitch" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "variable"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "default"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}" | grep -c "variable"
+  "$BATS_TEST_DIRNAME"/docxbox lsfj "${path_docx}" | grep -c "default"
 }

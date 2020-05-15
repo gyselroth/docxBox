@@ -10,7 +10,7 @@ base_command="docxbox lsf filename.docx"
 longhand_command="docxbox ls filename.docx"
 
 @test "Exit code of \"${base_command}\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx
+  run "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
@@ -21,19 +21,19 @@ longhand_command="docxbox ls filename.docx"
 }
 
 @test "Output of \"${base_command}\" contains ground informations" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx
+  run "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
 }
 
 @test "Output of \"${longhand_command} --fonts\" contains ground informations" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --fonts
+  run "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" --fonts
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
 }
 
 @test "Output of \"${longhand_command} -f\" contains ground informations" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -f
+  run "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" -f
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 12 fonts:" = "${lines[0]}" ]
 }
@@ -46,18 +46,18 @@ longhand_command="docxbox ls filename.docx"
   "Family"
   "Pitch")
 
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" contains fontfile-filename" {
-  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c "fontTable.xml"
+  "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "fontTable.xml"
 }
 
 @test "Output of \"${base_command}\" contains amount fonts" {
-  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c "12 fonts"
+  "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "12 fonts"
 }
 
 @test "Output of \"${base_command}\" contains font names" {
@@ -67,18 +67,18 @@ longhand_command="docxbox ls filename.docx"
   "Arial"
   "Liberation Serif")
 
-  for i in ${font_names[@]}
+  for i in "${font_names[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" can contain alternative font names" {
-  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c "Arial Unicode MS"
+  "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "Arial Unicode MS"
 }
 
 @test "Output of \"${base_command}\" contains font-charSets" {
-  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c "00"
+  "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "00"
 }
 
 @test "Output of \"${base_command}\" contains font-family" {
@@ -87,13 +87,13 @@ longhand_command="docxbox ls filename.docx"
   "swiss"
   "auto")
 
-  for i in ${font_family[@]}
+  for i in "${font_family[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c $i
+    "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" contains font-pitch" {
-  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c "variable"
-  "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx | grep -c "default"
+  "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "variable"
+  "$BATS_TEST_DIRNAME"/docxbox lsf "${path_docx}" | grep -c "default"
 }
