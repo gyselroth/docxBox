@@ -11,12 +11,15 @@ load _helper
   [ "Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox rmt filename.docx {missing arguments}\" is an error message" {
+title="Output of \"docxbox rmt filename.docx {missing arguments}\" "
+title+="is an error message"
+@test "${title}" {
   path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+  pattern="Missing argument: String left-hand-side of part to be removed"
 
   run "$BATS_TEST_DIRNAME"/docxbox rmt "${path_docx}"
   [ "$status" -ne 0 ]
-  [ "Missing argument: String left-hand-side of part to be removed" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 #@test "With \"docxbox rem filename.docx leftHandString rightHandString\" removes text between and including given strings" {
