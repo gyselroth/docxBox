@@ -19,9 +19,9 @@ docxbox=""$BATS_TEST_DIRNAME"/docxbox"
 }
 
 @test "Unziped files are located in project root" {
-  ls | grep -c cp_bio_assay.docx-extracted
+  ls | grep --count cp_bio_assay.docx-extracted
 
   if [ -d cp_bio_assay.docx-extracted ]; then
-    rm -r cp_bio_assay.docx-extracted;
+    rm --recursive cp_bio_assay.docx-extracted;
   fi
 }
