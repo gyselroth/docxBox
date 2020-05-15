@@ -9,5 +9,5 @@ fi
 
 for f in test/files/docx/*.docx
   do
-    cp $f test/functional/tmp/cp_${f##*/};
+    cp "$f" test/functional/tmp/cp_"${f##*/}";
   done
