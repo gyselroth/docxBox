@@ -11,7 +11,7 @@ base_command="docxbox lsij filename.docx"
 description="are contained images as JSON"
 
 @test "Exit code of \"${base_command}\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsij $path_docx
+  run "$BATS_TEST_DIRNAME"/docxbox lsij "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
@@ -22,21 +22,21 @@ description="are contained images as JSON"
 }
 
 @test "Output of \"${base_command}\" is contained images as JSON" {
-  "$BATS_TEST_DIRNAME"/docxbox lsij $path_docx | grep -c "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox lsij "${path_docx}" | grep -c "image1.jpeg"
 }
 
 @test "Output of \"docxbox lsi filename.docx --json\" ${description}" {
-  "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx --json | grep -c "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox lsi "${path_docx}" --json | grep -c "image1.jpeg"
 }
 
 @test "Output of \"docxbox lsi filename.docx -j\" ${description}" {
-  "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx -j | grep -c "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox lsi "${path_docx}" -j | grep -c "image1.jpeg"
 }
 
 @test "Output of \"docxbox ls filename.docx -ij\" ${description}" {
-  "$BATS_TEST_DIRNAME"/docxbox lsi $path_docx -ij | grep -c "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox lsi "${path_docx}" -ij | grep -c "image1.jpeg"
 }
 
 @test "Output of \"docxbox ls filename.docx --images --json\" ${description}" {
-  "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --images --json | grep "image1.jpeg"
+  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" --images --json | grep "image1.jpeg"
 }
