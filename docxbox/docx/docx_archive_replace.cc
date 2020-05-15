@@ -41,7 +41,7 @@ bool docx_archive_replace::ReplaceImage() {
       std::string path_image_replacement =
           helper::File::ResolvePath(path_working_directory_, argv_[4]);
 
-      helper::File::CopyFile(path_image_original, path_image_replacement);
+      helper::File::CopyFile(path_image_replacement, path_image_original);
 
       break;
     }
@@ -278,10 +278,10 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
   bool overwrite_source_docx = argc_ < 4;
 
   std::string path_docx_out = overwrite_source_docx
-      // Result filename is given as argument
-      ? helper::File::ResolvePath(path_working_directory_, argv_[3])
       // Overwrite original DOCX
-      : path_docx_in_;
+      ? path_docx_in_
+      // Result filename is given as argument
+      : helper::File::ResolvePath(path_working_directory_, argv_[3]);
 
   return CreateDocxFromExtract(path_docx_out, overwrite_source_docx);
 }

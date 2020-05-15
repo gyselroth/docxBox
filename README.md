@@ -174,7 +174,7 @@ or ````docxbox ls foo.docx --fields --json````
 ````docxbox cat foo.docx word/_rels/document.xml.rels````  
 outputs the given file's content.
 
-**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, use a your 
+**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use your 
 favorite text editor via the [cmd command](#arbitrary-manual-and-scripted-modification-and-analysis))
 
 
@@ -459,11 +459,10 @@ Run all tests: `./test.sh`
 Code Convention
 ---------------
 
-The source code of docxBox follows the Google C++ Style Guide, 
-see: https://google.github.io/styleguide/cppguide.html  
-The source code of functional tests mostly (excluding rule for maximum 
-characters per line) follows the Google Shell Style Guide, 
-see https://google.github.io/styleguide/shell.xml
+The source code of docxBox follows the 
+[Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).  
+The source code of functional tests follows the 
+[Google Shell Style Guide](https://google.github.io/styleguide/shell.xml)
 
 
 Changelog
@@ -514,6 +513,7 @@ docxBox was built using the following third party libraries and tools:
 | [Cppcheck](http://cppcheck.sourceforge.net/)                    | Static analysis tool for C/C++ code                                        | [GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.html)                         |      
 | [cpplint](https://github.com/cpplint/cpplint)                   | Static code checker for C++                                                | [BSD-3 Clause](https://opensource.org/licenses/BSD-3-Clause)                                              |      
 | [GCC](https://gcc.gnu.org)                                      | GCC, the GNU Compiler Collection                                           | [GNU General Public License version 3](https://gcc.gnu.org/onlinedocs/libstdc++/manual/appendix_gpl.html) |      
+| [ShellCheck](https://github.com/koalaman/shellcheck)            | A static analysis tool for shell scripts                              | [GNU General Public License version 3](https://gcc.gnu.org/onlinedocs/libstdc++/manual/appendix_gpl.html) |      
 | [Travis CI](https://travis-ci.org)                              | Hosted Continuous Integration Service                                      | [MIT License](https://opensource.org/licenses/MIT)                                                        |
 | [Valgrind](https://valgrind.org)                                | System for debugging and profiling Linux programs                          | [GNU General Public License, version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)           |
 
