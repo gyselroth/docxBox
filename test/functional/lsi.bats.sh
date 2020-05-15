@@ -5,16 +5,18 @@
 
 load _helper
 
+docxbox=""$BATS_TEST_DIRNAME"/docxbox"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+
 base_command="docxbox lsi filename.docx"
 
 @test "Exit code of \"${base_command}\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsi "${path_docx}"
+  run "${docxbox}" lsi "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox lsi {missing argument}\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsi
+  run "${docxbox}" lsi
   [ "$status" -ne 0 ]
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
@@ -28,20 +30,20 @@ base_command="docxbox lsi filename.docx"
 
   for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" | grep -c "${i}"
+    "${docxbox}" ls "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" is contained images" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsi "${path_docx}"
+  run "${docxbox}" lsi "${path_docx}"
   [ "$status" -eq 0 ]
-  "$BATS_TEST_DIRNAME"/docxbox lsi "${path_docx}" | grep -c image1.jpeg
+  "${docxbox}" lsi "${path_docx}" | grep --count image1.jpeg
 }
 
 @test "Output of \"docxbox ls filename.docx -i\" is contained images" {
-  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" -i | grep -c image1.jpeg
+  "${docxbox}" ls "${path_docx}" -i | grep --count image1.jpeg
 }
 
 @test "Output of \"docxbox ls filename.docx --images\" is contained images" {
-  "$BATS_TEST_DIRNAME"/docxbox ls "${path_docx}" --images | grep -c image1.jpeg
+  "${docxbox}" ls "${path_docx}" --images | grep --count image1.jpeg
 }
