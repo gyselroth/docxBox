@@ -175,7 +175,7 @@ or ````docxbox ls foo.docx --fields --json````
 ````docxbox cat foo.docx word/_rels/document.xml.rels````  
 outputs the given file's content.
 
-**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, use a your 
+**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use your 
 favorite text editor via the [cmd command](#arbitrary-manual-and-scripted-modification-and-analysis))
 
 

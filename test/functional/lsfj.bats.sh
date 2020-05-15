@@ -5,6 +5,7 @@
 
 load _helper
 
+docxbox=""$BATS_TEST_DIRNAME"/docxbox"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
 base_command="docxbox lsfj filename.docx"
@@ -20,53 +21,54 @@ attributes=(
   "pitch")
 
 @test "Exit code of \"docxbox ls filename.docx\" is zero" {
-  run "$BATS_TEST_DIRNAME"/docxbox ls $path_docx
+  run "${docxbox}" lsfj "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox lsfj {missing argument}\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsfj
+  run "${docxbox}" lsfj
   [ "$status" -ne 0 ]
   [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "Output of \"${base_command}\" ${long_description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c $i
+    "${docxbox}" lsfj "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} --json\" ${long_description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx --json | grep -c $i
+    "${docxbox}" lsf "${path_docx}" --json | grep --count "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} -j\" ${long_description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsf $path_docx -j | grep -c $i
+    "${docxbox}" lsf "${path_docx}" -j | grep --count "${i}"
   done
 }
 
-@test "Output of \"docxbox ls filename.docx --fonts --json\" ${long_description}" {
-  for i in ${attributes[@]}
+longhand="--fonts --json"
+@test "Output of \"docxbox ls filename.docx ${longhand}\" ${long_description}" {
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx --fonts --json | grep -c $i
+    "${docxbox}" ls "${path_docx}" ${longhand} | grep --count "${i}"
   done
 }
 
 @test "Output of \"docxbox ls filename.docx -fj\" ${long_description}" {
-  for i in ${attributes[@]}
+  for i in "${attributes[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls $path_docx -fj | grep -c $i
+    "${docxbox}" ls "${path_docx}" -fj | grep --count "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" contains fontfile-filename" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "fontTable.xml"
+  "${docxbox}" lsfj "${path_docx}" | grep --count "fontTable.xml"
 }
 
 @test "Output of \"${base_command}\" contains font names" {
@@ -80,18 +82,18 @@ attributes=(
   "DejaVu Sans"
   "OpenSymbol")
 
-  for i in ${font_names[@]}
+  for i in "${font_names[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c $i
+    "${docxbox}" lsfj "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" can contain alternative font names" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "Arial Unicode MS"
+  "${docxbox}" lsfj "${path_docx}" | grep --count "Arial Unicode MS"
 }
 
 @test "Output of \"${base_command}\" contains font-charSets" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "00"
+  "${docxbox}" lsfj "${path_docx}" | grep --count "00"
 }
 
 @test "Output of \"${base_command}\" contains font-family" {
@@ -100,13 +102,13 @@ attributes=(
   "swiss"
   "auto")
 
-  for i in ${font_family[@]}
+  for i in "${font_family[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c $i
+    "${docxbox}" lsfj "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" contains font-pitch" {
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "variable"
-  "$BATS_TEST_DIRNAME"/docxbox lsfj $path_docx | grep -c "default"
+  "${docxbox}" lsfj "${path_docx}" | grep --count "variable"
+  "${docxbox}" lsfj "${path_docx}" | grep --count "default"
 }
