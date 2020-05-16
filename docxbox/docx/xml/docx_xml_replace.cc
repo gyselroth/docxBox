@@ -254,21 +254,14 @@ std::string docx_xml_replace::RenderMarkupFromJson(const std::string& json) {
     case docx_renderer::Element_Heading3:
       markup = RenderHeading(3, json, markup);
       break;
-    case docx_renderer::Element_Image: {
-      auto renderer = new docx_renderer_image(argc_, argv_, json);
-      renderer->SetRelationshipId(image_relationship_id_);
-
-      markup = renderer->Render();
-
-      delete renderer;
-    }
+    case docx_renderer::Element_Image:
+      markup = RenderImage(json, markup);
+      break;
+    case docx_renderer::Element_ListUnordered:
+      markup = RenderList(false, json, markup);
     break;
-    case docx_renderer::Element_Table: {
-      auto renderer = new docx_renderer_table(argc_, argv_, json);
-
-      markup = renderer->Render();
-      delete renderer;
-    }
+    case docx_renderer::Element_Table:
+      markup = RenderTable(json, markup);
     break;
     case docx_renderer::Element_None:default:
       throw "Invalid markup config, failed to identify element type.";
@@ -276,6 +269,33 @@ std::string docx_xml_replace::RenderMarkupFromJson(const std::string& json) {
 
   return markup;
 }
+std::string &docx_xml_replace::RenderTable(
+    const std::string &json, std::string &markup) {
+  auto renderer = new docx_renderer_table(argc_, argv_, json);
+
+  replacement_xml_first_child_tag_ = "w:r";
+
+  markup = renderer->Render();
+
+  delete renderer;
+
+  return markup;
+}
+
+std::string &docx_xml_replace::RenderImage(const std::string &json,
+                                           std::string &markup) {
+  auto renderer = new docx_renderer_image(argc_, argv_, json);
+  renderer->SetRelationshipId(image_relationship_id_);
+
+  replacement_xml_first_child_tag_ = "w:r";
+
+  markup = renderer->Render();
+
+  delete renderer;
+
+  return markup;
+}
+
 std::string &docx_xml_replace::RenderHeading(
     int level, const std::string &json, std::string &markup) {
   auto renderer = new docx_renderer_heading(argc_, argv_, json);
@@ -286,5 +306,20 @@ std::string &docx_xml_replace::RenderHeading(
   markup = renderer->Render();
 
   delete renderer;
+
+  return markup;
+}
+
+std::string &docx_xml_replace::RenderList(
+    bool is_ordered, const std::string &json, std::string &markup) {
+  auto renderer = new docx_renderer_list(argc_, argv_, json);
+  renderer->SetIsOrdered(is_ordered);
+
+  replacement_xml_first_child_tag_ = "w:p";
+
+  markup = renderer->Render();
+
+  delete renderer;
+
   return markup;
 }

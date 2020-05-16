@@ -20,11 +20,12 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
   * [Modify document](#modify-document)
       + [Modify meta data](#modify-meta-data)
       + [Replace image](#replace-image)
-      + [Replace text by text](#replace-text-by-text)
-      + [Replace text by markup](#replace-text-by-markup)
-        + [Replace text by heading](#replace-text-by-heading)
-        + [Replace text by image](#replace-text-by-image)
-        + [Replace text by table](#replace-text-by-table)
+      + [Replace text](#replace-text)
+      + [Replace by markup](#replace-by-markup)
+        + [Insert heading markup](#insert-heading-markup)
+        + [Insert image markup](#insert-image-markup)
+        + [Insert list markup](#insert-list-markup)
+        + [Insert table markup](#insert-table-markup)
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
@@ -256,7 +257,7 @@ DOCX w/ the modified document.
 This creates a new file: new.docx
 
 
-#### Replace text by text
+#### Replace text
 
 Replace all (case-sensitive) occurrences of given string in DOCX text:
 
@@ -264,7 +265,7 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
 
-#### Replace text by markup
+#### Replace by markup
 
 Moreover replacing just text and fields, docxBox supports rendering and 
 inserting markup for the following more complex 
@@ -286,7 +287,7 @@ rules:
 * The order of attributes within the config of the type is arbitrary
 
 
-##### Replace text by heading
+##### Insert heading markup
 
 **Example:** Replace string ``search`` by a Heading 1 with the text 
 ``Hello DOCX 1``:  
@@ -295,7 +296,14 @@ rules:
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 
-##### Replace text by image
+##### Insert list markup
+
+**Example:** Replace string ``search`` by an unordered list:
+   
+````docxbox rpt foo.docx search "{\"ul\":[\"item-1\",\"item-2\",\"item-3\"]}"````  
+
+
+##### Insert image markup
 
 **Image markup specification example:** 
 
@@ -319,7 +327,7 @@ when inserting a new image file, it must be given as additional argument:
 ````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````
 
 
-#### Replace text by table
+##### Insert table markup
 
 To replace text by a newly rendered table like:
 

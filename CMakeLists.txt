@@ -40,6 +40,7 @@ add_executable(docxbox
         docxbox/docx/renderer/docx_renderer.cc
         docxbox/docx/renderer/docx_renderer_heading.cc
         docxbox/docx/renderer/docx_renderer_image.cc
+        docxbox/docx/renderer/docx_renderer_list.cc
         docxbox/docx/renderer/docx_renderer_rels.cc
         docxbox/docx/renderer/docx_renderer_table.cc
 

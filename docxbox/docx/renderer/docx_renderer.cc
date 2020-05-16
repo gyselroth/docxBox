@@ -17,9 +17,9 @@ docx_renderer::Elements docx_renderer::DetectElementType(
   if (identifier == "link") return Element_Link;
   if (identifier == "image") return Element_Image;
   if (identifier == "img") return Element_Image;
-  if (identifier == "ol") return Element_OrderedList;
+  if (identifier == "ol") return Element_ListOrdered;
   if (identifier == "table") return Element_Table;
-  if (identifier == "ul") return Element_UnorderedList;
+  if (identifier == "ul") return Element_ListUnordered;
 
   return Element_None;
 }
@@ -35,6 +35,14 @@ bool docx_renderer::IsValidJsonForHeading(const std::string &str) {
 }
 
 bool docx_renderer::IsValidJsonForImage(const std::string &str) {
+  Elements kType = docx_renderer::DetectElementType(str);
+
+  return helper::String::IsJson(str)
+      && (docx_renderer::Element_ListUnordered == kType
+          || docx_renderer::Element_ListOrdered == kType);
+}
+
+bool docx_renderer::IsValidJsonForList(const std::string &str) {
   return helper::String::IsJson(str)
       && docx_renderer::Element_Image ==
           docx_renderer::DetectElementType(str);

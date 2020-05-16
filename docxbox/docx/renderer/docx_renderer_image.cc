@@ -7,9 +7,7 @@
 
 // Constructor
 docx_renderer_image::docx_renderer_image(
-    int argc,
-    char **argv,
-    const std::string &json) {
+    int argc, char **argv, const std::string &json) {
   argc_ = argc;
   argv_ = argv;
 

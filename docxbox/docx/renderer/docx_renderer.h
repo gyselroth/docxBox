@@ -22,17 +22,18 @@ class docx_renderer {
     Element_Heading2,
     Element_Heading3,
     Element_Link,
+    Element_ListOrdered,
+    Element_ListUnordered,
     Element_Image,
-    Element_OrderedList,
     Element_Table,
-    Element_UnorderedList,
     Element_None
   };
 
   static docx_renderer::Elements DetectElementType(const std::string& json);
 
-  static bool IsValidJsonForImage(const std::string &str);
   static bool IsValidJsonForHeading(const std::string &str);
+  static bool IsValidJsonForImage(const std::string &str);
+  static bool IsValidJsonForList(const std::string &str);
 
  protected:
   int argc_;

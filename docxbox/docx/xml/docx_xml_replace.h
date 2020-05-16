@@ -7,6 +7,7 @@
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/docx/renderer/docx_renderer_heading.h>
 #include <docxbox/docx/renderer/docx_renderer_image.h>
+#include <docxbox/docx/renderer/docx_renderer_list.h>
 #include <docxbox/docx/renderer/docx_renderer_table.h>
 #include <docxbox/docx/docx_media.h>
 #include <docxbox/docx/xml/docx_xml.h>
@@ -70,9 +71,18 @@ class docx_xml_replace:docx_xml {
 
   void ReplaceRunsByXmlElement();
 
+  // TODO(kay): Extract rendering wrapper methods into separate class,
+  //            make docx_xml_replace multi-inherit, including the new
+  //            renderer_wrapper
   std::string RenderMarkupFromJson(const std::string& json);
 
   std::string &RenderHeading(int level, const std::string &json, std::string &markup);
+
+  std::string &RenderList(
+      bool is_ordered, const std::string &json, std::string &markup);
+
+  std::string &RenderImage(const std::string &json, std::string &markup);
+  std::string &RenderTable(const std::string &json, std::string &markup);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
