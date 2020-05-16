@@ -279,7 +279,6 @@ inserting markup for the following more complex
 Markup specification for such elements must be given as JSON, following these
 rules: 
 
-**Specification rules:**
 * JSON must be wrapped within ``{...}``
 * The first item must be a type identifier (``h1``, ``h2``, ``h3``, ``img``, 
   ``table``, ``ul``)
