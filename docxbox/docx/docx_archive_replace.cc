@@ -91,6 +91,7 @@ bool docx_archive_replace::ReplaceText() {
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
+  // TODO(kay): detect JSON being for image solely here, store type to property
   try {
     image_relationship_id = AddImageFileAndRelation(replacement);
   } catch (std::string &message) {

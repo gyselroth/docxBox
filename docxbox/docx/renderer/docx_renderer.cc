@@ -19,7 +19,6 @@ docx_renderer::Elements docx_renderer::DetectElementType(
   if (identifier == "img") return Element_Image;
   if (identifier == "ol") return Element_OrderedList;
   if (identifier == "table") return Element_Table;
-  if (identifier == "p") return Element_Paragraph;
   if (identifier == "ul") return Element_UnorderedList;
 
   return Element_None;

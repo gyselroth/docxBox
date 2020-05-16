@@ -25,7 +25,6 @@ class docx_renderer {
     Element_Image,
     Element_OrderedList,
     Element_Table,
-    Element_Paragraph,
     Element_UnorderedList,
     Element_None
   };

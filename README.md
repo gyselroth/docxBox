@@ -21,9 +21,10 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Modify meta data](#modify-meta-data)
       + [Replace image](#replace-image)
       + [Replace text by text](#replace-text-by-text)
-      + [Replace text by heading](#replace-text-by-heading)
-      + [Replace text by image](#replace-text-by-image)
-      + [Replace text by table](#replace-text-by-table)
+      + [Replace text by markup](#replace-text-by-markup)
+        + [Replace text by heading](#replace-text-by-heading)
+        + [Replace text by image](#replace-text-by-image)
+        + [Replace text by table](#replace-text-by-table)
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
@@ -263,7 +264,30 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
 
-#### Replace text by heading
+#### Replace text by markup
+
+Moreover replacing just text and fields, docxBox supports rendering and 
+inserting markup for the following more complex 
+[Office Open XML](https://en.wikipedia.org/wiki/Office_Open_XML) elements:
+
+* Heading 1, 2, 3
+* Image (``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, ``tif``, 
+  ``tiff``, ``wmf``)
+* Table
+* Unordered List  
+ 
+Markup specification for such elements must be given as JSON, following these
+rules: 
+
+**Specification rules:**
+* JSON must be wrapped within ``{...}``
+* The first item must be a type identifier (``h1``, ``h2``, ``h3``, ``img``, 
+  ``table``, ``ul``)
+* All attributes are given associative (as JSON object related to the type) 
+* The order of attributes within the config of the type is arbitrary
+
+
+##### Replace text by heading
 
 **Example:** Replace string ``search`` by a Heading 1 with the text 
 ``Hello DOCX 1``:  
@@ -272,11 +296,9 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 
-#### Replace text by image
+##### Replace text by image
 
-**Example:** To replace text by an image: 
-
-The image specification as JSON looks like:
+**Image markup specification example:** 
 
 ````
 {
@@ -288,24 +310,20 @@ The image specification as JSON looks like:
 }
 ````
 
-##### Specification rules:
-* JSON must be wrapped within ``{...}``
-* The type specifier (``img``) is mandatory
+**Specification rules:**
+
 * When adding a new image file resource, the ``filename`` parameter is optional,
   it specifies a different filename to be used within DOCX 
 * The ``offset`` argument is optional
-* Embeddable image formats are: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, 
-  ``png``, ``tif``, ``tiff``, ``wmf``
 * Size is given in EMUs (English Metric Unit) that is: ``pixels * 9525``
 
-The image configuration must be passed as escaped JSON, 
 when inserting a new image file, it must be given as additional argument:  
 ````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````
 
 
 #### Replace text by table
 
-**Example:** To replace text by a newly rendered table like:
+To replace text by a newly rendered table like:
 
 | A  | B  | C  |
 |----|----|----|
@@ -331,15 +349,12 @@ the table specification as JSON looks like:
 
 ##### Specification rules:
 
-* JSON must be wrapped within ``{...}``
-* The type specifier (``table``) is mandatory
-* The order of keys within the config of the type (``table``) is arbitrary
 * ``header`` is optional, when given: ``columns`` is optional
 * ``content`` is optional, when given: ``rows`` is optional
 
-The table configuration must be passed as escaped JSON:    
+Replace ``search`` by table:    
 ````docxbox rpt foo.docx search "{\"table\":{\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
-  
+
 
 #### Remove content between text
 
