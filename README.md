@@ -267,15 +267,16 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 #### Replace by markup
 
-Moreover replacing just text and fields, docxBox supports rendering and 
-inserting markup for the following more complex 
+Moreover [replacing text](#replace-text) and 
+[fields](#set-field-value-merge-fields-generic-fields), docxBox supports 
+rendering and inserting markup for the following more complex 
 [Office Open XML](https://en.wikipedia.org/wiki/Office_Open_XML) elements:
 
 * Heading 1, 2, 3
 * Image (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, 
   ``tif``, ``tiff``, ``wmf``)
 * Table
-* Unordered List  
+* Ordered list, unordered list  
  
 Markup specification for such elements must be given as JSON, following these
 rules: 
