@@ -40,8 +40,8 @@ void docx_renderer_image::InitSpecsFromJson() {
          ++it) {
       const std::string& key = it.key();
 
-      if (key == "filename") {
-        filename_internal_ = it.value();
+      if (key == "name") {
+        image_name = it.value();
       } else if (key == "offset") {
         auto value = it.value();
 
@@ -94,7 +94,7 @@ std::string docx_renderer_image::Render() {
             ">"
 
               "<pic:nvPicPr>"
-                "<pic:cNvPr id=\"0\" name=\"" + filename_internal_ + "\"/>"
+                "<pic:cNvPr id=\"0\" name=\"" + image_name + "\"/>"
                 "<pic:cNvPicPr/>"
               "</pic:nvPicPr>"
             "<pic:blipFill>"

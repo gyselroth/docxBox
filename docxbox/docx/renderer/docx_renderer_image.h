@@ -23,7 +23,7 @@ class docx_renderer_image: docx_renderer {
 
  private:
   // Image specs from JSON
-  std::string filename_internal_;
+  std::string image_name;
 
   int offset_x_ = 0;
   int offset_y_ = 0;

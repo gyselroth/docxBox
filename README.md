@@ -302,7 +302,7 @@ docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 ````
 {
     "img":{
-        "filename":"example.jpg",
+        "name":"example.jpg",
         "offset":[0,0],
         "size":[2438400,1828800]
     }
@@ -311,8 +311,7 @@ docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 **Specification rules:**
 
-* When adding a new image file resource, the ``filename`` parameter is optional,
-  it specifies a different filename to be used within DOCX 
+* The ``name`` parameter is optional
 * The ``offset`` argument is optional
 * Size is given in EMUs (English Metric Unit) that is: ``pixels * 9525``
 
