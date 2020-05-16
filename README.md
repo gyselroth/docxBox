@@ -273,8 +273,8 @@ rendering and inserting markup for the following more complex
 [Office Open XML](https://en.wikipedia.org/wiki/Office_Open_XML) elements:
 
 * [Heading 1, 2, 3](#insert-heading-markup)
-* [Image](#insert-image-markup) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, 
-  ``tif``, ``tiff``, ``wmf``)
+* [Image](#insert-image-markup) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, 
+  ``jpg``, ``png``, ``tif``, ``tiff``, ``wmf``)
 * [Table](#insert-table-markup)
 * [Ordered list, unordered list](#insert-list-markup)  
 
@@ -291,7 +291,7 @@ rules:
 ##### Insert heading markup
 
 **Example:** Replace string ``search`` by a Heading 1 with the text 
-``Hello DOCX 1``:  
+``Hello DOCX``:  
 ````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Hello DOCX\"}}"````  
 
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
