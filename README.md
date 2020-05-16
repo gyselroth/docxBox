@@ -271,8 +271,8 @@ inserting markup for the following more complex
 [Office Open XML](https://en.wikipedia.org/wiki/Office_Open_XML) elements:
 
 * Heading 1, 2, 3
-* Image (``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, ``tif``, 
-  ``tiff``, ``wmf``)
+* Image (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, 
+  ``tif``, ``tiff``, ``wmf``)
 * Table
 * Unordered List  
  
