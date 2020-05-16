@@ -282,8 +282,8 @@ Markup specification for such elements must be given as JSON, following these
 rules: 
 
 * JSON must be wrapped within ``{...}``
-* The first item must be a type identifier (``h1``, ``h2``, ``h3``, ``img``, 
-  ``table``, ``ul``)
+* The first item must be a type identifier (``h1``, ``h2``, ``h3``,
+  ``img`` / ``image``, ``ol``, ``table``, ``ul``)
 * All attributes are given associative (as JSON object related to the type) 
 * The order of attributes within the config of the type is arbitrary
 
