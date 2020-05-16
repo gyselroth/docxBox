@@ -269,7 +269,7 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 
 Moreover [replacing text](#replace-text) and 
 [fields](#set-field-value-merge-fields-generic-fields), docxBox supports 
-rendering and inserting markup for the following more complex 
+rendering and inserting markup for the following 
 [Office Open XML](https://en.wikipedia.org/wiki/Office_Open_XML) elements:
 
 * [Heading 1, 2, 3](#insert-heading-markup)
