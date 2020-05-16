@@ -272,12 +272,12 @@ Moreover [replacing text](#replace-text) and
 rendering and inserting markup for the following more complex 
 [Office Open XML](https://en.wikipedia.org/wiki/Office_Open_XML) elements:
 
-* Heading 1, 2, 3
-* Image (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, 
+* [Heading 1, 2, 3](#insert-heading-markup)
+* [Image](#insert-image-markup) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, ``jpg``, ``png``, 
   ``tif``, ``tiff``, ``wmf``)
-* Table
-* Ordered list, unordered list  
- 
+* [Table](#insert-table-markup)
+* [Ordered list, unordered list](#insert-list-markup)  
+
 Markup specification for such elements must be given as JSON, following these
 rules: 
 
