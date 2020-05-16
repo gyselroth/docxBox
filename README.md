@@ -291,8 +291,8 @@ rules:
 ##### Insert heading
 
 **Example:** Replace string ``search`` by a Heading 1 with the text 
-``Hello DOCX``:  
-````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Hello DOCX\"}}"````  
+``Foo``:  
+````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Foo\"}}"````  
 
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
