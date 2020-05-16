@@ -22,10 +22,10 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Replace image](#replace-image)
       + [Replace text](#replace-text)
       + [Replace by markup](#replace-by-markup)
-        + [Insert heading markup](#insert-heading-markup)
-        + [Insert image markup](#insert-image-markup)
-        + [Insert list markup](#insert-list-markup)
-        + [Insert table markup](#insert-table-markup)
+        + [Insert heading](#insert-heading)
+        + [Insert image](#insert-image)
+        + [Insert list](#insert-list)
+        + [Insert table](#insert-table)
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
@@ -288,7 +288,7 @@ rules:
 * The order of attributes within the config of the type is arbitrary
 
 
-##### Insert heading markup
+##### Insert heading
 
 **Example:** Replace string ``search`` by a Heading 1 with the text 
 ``Hello DOCX``:  
@@ -297,14 +297,14 @@ rules:
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 
-##### Insert list markup
+##### Insert list
 
 **Example:** Replace string ``search`` by an unordered list:
    
 ````docxbox rpt foo.docx search "{\"ul\":[\"item-1\",\"item-2\",\"item-3\"]}"````  
 
 
-##### Insert image markup
+##### Insert image
 
 **Image markup specification example:** 
 
