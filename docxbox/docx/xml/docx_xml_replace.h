@@ -4,11 +4,7 @@
 #ifndef DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
 #define DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
 
-#include <docxbox/docx/renderer/docx_renderer.h>
-#include <docxbox/docx/renderer/docx_renderer_heading.h>
-#include <docxbox/docx/renderer/docx_renderer_image.h>
-#include <docxbox/docx/renderer/docx_renderer_list.h>
-#include <docxbox/docx/renderer/docx_renderer_table.h>
+#include <docxbox/docx/renderer/docx_renderer_delegate.h>
 #include <docxbox/docx/docx_media.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_file.h>
@@ -20,7 +16,7 @@
 #include <string>
 #include <vector>
 
-class docx_xml_replace:docx_xml {
+class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
  public:
   docx_xml_replace(int argc, char **argv);
 
@@ -52,14 +48,11 @@ class docx_xml_replace:docx_xml {
   tinyxml2::XMLElement *current_run_;
 
   tinyxml2::XMLElement *replacement_xml_element_;
-  std::string replacement_xml_first_child_tag_ = "w:r";
 
   // Nodes stack, for when replacing text that is contained segmented
   std::vector<tinyxml2::XMLElement *> previous_text_nodes_;
 
   int amount_replaced_ = 0;
-
-  std::string image_relationship_id_ = "";
 
   void ReplaceOrLocateStringInXml(tinyxml2::XMLElement *node,
                                   const std::string &search,
@@ -70,19 +63,6 @@ class docx_xml_replace:docx_xml {
                                          const std::string &replacement);
 
   void ReplaceRunsByXmlElement();
-
-  // TODO(kay): Extract rendering wrapper methods into separate class,
-  //            make docx_xml_replace multi-inherit, including the new
-  //            renderer_wrapper
-  std::string RenderMarkupFromJson(const std::string& json);
-
-  std::string &RenderHeading(int level, const std::string &json, std::string &markup);
-
-  std::string &RenderList(
-      bool is_ordered, const std::string &json, std::string &markup);
-
-  std::string &RenderImage(const std::string &json, std::string &markup);
-  std::string &RenderTable(const std::string &json, std::string &markup);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
