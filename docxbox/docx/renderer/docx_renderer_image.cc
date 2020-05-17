@@ -50,9 +50,9 @@ void docx_renderer_image::InitSpecsFromJson() {
 
         width_ = value.at(0);
         height_ = value.at(1);
-        }
       }
     }
+  }
 
   is_json_valid_markup_config_ =
       width_ > 0

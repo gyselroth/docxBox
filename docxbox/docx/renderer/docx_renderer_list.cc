@@ -14,9 +14,7 @@ docx_renderer_list::docx_renderer_list(
   json_ = json;
   is_json_valid_markup_config_ = helper::String::IsJson(json);
 
-  if (is_json_valid_markup_config_) {
-    InitSpecsFromJson();
-  }
+  if (is_json_valid_markup_config_) InitSpecsFromJson();
 }
 
 void docx_renderer_list::SetIsOrdered(bool is_ordered) {
@@ -39,8 +37,11 @@ void docx_renderer_list::InitSpecsFromJson() {
       const std::string &key = it.key();
 
       if (key == "items") {
-        // TODO(kay): fetch items
-        //text_ = it.value();
+        auto items = it.value();
+
+        for (nlohmann::json::iterator it_items = items.begin();
+             it_items != items.end();
+             ++it_items) items_.push_back(it_items.value());
       }
     }
   }
@@ -49,12 +50,25 @@ void docx_renderer_list::InitSpecsFromJson() {
 std::string docx_renderer_list::Render() {
   if (!is_json_valid_markup_config_) throw "Failed render list markup.\n";
 
-  //wml_ = kWRunLhs;
+  wml_ = kWRunLhs;
 
-  // TODO(kay): add markup
-  wml_ = "";
+  for (const std::string& item : items_) {
+    wml_ +=
+        "<w:p>"
+          "<w:pPr>"
+            "<w:numPr>"
+              "<w:ilvl w:val=\"0\"/>"
+              "<w:numId w:val=\"1\"/>"
+            "</w:numPr>"
+            "<w:ind w:left=\"360\" w:hanging=\"360\"/>"
+          "</w:pPr>"
+          "<w:r>"
+            "<w:t>" + item + "</w:t>"
+          "</w:r>"
+        "</w:p>";
+  }
 
-  //wml_ += kWRunRhs;
+  wml_ += kWRunRhs;
 
   return wml_;
 }

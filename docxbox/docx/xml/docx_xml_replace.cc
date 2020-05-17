@@ -258,7 +258,12 @@ std::string docx_xml_replace::RenderMarkupFromJson(const std::string& json) {
       markup = RenderImage(json, markup);
       break;
     case docx_renderer::Element_ListUnordered:
+      // TODO(kay): check presence / insert rel. style
       markup = RenderList(false, json, markup);
+    break;
+    case docx_renderer::Element_ListOrdered:
+      // TODO(kay): check presence / insert rel. style
+      markup = RenderList(true, json, markup);
     break;
     case docx_renderer::Element_Table:
       markup = RenderTable(json, markup);
@@ -315,7 +320,7 @@ std::string &docx_xml_replace::RenderList(
   auto renderer = new docx_renderer_list(argc_, argv_, json);
   renderer->SetIsOrdered(is_ordered);
 
-  replacement_xml_first_child_tag_ = "w:p";
+  replacement_xml_first_child_tag_ = "w:r";
 
   markup = renderer->Render();
 

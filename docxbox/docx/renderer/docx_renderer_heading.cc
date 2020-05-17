@@ -16,9 +16,7 @@ docx_renderer_heading::docx_renderer_heading(
   json_ = json;
   is_json_valid_markup_config_ = helper::String::IsJson(json);
 
-  if (is_json_valid_markup_config_) {
-    InitSpecsFromJson();
-  }
+  if (is_json_valid_markup_config_) InitSpecsFromJson();
 }
 
 void docx_renderer_heading::SetLevel(int level) {

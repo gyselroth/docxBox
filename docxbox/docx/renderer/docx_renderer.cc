@@ -43,7 +43,9 @@ bool docx_renderer::IsValidJsonForImage(const std::string &str) {
 }
 
 bool docx_renderer::IsValidJsonForList(const std::string &str) {
+  Elements kType = docx_renderer::DetectElementType(str);
+
   return helper::String::IsJson(str)
-      && docx_renderer::Element_Image ==
-          docx_renderer::DetectElementType(str);
+      && (docx_renderer::Element_ListOrdered == kType
+          || docx_renderer::Element_ListUnordered == kType);
 }
