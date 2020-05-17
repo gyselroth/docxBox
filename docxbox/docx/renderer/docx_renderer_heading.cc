@@ -7,13 +7,11 @@
 
 // Constructor
 docx_renderer_heading::docx_renderer_heading(
-    int argc,
-    char **argv,
-    const std::string &json) {
+    int argc, char **argv, const std::string &json) {
   argc_ = argc;
   argv_ = argv;
-
   json_ = json;
+
   is_json_valid_markup_config_ = helper::String::IsJson(json);
 
   if (is_json_valid_markup_config_) InitSpecsFromJson();
@@ -46,8 +44,6 @@ void docx_renderer_heading::InitSpecsFromJson() {
 std::string docx_renderer_heading::Render() {
   if (!is_json_valid_markup_config_) throw "Failed render heading markup.\n";
 
-  //wml_ = kWRunLhs;
-
   wml_ =
       "<w:p>"
         "<w:pPr>"
@@ -57,8 +53,6 @@ std::string docx_renderer_heading::Render() {
           "<w:t>" + text_ + "</w:t>"
         "</w:r>"
       "</w:p>";
-
-  //wml_ += kWRunRhs;
 
   return wml_;
 }

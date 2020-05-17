@@ -7,9 +7,7 @@
 
 // Constructor
 docx_renderer_table::docx_renderer_table(
-    int argc,
-    char **argv,
-    const std::string &json) {
+    int argc, char **argv, const std::string &json) {
   argc_ = argc;
   argv_ = argv;
 
