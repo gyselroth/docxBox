@@ -28,7 +28,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
         + [Insert table](#insert-table)
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
-      + [Randomize document text](#randomize-document -text)
+      + [Randomize document text](#randomize-document-text)
   * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis-modification)
   * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
   * [Zip files into DOCX](#zip-files-into-docx)  
