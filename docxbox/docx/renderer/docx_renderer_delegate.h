@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_DELEGATE_H_
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_DELEGATE_H_
 
+#include <docxbox/docx/docx_numbering.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/docx/renderer/docx_renderer_heading.h>
 #include <docxbox/docx/renderer/docx_renderer_image.h>
@@ -13,9 +14,14 @@
 #include <string>
 
 class docx_renderer_delegate {
+ public:
+  void SetPathExtract(const std::string &path_extract);
+
  protected:
   int argc_;
   char **argv_;
+
+  std::string path_extract_;
 
   std::string replacement_xml_first_child_tag_ = "w:r";
 

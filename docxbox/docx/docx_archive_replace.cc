@@ -105,6 +105,7 @@ bool docx_archive_replace::ReplaceText() {
   auto file_list = docx_file.infolist();
 
   auto parser = new docx_xml_replace(argc_, argv_);
+  parser->SetPathExtract(path_extract_);
 
   if (!image_relationship_id.empty())
     parser->SetImageRelationshipId(image_relationship_id);

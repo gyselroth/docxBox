@@ -4,8 +4,7 @@
 #include <docxbox/docx/xml/docx_xml_replace.h>
 
 docx_xml_replace::docx_xml_replace(
-    int argc,
-    char **argv) : docx_xml(argc, argv) {
+    int argc, char **argv) : docx_xml(argc, argv) {
 }
 
 void docx_xml_replace::SetReplacementXmlFirstChildTag(

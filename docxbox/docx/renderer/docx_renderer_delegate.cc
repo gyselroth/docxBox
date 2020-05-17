@@ -3,6 +3,10 @@
 
 #include <docxbox/docx/renderer/docx_renderer_delegate.h>
 
+void docx_renderer_delegate::SetPathExtract(const std::string &path_extract) {
+  path_extract_ = path_extract;
+}
+
 std::string docx_renderer_delegate::RenderMarkupFromJson(
     const std::string& json) {
   auto type = docx_renderer::DetectElementType(json);
@@ -23,11 +27,9 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
       markup = RenderImage(json, markup);
       break;
     case docx_renderer::Element_ListUnordered:
-      // TODO(kay): check presence / insert rel. style
       markup = RenderList(false, json, markup);
       break;
     case docx_renderer::Element_ListOrdered:
-      // TODO(kay): check presence / insert rel. style
       markup = RenderList(true, json, markup);
       break;
     case docx_renderer::Element_Table:
@@ -82,6 +84,11 @@ std::string &docx_renderer_delegate::RenderHeading(
 
 std::string &docx_renderer_delegate::RenderList(
     bool is_ordered, const std::string &json, std::string &markup) {
+  auto numbering = new docx_numbering(path_extract_);
+  numbering->AddNumberingXml();
+
+  delete numbering;
+
   auto renderer = new docx_renderer_list(argc_, argv_, json);
   renderer->SetIsOrdered(is_ordered);
 
@@ -93,3 +100,4 @@ std::string &docx_renderer_delegate::RenderList(
 
   return markup;
 }
+
