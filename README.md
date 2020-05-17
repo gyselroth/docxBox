@@ -328,7 +328,7 @@ when inserting a new image file, it must be given as additional argument:
 ````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````
 
 
-##### Insert table markup
+##### Insert table
 
 To replace text by a newly rendered table like:
 
