@@ -29,7 +29,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
-  * [Arbitrary manual and scripted modification (and analysis)](#arbitrary-manual-and-scripted-modification-and-analysis)
+  * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis-modification)
   * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
@@ -412,7 +412,7 @@ purposes:
 ````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
 
 
-### Arbitrary manual and scripted modification (and analysis)
+### Arbitrary manual and scripted analysis / modification
 
 docxBox eases conducting arbitrary modifications on files contained within a 
 DOCX, manually and scripted.  
