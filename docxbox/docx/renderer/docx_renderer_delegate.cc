@@ -14,32 +14,32 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
   std::string markup;
 
   switch (type) {
-    case docx_renderer::Element_Heading1:
+    case docx_renderer::ElementType_Heading1:
       markup = RenderHeading(1, json, markup);
       break;
-    case docx_renderer::Element_Heading2:
+    case docx_renderer::ElementType_Heading2:
       markup = RenderHeading(2, json, markup);
       break;
-    case docx_renderer::Element_Heading3:
+    case docx_renderer::ElementType_Heading3:
       markup = RenderHeading(3, json, markup);
       break;
-    case docx_renderer::Element_Image:
+    case docx_renderer::ElementType_Image:
       markup = RenderImage(json, markup);
       break;
-    case docx_renderer::Element_Link:
+    case docx_renderer::ElementType_Link:
       // TODO(kay): add differentiation among links to URL and bookmark
       markup = RenderHyperlink(json, markup);
       break;
-    case docx_renderer::Element_ListUnordered:
+    case docx_renderer::ElementType_ListUnordered:
       markup = RenderList(false, json, markup);
       break;
-    case docx_renderer::Element_ListOrdered:
+    case docx_renderer::ElementType_ListOrdered:
       markup = RenderList(true, json, markup);
       break;
-    case docx_renderer::Element_Table:
+    case docx_renderer::ElementType_Table:
       markup = RenderTable(json, markup);
       break;
-    case docx_renderer::Element_None:default:
+    case docx_renderer::ElementType_None:default:
       throw "Invalid markup config, failed to identify element type.";
   }
 

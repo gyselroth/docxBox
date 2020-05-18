@@ -26,7 +26,7 @@ class docx_renderer_heading: docx_renderer {
   int level_;
   std::string text_;
 
-  void InitSpecsFromJson();
+  bool InitFromJson();
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_HEADING_H_

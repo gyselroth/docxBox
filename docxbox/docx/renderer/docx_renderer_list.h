@@ -26,7 +26,7 @@ class docx_renderer_list: docx_renderer {
   bool is_ordered_ = false;
   std::vector<std::string> items_;
 
-  void InitSpecsFromJson();
+  bool InitFromJson();
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LIST_H_

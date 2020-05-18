@@ -3,49 +3,35 @@
 
 #include <docxbox/docx/renderer/docx_renderer.h>
 
-docx_renderer::Elements docx_renderer::DetectElementType(
+docx_renderer::ElementType docx_renderer::DetectElementType(
     const std::string& json) {
   int offset_end_identifier = helper::String::OffsetChar(json, '"', 3);
 
-  if (offset_end_identifier == -1) return Element_None;
+  if (offset_end_identifier == -1) return ElementType_None;
 
   std::string identifier = json.substr(2, offset_end_identifier - 2);
 
-  if (identifier == "h1") return Element_Heading1;
-  if (identifier == "h2") return Element_Heading2;
-  if (identifier == "h3") return Element_Heading3;
-  if (identifier == "link") return Element_Link;
-  if (identifier == "image") return Element_Image;
-  if (identifier == "img") return Element_Image;
-  if (identifier == "ol") return Element_ListOrdered;
-  if (identifier == "table") return Element_Table;
-  if (identifier == "ul") return Element_ListUnordered;
+  if (identifier == "h1") return ElementType_Heading1;
+  if (identifier == "h2") return ElementType_Heading2;
+  if (identifier == "h3") return ElementType_Heading3;
+  if (identifier == "link") return ElementType_Link;
+  if (identifier == "image") return ElementType_Image;
+  if (identifier == "img") return ElementType_Image;
+  if (identifier == "ol") return ElementType_ListOrdered;
+  if (identifier == "table") return ElementType_Table;
+  if (identifier == "ul") return ElementType_ListUnordered;
 
-  return Element_None;
+  return ElementType_None;
 }
 
-bool docx_renderer::IsValidJsonForHeading(const std::string &str) {
-  Elements kElementType = docx_renderer::DetectElementType(str);
+bool docx_renderer::IsElementType(const std::vector<ElementType>& types) {
+  ElementType kElementType = DetectElementType(json_);
 
-  return helper::String::IsJson(str)
-      && (docx_renderer::Element_Heading1 == kElementType
-          || docx_renderer::Element_Heading2 == kElementType
-          || docx_renderer::Element_Heading3 == kElementType)
-      && helper::String::Contains(str, "text");
+  for (auto type : types) if (kElementType == type) return true;
+
+  return false;
 }
 
-bool docx_renderer::IsValidJsonForImage(const std::string &str) {
-  Elements kType = docx_renderer::DetectElementType(str);
-
-  return helper::String::IsJson(str)
-      && (docx_renderer::Element_ListUnordered == kType
-          || docx_renderer::Element_ListOrdered == kType);
-}
-
-bool docx_renderer::IsValidJsonForList(const std::string &str) {
-  Elements kType = docx_renderer::DetectElementType(str);
-
-  return helper::String::IsJson(str)
-      && (docx_renderer::Element_ListOrdered == kType
-          || docx_renderer::Element_ListUnordered == kType);
+bool docx_renderer::IsElementType(ElementType type) {
+  return DetectElementType(json_) == type;
 }

@@ -32,8 +32,7 @@ class docx_renderer_table: docx_renderer {
   // Generic table specs
   bool has_column_headers = false;
 
-  // Collect table specs from JSON
-  void InitSpecs();
+  bool InitFromJson();
 
   std::string RenderTableProperties();
   std::string RenderTableGrid();

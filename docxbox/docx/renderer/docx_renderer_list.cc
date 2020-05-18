@@ -12,21 +12,19 @@ docx_renderer_list::docx_renderer_list(
   argv_ = argv;
 
   json_ = json;
-  is_json_valid_markup_config_ = helper::String::IsJson(json);
-
-  if (is_json_valid_markup_config_) InitSpecsFromJson();
+  is_json_valid_ = InitFromJson();
 }
 
 void docx_renderer_list::SetIsOrdered(bool is_ordered) {
   is_ordered_ = is_ordered;
 }
 
-void docx_renderer_list::InitSpecsFromJson() {
-  if (!docx_renderer::IsValidJsonForList(json_)) {
-    is_json_valid_markup_config_ = false;
+bool docx_renderer_list::InitFromJson() {
+  if (!helper::String::IsJson(json_)
+      || !docx_renderer::IsElementType(
+          {ElementType_ListOrdered, ElementType_ListOrdered})) return false;
 
-    return;
-  }
+  items_.clear();
 
   auto json_outer = nlohmann::json::parse(json_);
 
@@ -45,10 +43,18 @@ void docx_renderer_list::InitSpecsFromJson() {
       }
     }
   }
+
+  if (items_.empty()) {
+    std::cerr << "Invalid markup: list contains no items.\n";
+
+    return false;
+  }
+
+  return true;
 }
 
 std::string docx_renderer_list::Render() {
-  if (!is_json_valid_markup_config_) throw "Failed render list markup.\n";
+  if (!is_json_valid_) throw "Failed render list markup.\n";
 
   wml_ = kWRunLhs;
 

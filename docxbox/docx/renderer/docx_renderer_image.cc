@@ -12,9 +12,7 @@ docx_renderer_image::docx_renderer_image(
   argv_ = argv;
 
   json_ = json;
-  is_json_valid_markup_config_ = helper::String::IsJson(json);
-
-  if (is_json_valid_markup_config_) InitSpecsFromJson();
+  is_json_valid_ = InitFromJson();
 }
 
 void docx_renderer_image::SetRelationshipId(
@@ -22,13 +20,9 @@ void docx_renderer_image::SetRelationshipId(
   relationship_id_ = relationship_id;
 }
 
-// Collect specs from JSON
-void docx_renderer_image::InitSpecsFromJson() {
-  if (!docx_renderer::IsValidJsonForImage(json_)) {
-    is_json_valid_markup_config_ = false;
-
-    return;
-  }
+bool docx_renderer_image::InitFromJson() {
+  if (!helper::String::IsJson(json_)
+      || !docx_renderer::IsElementType(ElementType_Image)) return false;
 
   auto json_outer = nlohmann::json::parse(json_);
 
@@ -54,15 +48,17 @@ void docx_renderer_image::InitSpecsFromJson() {
     }
   }
 
-  is_json_valid_markup_config_ =
+  is_json_valid_ =
       width_ > 0
       && height_ > 0;
+
+  return true;
 }
 
 
 // @see http://officeopenxml.com/drwPic.php
 std::string docx_renderer_image::Render() {
-  if (!is_json_valid_markup_config_) throw "Failed render image markup.\n";
+  if (!is_json_valid_) throw "Failed render image markup.\n";
 
   wml_ = kWRunLhs;
 

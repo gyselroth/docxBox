@@ -23,7 +23,7 @@ class docx_renderer_link: docx_renderer {
   std::string text_;
   std::string url_;
 
-  void InitSpecsFromJson();
+  bool InitFromJson();
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_

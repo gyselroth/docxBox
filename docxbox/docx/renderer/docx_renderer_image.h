@@ -33,7 +33,7 @@ class docx_renderer_image: docx_renderer {
 
   std::string relationship_id_;
 
-  void InitSpecsFromJson();
+  bool InitFromJson();
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_IMAGE_H_

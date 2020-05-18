@@ -12,17 +12,12 @@ docx_renderer_link::docx_renderer_link(
   argv_ = argv;
 
   json_ = json;
-  is_json_valid_markup_config_ = helper::String::IsJson(json);
-
-  if (is_json_valid_markup_config_) InitSpecsFromJson();
+  is_json_valid_ = InitFromJson();
 }
 
-void docx_renderer_link::InitSpecsFromJson() {
-//  if (!docx_renderer::IsValidJsonForLink(json_)) {
-//    is_json_valid_markup_config_ = false;
-//
-//    return;
-//  }
+bool docx_renderer_link::InitFromJson() {
+  if (!helper::String::IsJson(json_)
+      || !docx_renderer::IsElementType(ElementType_Link)) return false;
 
   auto json_outer = nlohmann::json::parse(json_);
 
@@ -41,7 +36,7 @@ void docx_renderer_link::InitSpecsFromJson() {
 }
 
 std::string docx_renderer_link::Render() {
-  if (!is_json_valid_markup_config_) throw "Failed render list markup.\n";
+  if (!is_json_valid_) throw "Failed render list markup.\n";
 
   wml_ =
       "<w:p>"

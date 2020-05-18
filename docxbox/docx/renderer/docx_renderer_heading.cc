@@ -10,23 +10,22 @@ docx_renderer_heading::docx_renderer_heading(
     int argc, char **argv, const std::string &json) {
   argc_ = argc;
   argv_ = argv;
+
   json_ = json;
-
-  is_json_valid_markup_config_ = helper::String::IsJson(json);
-
-  if (is_json_valid_markup_config_) InitSpecsFromJson();
+  is_json_valid_ = InitFromJson();
 }
 
 void docx_renderer_heading::SetLevel(int level) {
   level_ = level;
 }
 
-void docx_renderer_heading::InitSpecsFromJson() {
-  if (!docx_renderer::IsValidJsonForHeading(json_)) {
-    is_json_valid_markup_config_ = false;
+bool docx_renderer_heading::InitFromJson() {
+  if (!helper::String::IsJson(json_)
+      || !docx_renderer::IsElementType(
+      {ElementType_Heading1, ElementType_Heading2, ElementType_Heading3}))
+    return false;
 
-    return;
-  }
+  text_ = "";
 
   auto json_outer = nlohmann::json::parse(json_);
 
@@ -39,10 +38,12 @@ void docx_renderer_heading::InitSpecsFromJson() {
       if (key == "text") text_ = it.value();
     }
   }
+
+  return true;
 }
 
 std::string docx_renderer_heading::Render() {
-  if (!is_json_valid_markup_config_) throw "Failed render heading markup.\n";
+  if (!is_json_valid_) throw "Failed render heading markup.\n";
 
   wml_ =
       "<w:p>"
