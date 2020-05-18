@@ -36,9 +36,13 @@ add_executable(docxbox
         docxbox/docx/docx_fontTable.cc
         docxbox/docx/docx_meta.cc
         docxbox/docx/docx_media.cc
+        docxbox/docx/docx_numbering.cc
 
         docxbox/docx/renderer/docx_renderer.cc
+        docxbox/docx/renderer/docx_renderer_delegate.cc
+        docxbox/docx/renderer/docx_renderer_heading.cc
         docxbox/docx/renderer/docx_renderer_image.cc
+        docxbox/docx/renderer/docx_renderer_list.cc
         docxbox/docx/renderer/docx_renderer_rels.cc
         docxbox/docx/renderer/docx_renderer_table.cc
 

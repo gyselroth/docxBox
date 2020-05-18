@@ -91,6 +91,7 @@ bool docx_archive_replace::ReplaceText() {
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
+  // TODO(kay): detect JSON being for image solely here, store type to property
   try {
     image_relationship_id = AddImageFileAndRelation(replacement);
   } catch (std::string &message) {
@@ -104,6 +105,7 @@ bool docx_archive_replace::ReplaceText() {
   auto file_list = docx_file.infolist();
 
   auto parser = new docx_xml_replace(argc_, argv_);
+  parser->SetPathExtract(path_extract_);
 
   if (!image_relationship_id.empty())
     parser->SetImageRelationshipId(image_relationship_id);
@@ -166,7 +168,7 @@ void docx_archive_replace::InitDocxOutPathForReplaceText(
  */
 std::string docx_archive_replace::AddImageFileAndRelation(
   const std::string &image_markup_json) {
-  if (!docx_renderer::IsJsonForImage(image_markup_json)
+  if (!docx_renderer::IsValidJsonForImage(image_markup_json)
       || !hasArgOfAdditionalImageFile())
     // No media file given: successfully done (nothing)
     return "";

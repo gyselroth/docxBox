@@ -7,19 +7,14 @@
 
 // Constructor
 docx_renderer_image::docx_renderer_image(
-    int argc,
-    char **argv,
-    const std::string &json) {
+    int argc, char **argv, const std::string &json) {
   argc_ = argc;
   argv_ = argv;
 
   json_ = json;
   is_json_valid_markup_config_ = helper::String::IsJson(json);
 
-  if (is_json_valid_markup_config_) {
-    if (argc >= 6) InsertNewImageFile(argv[5]);
-    InitSpecsFromJson();
-  }
+  if (is_json_valid_markup_config_) InitSpecsFromJson();
 }
 
 void docx_renderer_image::SetRelationshipId(
@@ -27,14 +22,9 @@ void docx_renderer_image::SetRelationshipId(
   relationship_id_ = relationship_id;
 }
 
-bool docx_renderer_image::InsertNewImageFile(const std::string& path_image) {
-  // TODO(kay): implement
-  return true;
-}
-
 // Collect specs from JSON
 void docx_renderer_image::InitSpecsFromJson() {
-  if (!docx_renderer::IsJsonForImage(json_)) {
+  if (!docx_renderer::IsValidJsonForImage(json_)) {
     is_json_valid_markup_config_ = false;
 
     return;
@@ -48,8 +38,8 @@ void docx_renderer_image::InitSpecsFromJson() {
          ++it) {
       const std::string& key = it.key();
 
-      if (key == "filename") {
-        filename_internal_ = it.value();
+      if (key == "name") {
+        image_name = it.value();
       } else if (key == "offset") {
         auto value = it.value();
 
@@ -60,9 +50,9 @@ void docx_renderer_image::InitSpecsFromJson() {
 
         width_ = value.at(0);
         height_ = value.at(1);
-        }
       }
     }
+  }
 
   is_json_valid_markup_config_ =
       width_ > 0
@@ -102,7 +92,7 @@ std::string docx_renderer_image::Render() {
             ">"
 
               "<pic:nvPicPr>"
-                "<pic:cNvPr id=\"0\" name=\"" + filename_internal_ + "\"/>"
+                "<pic:cNvPr id=\"0\" name=\"" + image_name + "\"/>"
                 "<pic:cNvPicPr/>"
               "</pic:nvPicPr>"
             "<pic:blipFill>"

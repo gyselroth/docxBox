@@ -23,7 +23,7 @@ class docx_renderer_image: docx_renderer {
 
  private:
   // Image specs from JSON
-  std::string filename_internal_;
+  std::string image_name;
 
   int offset_x_ = 0;
   int offset_y_ = 0;
@@ -32,8 +32,6 @@ class docx_renderer_image: docx_renderer {
   int height_ = 0;
 
   std::string relationship_id_;
-
-  static bool InsertNewImageFile(const std::string& path_image);
 
   void InitSpecsFromJson();
 };

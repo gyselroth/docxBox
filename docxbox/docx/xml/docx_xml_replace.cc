@@ -4,8 +4,12 @@
 #include <docxbox/docx/xml/docx_xml_replace.h>
 
 docx_xml_replace::docx_xml_replace(
-    int argc,
-    char **argv) : docx_xml(argc, argv) {
+    int argc, char **argv) : docx_xml(argc, argv) {
+}
+
+void docx_xml_replace::SetReplacementXmlFirstChildTag(
+    const std::string &replacement_xml_first_child_tag) {
+  replacement_xml_first_child_tag_ = replacement_xml_first_child_tag;
 }
 
 void docx_xml_replace::SetImageRelationshipId(std::string &relationship_id) {
@@ -67,7 +71,8 @@ bool docx_xml_replace::ReplaceInXml(
 
   if (is_replacement_xml_)
     replacement_xml_element_ =
-        doc.FirstChildElement()->FirstChildElement("w:r");
+        doc.FirstChildElement()->FirstChildElement(
+            replacement_xml_first_child_tag_.c_str());
 
   tinyxml2::XMLElement *body =
       doc.FirstChildElement("w:document")->FirstChildElement("w:body");
@@ -231,33 +236,4 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
 
     ReplaceOrLocateStringInXml(sub_node, search, replacement);
   } while ((sub_node = sub_node->NextSiblingElement()));
-}
-
-std::string docx_xml_replace::RenderMarkupFromJson(const std::string& json) {
-  auto type = docx_renderer::DetectElementType(json);
-
-  std::string markup;
-
-  switch (type) {
-    case docx_renderer::Element_Image: {
-      auto renderer = new docx_renderer_image(argc_, argv_, json);
-      renderer->SetRelationshipId(image_relationship_id_);
-
-      markup = renderer->Render();
-
-      delete renderer;
-    }
-    break;
-    case docx_renderer::Element_Table: {
-      auto renderer = new docx_renderer_table(argc_, argv_, json);
-
-      markup = renderer->Render();
-      delete renderer;
-    }
-    break;
-    case docx_renderer::Element_None:default:
-      throw "Invalid markup config, failed to identify element type.";
-  }
-
-  return markup;
 }

@@ -4,9 +4,7 @@
 #ifndef DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
 #define DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
 
-#include <docxbox/docx/renderer/docx_renderer.h>
-#include <docxbox/docx/renderer/docx_renderer_image.h>
-#include <docxbox/docx/renderer/docx_renderer_table.h>
+#include <docxbox/docx/renderer/docx_renderer_delegate.h>
 #include <docxbox/docx/docx_media.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_file.h>
@@ -18,7 +16,7 @@
 #include <string>
 #include <vector>
 
-class docx_xml_replace:docx_xml {
+class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
  public:
   docx_xml_replace(int argc, char **argv);
 
@@ -29,6 +27,9 @@ class docx_xml_replace:docx_xml {
       bool replace_segmented = false);
 
   void SetImageRelationshipId(std::string &relationship_id);
+
+  void SetReplacementXmlFirstChildTag(
+      const std::string &replacement_xml_first_child_tag);
 
  private:
   // Replacement can be (plain)textual or XML markup
@@ -53,8 +54,6 @@ class docx_xml_replace:docx_xml {
 
   int amount_replaced_ = 0;
 
-  std::string image_relationship_id_ = "";
-
   void ReplaceOrLocateStringInXml(tinyxml2::XMLElement *node,
                                   const std::string &search,
                                   const std::string &replacement);
@@ -64,8 +63,6 @@ class docx_xml_replace:docx_xml {
                                          const std::string &replacement);
 
   void ReplaceRunsByXmlElement();
-
-  std::string RenderMarkupFromJson(const std::string& json);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_REPLACE_H_
