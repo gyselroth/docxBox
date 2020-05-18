@@ -24,27 +24,21 @@ base_command="docxbox lsm filename.docx"
 @test "Output of \"${base_command}\" contains information about the xml schema" {
   xml_schema="xmlSchema: http://schemas.openxmlformats.org/officeDocument/2006"
 
-  run "${docxbox}" lsm "${path_docx}"
-  [ "$status" -eq 0 ]
-  [ "$xml_schema" = "${lines[0]}" ]
+  "${docxbox}" lsm "${path_docx}" | grep --count "${xml_schema}"
 }
 
 title="Output of \"${base_command}\" "
 title+="contains information about the creation time and date"
 @test "${title}" {
-  run "${docxbox}" lsm "${path_docx}"
-  [ "$status" -eq 0 ]
-  [ "created: 2017-08-02T11:09:18Z" = "${lines[1]}" ]
+  created="created: 2017-08-02T11:09:18Z"
+
+  "${docxbox}" lsm "${path_docx}" | grep --count "${created}"
 }
 
 @test "Output of \"${base_command}\" contains language information" {
-  run "${docxbox}" lsm "${path_docx}"
-  [ "$status" -eq 0 ]
-  [ "language: en-US" = "${lines[2]}" ]
+  "${docxbox}" lsm "${path_docx}" | grep --count "language: en-US"
 }
 
 @test "Output of \"${base_command}\" contains information about the revision" {
-  run "${docxbox}" lsm "${path_docx}"
-  [ "$status" -eq 0 ]
-  [ "revision: 0" = "${lines[3]}" ]
+  "${docxbox}" lsm "${path_docx}" | grep --count "revision: 0"
 }

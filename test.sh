@@ -53,7 +53,7 @@ bats ./test/functional/lslj.bats.sh
 printf "\n\033[4mTest listing metadata in DOCX (lsm)\033[0m\n"
 bats ./test/functional/lsm.bats.sh
 
-printf "\n\033[4mTest listing metadata in DOCX as JSON (lsm)\033[0m\n"
+printf "\n\033[4mTest listing metadata in DOCX as JSON (lsmj)\033[0m\n"
 bats ./test/functional/lsmj.bats.sh
 
 # Convert and compare DOCX:
