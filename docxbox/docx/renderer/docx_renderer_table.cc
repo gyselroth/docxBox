@@ -7,9 +7,8 @@
 
 // Constructor
 docx_renderer_table::docx_renderer_table(
-    int argc, char **argv, const std::string &json) {
-  argc_ = argc;
-  argv_ = argv;
+    std::string path_extract, const std::string &json) {
+  path_extract_ = std::move(path_extract);
 
   json_ = json;
   is_json_valid_ = helper::String::IsJson(json);

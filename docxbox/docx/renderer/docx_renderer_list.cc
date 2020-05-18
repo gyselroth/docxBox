@@ -5,14 +5,21 @@
 
 #include <iostream>
 
+
 // Constructor
 docx_renderer_list::docx_renderer_list(
-    int argc, char **argv, const std::string &json) {
-  argc_ = argc;
-  argv_ = argv;
+    std::string path_extract, const std::string &json) {
+  path_extract_ = std::move(path_extract);
 
   json_ = json;
   is_json_valid_ = InitFromJson();
+
+  if (is_json_valid_) {
+    auto numbering = new docx_numbering(path_extract_);
+    numbering->AddNumberingXml();
+
+    delete numbering;
+  }
 }
 
 void docx_renderer_list::SetIsOrdered(bool is_ordered) {
@@ -51,6 +58,12 @@ bool docx_renderer_list::InitFromJson() {
   }
 
   return true;
+}
+
+std::string docx_renderer_list::Render(bool is_ordered) {
+  SetIsOrdered(is_ordered);
+
+  return Render();
 }
 
 std::string docx_renderer_list::Render() {

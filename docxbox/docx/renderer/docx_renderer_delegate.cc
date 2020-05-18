@@ -47,7 +47,7 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
 }
 std::string &docx_renderer_delegate::RenderTable(
     const std::string &json, std::string &markup) {
-  auto renderer = new docx_renderer_table(argc_, argv_, json);
+  auto renderer = new docx_renderer_table(path_extract_, json);
 
   replacement_xml_first_child_tag_ = "w:r";
 
@@ -60,12 +60,11 @@ std::string &docx_renderer_delegate::RenderTable(
 
 std::string &docx_renderer_delegate::RenderImage(const std::string &json,
                                            std::string &markup) {
-  auto renderer = new docx_renderer_image(argc_, argv_, json);
-  renderer->SetRelationshipId(image_relationship_id_);
+  auto renderer = new docx_renderer_image(path_extract_, json);
 
   replacement_xml_first_child_tag_ = "w:r";
 
-  markup = renderer->Render();
+  markup = renderer->Render(image_relationship_id_);
 
   delete renderer;
 
@@ -74,12 +73,11 @@ std::string &docx_renderer_delegate::RenderImage(const std::string &json,
 
 std::string &docx_renderer_delegate::RenderHeading(
     int level, const std::string &json, std::string &markup) {
-  auto renderer = new docx_renderer_heading(argc_, argv_, json);
-  renderer->SetLevel(level);
+  auto renderer = new docx_renderer_heading(path_extract_, json);
 
   replacement_xml_first_child_tag_ = "w:p";
 
-  markup = renderer->Render();
+  markup = renderer->Render(level);
 
   delete renderer;
 
@@ -88,17 +86,11 @@ std::string &docx_renderer_delegate::RenderHeading(
 
 std::string &docx_renderer_delegate::RenderList(
     bool is_ordered, const std::string &json, std::string &markup) {
-  auto numbering = new docx_numbering(path_extract_);
-  numbering->AddNumberingXml();
-
-  delete numbering;
-
-  auto renderer = new docx_renderer_list(argc_, argv_, json);
-  renderer->SetIsOrdered(is_ordered);
+  auto renderer = new docx_renderer_list(path_extract_, json);
 
   replacement_xml_first_child_tag_ = "w:r";
 
-  markup = renderer->Render();
+  markup = renderer->Render(is_ordered);
 
   delete renderer;
 
@@ -107,14 +99,7 @@ std::string &docx_renderer_delegate::RenderList(
 
 std::string &docx_renderer_delegate::RenderHyperlink(
     const std::string &json, std::string &markup) {
-  auto numbering = new docx_numbering(path_extract_);
-  numbering->AddNumberingXml();
-
-  delete numbering;
-
-  auto renderer = new docx_renderer_link(argc_, argv_, json);
-  //renderer->setPathExtract(path_extract_);
-  // TODO(kay): move above numbering.xml insertion to be invoked from renderer
+  auto renderer = new docx_renderer_link(path_extract_, json);
 
   replacement_xml_first_child_tag_ = "w:p";
 

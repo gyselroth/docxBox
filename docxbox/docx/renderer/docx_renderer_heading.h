@@ -16,17 +16,18 @@ class docx_renderer_heading: docx_renderer {
  public:
   // Constructor
   explicit docx_renderer_heading(
-      int argc, char **argv, const std::string &json);
+      std::string path_extract, const std::string &json);
 
   void SetLevel(int level);
 
-  std::string Render();
+  std::string Render(int level);
+  std::string Render() override;
 
  private:
   int level_;
   std::string text_;
 
-  bool InitFromJson();
+  bool InitFromJson() override;
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_HEADING_H_

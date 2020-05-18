@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
 
+#include <docxbox/docx/docx_numbering.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/helper/helper_string.h>
 
@@ -15,15 +16,15 @@
 class docx_renderer_link: docx_renderer {
  public:
   // Constructor
-  docx_renderer_link(int argc, char **argv, const std::string &json);
+  docx_renderer_link(std::string path_extract, const std::string &json);
 
-  std::string Render();
+  std::string Render() override;
 
  private:
   std::string text_;
   std::string url_;
 
-  bool InitFromJson();
+  bool InitFromJson() override;
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_

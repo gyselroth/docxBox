@@ -4,15 +4,17 @@
 #include <docxbox/docx/renderer/docx_renderer_heading.h>
 
 #include <iostream>
+#include <utility>
 
 // Constructor
 docx_renderer_heading::docx_renderer_heading(
-    int argc, char **argv, const std::string &json) {
-  argc_ = argc;
-  argv_ = argv;
+    std::string path_extract, const std::string &json) {
+  path_extract_ = std::move(path_extract);
 
   json_ = json;
   is_json_valid_ = InitFromJson();
+
+  level_ = 1;
 }
 
 void docx_renderer_heading::SetLevel(int level) {
@@ -43,7 +45,13 @@ bool docx_renderer_heading::InitFromJson() {
 }
 
 std::string docx_renderer_heading::Render() {
+  return Render(1);
+}
+
+std::string docx_renderer_heading::Render(int level) {
   if (!is_json_valid_) throw "Failed render heading markup.\n";
+
+  if (level > 0) SetLevel(level);
 
   wml_ =
       "<w:p>"

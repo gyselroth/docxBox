@@ -34,12 +34,10 @@ class docx_renderer {
   bool IsElementType(const std::vector<ElementType>& types);
   bool IsElementType(ElementType type);
 
-  // Mandatory when implementing the interface
   virtual std::string Render() = 0;
 
  protected:
-  int argc_;
-  char **argv_;
+  std::string path_extract_;
 
   std::string json_;
   bool is_json_valid_;
@@ -47,7 +45,6 @@ class docx_renderer {
   std::string wml_;
 
  private:
-  // Mandatory when implementing the interface
   virtual bool InitFromJson() = 0;
 };
 
