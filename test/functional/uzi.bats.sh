@@ -21,7 +21,11 @@ unzipped_folder="cp_bio_assay.docx-extracted"
   [ "$status" -eq 0 ]
 }
 
-@test "Unziped files are located in project root" {
+@test "Unzipped xml files are indented" {
+  cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
+}
+
+@test "Unzipped files are located in project root" {
   ls | grep --count "${unzipped_folder}"
 
   if [ -d "${unzipped_folder}" ]; then
@@ -34,7 +38,11 @@ unzipped_folder="cp_bio_assay.docx-extracted"
   [ "$status" -eq 0 ]
 }
 
-@test "Unziped files are located in project root after running uz -i" {
+@test "Unzipped xml files are indented after running uz -i" {
+  cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
+}
+
+@test "Unzipped files are located in project root after running uz -i" {
   ls | grep --count "${unzipped_folder}"
 
   if [ -d "${unzipped_folder}" ]; then
@@ -47,7 +55,11 @@ unzipped_folder="cp_bio_assay.docx-extracted"
   [ "$status" -eq 0 ]
 }
 
-@test "Unziped files are located in project root after running uz --indent" {
+@test "Unzipped xml files are indented after running uz --indent" {
+  cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
+}
+
+@test "Unzipped files are located in project root after running uz --indent" {
   ls | grep --count "${unzipped_folder}"
 
   if [ -d "${unzipped_folder}" ]; then
