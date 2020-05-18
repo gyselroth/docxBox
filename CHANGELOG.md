@@ -5,7 +5,7 @@ V0.0.4 - Not finished yet
 -------------------------
 * Add replace text by list 
 * Add replace text by heading 1, 2, 3 
-* Add replace text by image 
+* Add replace text by image
 * Add cat command: output content of file from within DOCX 
 * Render help in two columns, output also version number 
 * Side-by-side DOCX compare now detects different content (of files w/ identical attributes)
