@@ -303,9 +303,9 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
 
   helper::Cli::Execute(command.c_str());
 
-  std::cout << "\nHit [Enter] when done.";
-
-  getchar();
+// TODO(kay): TBD - implement optional wait for keypress
+//  std::cout << "\nHit [Enter] when done.";
+//  getchar();
 
   Zip(true, path_extract_, "", true, true);
 
@@ -380,6 +380,7 @@ bool docx_archive::ViewFilesDiff() {
       path_extract_left + "/" + file,
       path_extract_right + "/" + file);
 
+  // TODO(kay): test/improve auto-width, add option for unified diff
   if (width > 200) width = 200;
 
   helper::Cli::Execute(
@@ -388,9 +389,9 @@ bool docx_archive::ViewFilesDiff() {
                   + path_extract_left + "/" + file + " "
                   + path_extract_right + "/" + file).c_str());
 
-  std::cout << "\nHit [Enter] when done.";
-
-  getchar();
+// TODO(kay): TBD - implement optional wait for keypress
+//  std::cout << "\nHit [Enter] when done.";
+//  getchar();
 
   std::cout << "\n";
 

@@ -3,6 +3,19 @@
 
 #include <docxbox/docx/renderer/docx_renderer_rels.h>
 
+std::string docx_renderer_rels::RenderRelationship(
+    const std::string &path_target,
+    const int relation_type,
+    const std::string& relationship_id) {
+  switch (relation_type) {
+    case docx_xml_rels::RelationType_Numbering:
+      return RenderNumberingRelationship(relationship_id);
+    case docx_xml_rels::RelationType_Image:
+    default:
+      return RenderImageRelationship(path_target, relationship_id);
+  }
+}
+
 std::string docx_renderer_rels::RenderImageRelationship(
     const std::string &path_target,
     const std::string &relationship_id) {
@@ -10,4 +23,12 @@ std::string docx_renderer_rels::RenderImageRelationship(
           "Id=\"" + relationship_id + "\" "
           "Type=\"" + kUrlRelationshipSchemaImage + "\" "
           "Target=\"" + path_target + "\"/>";
+}
+
+std::string docx_renderer_rels::RenderNumberingRelationship(
+    const std::string &relationship_id) {
+  return "<Relationship "
+         "Id=\"" + relationship_id + "\" "
+         "Type=\"" + kUrlRelationshipSchemaNumbering + "\" "
+         "Target=\"numbering.xml\"/>";
 }

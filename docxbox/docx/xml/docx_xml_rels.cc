@@ -2,6 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/docx_xml_rels.h>
+#include <docxbox/docx/docx_numbering.h>
 
 docx_xml_rels::docx_xml_rels(
     std::string path_extract, int argc, char **argv) : docx_xml(
@@ -12,9 +13,9 @@ docx_xml_rels::docx_xml_rels(
   xml_ = helper::File::GetFileContents(path_rels_xml);
 }
 
-// Get (insert if not exists) relationship id of given target
+// Get (insert if not exists) relationship id of given image target
 std::string docx_xml_rels::GetRelationShipIdByTarget(
-  const std::string &path_target) {
+  const std::string &path_target, RelationType relation_type) {
   tinyxml2::XMLDocument doc;
 
   doc.Parse(xml_.c_str());
@@ -28,6 +29,7 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
   const char* target_key = "Target";
 
   bool target_exists = false;
+
   std::string relationship_id;
 
   do {
@@ -53,11 +55,15 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
 
   relationship_id = "rId" + std::to_string(last_id + 1);
 
-  std::string insert_node_xml =
-      docx_renderer_rels::RenderImageRelationship(path_target, relationship_id)
-      + "</Relationships>";
+  const std::basic_string<char,
+                          std::char_traits<char>,
+                          std::allocator<char>>
+      &kRelationshipTag = docx_renderer_rels::RenderRelationship(
+      path_target,
+      relation_type,
+      relationship_id) + "</Relationships>";
 
-  helper::String::Replace(xml_, "</Relationships>", insert_node_xml.c_str());
+  helper::String::Replace(xml_, "</Relationships>", kRelationshipTag.c_str());
 
   if (!SaveXml(true)) throw "Failed save word/_rels/document.xml.rels\n";
 
@@ -70,6 +76,13 @@ void docx_xml_rels::GetRelationshipId(
   const char* id_key = "Id";
   auto id = relationship->FindAttribute(id_key);
   relationship_id = id->Value();
+}
+
+// Get (insert if not exists) relationship id of given target
+std::string GetRelationShipIdByTarget(
+    const std::string &schema_url,
+    const std::string &path_target) {
+  return "";
 }
 
 bool docx_xml_rels::SaveXml(bool compress) {
