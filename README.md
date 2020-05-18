@@ -297,6 +297,12 @@ rules:
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 
+##### Insert hyperlink
+
+**Example:** Replace string ``search`` by a hyperlink:    
+````docxbox rpt foo.docx search "{\"link\":{\"text\":\"docxBox\",\"url\":\"https://github.com/gyselroth/docxbox\"}}"````  
+
+
 ##### Insert list
 
 **Example:** Replace string ``search`` by an unordered list:

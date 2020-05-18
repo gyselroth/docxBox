@@ -31,6 +31,8 @@ class docx_renderer {
 
   static docx_renderer::Elements DetectElementType(const std::string& json);
 
+  // TODO(kay): make these validator unnecessary: initFromJson should suffice as
+  //            both- initialization and check: all required fields initialized?
   static bool IsValidJsonForHeading(const std::string &str);
   static bool IsValidJsonForImage(const std::string &str);
   static bool IsValidJsonForList(const std::string &str);

@@ -26,6 +26,10 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
     case docx_renderer::Element_Image:
       markup = RenderImage(json, markup);
       break;
+    case docx_renderer::Element_Link:
+      // TODO(kay): add differentiation among links to URL and bookmark
+      markup = RenderHyperlink(json, markup);
+      break;
     case docx_renderer::Element_ListUnordered:
       markup = RenderList(false, json, markup);
       break;
@@ -101,3 +105,22 @@ std::string &docx_renderer_delegate::RenderList(
   return markup;
 }
 
+std::string &docx_renderer_delegate::RenderHyperlink(
+    const std::string &json, std::string &markup) {
+  auto numbering = new docx_numbering(path_extract_);
+  numbering->AddNumberingXml();
+
+  delete numbering;
+
+  auto renderer = new docx_renderer_link(argc_, argv_, json);
+  //renderer->setPathExtract(path_extract_);
+  // TODO(kay): move above numbering.xml insertion to be invoked from renderer
+
+  replacement_xml_first_child_tag_ = "w:p";
+
+  markup = renderer->Render();
+
+  delete renderer;
+
+  return markup;
+}

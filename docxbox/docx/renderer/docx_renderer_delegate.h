@@ -8,6 +8,7 @@
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/docx/renderer/docx_renderer_heading.h>
 #include <docxbox/docx/renderer/docx_renderer_image.h>
+#include <docxbox/docx/renderer/docx_renderer_link.h>
 #include <docxbox/docx/renderer/docx_renderer_list.h>
 #include <docxbox/docx/renderer/docx_renderer_table.h>
 
@@ -31,6 +32,8 @@ class docx_renderer_delegate {
 
   std::string &RenderHeading(
       int level, const std::string &json, std::string &markup);
+
+  std::string &RenderHyperlink(const std::string &json, std::string &markup);
 
   std::string &RenderList(
       bool is_ordered, const std::string &json, std::string &markup);
