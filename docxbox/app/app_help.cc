@@ -422,7 +422,7 @@ bool AppHelp::PrintHelpOnUnzip(bool with_uz, bool with_uzm, bool with_uzi) {
                  "-----------------------------------------------\n"
                  "  docxbox uzi foo.docx\n"
                  "  or: docxbox uz foo.docx -i\n"
-                 "  or: docxbox uz foo.docx --ident\n\n";
+                 "  or: docxbox uz foo.docx --indent\n\n";
   }
 
   return true;

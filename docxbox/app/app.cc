@@ -94,6 +94,9 @@ AppCommands::Commands App::PreProcess(
       if (arguments->Matches(3, "-f", "--format"))
         return AppCommands::Command_UnzipAndIndentXml;
 
+      if (arguments->Matches(3, "-i", "--indent"))
+        return AppCommands::Command_UnzipAndIndentXml;
+
       return arguments->Matches(3, "-m", "--media")
                ? AppCommands::Command_UnzipMedia
                : command;

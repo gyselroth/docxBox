@@ -19,11 +19,19 @@
 
 class docx_xml_rels:docx_xml {
  public:
+  enum RelationType {
+    RelationType_Image,
+    RelationType_Numbering,
+    RelationType_None
+  };
+
   explicit docx_xml_rels(
       std::string path_extract, int argc = 0, char **argv = nullptr);
 
-  // Get (insert if not exists) relationship id of given target
-  std::string GetRelationShipIdByTarget(const std::string &path_target);
+  // Get (insert if not exists) relationship id of given image target
+  std::string GetRelationShipIdByTarget(
+      const std::string &path_target,
+      RelationType relation_type = RelationType_Image);
 
  private:
   std::string path_extract_;
