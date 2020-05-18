@@ -19,9 +19,7 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 @test "With of \"docxbox uzi filename.docx\" all files are unzipped" {
   run "${docxbox}" uzi "${path_docx}"
   [ "$status" -eq 0 ]
-}
 
-@test "Unzipped xml files are indented" {
   cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
@@ -36,9 +34,7 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 @test "With of \"docxbox uz filename.docx -i\" all files are unzipped" {
   run "${docxbox}" uz "${path_docx}" -i
   [ "$status" -eq 0 ]
-}
 
-@test "Unzipped xml files are indented after running uz -i" {
   cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
@@ -53,9 +49,7 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 @test "With of \"docxbox uz filename.docx --indent\" all files are unzipped" {
   run "${docxbox}" uz "${path_docx}" --indent
   [ "$status" -eq 0 ]
-}
 
-@test "Unzipped xml files are indented after running uz --indent" {
   cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 

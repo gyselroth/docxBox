@@ -92,7 +92,7 @@ bats ./test/functional/uzi.bats.sh
 printf "\n\033[4mTest unziping only media files from DOCX (uzm)\033[0m\n"
 bats ./test/functional/uzm.bats.sh
 
-printf "\n\033[4mTest creating (zip) DOCX from files (zip)\033[0m\n"
+printf "\n\033[4mTest creating (zp) DOCX from files (zp)\033[0m\n"
 bats ./test/functional/zp.bats.sh
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
