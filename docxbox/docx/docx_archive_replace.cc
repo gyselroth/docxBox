@@ -60,7 +60,7 @@ bool docx_archive_replace::ReplaceImage() {
         : path_docx_in_;
 
     if (!Zip(false, path_extract_, path_docx_out + "tmp"))
-      throw "DOCX creation failed.\n";
+      throw "DOCX creation failed: "  + path_docx_out;
 
     if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
 
@@ -68,9 +68,7 @@ bool docx_archive_replace::ReplaceImage() {
         std::string(path_docx_out).append("tmp").c_str(),
         path_docx_out.c_str());
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   return true;
@@ -98,9 +96,7 @@ bool docx_archive_replace::ReplaceText() {
     hyperlink_relationship_id = AddHyperlinkRelation(replacement);
 
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -120,14 +116,9 @@ bool docx_archive_replace::ReplaceText() {
 
     if (helper::File::IsDirectory(path_file_absolute)) continue;
 
-    if (!parser->ReplaceInXml(path_file_absolute, search, replacement)) {
-      std::cerr << "Error: Failed replace string in: "
-                << file_in_zip.filename << "\n";
-
-      delete parser;
-
-      return false;
-    }
+    if (!parser->ReplaceInXml(path_file_absolute, search, replacement))
+      return docxbox::AppError::Output(
+          "Failed replace string in: " + file_in_zip.filename);
   }
 
   delete parser;
@@ -238,12 +229,10 @@ bool docx_archive_replace::RemoveBetweenText() {
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
 
     if (!parser->RemoveBetweenStringsInXml(path_file_absolute, lhs, rhs)) {
-      std::cerr << "Error: Failed to remove content from: "
-                << file_in_zip.filename << "\n";
-
       delete parser;
 
-      return false;
+      return docxbox::AppError::Output(
+          "Error: Failed to remove content from: " + file_in_zip.filename);
     }
   }
 
@@ -276,12 +265,10 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
 
     if (!parser->RandomizeAllTextInXml(path_file_absolute)) {
-      std::cerr << "Error: Failed insert lorem ipsum in: "
-                << file_in_zip.filename << "\n";
-
       delete parser;
 
-      return false;
+      return docxbox::AppError::Output(
+          "Error: Failed insert lorem ipsum in: " + file_in_zip.filename);
     }
   }
 
@@ -340,11 +327,8 @@ bool docx_archive_replace::SetFieldValue() {
 
   std::string path_docx_out_tmp = path_docx_out + "tmp";
 
-  if (!Zip(false, path_extract_, path_docx_out_tmp)) {
-    std::cerr << "DOCX creation failed.\n";
-
-    return false;
-  }
+  if (!Zip(false, path_extract_, path_docx_out_tmp))
+    return docxbox::AppError::Output("DOCX creation failed.");
 
   return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out.c_str());
 }

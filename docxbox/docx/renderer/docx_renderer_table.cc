@@ -4,6 +4,7 @@
 #include <docxbox/docx/renderer/docx_renderer_table.h>
 
 #include <iostream>
+#include <docxbox/app/app_error.h>
 
 // Constructor
 docx_renderer_table::docx_renderer_table(
@@ -69,14 +70,11 @@ bool docx_renderer_table::InitFromJson() {
     }
   }
 
-  if (amount_columns_ == 0
-      || amount_rows_ == 0) {
-    std::cerr << "Invalid table config: must contain column(s) / row(s)\n";
-
-    return false;
-  }
-
-  return true;
+  return amount_columns_ == 0
+             || amount_rows_ == 0
+         ? docxbox::AppError::Output(
+          "Invalid table config: must contain column(s) / row(s)")
+         : true;
 }
 
 // @see http://officeopenxml.com/WPtable.php

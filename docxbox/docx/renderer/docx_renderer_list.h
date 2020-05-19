@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LIST_H_
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LIST_H_
 
+#include <docxbox/app/app_error.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/docx/docx_numbering.h>
 #include <docxbox/helper/helper_string.h>

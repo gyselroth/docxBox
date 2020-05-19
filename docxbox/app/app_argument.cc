@@ -29,11 +29,10 @@ bool AppArguments::IsArgumentGiven(int argc,
                                    const std::string &argument_description,
                                    bool do_throw) {
   if (argc <= index) {
-    if (do_throw) throw "Missing argument: " + argument_description + "\n";
+    if (do_throw) throw "Missing argument: " + argument_description;
 
-    std::cerr << "Missing argument: " << argument_description << "\n";
-
-    return false;
+    return docxbox::AppError::Output(
+        "Missing argument: " + argument_description);
   }
 
   return true;

@@ -3,6 +3,8 @@ docxBox Changelog
 
 V0.0.4 - Not finished yet
 -------------------------
+* Add handler for all docxBox error messages 
+  (prefixes all error-messages, creates central place for logging)  
 * Add replace text by list 
 * Add replace text by heading 1, 2, 3 
 * Add replace text by image

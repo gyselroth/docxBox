@@ -47,14 +47,10 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
 
   RandomizeInTextNodes(body);
 
-  if (has_xml_changed_
-      && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
-    std::cerr << "Error - Failed saving: " << path_xml << "\n";
-
-    return false;
-  }
-
-  return true;
+  return has_xml_changed_
+             && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+         ? docxbox::AppError::Output("Failed saving: " + path_xml)
+         : true;
 }
 
 // Replaces the searched string when contained within a single <w:t> node

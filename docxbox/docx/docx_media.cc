@@ -23,9 +23,7 @@ bool docx_media::AddImageFile(const std::string& path_image) {
   try {
     if (!helper::File::CopyFile(path_image, path_destination)) return false;
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   media_path_new_image_ = "media/" + filename_image;

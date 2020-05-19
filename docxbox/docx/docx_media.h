@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_DOCX_MEDIA_H_
 #define DOCXBOX_DOCX_DOCX_MEDIA_H_
 
+#include <docxbox/app/app_error.h>
 #include <docxbox/docx/xml/docx_xml_rels.h>
 #include <docxbox/helper/helper_file.h>
 

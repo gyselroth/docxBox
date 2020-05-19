@@ -5,7 +5,6 @@
 
 #include <iostream>
 
-
 // Constructor
 docx_renderer_list::docx_renderer_list(
     std::string path_extract, const std::string &json) {
@@ -51,13 +50,9 @@ bool docx_renderer_list::InitFromJson() {
     }
   }
 
-  if (items_.empty()) {
-    std::cerr << "Invalid markup: list contains no items.\n";
-
-    return false;
-  }
-
-  return true;
+  return items_.empty()
+    ? docxbox::AppError::Output("Invalid markup: list contains no items.")
+    : true;
 }
 
 std::string docx_renderer_list::Render(bool is_ordered) {

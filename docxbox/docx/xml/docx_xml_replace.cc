@@ -57,9 +57,7 @@ bool docx_xml_replace::ReplaceInXml(
           "<w:body>",
           RenderMarkupFromJson(replacement) + "<w:body>");
     } catch (std::string &message) {
-      std::cerr << message;
-
-      return false;
+      return docxbox::AppError::Output(message);
     }
   }
 
@@ -95,14 +93,10 @@ bool docx_xml_replace::ReplaceInXml(
   if (is_replacement_xml_ && !runs_to_be_replaced_.empty())
     ReplaceRunsByXmlElement();
 
-  if (amount_replaced_ > 0
-      && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
-    std::cerr << "Error - Failed saving: " << path_xml << "\n";
-
-    return false;
-  }
-
-  return true;
+  return amount_replaced_ > 0
+             && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+         ? docxbox::AppError::Output("Failed saving: " + path_xml)
+         : true;
 }
 
 // Replaces the searched string when contained within a single <w:t> node

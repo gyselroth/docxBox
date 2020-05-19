@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_XML_DOCX_XML_LOREM_H_
 #define DOCXBOX_DOCX_XML_DOCX_XML_LOREM_H_
 
+#include <docxbox/app/app_error.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
