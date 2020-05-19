@@ -68,3 +68,27 @@ long_description="contains files with the given file ending"
   "${docxbox}" ls "${path_docx}" *.jpeg | grep --count "image1.jpeg"
   "${docxbox}" ls "${path_docx}" *.xml | grep --count "9 files"
 }
+
+@test "Output of ${base_command} nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "Error - File not found:"
+}
+
+@test "Output of ${base_command} wrong_file_type\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "$BATS_TEST_DIRNAME"/docxbox ls "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "Error - File not found:"
+  done
+}

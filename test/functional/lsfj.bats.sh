@@ -112,3 +112,17 @@ longhand="--fonts --json"
   "${docxbox}" lsfj "${path_docx}" | grep --count "variable"
   "${docxbox}" lsfj "${path_docx}" | grep --count "default"
 }
+
+@test "Output of \"docxbox lsfj wrong_file_type\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "${docxbox}" lsfj "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+  done
+}

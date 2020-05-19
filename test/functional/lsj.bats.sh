@@ -64,8 +64,22 @@ search_values=(
   "${docxbox}" lsj "${path_docx}" | grep --count "23:58"
 }
 
-@test "Output of \"docxbox ls {missing argument}\" is an error message" {
+@test "Output of \"docxbox lsj {missing argument}\" is an error message" {
   run "${docxbox}" lsj
   [ "$status" -ne 0 ]
   [ "Missing argument: DOCX filename" = "${lines[0]}" ]
+}
+
+@test "Output of \"docxbox lsj wrong_file_type\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "$BATS_TEST_DIRNAME"/docxbox lsj "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+  done
 }

@@ -56,3 +56,18 @@ title+="${long_description_json}"
   pattern="/word/document.xml"
   "${docxbox}" lsd "${path_docx}" --json | grep --count "${pattern}"
 }
+
+@test "Output of \"${base_command} wrong_file_type\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "${docxbox}" lsdj "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+  done
+}
+

@@ -40,3 +40,17 @@ title+="text gets replaced by dummy text and is saved to new file"
   "${docxbox}" lorem "${path_docx_1}" "${path_docx_2}"
   ls test/functional/tmp | grep -c lorem.docx
 }
+
+@test "Output of ${base_command} wrong_file_type\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "$BATS_TEST_DIRNAME"/docxbox lorem "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+  done
+}
