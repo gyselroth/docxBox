@@ -23,6 +23,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Replace text](#replace-text)
       + [Replace by markup](#replace-by-markup)
         + [Insert heading](#insert-heading)
+        + [Insert hyperlink](#insert-hyperlink) 
         + [Insert image](#insert-image)
         + [Insert list](#insert-list)
         + [Insert table](#insert-table)
@@ -295,6 +296,12 @@ rules:
 ````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Foo\"}}"````  
 
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
+
+
+##### Insert hyperlink
+
+**Example:** Replace string ``search`` by a hyperlink:    
+````docxbox rpt foo.docx search "{\"link\":{\"text\":\"docxBox\",\"url\":\"https://github.com/gyselroth/docxbox\"}}"````  
 
 
 ##### Insert list

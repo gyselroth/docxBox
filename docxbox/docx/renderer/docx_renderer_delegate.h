@@ -8,6 +8,7 @@
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/docx/renderer/docx_renderer_heading.h>
 #include <docxbox/docx/renderer/docx_renderer_image.h>
+#include <docxbox/docx/renderer/docx_renderer_link.h>
 #include <docxbox/docx/renderer/docx_renderer_list.h>
 #include <docxbox/docx/renderer/docx_renderer_table.h>
 
@@ -25,12 +26,15 @@ class docx_renderer_delegate {
 
   std::string replacement_xml_first_child_tag_ = "w:r";
 
+  // @see docx_xml_replace::SetImageRelationshipId()
   std::string image_relationship_id_ = "";
 
   std::string RenderMarkupFromJson(const std::string& json);
 
   std::string &RenderHeading(
       int level, const std::string &json, std::string &markup);
+
+  std::string &RenderHyperlink(const std::string &json, std::string &markup);
 
   std::string &RenderList(
       bool is_ordered, const std::string &json, std::string &markup);

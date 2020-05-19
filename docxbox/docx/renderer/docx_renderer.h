@@ -17,33 +17,35 @@ static const char *const kWTableRhs = "</w:tbl>";
 
 class docx_renderer {
  public:
-  enum Elements {
-    Element_Heading1,
-    Element_Heading2,
-    Element_Heading3,
-    Element_Link,
-    Element_ListOrdered,
-    Element_ListUnordered,
-    Element_Image,
-    Element_Table,
-    Element_None
+  enum ElementType {
+    ElementType_Heading1,
+    ElementType_Heading2,
+    ElementType_Heading3,
+    ElementType_Link,
+    ElementType_ListOrdered,
+    ElementType_ListUnordered,
+    ElementType_Image,
+    ElementType_Table,
+    ElementType_None
   };
 
-  static docx_renderer::Elements DetectElementType(const std::string& json);
+  static docx_renderer::ElementType DetectElementType(const std::string& json);
 
-  static bool IsValidJsonForHeading(const std::string &str);
-  static bool IsValidJsonForImage(const std::string &str);
-  static bool IsValidJsonForList(const std::string &str);
+  bool IsElementType(const std::vector<ElementType>& types);
+  bool IsElementType(ElementType type);
+
+  virtual std::string Render() = 0;
 
  protected:
-  int argc_;
-  char **argv_;
+  std::string path_extract_;
 
   std::string json_;
-
-  bool is_json_valid_markup_config_;
+  bool is_json_valid_;
 
   std::string wml_;
+
+ private:
+  virtual bool InitFromJson() = 0;
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_H_

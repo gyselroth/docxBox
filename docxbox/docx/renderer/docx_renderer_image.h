@@ -15,11 +15,12 @@
 class docx_renderer_image: docx_renderer {
  public:
   // Constructor
-  explicit docx_renderer_image(int argc, char **argv, const std::string &json);
+  explicit docx_renderer_image(std::string path_extract, const std::string &json);
 
   void SetRelationshipId(const std::string &relationship_id);
 
-  std::string Render();
+  std::string Render(const std::string& image_relationship_id);
+  std::string Render() override;
 
  private:
   // Image specs from JSON
@@ -33,7 +34,7 @@ class docx_renderer_image: docx_renderer {
 
   std::string relationship_id_;
 
-  void InitSpecsFromJson();
+  bool InitFromJson() override;
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_IMAGE_H_

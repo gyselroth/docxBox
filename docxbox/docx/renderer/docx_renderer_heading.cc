@@ -4,29 +4,30 @@
 #include <docxbox/docx/renderer/docx_renderer_heading.h>
 
 #include <iostream>
+#include <utility>
 
 // Constructor
 docx_renderer_heading::docx_renderer_heading(
-    int argc, char **argv, const std::string &json) {
-  argc_ = argc;
-  argv_ = argv;
+    std::string path_extract, const std::string &json) {
+  path_extract_ = std::move(path_extract);
+
   json_ = json;
+  is_json_valid_ = InitFromJson();
 
-  is_json_valid_markup_config_ = helper::String::IsJson(json);
-
-  if (is_json_valid_markup_config_) InitSpecsFromJson();
+  level_ = 1;
 }
 
 void docx_renderer_heading::SetLevel(int level) {
   level_ = level;
 }
 
-void docx_renderer_heading::InitSpecsFromJson() {
-  if (!docx_renderer::IsValidJsonForHeading(json_)) {
-    is_json_valid_markup_config_ = false;
+bool docx_renderer_heading::InitFromJson() {
+  if (!helper::String::IsJson(json_)
+      || !docx_renderer::IsElementType(
+      {ElementType_Heading1, ElementType_Heading2, ElementType_Heading3}))
+    return false;
 
-    return;
-  }
+  text_ = "";
 
   auto json_outer = nlohmann::json::parse(json_);
 
@@ -39,10 +40,18 @@ void docx_renderer_heading::InitSpecsFromJson() {
       if (key == "text") text_ = it.value();
     }
   }
+
+  return true;
 }
 
 std::string docx_renderer_heading::Render() {
-  if (!is_json_valid_markup_config_) throw "Failed render heading markup.\n";
+  return Render(1);
+}
+
+std::string docx_renderer_heading::Render(int level) {
+  if (!is_json_valid_) throw "Failed render heading markup.\n";
+
+  if (level > 0) SetLevel(level);
 
   wml_ =
       "<w:p>"

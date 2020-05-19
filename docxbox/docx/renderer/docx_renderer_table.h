@@ -14,9 +14,10 @@
 class docx_renderer_table: docx_renderer {
  public:
   // Constructor
-  explicit docx_renderer_table(int argc, char **argv, const std::string &json);
+  explicit docx_renderer_table(
+      std::string path_extract, const std::string &json);
 
-  std::string Render();
+  std::string Render() override;
 
  private:
   // Table specs from JSON
@@ -32,8 +33,7 @@ class docx_renderer_table: docx_renderer {
   // Generic table specs
   bool has_column_headers = false;
 
-  // Collect table specs from JSON
-  void InitSpecs();
+  bool InitFromJson() override;
 
   std::string RenderTableProperties();
   std::string RenderTableGrid();

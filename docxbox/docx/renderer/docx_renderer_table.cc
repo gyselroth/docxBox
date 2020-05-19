@@ -7,23 +7,20 @@
 
 // Constructor
 docx_renderer_table::docx_renderer_table(
-    int argc, char **argv, const std::string &json) {
-  argc_ = argc;
-  argv_ = argv;
+    std::string path_extract, const std::string &json) {
+  path_extract_ = std::move(path_extract);
 
   json_ = json;
-  is_json_valid_markup_config_ = helper::String::IsJson(json);
+  is_json_valid_ = helper::String::IsJson(json);
 
-  if (is_json_valid_markup_config_) InitSpecs();
+  if (is_json_valid_) InitFromJson();
 }
 
-// Collect table specs from JSON
-void docx_renderer_table::InitSpecs() {
-  if (!helper::String::Contains(json_, "table")) {
-    is_json_valid_markup_config_ = false;
+bool docx_renderer_table::InitFromJson() {
+  if (!docx_renderer::IsElementType(ElementType_Table)) return false;
 
-    return;
-  }
+  amount_columns_ = 0;
+  amount_rows_ = 0;
 
   auto json_outer = nlohmann::json::parse(json_);
 
@@ -72,12 +69,19 @@ void docx_renderer_table::InitSpecs() {
     }
   }
 
-  is_json_valid_markup_config_ = amount_columns_ > 0 && amount_rows_ > 0;
+  if (amount_columns_ == 0
+      || amount_rows_ == 0) {
+    std::cerr << "Invalid table config: must contain column(s) / row(s)\n";
+
+    return false;
+  }
+
+  return true;
 }
 
 // @see http://officeopenxml.com/WPtable.php
 std::string docx_renderer_table::Render() {
-  if (!is_json_valid_markup_config_) "Failed render table markup.\n";
+  if (!is_json_valid_) throw "Failed render table markup.\n";
 
   wml_ = std::string(kWRunLhs);
 
