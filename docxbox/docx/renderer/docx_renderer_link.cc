@@ -32,6 +32,8 @@ bool docx_renderer_link::InitFromJson() {
       //else if (key == "bookmark")
     }
   }
+
+  return !text_.empty() && !url_.empty();
 }
 
 std::string docx_renderer_link::Render() {

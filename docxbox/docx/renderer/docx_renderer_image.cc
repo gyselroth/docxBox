@@ -47,11 +47,7 @@ bool docx_renderer_image::InitFromJson() {
     }
   }
 
-  is_json_valid_ =
-      width_ > 0
-      && height_ > 0;
-
-  return true;
+  return width_ > 0 && height_ > 0;
 }
 
 std::string docx_renderer_image::Render(

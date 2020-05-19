@@ -41,7 +41,7 @@ bool docx_renderer_heading::InitFromJson() {
     }
   }
 
-  return true;
+  return !text_.empty();
 }
 
 std::string docx_renderer_heading::Render() {
