@@ -3,6 +3,9 @@
 
 #include <docxbox/docx/xml/docx_xml_rels.h>
 #include <docxbox/docx/docx_numbering.h>
+#include <docxbox/docx/docx_rels.h>
+
+#include <utility>
 
 docx_xml_rels::docx_xml_rels(
     std::string path_extract, int argc, char **argv) : docx_xml(
@@ -15,7 +18,7 @@ docx_xml_rels::docx_xml_rels(
 
 // Get (insert if not exists) relationship id of given image target
 std::string docx_xml_rels::GetRelationShipIdByTarget(
-  const std::string &path_target, RelationType relation_type) {
+    const std::string &target, docx_rels::RelationType relation_type) {
   tinyxml2::XMLDocument doc;
 
   doc.Parse(xml_.c_str());
@@ -33,14 +36,14 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
   std::string relationship_id;
 
   do {
-    auto target = relationship->FindAttribute(target_key);
-    if (!target) continue;
+    auto attr_target = relationship->FindAttribute(target_key);
+    if (!attr_target) continue;
 
-    std::string target_value = target->Value();
+    std::string target_value = attr_target->Value();
 
     GetRelationshipId(relationship, relationship_id);
 
-    if (target_value == path_target) {
+    if (target_value == target) {
       target_exists = true;
       break;
     }
@@ -59,7 +62,7 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
                           std::char_traits<char>,
                           std::allocator<char>>
       &kRelationshipTag = docx_renderer_rels::RenderRelationship(
-      path_target,
+      target,
       relation_type,
       relationship_id) + "</Relationships>";
 
@@ -76,13 +79,6 @@ void docx_xml_rels::GetRelationshipId(
   const char* id_key = "Id";
   auto id = relationship->FindAttribute(id_key);
   relationship_id = id->Value();
-}
-
-// Get (insert if not exists) relationship id of given target
-std::string GetRelationShipIdByTarget(
-    const std::string &schema_url,
-    const std::string &path_target) {
-  return "";
 }
 
 bool docx_xml_rels::SaveXml(bool compress) {

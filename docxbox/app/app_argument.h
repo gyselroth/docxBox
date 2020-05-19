@@ -44,6 +44,8 @@ class AppArguments {
                const std::string &identifier_short,
                const std::string &identifier_long);
 
+  static bool isArgImageFile(int argc, char **argv, int index_argument);
+
  private:
   int argc_;
   char **argv_;

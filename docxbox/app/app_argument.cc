@@ -74,4 +74,9 @@ bool AppArguments::Matches(
         || 0 == strcmp(argv_[offset_argument], identifier_long.c_str()));
 }
 
+bool AppArguments::isArgImageFile(int argc, char **argv, int index_argument) {
+  return argc > index_argument
+      && helper::File::IsWordCompatibleImage(argv[index_argument]);
+}
+
 }  // namespace docxbox

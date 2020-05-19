@@ -9,19 +9,16 @@
 
 #include <string>
 
-static const char *const kUrlRelationshipSchemaImage =
-  "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
-
-static const char *const kUrlRelationshipSchemaNumbering =
-  "http://schemas.openxmlformats.org/officeDocument/2006/relationships/"
-  "numbering";
-
 class docx_renderer_rels: docx_renderer {
  public:
   static std::string RenderRelationship(
-      const std::string &path_target,
+      const std::string &target,
       const int relation_type,
       const std::string& relationship_id);
+
+  static std::string RenderHyperlinkRelationship(
+      const std::string &url,
+      const std::string &relationship_id);
 
   static std::string RenderImageRelationship(
       const std::string &path_target,

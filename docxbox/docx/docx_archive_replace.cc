@@ -88,12 +88,15 @@ bool docx_archive_replace::ReplaceText() {
   std::string replacement = argv_[4];
 
   std::string image_relationship_id;
+  std::string hyperlink_relationship_id;
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
-  // TODO(kay): detect JSON being for image solely here, store type to property
   try {
     image_relationship_id = AddImageFileAndRelation(replacement);
+
+    hyperlink_relationship_id = AddHyperlinkRelation(replacement);
+
   } catch (std::string &message) {
     std::cerr << message;
 
@@ -168,7 +171,7 @@ void docx_archive_replace::InitDocxOutPathForReplaceText(
  */
 std::string docx_archive_replace::AddImageFileAndRelation(
   const std::string &image_markup_json) {
-  if (!hasArgOfAdditionalImageFile())
+  if (!docxbox::AppArguments::isArgImageFile(argc_, argv_, 5))
     // No media file given: successfully done (nothing)
     return "";
 
@@ -190,17 +193,25 @@ std::string docx_archive_replace::AddImageFileAndRelation(
   added_image_file_ = true;
 
   // 2. Create media relation in _rels/document.xml.rels
-  auto relationship_id =
-      relations->GetImageRelationshipId(relations->GetMediaPathNewImage());
+  auto relationship_id = relations->GetImageRelationshipId(
+      relations->GetMediaPathNewImage());
 
   delete relations;
 
   return relationship_id;
 }
 
-bool docx_archive_replace::hasArgOfAdditionalImageFile() const {
-  return argc_ >= 6
-        && helper::File::IsWordCompatibleImage(argv_[5]);
+std::string docx_archive_replace::AddHyperlinkRelation(
+    const std::string &markup_json) {
+  std::string path_extract_absolute =
+      helper::File::ResolvePath(path_working_directory_, path_extract_);
+
+  auto url = helper::Json::GetFirstValueOfKey(markup_json, "url");
+
+  return docx_rels::GetRelationshipId(
+      path_extract_absolute,
+      url,
+      docx_rels::RelationType_Hyperlink);
 }
 
 bool docx_archive_replace::RemoveBetweenText() {

@@ -3,33 +3,42 @@
 
 #include <docxbox/docx/docx_numbering.h>
 
+// TODO(kay): transform into docx_renderer_numbering
 docx_numbering::docx_numbering(std::string path_extract) {
   path_extract_ = std::move(path_extract);
 }
 
 bool docx_numbering::AddNumberingXml() {
   std::string path_numbering_xml = path_extract_ + "/word/numbering.xml";
-  
+
   if (helper::File::FileExists(path_numbering_xml)) return true;
-  
+
+  const std::basic_string<char>
+      &urlSchemaWord10 = std::string(kUrlSchemaMsOfficeWord2010);
+  const std::basic_string<char>
+      &urlSchemaOffice06 = std::string(kUrlSchemaOffice2006);
+
   std::string xml =
       "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>"
       "<w:numbering "
-        "xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" "
-        "xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
+        "xmlns:wpc=\"" + urlSchemaWord10 + "wordprocessingCanvas\" "
+        "xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/"
+          "2006\" "
         "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
-        "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
-        "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
+        "xmlns:r=\"" + urlSchemaOffice06 + "relationships\" "
+        "xmlns:m=\"" + urlSchemaOffice06 + "math\" "
         "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
-        "xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" "
-        "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
+        "xmlns:wp14=\"" + urlSchemaWord10 + "wordprocessingDrawing\" "
+        "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/"
+          "wordprocessingDrawing\" "
         "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
-        "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
-        "xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" "
-        "xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" "
-        "xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" "
+        "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/"
+          "main\" "
+        "xmlns:w14=\"" + urlSchemaWord10 + "wordml\" "
+        "xmlns:wpg=\"" + urlSchemaWord10 + "wordprocessingGroup\" "
+        "xmlns:wpi=\"" + urlSchemaWord10 + "wordprocessingInk\" "
         "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" "
-        "xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" "
+        "xmlns:wps=\"" + urlSchemaWord10 + "wordprocessingShape\" "
         "mc:Ignorable=\"w14 wp14\">"
       "<w:abstractNum w:abstractNumId=\"0\">"
         "<w:multiLevelType w:val=\"hybridMultilevel\"/>"

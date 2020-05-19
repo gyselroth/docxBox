@@ -4,7 +4,7 @@
 #ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_H_
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_H_
 
-#include <docxbox/helper/helper_string.h>
+#include <docxbox/helper/helper_json.h>
 
 #include <iostream>
 #include <string>

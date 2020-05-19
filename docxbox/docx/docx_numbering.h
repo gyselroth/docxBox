@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_DOCX_NUMBERING_H_
 #define DOCXBOX_DOCX_DOCX_NUMBERING_H_
 
+#include <docxbox/docx/docx_rels.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_numeric.h>
 #include <docxbox/helper/helper_string.h>
