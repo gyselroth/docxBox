@@ -27,6 +27,7 @@ class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
       bool replace_segmented = false);
 
   void SetImageRelationshipId(std::string &relationship_id);
+  void SetHyperlinkRelationshipId(std::string &relationship_id);
 
   void SetReplacementXmlFirstChildTag(
       const std::string &replacement_xml_first_child_tag);

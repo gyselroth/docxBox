@@ -103,7 +103,7 @@ std::string &docx_renderer_delegate::RenderHyperlink(
 
   replacement_xml_first_child_tag_ = "w:p";
 
-  markup = renderer->Render();
+  markup = renderer->Render(hyperlink_relationship_id_);
 
   delete renderer;
 

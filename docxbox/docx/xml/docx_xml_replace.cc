@@ -16,6 +16,11 @@ void docx_xml_replace::SetImageRelationshipId(std::string &relationship_id) {
   image_relationship_id_ = relationship_id;
 }
 
+void docx_xml_replace::SetHyperlinkRelationshipId(
+    std::string &relationship_id) {
+  hyperlink_relationship_id_ = relationship_id;
+}
+
 // Replace given search string by replacement, which can be:
 // 1. A regular string: will replace the given string
 // 2. A string containing JSON: will be interpreted for rendering word markup,

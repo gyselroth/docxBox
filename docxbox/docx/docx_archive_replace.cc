@@ -91,10 +91,14 @@ bool docx_archive_replace::ReplaceText() {
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   try {
-    image_relationship_id = AddImageFileAndRelation(replacement);
-
-    hyperlink_relationship_id = AddHyperlinkRelation(replacement);
-
+    // TODO(kay): single-out render-type detection
+    if (helper::String::StartsWith(replacement.c_str(), "{\"image\":{")
+        ||helper::String::StartsWith(replacement.c_str(), "{\"img\":{")) {
+      image_relationship_id = AddImageFileAndRelation(replacement);
+    } else if (helper::String::StartsWith(replacement.c_str(), "{\"link\":{")) {
+      hyperlink_relationship_id = AddHyperlinkRelation(replacement);
+      // TODO(kay): ensure presence of hyperlink-style
+    }
   } catch (std::string &message) {
     return docxbox::AppError::Output(message);
   }
@@ -108,6 +112,9 @@ bool docx_archive_replace::ReplaceText() {
 
   if (!image_relationship_id.empty())
     parser->SetImageRelationshipId(image_relationship_id);
+
+  if (!hyperlink_relationship_id.empty())
+    parser->SetHyperlinkRelationshipId(hyperlink_relationship_id);
 
   for (const auto &file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
@@ -226,9 +233,9 @@ bool docx_archive_replace::RemoveBetweenText() {
   for (const auto &file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
-    std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
+    std::string path_file_abs = path_extract_ + "/" + file_in_zip.filename;
 
-    if (!parser->RemoveBetweenStringsInXml(path_file_absolute, lhs, rhs)) {
+    if (!parser->RemoveBetweenStringsInXml(path_file_abs, lhs, rhs)) {
       delete parser;
 
       return docxbox::AppError::Output(

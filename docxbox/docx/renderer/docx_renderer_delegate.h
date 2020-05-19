@@ -29,6 +29,8 @@ class docx_renderer_delegate {
   // @see docx_xml_replace::SetImageRelationshipId()
   std::string image_relationship_id_ = "";
 
+  std::string hyperlink_relationship_id_ = "";
+
   std::string RenderMarkupFromJson(const std::string& json);
 
   std::string &RenderHeading(

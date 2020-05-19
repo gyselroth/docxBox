@@ -18,11 +18,16 @@ class docx_renderer_link: docx_renderer {
   // Constructor
   docx_renderer_link(std::string path_extract, const std::string &json);
 
+  void SetRelationshipId(const std::string &relationship_id);
+
+  std::string Render(const std::string &relationship_id);
   std::string Render() override;
 
  private:
   std::string text_;
   std::string url_;
+
+  std::string relationship_id_;
 
   bool InitFromJson() override;
 };
