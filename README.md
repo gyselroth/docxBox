@@ -23,6 +23,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Replace text](#replace-text)
       + [Replace by markup](#replace-by-markup)
         + [Insert heading](#insert-heading)
+        + [Insert hyperlink](#insert-hyperlink) 
         + [Insert image](#insert-image)
         + [Insert list](#insert-list)
         + [Insert table](#insert-table)
