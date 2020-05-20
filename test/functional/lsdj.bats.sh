@@ -19,7 +19,7 @@ long_description_json="the fields in the docx are listed as JSON"
 @test "Output of \"docxbox lsdj {missing argument}\" is an error message" {
   run "${docxbox}" lsdj
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "With \"${base_command}\" the fields in the docx are listed as JSON" {
@@ -67,7 +67,7 @@ title+="${long_description_json}"
   for i in "${wrong_file_types[@]}"
   do
     "${docxbox}" lsdj "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
 

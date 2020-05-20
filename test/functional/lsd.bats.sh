@@ -21,7 +21,7 @@ merge_format="\* MERGEFORMAT"
 @test "Output of ${base_command} {missing argument}\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox lsd
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "With ${base_command} filename.docx\" the fields in the docx are listed" {
@@ -51,6 +51,6 @@ title+="the fields in the docx are listed"
   for i in "${wrong_file_types[@]}"
   do
     "$BATS_TEST_DIRNAME"/docxbox lsd "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
