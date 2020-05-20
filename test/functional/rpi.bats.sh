@@ -70,7 +70,7 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
 
   for i in "${wrong_file_types[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox rpi "${i}" image1.jpeg "${path_jpeg}" 2>&1 | tee "${err_log}"
+    "${docxbox}" rpi "${i}" image1.jpeg "${path_jpeg}" 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "${pattern}"
   done
 }
