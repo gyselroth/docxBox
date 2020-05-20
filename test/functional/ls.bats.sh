@@ -76,7 +76,7 @@ long_description="contains files with the given file ending"
   [ "$status" -ne 0 ]
 
   "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "Error - File not found:"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of ${base_command} wrong_file_type\" is an error message" {

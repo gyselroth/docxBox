@@ -60,6 +60,16 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
   file "${path_extracted_image}" | grep --count "2100x400"
 }
 
+@test "Output of \"docxbox rpi nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" rpi nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" rpi nonexistent.docx 2>&1 image1.jpeg "${path_jpeg}" | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
 @test "Output of \"docxbox rpi wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   err_log="test/functional/tmp/err.log"

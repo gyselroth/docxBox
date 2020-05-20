@@ -89,6 +89,16 @@ revision="the meta attribute revision can be changed"
   "${docxbox}" lsm "${path_docx}" | grep "revision: 25"
 }
 
+@test "Output of \"docxbox mm nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" mm nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" mm nonexistent.docx revision "1" 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
 argument="{meta_attribute} {argument}"
 @test "Output of \"docxbox mm ${argument} wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"

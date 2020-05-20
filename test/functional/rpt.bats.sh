@@ -50,6 +50,16 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   "${docxbox}" txt "${path_docx_out}" | grep --count Dorem
 }
 
+@test "Output of \"docxbox rpt ${arguments} nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" rpt nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" rpt nonexistent.docx Lorem Dorem 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
 @test "Output of \"docxbox rpt ${arguments} wrong_file_type\" ${error}" {
   pattern="docxBox Error - File is no ZIP archive:"
   err_log="test/functional/tmp/err.log"

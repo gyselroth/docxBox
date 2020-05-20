@@ -42,6 +42,16 @@ appendix=" the value of the given field is changed"
   "${docxbox}" txt "${path_docx}" | grep --count "foobar"
 }
 
+@test "Output of \"docxbox sfv nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" sfv nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" sfv nonexistent.docx "${mergefield}" foobar 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
 title="Output of \"docxbox fieldIdentifier fieldValue wrong_file_type\" "
 title+="is an error message"
 @test "${title}" {
