@@ -18,7 +18,7 @@ path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 @test "Output of \"docxbox ls {missing argument}\" is an error message" {
   run "${docxbox}" ls
   [ "$status" -ne 0 ]
-  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
 @test "Output of ${base_command}\" contains files' and directories' attributes" {
@@ -89,6 +89,6 @@ long_description="contains files with the given file ending"
   for i in "${wrong_file_types[@]}"
   do
     "$BATS_TEST_DIRNAME"/docxbox ls "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "Error - File not found:"
+    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

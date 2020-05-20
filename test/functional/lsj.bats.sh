@@ -67,7 +67,7 @@ search_values=(
 @test "Output of \"docxbox lsj {missing argument}\" is an error message" {
   run "${docxbox}" lsj
   [ "$status" -ne 0 ]
-  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox lsj wrong_file_type\" is an error message" {
@@ -80,6 +80,6 @@ search_values=(
   for i in "${wrong_file_types[@]}"
   do
     "$BATS_TEST_DIRNAME"/docxbox lsj "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
