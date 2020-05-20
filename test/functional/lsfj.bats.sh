@@ -28,7 +28,7 @@ attributes=(
 @test "Output of \"docxbox lsfj {missing argument}\" is an error message" {
   run "${docxbox}" lsfj
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "Output of \"${base_command}\" ${long_description}" {
@@ -123,6 +123,6 @@ longhand="--fonts --json"
   for i in "${wrong_file_types[@]}"
   do
     "${docxbox}" lsfj "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
