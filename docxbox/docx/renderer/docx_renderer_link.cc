@@ -32,6 +32,19 @@ bool docx_renderer_link::InitFromJson() {
       //else if (key == "bookmark")
     }
   }
+
+  return !text_.empty() && !url_.empty();
+}
+
+void docx_renderer_link::SetRelationshipId(
+    const std::string &relationship_id) {
+  relationship_id_ = relationship_id;
+}
+
+std::string docx_renderer_link::Render(const std::string &relationship_id) {
+  relationship_id_ = relationship_id;
+
+  return Render();
 }
 
 std::string docx_renderer_link::Render() {
@@ -44,8 +57,7 @@ std::string docx_renderer_link::Render() {
             "<w:rStyle w:val=\"char1\"/>"
           "</w:rPr>"
         "</w:pPr>"
-        // TODO(kay): add link relation into word/_rels/document.xml.rels
-        "<w:hyperlink r:id=\"rId7\" w:history=\"1\">"
+        "<w:hyperlink r:id=\"" + relationship_id_ + "\" w:history=\"1\">"
           "<w:r>"
             "<w:rPr>"
               "<w:rStyle w:val=\"char1\"/>"

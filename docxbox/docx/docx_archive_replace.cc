@@ -60,7 +60,7 @@ bool docx_archive_replace::ReplaceImage() {
         : path_docx_in_;
 
     if (!Zip(false, path_extract_, path_docx_out + "tmp"))
-      throw "DOCX creation failed.\n";
+      throw "DOCX creation failed: "  + path_docx_out;
 
     if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
 
@@ -68,9 +68,7 @@ bool docx_archive_replace::ReplaceImage() {
         std::string(path_docx_out).append("tmp").c_str(),
         path_docx_out.c_str());
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   return true;
@@ -88,16 +86,21 @@ bool docx_archive_replace::ReplaceText() {
   std::string replacement = argv_[4];
 
   std::string image_relationship_id;
+  std::string hyperlink_relationship_id;
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
-  // TODO(kay): detect JSON being for image solely here, store type to property
   try {
-    image_relationship_id = AddImageFileAndRelation(replacement);
+    // TODO(kay): single-out render-type detection
+    if (helper::String::StartsWith(replacement.c_str(), "{\"image\":{")
+        ||helper::String::StartsWith(replacement.c_str(), "{\"img\":{")) {
+      image_relationship_id = AddImageFileAndRelation(replacement);
+    } else if (helper::String::StartsWith(replacement.c_str(), "{\"link\":{")) {
+      hyperlink_relationship_id = AddHyperlinkRelation(replacement);
+      // TODO(kay): ensure presence of hyperlink-style
+    }
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -110,6 +113,9 @@ bool docx_archive_replace::ReplaceText() {
   if (!image_relationship_id.empty())
     parser->SetImageRelationshipId(image_relationship_id);
 
+  if (!hyperlink_relationship_id.empty())
+    parser->SetHyperlinkRelationshipId(hyperlink_relationship_id);
+
   for (const auto &file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
@@ -117,14 +123,9 @@ bool docx_archive_replace::ReplaceText() {
 
     if (helper::File::IsDirectory(path_file_absolute)) continue;
 
-    if (!parser->ReplaceInXml(path_file_absolute, search, replacement)) {
-      std::cerr << "Error: Failed replace string in: "
-                << file_in_zip.filename << "\n";
-
-      delete parser;
-
-      return false;
-    }
+    if (!parser->ReplaceInXml(path_file_absolute, search, replacement))
+      return docxbox::AppError::Output(
+          "Failed replace string in: " + file_in_zip.filename);
   }
 
   delete parser;
@@ -168,7 +169,7 @@ void docx_archive_replace::InitDocxOutPathForReplaceText(
  */
 std::string docx_archive_replace::AddImageFileAndRelation(
   const std::string &image_markup_json) {
-  if (!hasArgOfAdditionalImageFile())
+  if (!docxbox::AppArguments::isArgImageFile(argc_, argv_, 5))
     // No media file given: successfully done (nothing)
     return "";
 
@@ -190,17 +191,25 @@ std::string docx_archive_replace::AddImageFileAndRelation(
   added_image_file_ = true;
 
   // 2. Create media relation in _rels/document.xml.rels
-  auto relationship_id =
-      relations->GetImageRelationshipId(relations->GetMediaPathNewImage());
+  auto relationship_id = relations->GetImageRelationshipId(
+      relations->GetMediaPathNewImage());
 
   delete relations;
 
   return relationship_id;
 }
 
-bool docx_archive_replace::hasArgOfAdditionalImageFile() const {
-  return argc_ >= 6
-        && helper::File::IsWordCompatibleImage(argv_[5]);
+std::string docx_archive_replace::AddHyperlinkRelation(
+    const std::string &markup_json) {
+  std::string path_extract_absolute =
+      helper::File::ResolvePath(path_working_directory_, path_extract_);
+
+  auto url = helper::Json::GetFirstValueOfKey(markup_json, "url");
+
+  return docx_rels::GetRelationshipId(
+      path_extract_absolute,
+      url,
+      docx_rels::RelationType_Hyperlink);
 }
 
 bool docx_archive_replace::RemoveBetweenText() {
@@ -224,15 +233,13 @@ bool docx_archive_replace::RemoveBetweenText() {
   for (const auto &file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
-    std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
+    std::string path_file_abs = path_extract_ + "/" + file_in_zip.filename;
 
-    if (!parser->RemoveBetweenStringsInXml(path_file_absolute, lhs, rhs)) {
-      std::cerr << "Error: Failed to remove content from: "
-                << file_in_zip.filename << "\n";
-
+    if (!parser->RemoveBetweenStringsInXml(path_file_abs, lhs, rhs)) {
       delete parser;
 
-      return false;
+      return docxbox::AppError::Output(
+          "Error: Failed to remove content from: " + file_in_zip.filename);
     }
   }
 
@@ -265,12 +272,10 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
     std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
 
     if (!parser->RandomizeAllTextInXml(path_file_absolute)) {
-      std::cerr << "Error: Failed insert lorem ipsum in: "
-                << file_in_zip.filename << "\n";
-
       delete parser;
 
-      return false;
+      return docxbox::AppError::Output(
+          "Error: Failed insert lorem ipsum in: " + file_in_zip.filename);
     }
   }
 
@@ -329,11 +334,8 @@ bool docx_archive_replace::SetFieldValue() {
 
   std::string path_docx_out_tmp = path_docx_out + "tmp";
 
-  if (!Zip(false, path_extract_, path_docx_out_tmp)) {
-    std::cerr << "DOCX creation failed.\n";
-
-    return false;
-  }
+  if (!Zip(false, path_extract_, path_docx_out_tmp))
+    return docxbox::AppError::Output("DOCX creation failed.");
 
   return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out.c_str());
 }

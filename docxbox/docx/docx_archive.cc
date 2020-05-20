@@ -24,7 +24,7 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
       index_path_argument);
 
   if (!helper::File::FileExists(path_docx_in_))
-    throw "Error - File not found: " + path_docx_in_ + "\n";
+    throw "File not found: " + path_docx_in_ + "\n";
 
   return true;
 }
@@ -109,9 +109,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    std::cerr << message << "\n";
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   if (!IsZipArchive(path_docx_in_)) return false;
@@ -128,11 +126,9 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
   docx_file.extractall(path_working_directory_ + "/" + path_extract_);
 
-  if (ensure_is_docx && IsUnzippedDocx()) {
-    std::cerr << "Error: " << path_docx_in_ << " is not a DOCX document.\n";
-
-    return false;
-  }
+  if (ensure_is_docx && IsUnzippedDocx())
+    // TODO(kay): check above condition, seems inverted
+    return docxbox::AppError::Output(path_docx_in_ + " is not a DOCX document");
 
   return format_xml_files
          ? miniz_cpp_ext::IndentXmlFiles(path_extract_, file_list)
@@ -141,21 +137,14 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
 // Ensure given file is a ZIP archive (must begin w/ "PK^C^D^T")
 bool docx_archive::IsZipArchive(const std::string& path_file) {
-  if (!helper::File::FileExists(path_file)) {
-    std::cerr << "File not found: " << path_file << "\n";
+  if (!helper::File::FileExists(path_file))
+    return docxbox::AppError::Output("File not found: " + path_file);
 
-    return false;
-  }
-
-  if (!helper::String::StartsWith(
+  return helper::String::StartsWith(
       helper::File::GetFileContents(path_file).c_str(),
-      "PK\003\004\024")) {
-    std::cerr << "Not a valid DOX (ZIP) archive: " << path_file << "\n";
-
-    return false;
-  }
-
-  return true;
+      "PK\003\004\024")
+         ? true
+         : docxbox::AppError::Output("File is no ZIP archive: " + path_file);
 }
 
 // Check formal structure of DOCX archive - mandatory files given?
@@ -186,11 +175,8 @@ bool docx_archive::UnzipMedia() {
 
 bool docx_archive::CreateDocxFromExtract(
     const std::string &path_docx_out, bool overwrite_source_docx) {
-  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
-    std::cerr << "DOCX creation failed.\n";
-
-    return false;
-  }
+  if (!Zip(false, path_extract_, path_docx_out + "tmp"))
+    return docxbox::AppError::Output("DOCX creation failed.");
 
   if (overwrite_source_docx) helper::File::Remove(path_docx_in_.c_str());
 
@@ -223,11 +209,8 @@ bool docx_archive::Zip(
     path_docx_result =
         helper::File::ResolvePath(path_working_directory_, argv_[3], false);
   } else {
-    if (!helper::File::IsDirectory(path_directory)) {
-      std::cerr << "Not a directory: " << path_directory;
-
-      return false;
-    }
+    if (!helper::File::IsDirectory(path_directory))
+      return docxbox::AppError::Output("Not a directory: " + path_directory);
   }
 
   if (path_docx_result.empty() && !path_docx_in_.empty())
@@ -324,26 +307,19 @@ bool docx_archive::CatFile() {
 
   std::string path_file_relative = argv_[3];
 
-  if (path_file_relative.empty()) {
-    std::cout << "Invalid file path.\n";
-
-    return false;
-  }
+  if (path_file_relative.empty())
+    return docxbox::AppError::Output(
+        "Invalid file path: " + path_file_relative);
 
   if (path_file_relative[0] == '/')
     path_file_relative = path_file_relative.substr(1);
 
   std::string path_file = path_extract_ + "/" + path_file_relative;
 
-  if (!helper::File::FileExists(path_file)) {
-    std::cout << "File not found: " << argv_[3] << "\n";
+  if (!helper::File::FileExists(path_file))
+    return docxbox::AppError::Output(std::string("File not found: ") + argv_[3]);
 
-    return false;
-  }
-
-  auto content = helper::File::GetFileContents(path_file);
-
-  std::cout << content << "\n";
+  std::cout << helper::File::GetFileContents(path_file) << "\n";
 
   return true;
 }
@@ -370,11 +346,9 @@ bool docx_archive::ViewFilesDiff() {
   std::string file = argv_[4];
 
   if (!helper::File::FileExists(path_extract_left + "/" + file)
-      || !helper::File::FileExists(path_extract_right + "/" + file)) {
-    std::cerr << "File not given in both DOCX archives: " << file << "\n";
-
-    return false;
-  }
+      || !helper::File::FileExists(path_extract_right + "/" + file))
+    return docxbox::AppError::Output(
+        "File not given in both DOCX archives: " + file);
 
   int width = helper::File::GetLongestLineLength(
       path_extract_left + "/" + file,
@@ -403,11 +377,10 @@ bool docx_archive::ModifyMeta() {
 
   if (!meta->InitModificationArguments()
       || !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) {
-    std::cerr << "Initialization for meta modification failed.\n";
-
     delete meta;
 
-    return false;
+    return docxbox::AppError::Output(
+        "Initialization for meta modification failed.");
   }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -416,11 +389,9 @@ bool docx_archive::ModifyMeta() {
   meta->SetPathExtract(path_extract_);
 
   if (!meta->UpsertAttribute()) {
-    std::cerr << "Update/Insert meta attribute failed.\n";
-
     delete meta;
 
-    return false;
+    return docxbox::AppError::Output("Update/Insert meta attribute failed.");
   }
 
   // Modifiable meta attributes are in docProps/core.xml
@@ -461,11 +432,9 @@ bool docx_archive::ModifyMeta() {
     if (!Zip(false, path_extract_, path_docx_out + "tmp",
              attribute != docx_meta::Attribute_Created,
              attribute != docx_meta::Attribute_Modified)) {
-      std::cerr << "DOCX creation failed.\n";
-
       delete meta;
 
-      return false;
+      return docxbox::AppError::Output("DOCX creation failed.");
     }
   /*}*/
 
@@ -492,11 +461,9 @@ bool docx_archive::UpdateCoreXmlDate(
   if (value.empty()) {
     meta->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
   } else {
-    if (!helper::DateTime::IsIso8601Date(value)) {
-      std::cerr << "Invalid date (" << value << "), must be ISO 8601.\n";
-
-      return false;
-    }
+    if (!helper::DateTime::IsIso8601Date(value))
+      return docxbox::AppError::Output(
+          "Invalid date (must be ISO 8601): " + value);
 
     meta->SetValue(value);
   }

@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_APP_APP_ARGUMENT_H_
 #define DOCXBOX_APP_APP_ARGUMENT_H_
 
+#include <docxbox/app/app_error.h>
 #include <docxbox/helper/helper_string.h>
 #include <docxbox/helper/helper_file.h>
 
@@ -43,6 +44,8 @@ class AppArguments {
   bool Matches(int offset_argument,
                const std::string &identifier_short,
                const std::string &identifier_long);
+
+  static bool isArgImageFile(int argc, char **argv, int index_argument);
 
  private:
   int argc_;

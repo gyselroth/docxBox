@@ -42,9 +42,11 @@ class docx_archive_replace : public docx_archive {
   // New image file added, requires adding resp. relation
   bool added_image_file_ = false;
 
+  // TODO(kay): move into docx_media(?)
   std::string AddImageFileAndRelation(const std::string &image_markup_json);
 
-  bool hasArgOfAdditionalImageFile() const;
+  // TODO(kay): TBD: move into docx_rels(?)
+  std::string AddHyperlinkRelation(const std::string &markup_json);
 
   void InitDocxOutPathForReplaceText(
       std::string &path_docx_out, bool &overwrite_source_docx) const;

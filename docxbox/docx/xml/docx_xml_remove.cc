@@ -32,11 +32,9 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(
       && found_rhs_) {
     RemoveNodes(nodes_to_be_removed_);
 
-    if (tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
-      std::cerr << "Error - Failed saving: " << path_xml << "\n";
-
-      return false;
-    }
+    return tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+           ? docxbox::AppError::Output("Failed saving: " + path_xml)
+           : true;
   }
 
   return true;

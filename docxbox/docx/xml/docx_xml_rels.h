@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_XML_DOCX_XML_RELS_H_
 #define DOCXBOX_DOCX_XML_DOCX_XML_RELS_H_
 
+#include <docxbox/docx/docx_rels.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/docx/renderer/docx_renderer_rels.h>
 #include <docxbox/docx/xml/docx_xml_indent.h>
@@ -19,19 +20,13 @@
 
 class docx_xml_rels:docx_xml {
  public:
-  enum RelationType {
-    RelationType_Image,
-    RelationType_Numbering,
-    RelationType_None
-  };
-
   explicit docx_xml_rels(
       std::string path_extract, int argc = 0, char **argv = nullptr);
 
   // Get (insert if not exists) relationship id of given image target
   std::string GetRelationShipIdByTarget(
-      const std::string &path_target,
-      RelationType relation_type = RelationType_Image);
+      const std::string &target,
+      docx_rels::RelationType relation_type);
 
  private:
   std::string path_extract_;

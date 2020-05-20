@@ -2,6 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/docx_xml_field.h>
+#include <docxbox/app/app_error.h>
 
 docx_xml_field::docx_xml_field(int argc, char **argv) : docx_xml(argc, argv) {
 }
@@ -60,14 +61,10 @@ bool docx_xml_field::SetFieldText(
   else
     SetFieldTextInNodes(body, field_identifier, text);
 
-  if (has_xml_changed_
-      && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)) {
-    std::cerr << "Error - Failed saving: " << path_xml << "\n";
-
-    return false;
-  }
-
-  return true;
+  return has_xml_changed_
+             && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+         ? docxbox::AppError::Output("Failed saving: " + path_xml)
+         : true;
 }
 
 // Set field text within children of given node

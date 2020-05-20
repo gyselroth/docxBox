@@ -171,12 +171,10 @@ bool docx_meta::InitModificationArguments() {
 
   attribute_ = ResolveAttributeByName(argv_[3]);
 
-  if (attribute_ == Attribute::Attribute_Unknown) {
-    std::cerr << "Invalid argument: Unknown or unsupported attribute: "
-              << argv_[3] << "\n";
-
-    return false;
-  }
+  if (attribute_ == Attribute::Attribute_Unknown)
+    return docxbox::AppError::Output(
+        std::string(
+            "Invalid argument: Unknown or unsupported attribute: ") + argv_[3]);
 
   if (!docxbox::AppArguments::IsArgumentGiven(
       argc_, 4, "Value to set attribute to")) return false;
@@ -195,12 +193,9 @@ bool docx_meta::UpsertAttribute(bool saveXml) {
 
   try {
     if (IsDateAttribute(attribute_)
-        && !helper::DateTime::IsIso8601Date(value_)) {
-      std::cerr << "Invalid date (" << value_ << "), "
-                   "must be given as ISO 8601\n";
-
-      return false;
-    }
+        && !helper::DateTime::IsIso8601Date(value_))
+      return docxbox::AppError::Output(
+        "Invalid date (must be given as ISO 8601): " + value_);
 
     bool attribute_exists = AttributeExistsInCoreXml(attribute_);
 
@@ -208,9 +203,7 @@ bool docx_meta::UpsertAttribute(bool saveXml) {
            ? UpdateCoreAttribute(attribute_, value_)
            : InsertCoreAttribute(attribute_, value_);
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   return result && saveXml
@@ -230,9 +223,7 @@ bool docx_meta::UpdateCoreAttribute(
     lhs_of_value = GetLhsTagByAttribute(attribute);
     rhs_of_value = GetRhsTagByAttribute(attribute);
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   helper::String::Replace(
@@ -272,9 +263,7 @@ bool docx_meta::AttributeExistsInCoreXml(Attribute attribute) {
   try {
     lhs_of_value = GetLhsTagByAttribute(attribute);
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   return helper::String::Contains(core_xml_, lhs_of_value.c_str());

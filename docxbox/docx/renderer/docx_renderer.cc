@@ -5,12 +5,9 @@
 
 docx_renderer::ElementType docx_renderer::DetectElementType(
     const std::string& json) {
-  int offset_end_identifier = helper::String::OffsetChar(json, '"', 3);
+  std::string identifier = helper::Json::GetFirstKey(json);
 
-  if (offset_end_identifier == -1) return ElementType_None;
-
-  std::string identifier = json.substr(2, offset_end_identifier - 2);
-
+  if (identifier.empty()) return ElementType_None;
   if (identifier == "h1") return ElementType_Heading1;
   if (identifier == "h2") return ElementType_Heading2;
   if (identifier == "h3") return ElementType_Heading3;

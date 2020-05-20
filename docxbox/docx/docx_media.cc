@@ -23,9 +23,7 @@ bool docx_media::AddImageFile(const std::string& path_image) {
   try {
     if (!helper::File::CopyFile(path_image, path_destination)) return false;
   } catch (std::string &message) {
-    std::cerr << message;
-
-    return false;
+    return docxbox::AppError::Output(message);
   }
 
   media_path_new_image_ = "media/" + filename_image;
@@ -56,10 +54,11 @@ std::string docx_media::GetNextImageNumber() {
   return std::to_string(number);
 }
 
-// Get (add if not exists) image relationship in _rels/document.xml.rels
-std::string docx_media::GetImageRelationshipId(const std::string &path_image) {
+// Get (add if not exists) relationship into _rels/document.xml.rels
+std::string docx_media::GetImageRelationshipId(const std::string &target) {
   auto rels = new docx_xml_rels(path_extract_);
-  auto relationship_id = rels->GetRelationShipIdByTarget(path_image);
+  auto relationship_id = rels->GetRelationShipIdByTarget(
+          target, docx_rels::RelationType_Image);
 
   delete rels;
 

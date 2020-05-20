@@ -29,11 +29,10 @@ bool AppArguments::IsArgumentGiven(int argc,
                                    const std::string &argument_description,
                                    bool do_throw) {
   if (argc <= index) {
-    if (do_throw) throw "Missing argument: " + argument_description + "\n";
+    if (do_throw) throw "Missing argument: " + argument_description;
 
-    std::cerr << "Missing argument: " << argument_description << "\n";
-
-    return false;
+    return docxbox::AppError::Output(
+        "Missing argument: " + argument_description);
   }
 
   return true;
@@ -72,6 +71,11 @@ bool AppArguments::Matches(
   return argc_ > offset_argument
     && (0 == strcmp(argv_[offset_argument], identifier_short.c_str())
         || 0 == strcmp(argv_[offset_argument], identifier_long.c_str()));
+}
+
+bool AppArguments::isArgImageFile(int argc, char **argv, int index_argument) {
+  return argc > index_argument
+      && helper::File::IsWordCompatibleImage(argv[index_argument]);
 }
 
 }  // namespace docxbox
