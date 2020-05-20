@@ -16,9 +16,11 @@ base_command="docxbox lorem filename.docx"
 }
 
 @test "Output of \"docxbox lorem {missing argument}\" is an error message" {
+  pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
+
   run "${docxbox}" lorem
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 @test "With \"${base_command}\" text gets replaced by dummy text" {
@@ -42,6 +44,7 @@ title+="text gets replaced by dummy text and is saved to new file"
 }
 
 @test "Output of ${base_command} wrong_file_type\" is an error message" {
+  pattern="docxBox Error - File is no ZIP archive:"
   err_log="test/functional/tmp/err.log"
   wrong_file_types=(
   "test/functional/tmp/cp_lorem_ipsum.pdf"
@@ -51,6 +54,6 @@ title+="text gets replaced by dummy text and is saved to new file"
   for i in "${wrong_file_types[@]}"
   do
     "$BATS_TEST_DIRNAME"/docxbox lorem "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "Not a valid DOX (ZIP) archive:"
+    cat "${err_log}" | grep --count "${pattern}"
   done
 }
