@@ -7,16 +7,17 @@ load _helper
 
 docxbox=""$BATS_TEST_DIRNAME"/docxbox"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+error="is an error message"
 
 base_command="docxbox rpt filename.docx"
 
-@test "Output of \"docxbox rpt {missing filename}\" is an error message" {
+@test "Output of \"docxbox rpt {missing filename}\" ${error}" {
   run "${docxbox}" rpt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
-@test "Output of \"${base_command} {missing arguments}\" is an error message" {
+@test "Output of \"${base_command} {missing arguments}\" ${error}" {
   pattern="docxBox Error - Missing argument: String to be found (and replaced)"
 
   run "${docxbox}" rpt "${path_docx}"
@@ -25,7 +26,7 @@ base_command="docxbox rpt filename.docx"
 }
 
 missing_argument="stringToBeReplaced {missing argument}"
-@test "Output of \"${base_command} ${missing_argument}\" is an error message" {
+@test "Output of \"${base_command} ${missing_argument}\" ${error}" {
   run "${docxbox}" rpt "${path_docx}" toBeReplaced
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Replacement" = "${lines[0]}" ]
@@ -49,7 +50,7 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   "${docxbox}" txt "${path_docx_out}" | grep --count Dorem
 }
 
-@test "Output of \"docxbox rpt wrong_file_type\" is an error message" {
+@test "Output of \"docxbox rpt ${arguments} wrong_file_type\" ${error}" {
   pattern="docxBox Error - File is no ZIP archive:"
   err_log="test/functional/tmp/err.log"
   wrong_file_types=(
@@ -59,7 +60,7 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
 
   for i in "${wrong_file_types[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox rpt "${i}" Lorem Dorem 2>&1 | tee "${err_log}"
+    "${docxbox}" rpt "${i}" Lorem Dorem 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "${pattern}"
   done
 }
