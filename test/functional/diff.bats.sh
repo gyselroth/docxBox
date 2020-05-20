@@ -47,7 +47,17 @@ description="a side by side view is displayed"
   "${docxbox}" diff "${path_docx_1}" "${path_changed_docx}" word/document.xml | grep "|"
 }
 
-@test "Output of \"docxbox diff wrong_file_type\" is an error message" {
+@test "Output of \"docxbox diff nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" lsmj nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" lsmj nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
+@test "Output of \"docxbox diff wrongFileType\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   err_log="test/functional/tmp/err.log"
   wrong_file_types=(
@@ -57,7 +67,7 @@ description="a side by side view is displayed"
 
   for i in "${wrong_file_types[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lorem "${i}" 2>&1 | tee "${err_log}"
+    "${docxbox}" diff "${i}" "${path_docx_1}" word/document.xml 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "${pattern}"
   done
 }
