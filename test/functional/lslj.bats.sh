@@ -72,6 +72,16 @@ search_results=(
   done
 }
 
+@test "Output of \"docxbox lslj nonexistent.docx searchString\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" lslj nonexistent.docx fonts
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" lslj nonexistent.docx fonts 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
 @test "Output of \"docxbox lslj wrong_file_type searchString\" ${error_message}" {
   err_log="test/functional/tmp/err.log"
   wrong_file_types=(

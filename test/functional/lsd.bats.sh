@@ -41,6 +41,16 @@ title+="the fields in the docx are listed"
   "${docxbox}" ls "${path_docx}" -d | grep --count "${merge_format}"
 }
 
+@test "Output of \"docxbox lsd nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "$BATS_TEST_DIRNAME"/docxbox lsd nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "$BATS_TEST_DIRNAME"/docxbox lsd nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
 @test "Output of ${base_command} wrong_file_type\" is an error message" {
   err_log="test/functional/tmp/err.log"
   wrong_file_types=(

@@ -43,7 +43,17 @@ title+="contains information about the creation time and date"
   "${docxbox}" lsm "${path_docx}" | grep --count "revision: 0"
 }
 
-@test "Output of \"${base_command} wrong_file_type\" is an error message" {
+@test "Output of \"docxbox lsm nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" lsm nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" lsm nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
+@test "Output of \"docxbox lsm wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   err_log="test/functional/tmp/err.log"
   wrong_file_types=(
