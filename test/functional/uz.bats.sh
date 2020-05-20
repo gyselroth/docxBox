@@ -17,6 +17,16 @@ unzipped_folder="cp_bio_assay.docx-extracted"
   [ "${pattern}" = "${lines[0]}" ]
 }
 
+@test "Output of \"docxbox uz nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" uz nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" uz nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
 @test "Output of \"docxbox uz wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   err_log="test/functional/tmp/err.log"
