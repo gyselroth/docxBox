@@ -12,9 +12,36 @@ description="only media files are extracted"
 unzipped_docx="cp_table_unordered_list_images.docx-media-extracted"
 
 @test "Output of \"docxbox uzm {missing argument}\" is an error message" {
+  pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
+
   run "${docxbox}" uzm
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
+}
+
+@test "Output of \"docxbox uzm nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" uzm nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" uzm nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
+@test "Output of \"docxbox uzm wrong_file_type\" is an error message" {
+  pattern="docxBox Error - File is no ZIP archive:"
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "${docxbox}" uzm "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "${pattern}"
+  done
 }
 
 @test "With \"docxbox uzm filename.docx\" ${description}" {
