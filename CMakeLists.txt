@@ -39,6 +39,7 @@ add_executable(docxbox
         docxbox/docx/docx_media.cc
         docxbox/docx/docx_numbering.cc
         docxbox/docx/docx_rels.cc
+        docxbox/docx/docx_styles.cc
 
         docxbox/docx/renderer/docx_renderer.cc
         docxbox/docx/renderer/docx_renderer_delegate.cc
@@ -47,6 +48,7 @@ add_executable(docxbox
         docxbox/docx/renderer/docx_renderer_link.cc
         docxbox/docx/renderer/docx_renderer_list.cc
         docxbox/docx/renderer/docx_renderer_rels.cc
+        docxbox/docx/renderer/docx_renderer_styles.cc
         docxbox/docx/renderer/docx_renderer_table.cc
 
         docxbox/docx/xml/docx_xml.cc
@@ -57,6 +59,7 @@ add_executable(docxbox
         docxbox/docx/xml/docx_xml_rels.cc
         docxbox/docx/xml/docx_xml_remove.cc
         docxbox/docx/xml/docx_xml_replace.cc
+        docxbox/docx/xml/docx_xml_styles.cc
 
         docxbox/helper/helper_cli.cc
         docxbox/helper/helper_dateTime.cc
