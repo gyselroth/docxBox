@@ -60,6 +60,14 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
   file "${path_extracted_image}" | grep --count "2100x400"
 }
 
+@test "Output of \"${base_command} nonexistent.image\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  error_message="docxBox Error - Copy file failed - file not found:"
+
+  "${docxbox}" rpi "${path_docx}" image1.jpeg nonexistent.jpeg 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "${error_message}"
+}
+
 @test "Output of \"docxbox rpi nonexistent.docx\" is an error message" {
   err_log="test/functional/tmp/err.log"
 
