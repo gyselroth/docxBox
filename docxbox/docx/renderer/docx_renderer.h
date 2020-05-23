@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 static const char *const kWRunLhs = "<w:r>";
 static const char *const kWRunRhs = "</w:r>";

@@ -29,7 +29,7 @@ bool docx_renderer_link::InitFromJson() {
       if (key == "text") text_ = it.value();
       else if (key == "url") url_ = it.value();
       // TODO(kay): add bookmark linking
-      //else if (key == "bookmark")
+//      else if (key == "bookmark")
     }
   }
 

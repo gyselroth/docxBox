@@ -14,10 +14,10 @@ docx_renderer_list::docx_renderer_list(
   is_json_valid_ = InitFromJson();
 
   if (is_json_valid_) {
-    auto numbering = new docx_numbering(path_extract_);
-    numbering->AddNumberingXml();
+    auto numbering_component = new numbering(path_extract_);
+    numbering_component->AddNumberingXml();
 
-    delete numbering;
+    delete numbering_component;
   }
 }
 
