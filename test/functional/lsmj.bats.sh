@@ -22,7 +22,7 @@ pattern="\"created\": \"2017-08-02T11:09:18Z\""
 @test "Output of \"docxbox lsmj {missing argument}\" is an error message" {
   run "${docxbox}" lsmj
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "Output of \"${base_command}\" contains information about the xml schema" {
@@ -55,4 +55,29 @@ pattern="\"created\": \"2017-08-02T11:09:18Z\""
 
 @test "Output of \"${base_command}\" contains information about the revision" {
   "${docxbox}" lsmj "${path_docx}" | grep --count "\"revision\": \"0\""
+}
+
+@test "Output of \"docxbox lsmj nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" lsmj nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" lsmj nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
+@test "Output of \"docxbox lsmj wrong_file_type\" is an error message" {
+  pattern="docxBox Error - File is no ZIP archive:"
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "${docxbox}" lsmj "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "${pattern}"
+  done
 }

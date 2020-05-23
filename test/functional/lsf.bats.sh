@@ -19,7 +19,7 @@ longhand_command="docxbox ls filename.docx"
 @test "Output of \"docxbox lsf {missing argument}\" is an error message" {
   run "${docxbox}" lsf
   [ "$status" -ne 0 ]
-  [ "Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
 @test "Output of \"${base_command}\" contains ground informations" {
@@ -98,4 +98,28 @@ longhand_command="docxbox ls filename.docx"
 @test "Output of \"${base_command}\" contains font-pitch" {
   "${docxbox}" lsf "${path_docx}" | grep --count "variable"
   "${docxbox}" lsf "${path_docx}" | grep --count "default"
+}
+
+@test "Output of \"docxbox lsf nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "$BATS_TEST_DIRNAME"/docxbox lsf nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "$BATS_TEST_DIRNAME"/docxbox lsf nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
+@test "Output of \"docxbox lsf wrong_file_type\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "${docxbox}" lsf "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
+  done
 }

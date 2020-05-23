@@ -60,12 +60,36 @@ search_values=(
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
-  "${docxbox}" lsj "${path_docx}" | grep --count "4/11/2020"
-  "${docxbox}" lsj "${path_docx}" | grep --count "11:3"
+  "${docxbox}" lsj "${path_docx}" | grep --count "5/14/2020"
+  "${docxbox}" lsj "${path_docx}" | grep --count "23:58"
 }
 
-@test "Output of \"docxbox ls {missing argument}\" is an error message" {
+@test "Output of \"docxbox lsj {missing argument}\" is an error message" {
   run "${docxbox}" lsj
   [ "$status" -ne 0 ]
-  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
+}
+
+@test "Output of \"docxbox lsj nonexistent.docx\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "$BATS_TEST_DIRNAME"/docxbox lsj nonexistent.docx
+  [ "$status" -ne 0 ]
+
+  "$BATS_TEST_DIRNAME"/docxbox lsj nonexistent.docx 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
+@test "Output of \"docxbox lsj wrong_file_type\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "$BATS_TEST_DIRNAME"/docxbox lsj "${i}" 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
+  done
 }

@@ -31,15 +31,16 @@ regex_result="docProps/core.xml"
 @test "Output of \"docxbox lsl {missing argument}\" is an error message" {
   run "${docxbox}" lsl
   [ "$status" -ne 0 ]
-  [ "Missing argument: DOCX filename" = "${lines[0]}" ]
+  [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
 title="Output of \"docxbox lsl filename.docx {missing argument}\" "
 title+="is an error message"
 @test "${title}" {
-  pattern="Missing argument: String or regular expression to be located"
+  pattern="docxBox Error - Missing argument: "
+  pattern+="String or regular expression to be located"
 
-  run "${docxbox}" lsl path_docx
+  run "${docxbox}" lsl "${path_docx}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
@@ -54,25 +55,49 @@ title+="is an error message"
 @test "\"docxbox ls filename.docx -l searchString\" ${description}" {
   for i in "${search_results[@]}"
   do
-    "${docxbox}" ls "${path_docx}" fonts -l | grep --count "${i}"
+    "${docxbox}" ls "${path_docx}" -l fonts | grep --count "${i}"
   done
 }
 
 @test "\"docxbox ls filename.docx --locate searchString\" ${description}" {
   for i in "${search_results[@]}"
   do
-    "${docxbox}" lsl "${path_docx}" fonts --locate | grep --count "${i}"
+    "${docxbox}" lsl "${path_docx}" --locate fonts | grep --count "${i}"
   done
 }
 
-@test "\"docxbox lsl filename.docx regex\" ${regex_description}" {
+@test "With \"docxbox lsl filename.docx regex\" ${regex_description}" {
   "${docxbox}" lsl "${path_docx}" "${regex}" | grep --count ${regex_result}
 }
 
-@test "\"docxbox ls filename.docx -l regex\" ${regex_description}" {
+@test "With \"docxbox ls filename.docx -l regex\" ${regex_description}" {
   "${docxbox}" ls "${path_docx}" -l "${regex}" | grep --count ${regex_result}
 }
 
-@test "\"docxbox ls filename.docx --locate regex\" ${regex_description}" {
+@test "With \"docxbox ls filename.docx --locate regex\" ${regex_description}" {
   "${docxbox}" ls "${path_docx}" --locate "${regex}" | grep --count ${regex_result}
+}
+
+@test "Output of \"docxbox lsl nonexistent.docx searchString\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+
+  run "${docxbox}" lsl nonexistent.docx fonts
+  [ "$status" -ne 0 ]
+
+  "${docxbox}" lsl nonexistent.docx fonts 2>&1 | tee "${err_log}"
+  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+}
+
+@test "Output of \"docxbox lsl wrong_file_type\" is an error message" {
+  err_log="test/functional/tmp/err.log"
+  wrong_file_types=(
+  "test/functional/tmp/cp_lorem_ipsum.pdf"
+  "test/functional/tmp/cp_mock_csv.csv"
+  "test/functional/tmp/cp_mock_excel.xls")
+
+  for i in "${wrong_file_types[@]}"
+  do
+    "${docxbox}" lsl "${i}" fonts 2>&1 | tee "${err_log}"
+    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
+  done
 }
