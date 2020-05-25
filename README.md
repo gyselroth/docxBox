@@ -306,12 +306,10 @@ docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 ##### Insert list
 
-Replace string ``search`` by an unordered list:
-   
+Replace string ``search`` by an unordered list:  
 ````docxbox rpt foo.docx search "{\"ul\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"````  
 
-Replace string ``search`` by an ordered list:
-   
+Replace string ``search`` by an ordered list:  
 ````docxbox rpt foo.docx search "{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"````
 
 
