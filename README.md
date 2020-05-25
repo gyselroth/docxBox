@@ -210,8 +210,8 @@ w/ different attributes or (identical attributes but) different content.
 
 #### Compare specific file from two DOCX archives
 
-Files that have changed between versions of a given document, can be 
-inspected using the ``diff`` tool (which must be installed on your system).  
+Files that have changed between versions of a document, can be inspected using 
+the ``diff`` tool (which must be installed on your system).  
  
 Display **side-by-side** comparison of the formatted XML of given file 
 (``word/settings.xml``), with differences indicated:  
