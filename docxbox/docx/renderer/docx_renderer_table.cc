@@ -3,9 +3,6 @@
 
 #include <docxbox/docx/renderer/docx_renderer_table.h>
 
-#include <iostream>
-#include <docxbox/app/app_error.h>
-
 // Constructor
 docx_renderer_table::docx_renderer_table(
     std::string path_extract, const std::string &json) {

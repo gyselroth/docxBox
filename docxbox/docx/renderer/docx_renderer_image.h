@@ -8,6 +8,7 @@
 #include <docxbox/helper/helper_string.h>
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
@@ -15,7 +16,8 @@
 class docx_renderer_image: docx_renderer {
  public:
   // Constructor
-  explicit docx_renderer_image(std::string path_extract, const std::string &json);
+  explicit docx_renderer_image(
+      std::string path_extract, const std::string &json);
 
   void SetRelationshipId(const std::string &relationship_id);
 

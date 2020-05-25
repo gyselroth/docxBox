@@ -8,11 +8,11 @@ std::string docx_renderer_rels::RenderRelationship(
     const int relation_type,
     const std::string& relationship_id) {
   switch (relation_type) {
-    case docx_rels::RelationType_Hyperlink:
+    case rels::RelationType_Hyperlink:
       return RenderHyperlinkRelationship(target, relationship_id);
-    case docx_rels::RelationType_Numbering:
+    case rels::RelationType_Numbering:
       return RenderNumberingRelationship(relationship_id);
-    case docx_rels::RelationType_Image:
+    case rels::RelationType_Image:
     default:
       return RenderImageRelationship(target, relationship_id);
   }

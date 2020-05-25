@@ -29,17 +29,17 @@ add_executable(docxbox
         docxbox/app/app_help.cc
         docxbox/app/app_help.h
 
-        docxbox/docx/docx_archive.cc
-        docxbox/docx/docx_archive_list.cc
-        docxbox/docx/docx_archive_replace.cc
+        docxbox/docx/archive/docx_archive.cc
+        docxbox/docx/archive/docx_archive_list.cc
+        docxbox/docx/archive/docx_archive_replace.cc
 
-        docxbox/docx/docx_fileListCompare.cc
-        docxbox/docx/docx_fontTable.cc
-        docxbox/docx/docx_meta.cc
-        docxbox/docx/docx_media.cc
-        docxbox/docx/docx_numbering.cc
-        docxbox/docx/docx_rels.cc
-        docxbox/docx/docx_styles.cc
+        docxbox/docx/archive/docx_fileListCompare.cc
+        docxbox/docx/component/fontTable.cc
+        docxbox/docx/component/meta.cc
+        docxbox/docx/component/media.cc
+        docxbox/docx/component/numbering.cc
+        docxbox/docx/component/rels.cc
+        docxbox/docx/component/styles.cc
 
         docxbox/docx/renderer/docx_renderer.cc
         docxbox/docx/renderer/docx_renderer_delegate.cc
@@ -52,14 +52,14 @@ add_executable(docxbox
         docxbox/docx/renderer/docx_renderer_table.cc
 
         docxbox/docx/xml/docx_xml.cc
-        docxbox/docx/xml/docx_xml_field.cc
-        docxbox/docx/xml/docx_xml_indent.cc
-        docxbox/docx/xml/docx_xml_lorem.cc
-        docxbox/docx/xml/docx_xml_to_plaintext.cc
-        docxbox/docx/xml/docx_xml_rels.cc
-        docxbox/docx/xml/docx_xml_remove.cc
-        docxbox/docx/xml/docx_xml_replace.cc
-        docxbox/docx/xml/docx_xml_styles.cc
+        docxbox/docx/xml/entity/docx_xml_field.cc
+        docxbox/docx/xml/entity/docx_xml_rels.cc
+        docxbox/docx/xml/entity/docx_xml_styles.cc
+        docxbox/docx/xml/visitor/docx_xml_indent.cc
+        docxbox/docx/xml/visitor/docx_xml_lorem.cc
+        docxbox/docx/xml/visitor/docx_xml_to_plaintext.cc
+        docxbox/docx/xml/visitor/docx_xml_remove.cc
+        docxbox/docx/xml/visitor/docx_xml_replace.cc
 
         docxbox/helper/helper_cli.cc
         docxbox/helper/helper_dateTime.cc

@@ -4,11 +4,12 @@
 #ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
 
-#include <docxbox/docx/docx_numbering.h>
+#include <docxbox/docx/component/numbering.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/helper/helper_string.h>
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <vendor/json/single_include/nlohmann/json.hpp>

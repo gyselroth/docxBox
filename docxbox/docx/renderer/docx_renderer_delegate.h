@@ -4,7 +4,7 @@
 #ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_DELEGATE_H_
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_DELEGATE_H_
 
-#include <docxbox/docx/docx_numbering.h>
+#include <docxbox/docx/component/numbering.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/docx/renderer/docx_renderer_heading.h>
 #include <docxbox/docx/renderer/docx_renderer_image.h>

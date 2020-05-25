@@ -5,7 +5,7 @@
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_STYLES_H_
 
 #include <docxbox/docx/renderer/docx_renderer.h>
-#include <docxbox/docx/xml/docx_xml_rels.h>
+#include <docxbox/docx/xml/entity/docx_xml_rels.h>
 
 #include <string>
 
@@ -17,4 +17,4 @@ class docx_renderer_styles: docx_renderer {
   static std::string RenderHyperlinkStyle(const std::string &style_id);
 };
 
-#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_RELS_H_
+#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_STYLES_H_

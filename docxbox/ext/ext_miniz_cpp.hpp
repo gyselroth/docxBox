@@ -4,7 +4,7 @@
 #ifndef DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
 #define DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
 
-#include <docxbox/docx/xml/docx_xml_indent.h>
+#include <docxbox/docx/xml/visitor/docx_xml_indent.h>
 
 #include <memory>
 #include <string>

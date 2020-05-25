@@ -7,9 +7,9 @@
 #include <docxbox/app/app_argument.h>
 #include <docxbox/app/app_command.h>
 #include <docxbox/app/app_help.h>
-#include <docxbox/docx/docx_archive.h>
-#include <docxbox/docx/docx_archive_list.h>
-#include <docxbox/docx/docx_archive_replace.h>
+#include <docxbox/docx/archive/docx_archive.h>
+#include <docxbox/docx/archive/docx_archive_list.h>
+#include <docxbox/docx/archive/docx_archive_replace.h>
 #include <docxbox/config.h>
 
 #include <string>

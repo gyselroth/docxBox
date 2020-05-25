@@ -5,8 +5,11 @@
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_
 
 #include <docxbox/docx/renderer/docx_renderer.h>
+#include <docxbox/app/app_error.h>
 
+#include <iostream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
