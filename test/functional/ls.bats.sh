@@ -62,8 +62,8 @@ search_values=(
 }
 
 @test "Output of ${base_command}\" contains files' date and time" {
-  "${docxbox}" ls "${path_docx}" | grep --count "1/1/1980"
-  "${docxbox}" ls "${path_docx}" | grep --count "0:0"
+  "${docxbox}" ls "${path_docx}" | grep --count "5/25/2020"
+  "${docxbox}" ls "${path_docx}" | grep --count "16:32"
 }
 
 long_description="contains files with the given file ending"
