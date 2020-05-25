@@ -42,16 +42,19 @@ attributes=(
 @test "Output of \"docxbox lsj filename.docx\" are contained files" {
 search_values=(
 "[Content_Types].xml"
-"docProps/app.xml"
-"docProps/core.xml"
+"_rels/.rels"
 "word/_rels/document.xml.rels"
-"word/charts/chart1.xml"
 "word/document.xml"
-"word/fontTable.xml"
-"word/media/image1.jpeg"
-"word/numbering.xml"
+"word/theme/theme1.xml"
+"word/media/image1.png"
+"word/media/image2.jpeg"
 "word/settings.xml"
-"word/styles.xml")
+"word/webSettings.xml"
+"word/styles.xml"
+"word/numbering.xml"
+"docProps/core.xml"
+"word/fontTable.xml"
+"docProps/app.xml")
 
   for i in "${search_values[@]}"
   do
@@ -60,8 +63,8 @@ search_values=(
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
-  "${docxbox}" lsj "${path_docx}" | grep --count "5/14/2020"
-  "${docxbox}" lsj "${path_docx}" | grep --count "23:58"
+  "${docxbox}" lsj "${path_docx}" | grep --count "1/1/1980"
+  "${docxbox}" lsj "${path_docx}" | grep --count "0:0"
 }
 
 @test "Output of \"docxbox lsj {missing argument}\" is an error message" {
