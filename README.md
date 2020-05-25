@@ -277,7 +277,7 @@ rendering and inserting the following
 * [Image](#insert-image-markup) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, 
   ``jpg``, ``png``, ``tif``, ``tiff``, ``wmf``)
 * [Table](#insert-table-markup)
-* [Ordered list, unordered list](#insert-list-markup)  
+* [Ordered list, unordered list](#insert-list)  
 
 Markup specification for such elements must be given as JSON, following these
 rules: 
