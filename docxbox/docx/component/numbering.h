@@ -26,6 +26,7 @@ class numbering {
 
   static std::string RenderXml(bool unordered = true);
   static std::string RenderXmlNamespaceTag();
+  static std::string RenderXmlAbstractNum0();
 };
 
 #endif  // DOCXBOX_DOCX_COMPONENT_NUMBERING_H_

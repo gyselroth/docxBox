@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#include <docxbox/docx/renderer/docx_renderer_table.h>
+#include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
 
 // Constructor
 docx_renderer_table::docx_renderer_table(

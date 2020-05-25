@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#include <docxbox/docx/renderer/docx_renderer_link.h>
+#include <docxbox/docx/renderer/contentType/docx_renderer_link.h>
 
 #include <iostream>
 

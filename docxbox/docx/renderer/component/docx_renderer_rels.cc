@@ -1,7 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#include <docxbox/docx/renderer/docx_renderer_rels.h>
+#include <docxbox/docx/renderer/component/docx_renderer_rels.h>
 
 std::string docx_renderer_rels::RenderRelationship(
     const std::string &target,

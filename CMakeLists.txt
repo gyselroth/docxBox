@@ -45,13 +45,13 @@ add_executable(docxbox
 
         docxbox/docx/renderer/docx_renderer.cc
         docxbox/docx/renderer/docx_renderer_delegate.cc
-        docxbox/docx/renderer/docx_renderer_heading.cc
-        docxbox/docx/renderer/docx_renderer_image.cc
-        docxbox/docx/renderer/docx_renderer_link.cc
-        docxbox/docx/renderer/docx_renderer_list.cc
-        docxbox/docx/renderer/docx_renderer_rels.cc
-        docxbox/docx/renderer/docx_renderer_styles.cc
-        docxbox/docx/renderer/docx_renderer_table.cc
+        docxbox/docx/renderer/contentType/docx_renderer_heading.cc
+        docxbox/docx/renderer/contentType/docx_renderer_image.cc
+        docxbox/docx/renderer/contentType/docx_renderer_link.cc
+        docxbox/docx/renderer/contentType/docx_renderer_list.cc
+        docxbox/docx/renderer/component/docx_renderer_rels.cc
+        docxbox/docx/renderer/component/docx_renderer_styles.cc
+        docxbox/docx/renderer/contentType/docx_renderer_table.cc
 
         docxbox/docx/xml/docx_xml.cc
         docxbox/docx/xml/contentType/docx_xml_field.cc

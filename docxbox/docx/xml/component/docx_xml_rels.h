@@ -6,7 +6,7 @@
 
 #include <docxbox/docx/component/rels.h>
 #include <docxbox/docx/xml/docx_xml.h>
-#include <docxbox/docx/renderer/docx_renderer_rels.h>
+#include <docxbox/docx/renderer/component/docx_renderer_rels.h>
 #include <docxbox/docx/xml/visitor/docx_xml_indent.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
