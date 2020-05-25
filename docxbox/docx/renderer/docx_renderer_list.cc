@@ -11,17 +11,19 @@ docx_renderer_list::docx_renderer_list(
 
   json_ = json;
   is_json_valid_ = InitFromJson();
-
-  if (is_json_valid_) {
-    auto numbering_component = new numbering(path_extract_);
-    numbering_component->AddNumberingXml();
-
-    delete numbering_component;
-  }
 }
 
 void docx_renderer_list::SetIsOrdered(bool is_ordered) {
   is_ordered_ = is_ordered;
+}
+
+void docx_renderer_list::AddNumberingXml() const {
+  if (is_json_valid_) {
+    auto numbering_component = new numbering(path_extract_);
+    numbering_component->AddNumberingXml(is_ordered_);
+
+    delete numbering_component;
+  }
 }
 
 bool docx_renderer_list::InitFromJson() {
@@ -61,6 +63,9 @@ bool docx_renderer_list::InitFromJson() {
 
 std::string docx_renderer_list::Render(bool is_ordered) {
   SetIsOrdered(is_ordered);
+  AddNumberingXml();
+  // TODO(kay): implement add specs
+  //  for ordered-list in word/_rels/document.xml.rels
 
   return Render();
 }

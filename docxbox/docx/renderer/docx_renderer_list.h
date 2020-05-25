@@ -31,6 +31,7 @@ class docx_renderer_list: docx_renderer {
   std::vector<std::string> items_;
 
   bool InitFromJson() override;
+  void AddNumberingXml() const;
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LIST_H_
