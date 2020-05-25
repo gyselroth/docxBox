@@ -12,7 +12,7 @@ base_command="docxbox lsmj filename.docx"
 
 description="contains information about the creation time and date"
 
-pattern="\"created\": \"2017-08-02T11:09:18Z\""
+pattern="\"created\": \"2020-05-25T16:32:27Z\""
 
 @test "Exit code of \"${base_command}\" is zero" {
   run "${docxbox}" lsmj "${path_docx}"
@@ -20,9 +20,11 @@ pattern="\"created\": \"2017-08-02T11:09:18Z\""
 }
 
 @test "Output of \"docxbox lsmj {missing argument}\" is an error message" {
+  pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
+
   run "${docxbox}" lsmj
   [ "$status" -ne 0 ]
-  [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+  [ "${pattern}" = "${lines[0]}" ]
 }
 
 @test "Output of \"${base_command}\" contains information about the xml schema" {
@@ -54,7 +56,7 @@ pattern="\"created\": \"2017-08-02T11:09:18Z\""
 }
 
 @test "Output of \"${base_command}\" contains information about the revision" {
-  "${docxbox}" lsmj "${path_docx}" | grep --count "\"revision\": \"0\""
+  "${docxbox}" lsmj "${path_docx}" | grep --count "\"revision\": \"2\""
 }
 
 @test "Output of \"docxbox lsmj nonexistent.docx\" is an error message" {

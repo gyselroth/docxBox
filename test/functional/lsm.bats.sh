@@ -30,7 +30,7 @@ base_command="docxbox lsm filename.docx"
 title="Output of \"${base_command}\" "
 title+="contains information about the creation time and date"
 @test "${title}" {
-  created="created: 2017-08-02T11:09:18Z"
+  created="created: 2020-05-25T16:32:27Z"
 
   "${docxbox}" lsm "${path_docx}" | grep --count "${created}"
 }
@@ -40,7 +40,7 @@ title+="contains information about the creation time and date"
 }
 
 @test "Output of \"${base_command}\" contains information about the revision" {
-  "${docxbox}" lsm "${path_docx}" | grep --count "revision: 0"
+  "${docxbox}" lsm "${path_docx}" | grep --count "revision: 2"
 }
 
 @test "Output of \"docxbox lsm nonexistent.docx\" is an error message" {
