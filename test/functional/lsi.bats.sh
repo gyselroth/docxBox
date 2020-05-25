@@ -39,15 +39,15 @@ base_command="docxbox lsi filename.docx"
 @test "Output of \"${base_command}\" is contained images" {
   run "${docxbox}" lsi "${path_docx}"
   [ "$status" -eq 0 ]
-  "${docxbox}" lsi "${path_docx}" | grep --count image1.jpeg
+  "${docxbox}" lsi "${path_docx}" | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox ls filename.docx -i\" is contained images" {
-  "${docxbox}" ls "${path_docx}" -i | grep --count image1.jpeg
+  "${docxbox}" ls "${path_docx}" -i | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox ls filename.docx --images\" is contained images" {
-  "${docxbox}" ls "${path_docx}" --images | grep --count image1.jpeg
+  "${docxbox}" ls "${path_docx}" --images | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox lsi nonexistent.docx\" is an error message" {

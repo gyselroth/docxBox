@@ -23,23 +23,23 @@ description="are contained images as JSON"
 }
 
 @test "Output of \"${base_command}\" is contained images as JSON" {
-  "${docxbox}" lsij "${path_docx}" | grep --count "image1.jpeg"
+  "${docxbox}" lsij "${path_docx}" | grep --count ""image2.jpeg""
 }
 
 @test "Output of \"docxbox lsi filename.docx --json\" ${description}" {
-  "${docxbox}" lsi "${path_docx}" --json | grep --count "image1.jpeg"
+  "${docxbox}" lsi "${path_docx}" --json | grep --count ""image2.jpeg""
 }
 
 @test "Output of \"docxbox lsi filename.docx -j\" ${description}" {
-  "${docxbox}" lsi "${path_docx}" -j | grep --count "image1.jpeg"
+  "${docxbox}" lsi "${path_docx}" -j | grep --count ""image2.jpeg""
 }
 
 @test "Output of \"docxbox ls filename.docx -ij\" ${description}" {
-  "${docxbox}" lsi "${path_docx}" -ij | grep --count "image1.jpeg"
+  "${docxbox}" lsi "${path_docx}" -ij | grep --count ""image2.jpeg""
 }
 
 @test "Output of \"docxbox ls filename.docx --images --json\" ${description}" {
-  "${docxbox}" ls "${path_docx}" --images --json | grep --count "image1.jpeg"
+  "${docxbox}" ls "${path_docx}" --images --json | grep --count ""image2.jpeg""
 }
 
 @test "Output of \"docxbox lsij nonexistent.docx\" is an error message" {
