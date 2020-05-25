@@ -538,7 +538,6 @@ void docx_archive::CompressXmlFiles(const std::string &path_directory) const {
 
     docx_xml_indent::CompressXml(xml);
 
-    helper::File::Remove(path_file_absolute.c_str());
     helper::File::WriteToNewFile(path_file_absolute, xml);
   }
 }

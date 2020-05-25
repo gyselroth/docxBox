@@ -2,6 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/archive/docx_archive_replace.h>
+#include <docxbox/docx/component/contentTypes.h>
 
 docx_archive_replace::docx_archive_replace(
     int argc,
@@ -90,14 +91,20 @@ bool docx_archive_replace::ReplaceText() {
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
+  const char *kReplacement = replacement.c_str();
+
   try {
     // TODO(kay): single-out render-type detection
-    if (helper::String::StartsWith(replacement.c_str(), "{\"image\":{")
-        ||helper::String::StartsWith(replacement.c_str(), "{\"img\":{")) {
+    if (helper::String::StartsWith(kReplacement, "{\"image\":{")
+        || helper::String::StartsWith(kReplacement, "{\"img\":{")) {
       image_relationship_id = AddImageFileAndRelation(replacement);
-    } else if (helper::String::StartsWith(replacement.c_str(), "{\"link\":{")) {
+    } else if (helper::String::StartsWith(kReplacement, "{\"link\":{")) {
       hyperlink_relationship_id = AddHyperlinkRelation(replacement);
       // TODO(kay): ensure presence of hyperlink-style
+    } else if (helper::String::StartsWith(kReplacement, "{\"ol\":[")) {
+      std::string path_extract_absolute =
+          path_working_directory_ + "/" + path_extract_;
+      contentTypes::OverrideNumbering(path_extract_absolute);
     }
   } catch (std::string &message) {
     return docxbox::AppError::Output(message);

@@ -2,8 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/renderer/docx_renderer_list.h>
-
-#include <iostream>
+#include <docxbox/docx/component/contentTypes.h>
 
 // Constructor
 docx_renderer_list::docx_renderer_list(
@@ -28,7 +27,7 @@ void docx_renderer_list::SetIsOrdered(bool is_ordered) {
 bool docx_renderer_list::InitFromJson() {
   if (!helper::String::IsJson(json_)
       || !docx_renderer::IsElementType(
-          {ElementType_ListOrdered, ElementType_ListOrdered})) return false;
+          {ElementType_ListUnordered, ElementType_ListOrdered})) return false;
 
   items_.clear();
 
@@ -38,14 +37,19 @@ bool docx_renderer_list::InitFromJson() {
     for (nlohmann::json::iterator it = json_inner.begin();
          it != json_inner.end();
          ++it) {
-      const std::string &key = it.key();
+      try {
+        const std::string &key = it.key();
 
-      if (key == "items") {
-        auto items = it.value();
+        if ("items" == key) {
+          auto items = it.value();
 
-        for (nlohmann::json::iterator it_items = items.begin();
-             it_items != items.end();
-             ++it_items) items_.push_back(it_items.value());
+          for (nlohmann::json::iterator it_items = items.begin();
+               it_items != items.end();
+               ++it_items)
+            items_.push_back(it_items.value());
+        }
+      } catch (nlohmann::detail::invalid_iterator &e) {
+        continue;
       }
     }
   }

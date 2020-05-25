@@ -281,9 +281,6 @@ void meta::LoadCoreXml(const std::string& path) {
 }
 
 bool meta::SaveCoreXml() {
-  if (helper::File::FileExists(core_xml_))
-    helper::File::Remove(path_core_xml_.c_str());
-
   if (!helper::File::WriteToNewFile(path_core_xml_, core_xml_))
     throw "Failed saving: " + path_core_xml_;
 

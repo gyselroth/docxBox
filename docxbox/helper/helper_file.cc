@@ -18,6 +18,8 @@ bool File::FileExists(const std::string &path_file) {
 }
 
 std::string File::GetFileContents(const std::string &path_file) {
+  if (!FileExists(path_file)) throw "File not found: "  + path_file;
+
   std::ifstream file(path_file);
 
   return GetFileContents(file);
@@ -94,11 +96,13 @@ std::streampos File::GetFileSize(std::ifstream &file) {
 bool File::WriteToNewFile(
     const std::string &path_file,
     const std::string &content) {
+  if (FileExists(path_file)) Remove(path_file.c_str());
+
   std::ofstream outfile(path_file);
   outfile << content;
   outfile.close();
 
-  return File::FileExists(path_file);
+  return FileExists(path_file);
 }
 
 bool File::CopyFile(

@@ -5,7 +5,7 @@
 #define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_STYLES_H_
 
 #include <docxbox/docx/renderer/docx_renderer.h>
-#include <docxbox/docx/xml/entity/docx_xml_rels.h>
+#include <docxbox/docx/xml/component/docx_xml_rels.h>
 
 #include <string>
 
