@@ -6,7 +6,7 @@
 load _helper
 
 docxbox=""$BATS_TEST_DIRNAME"/docxbox"
-path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+path_docx="test/functional/tmp/cp_mergefields.docx"
 
 base_command="docxbox lsfj filename.docx"
 longhand_command="docxbox lsf filename.docx"
@@ -73,14 +73,14 @@ longhand="--fonts --json"
 
 @test "Output of \"${base_command}\" contains font names" {
   font_names=(
-  "Times New Roman"
-  "Symbol"
-  "Arial"
-  "Liberation Serif"
-  "OpenSymbol"
-  "Liberation Sans"
-  "DejaVu Sans"
-  "OpenSymbol")
+    "Calibri
+    Times New Roman
+    Arial
+    MS Mincho
+    Arial Black
+    Verdana
+    Times
+    Calibri Light")
 
   for i in "${font_names[@]}"
   do
@@ -89,7 +89,7 @@ longhand="--fonts --json"
 }
 
 @test "Output of \"${base_command}\" can contain alternative font names" {
-  "${docxbox}" lsfj "${path_docx}" | grep --count "Arial Unicode MS"
+  "${docxbox}" lsfj "${path_docx}" | grep --count "ＭＳ 明朝"
 }
 
 @test "Output of \"${base_command}\" contains font-charSets" {
@@ -110,7 +110,7 @@ longhand="--fonts --json"
 
 @test "Output of \"${base_command}\" contains font-pitch" {
   "${docxbox}" lsfj "${path_docx}" | grep --count "variable"
-  "${docxbox}" lsfj "${path_docx}" | grep --count "default"
+  "${docxbox}" lsfj "${path_docx}" | grep --count "fixed"
 }
 
 @test "Output of \"docxbox lsfj nonexistent.docx\" is an error message" {
