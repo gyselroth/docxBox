@@ -11,9 +11,9 @@ docx_xml_rels::docx_xml_rels(
     std::string path_extract, int argc, char **argv) : docx_xml(
     argc,
     argv) {
-  path_rels_xml = path_extract + "/word/_rels/document.xml.rels";
+  path_xml_file_ = path_extract + "/word/_rels/document.xml.rels";
   path_extract_ = std::move(path_extract);
-  xml_ = helper::File::GetFileContents(path_rels_xml);
+  xml_ = helper::File::GetFileContents(path_xml_file_);
 }
 
 // Get (insert if not exists) relationship id of given image target
@@ -79,11 +79,4 @@ void docx_xml_rels::GetRelationshipId(
   const char* id_key = "Id";
   auto id = relationship->FindAttribute(id_key);
   relationship_id = id->Value();
-}
-
-// TODO(kay): generalize xml-filename, move into parent class (docx_xml)
-bool docx_xml_rels::SaveXml(bool compress) {
-  if (compress) docx_xml_indent::CompressXml(xml_);
-
-  return helper::File::WriteToNewFile(path_rels_xml, xml_);
 }

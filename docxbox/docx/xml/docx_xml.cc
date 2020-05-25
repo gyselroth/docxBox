@@ -19,3 +19,9 @@ bool docx_xml::IsXmlFileContainingText(const std::string &filename) {
       && !helper::String::EndsWith(filename, "stylesWithEffects.xml")
       && !helper::String::EndsWith(filename, "webSettings.xml");
 }
+
+bool docx_xml::SaveXml(bool compress) {
+  if (compress) helper::Xml::CompressXml(xml_);
+
+  return helper::File::WriteToNewFile(path_xml_file_, xml_);
+}

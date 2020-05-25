@@ -6,6 +6,7 @@
 
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
+#include <docxbox/helper/helper_xml.h>
 
 #include <vendor/tinyxml2/tinyxml2.h>
 
@@ -23,6 +24,10 @@ class docx_xml {
   char **argv_;
 
   std::string document_text_;
+  std::string path_xml_file_;
+  std::string xml_;
+
+  bool SaveXml(bool compress);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_H_

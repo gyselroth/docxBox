@@ -11,9 +11,9 @@ docx_xml_styles::docx_xml_styles(
     std::string path_extract, int argc, char **argv) : docx_xml(
     argc,
     argv) {
-  path_styles_xml = path_extract + "/word/styles.xml";
+  path_xml_file_ = path_extract + "/word/styles.xml";
   path_extract_ = std::move(path_extract);
-  xml_ = helper::File::GetFileContents(path_styles_xml);
+  xml_ = helper::File::GetFileContents(path_xml_file_);
 }
 
 // Get (insert if not exists) style ID
@@ -72,13 +72,6 @@ std::string docx_xml_styles::GetStyleId(
 //  if (!SaveXml(true)) throw "Failed save word/styles.xml\n";
 
   return style_id;
-}
-
-// TODO(kay): generalize xml-filename, move into parent class (docx_xml)
-bool docx_xml_styles::SaveXml(bool compress) {
-  if (compress) docx_xml_indent::CompressXml(xml_);
-
-  return helper::File::WriteToNewFile(path_styles_xml, xml_);
 }
 
 std::string docx_xml_styles::GetStyleIdPrefixByType(

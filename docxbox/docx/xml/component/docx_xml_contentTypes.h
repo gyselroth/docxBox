@@ -23,12 +23,6 @@ class docx_xml_contentTypes: docx_xml {
 
  private:
   std::string path_extract_;
-  std::string path_contentTypes_xml;
-
-  std::string xml_;
-
-  // TODO(kay): generalize xml-filename, move into parent class (docx_xml)
-  bool SaveXml(bool compress = false);
 };
 
 #endif  // DOCXBOX_DOCX_XML_COMPONENT_DOCX_XML_CONTENTTYPES_H_

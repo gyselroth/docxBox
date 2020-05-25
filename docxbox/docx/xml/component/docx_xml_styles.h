@@ -7,7 +7,6 @@
 #include <docxbox/docx/component/styles.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/docx/renderer/component/docx_renderer_styles.h>
-#include <docxbox/docx/xml/visitor/docx_xml_indent.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
 
@@ -29,12 +28,6 @@ class docx_xml_styles: docx_xml {
 
  private:
   std::string path_extract_;
-  std::string path_styles_xml;
-
-  std::string xml_;
-
-  // TODO(kay): generalize xml-filename, move into parent class (docx_xml)
-  bool SaveXml(bool compress = false);
 
   static std::string GetStyleIdPrefixByType(styles::StyleType type);
 };

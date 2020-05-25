@@ -17,6 +17,7 @@ void docx_renderer_list::SetIsOrdered(bool is_ordered) {
   is_ordered_ = is_ordered;
 }
 
+// Ensure word/numbering.xml exists
 void docx_renderer_list::AddNumberingXml() const {
   if (is_json_valid_) {
     auto numbering_component = new numbering(path_extract_);
@@ -24,6 +25,16 @@ void docx_renderer_list::AddNumberingXml() const {
 
     delete numbering_component;
   }
+}
+
+// Ensure relation to word/numbering.xml in word/_rels/document.xml.rels
+void docx_renderer_list::AddNumberingRels() const {
+  if (!is_json_valid_) return;
+
+  rels::GetRelationshipId(
+      path_extract_,
+      "numbering.xml",
+      rels::RelationType::RelationType_Numbering);
 }
 
 bool docx_renderer_list::InitFromJson() {
@@ -63,9 +74,9 @@ bool docx_renderer_list::InitFromJson() {
 
 std::string docx_renderer_list::Render(bool is_ordered) {
   SetIsOrdered(is_ordered);
+
   AddNumberingXml();
-  // TODO(kay): implement add specs
-  //  for ordered-list in word/_rels/document.xml.rels
+  AddNumberingRels();
 
   return Render();
 }

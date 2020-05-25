@@ -527,7 +527,7 @@ void docx_archive::ZipUsingMinizCpp(bool compress_xml,
 
     std::string xml = helper::File::GetFileContents(path_file_absolute);
 
-    if (compress_xml) docx_xml_indent::CompressXml(xml);
+    if (compress_xml) helper::Xml::CompressXml(xml);
 
     file.writestr(file_in_zip, xml);
   }
@@ -549,7 +549,7 @@ void docx_archive::CompressXmlFiles(const std::string &path_directory) const {
 
     std::string xml = helper::File::GetFileContents(path_file_absolute);
 
-    docx_xml_indent::CompressXml(xml);
+    helper::Xml::CompressXml(xml);
 
     helper::File::WriteToNewFile(path_file_absolute, xml);
   }

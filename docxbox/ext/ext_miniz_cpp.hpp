@@ -4,8 +4,6 @@
 #ifndef DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
 #define DOCXBOX_EXT_EXT_MINIZ_CPP_HPP_
 
-#include <docxbox/docx/xml/visitor/docx_xml_indent.h>
-
 #include <memory>
 #include <string>
 #include <vector>
@@ -200,7 +198,7 @@ class miniz_cpp_ext {
           && !helper::String::EndsWith(file_in_zip.filename, ".xml.rels"))
         continue;
 
-      if (!docx_xml_indent::IndentXmlFile(
+      if (!helper::Xml::IndentXmlFile(
           path_extract + "/" + file_in_zip.filename)) return false;
     }
 

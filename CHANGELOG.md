@@ -6,7 +6,7 @@ V0.0.4 - Not finished yet
 * Add "unified" option to diff shorthand  
 * Add handler for all docxBox error messages 
   (prefixes all error-messages, creates central place for logging)  
-* Add replace text by list 
+* Add replace text by ordered and unordered list 
 * Add replace text by heading 1, 2, 3 
 * Add replace text by image
 * Add cat command: output content of file from within DOCX 

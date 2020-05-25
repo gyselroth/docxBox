@@ -58,7 +58,6 @@ add_executable(docxbox
         docxbox/docx/xml/component/docx_xml_contentTypes.cc
         docxbox/docx/xml/component/docx_xml_rels.cc
         docxbox/docx/xml/component/docx_xml_styles.cc
-        docxbox/docx/xml/visitor/docx_xml_indent.cc
         docxbox/docx/xml/visitor/docx_xml_lorem.cc
         docxbox/docx/xml/visitor/docx_xml_to_plaintext.cc
         docxbox/docx/xml/visitor/docx_xml_remove.cc
@@ -70,6 +69,7 @@ add_executable(docxbox
         docxbox/helper/helper_json.cc
         docxbox/helper/helper_string.cc
         docxbox/helper/helper_numeric.cc
+        docxbox/helper/helper_xml.cc
 
         vendor/miniz-cpp/zip_file.hpp
         vendor/tinyxml2/tinyxml2.cpp)
