@@ -213,11 +213,11 @@ w/ different attributes or (identical attributes but) different content.
 Files that have changed between versions of a given document, can be 
 inspected using the ``diff`` tool (which must be installed on your system).  
  
-Display side-by-side comparison of the formatted XML of given file 
+Display **side-by-side** comparison of the formatted XML of given file 
 (``word/settings.xml``), with differences indicated:  
 ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml````  
 
-Display unified diff:
+Display **unified** diff:
 ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml -u````  
 or: ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml --unified````
 
