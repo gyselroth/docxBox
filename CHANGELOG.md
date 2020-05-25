@@ -3,6 +3,7 @@ docxBox Changelog
 
 V0.0.4 - Not finished yet
 -------------------------
+* Add "unified" option to diff shorthand  
 * Add handler for all docxBox error messages 
   (prefixes all error-messages, creates central place for logging)  
 * Add replace text by list 

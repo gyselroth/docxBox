@@ -351,18 +351,31 @@ bool docx_archive::ViewFilesDiff() {
     return docxbox::AppError::Output(
         "File not given in both DOCX archives: " + file);
 
-  int width = helper::File::GetLongestLineLength(
-      path_extract_left + "/" + file,
-      path_extract_right + "/" + file);
+  if (argc_ > 5
+      && (0 == strcmp(argv_[5], "-u") || 0 == strcmp(argv_[5], "--unified"))) {
+    auto output = helper::Cli::GetExecutionResponse(
+        std::string(
+            "diff -u "
+            + path_extract_left + "/" + file + " "
+            + path_extract_right + "/" + file).c_str());
 
-  // TODO(kay): test/improve auto-width, add option for unified diff
-  if (width > 200) width = 200;
+    helper::String::Replace(output, "-extracted/", "");
 
-  helper::Cli::Execute(
-      std::string("diff -y "
-                  "--width=" + std::to_string(width) + " "
-                  + path_extract_left + "/" + file + " "
-                  + path_extract_right + "/" + file).c_str());
+    std::cout << output;
+  } else {
+    int width = helper::File::GetLongestLineLength(
+    path_extract_left + "/" + file,
+    path_extract_right + "/" + file);
+
+    // TODO(kay): test/improve auto-width
+    if (width > 200) width = 200;
+
+    helper::Cli::Execute(
+        std::string("diff -y "
+                    "--width=" + std::to_string(width) + " "
+                    + path_extract_left + "/" + file + " "
+                    + path_extract_right + "/" + file).c_str());
+  }
 
 // TODO(kay): TBD - implement optional wait for keypress
 //  std::cout << "\nHit [Enter] when done.";
