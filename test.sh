@@ -57,6 +57,9 @@ printf "\n\033[4mTest listing metadata in DOCX as JSON (lsmj)\033[0m\n"
 bats ./test/functional/lsmj.bats.sh
 
 # Convert and compare DOCX:
+printf "\n\033[4mTest output XML document\033[0m\n"
+bats ./test/functional/cat.bats.sh
+
 printf "\n\033[4mTest output DOCX document as plaintext (txt)\033[0m\n"
 bats ./test/functional/txt.bats.sh
 

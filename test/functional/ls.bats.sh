@@ -37,16 +37,19 @@ path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 @test "Output of ${base_command}\" is contained files" {
 search_values=(
 "[Content_Types].xml"
-"docProps/app.xml"
-"docProps/core.xml"
+"_rels/.rels"
 "word/_rels/document.xml.rels"
-"word/charts/chart1.xml"
 "word/document.xml"
-"word/fontTable.xml"
-"word/media/image1.jpeg"
-"word/numbering.xml"
+"word/theme/theme1.xml"
+"word/media/image1.png"
+"word/media/image2.jpeg"
 "word/settings.xml"
-"word/styles.xml")
+"word/webSettings.xml"
+"word/styles.xml"
+"word/numbering.xml"
+"docProps/core.xml"
+"word/fontTable.xml"
+"docProps/app.xml")
 
   for i in "${search_values[@]}"
   do
@@ -55,18 +58,18 @@ search_values=(
 }
 
 @test "Output of ${base_command}\" contains amount of contained files" {
-  "${docxbox}" ls "${path_docx}" | grep --count '11 files'
+  "${docxbox}" ls "${path_docx}" | grep --count '14 files'
 }
 
 @test "Output of ${base_command}\" contains files' date and time" {
-  "${docxbox}" ls "${path_docx}" | grep --count "5/14/2020"
-  "${docxbox}" ls "${path_docx}" | grep --count "23:58"
+  "${docxbox}" ls "${path_docx}" | grep --count "5/25/2020"
+  "${docxbox}" ls "${path_docx}" | grep --count "16:32"
 }
 
 long_description="contains files with the given file ending"
 @test "Output of ${base_command} *.file-ending\" ${long_description}" {
-  "${docxbox}" ls "${path_docx}" *.jpeg | grep --count "image1.jpeg"
-  "${docxbox}" ls "${path_docx}" *.xml | grep --count "9 files"
+  "${docxbox}" ls "${path_docx}" *.jpeg | grep --count "image2.jpeg"
+  "${docxbox}" ls "${path_docx}" *.xml | grep --count "10 files"
 }
 
 @test "Output of ${base_command} nonexistent.docx\" is an error message" {
