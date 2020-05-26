@@ -346,30 +346,10 @@ bool docx_archive::ViewFilesDiff() {
         "File not given in both DOCX archives: " + file);
 
   if (argc_ > 5
-      && (0 == strcmp(argv_[5], "-u") || 0 == strcmp(argv_[5], "--unified"))) {
-    auto output = helper::Cli::GetExecutionResponse(
-        std::string(
-            "diff -u "
-            + path_extract_left + "/" + file + " "
-            + path_extract_right + "/" + file).c_str());
-
-    helper::String::Replace(output, "-extracted/", "");
-
-    std::cout << output;
-  } else {
-    int width = helper::File::GetLongestLineLength(
-    path_extract_left + "/" + file,
-    path_extract_right + "/" + file);
-
-    // TODO(kay): test/improve auto-width
-    if (width > 200) width = 200;
-
-    helper::Cli::Execute(
-        std::string("diff -y "
-                    "--width=" + std::to_string(width) + " "
-                    + path_extract_left + "/" + file + " "
-                    + path_extract_right + "/" + file).c_str());
-  }
+      && (0 == strcmp(argv_[5], "-u") || 0 == strcmp(argv_[5], "--unified")))
+    OutputDiffUnified(path_extract_left, path_extract_right, file);
+  else
+    OutputDiffSideBySide(path_extract_left, path_extract_right, file);
 
 // TODO(kay): TBD - implement optional wait for keypress
 //  std::cout << "\nHit [Enter] when done.";
@@ -378,6 +358,49 @@ bool docx_archive::ViewFilesDiff() {
   std::cout << "\n";
 
   return true;
+}
+
+void docx_archive::OutputDiffSideBySide(const std::string &path_extract_left,
+                                        const std::string &path_extract_right,
+                                        const std::string &file) const {
+  auto path_left = path_extract_left;
+  helper::String::Replace(path_left, "-extracted", "");
+
+  auto path_right = path_extract_right;
+  helper::String::Replace(path_right, "-extracted", "");
+
+  std::cout
+    << file << " of "
+    << kAnsiUnderline << path_left << kAnsiReset
+    << " (left) vs. "
+    << kAnsiUnderline << path_right << kAnsiReset << "\n\n";
+
+  int width = helper::File::GetLongestLineLength(
+  path_extract_left + "/" + file,
+  path_extract_right + "/" + file);
+
+  // TODO(kay): test/improve auto-width
+  if (width > 200) width = 200;
+
+  helper::Cli::Execute(
+      std::string("diff -y "
+                  "--width=" + std::to_string(width) + " "
+                  + path_extract_left + "/" + file + " "
+                  + path_extract_right + "/" + file).c_str());
+}
+
+void docx_archive::OutputDiffUnified(const std::string &path_extract_left,
+                                     const std::string &path_extract_right,
+                                     const std::string &file) const {
+  auto output = helper::Cli::GetExecutionResponse(
+      std::string(
+          "diff -u "
+          + path_extract_left + "/" + file + " "
+          + path_extract_right + "/" + file).c_str());
+
+  helper::String::Replace(output, "-extracted/", "");
+
+  std::cout << output;
 }
 
 bool docx_archive::ModifyMeta() {

@@ -20,8 +20,11 @@
 #include <utility>
 #include <vector>
 
-static const char *const kAnsiReverse = "\033[7m";
+static const char *const kAnsiBold = "\033[1m";
 static const char *const kAnsiDim = "\033[2m";
+static const char *const kAnsiItalic = "\033[3m";
+static const char *const kAnsiUnderline = "\033[4m";
+static const char *const kAnsiReverse = "\033[7m";
 static const char *const kAnsiReset = "\033[0m";
 
 namespace helper {

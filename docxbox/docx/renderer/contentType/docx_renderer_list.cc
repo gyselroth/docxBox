@@ -83,8 +83,6 @@ std::string docx_renderer_list::Render(bool is_ordered) {
 
 std::string docx_renderer_list::Render() {
   if (!is_json_valid_) {
-    docxbox::AppError::Output("Failed render list markup.");
-
     wml_ = "";
 
     return wml_;

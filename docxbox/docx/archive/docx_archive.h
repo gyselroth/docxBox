@@ -126,6 +126,13 @@ class docx_archive {
                    bool compress_xml = false) const;
 
   void CompressXmlFiles(const std::string &path_directory) const;
+
+  void OutputDiffUnified(const std::string &path_extract_left,
+                         const std::string &path_extract_right,
+                         const std::string &file) const;
+  void OutputDiffSideBySide(const std::string &path_extract_left,
+                            const std::string &path_extract_right,
+                            const std::string &file) const;
 };
 
 #endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_H_

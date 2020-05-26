@@ -58,7 +58,8 @@ bool docx_xml_replace::ReplaceInXml(
     // Render and inject markup (initially) before body
     const std::string &kMarkup = RenderMarkupFromJson(replacement);
 
-    if (kMarkup.empty()) return false;
+    if (kMarkup.empty())
+      return docxbox::AppError::Output("Failed render markup from given JSON");
 
     helper::String::ReplaceAll(doc_xml, "<w:body>", kMarkup + "<w:body>");
   }

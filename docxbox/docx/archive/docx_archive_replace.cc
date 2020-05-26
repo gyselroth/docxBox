@@ -101,7 +101,7 @@ bool docx_archive_replace::ReplaceText() {
     } else if (helper::String::StartsWith(kReplacement, "{\"link\":{")) {
       hyperlink_relationship_id = AddHyperlinkRelation(replacement);
       // TODO(kay): ensure presence of hyperlink-style
-    } else if (helper::String::StartsWith(kReplacement, "{\"ol\":[")) {
+    } else if (helper::String::StartsWith(kReplacement, "{\"ol\":{")) {
       std::string path_extract_absolute =
           path_working_directory_ + "/" + path_extract_;
       contentTypes::OverrideNumbering(path_extract_absolute);
