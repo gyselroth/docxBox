@@ -77,6 +77,7 @@ std::string docx_renderer_list::Render(bool is_ordered) {
 
   AddNumberingXml();
   AddNumberingRels();
+  // TODO(kay): add numbering override(?)
 
   return Render();
 }
