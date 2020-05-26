@@ -5,6 +5,7 @@
 #define DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_H_
 
 #include <docxbox/app/app_argument.h>
+#include <docxbox/app/app_error.h>
 #include <docxbox/docx/component/fontTable.h>
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>

@@ -23,10 +23,7 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
       argv_,
       index_path_argument);
 
-  if (!helper::File::FileExists(path_docx_in_))
-    throw "File not found: " + path_docx_in_ + "\n";
-
-  return true;
+  return !path_docx_in_.empty();
 }
 
 // Render path (string) where to extract given DOCX file
@@ -137,8 +134,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
 // Ensure given file is a ZIP archive (must begin w/ "PK^C^D^T")
 bool docx_archive::IsZipArchive(const std::string& path_file) {
-  if (!helper::File::FileExists(path_file))
-    return docxbox::AppError::Output("File not found: " + path_file);
+  if (!helper::File::FileExists(path_file)) return false;
 
   return helper::String::StartsWith(
       helper::File::GetFileContents(path_file).c_str(),
@@ -200,8 +196,7 @@ bool docx_archive::Zip(
     if (!docxbox::AppArguments::AreArgumentsGiven(
         argc_,
         2, "Path of directory to be zipped",
-        3, "Filename of docx to be created"))
-      return false;
+        3, "Filename of docx to be created")) return false;
 
     path_directory =
         helper::File::ResolvePath(path_working_directory_, argv_[2]);
@@ -329,8 +324,7 @@ bool docx_archive::ViewFilesDiff() {
   if (!docxbox::AppArguments::AreArgumentsGiven(
       argc_,
       3, "DOCX file to compare with",
-      4, "File within DOCX archives to be compared"))
-    return false;
+      4, "File within DOCX archives to be compared")) return false;
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 

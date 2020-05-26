@@ -166,8 +166,7 @@ bool meta::InitModificationArguments() {
   if (!docxbox::AppArguments::AreArgumentsGiven(
       argc_,
       2, "DOCX filename",
-      3, "Meta attribute to be set"))
-    return false;
+      3, "Meta attribute to be set")) return false;
 
   attribute_ = ResolveAttributeByName(argv_[3]);
 

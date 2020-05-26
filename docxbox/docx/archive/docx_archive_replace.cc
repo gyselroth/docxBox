@@ -13,8 +13,7 @@ bool docx_archive_replace::ReplaceImage() {
       argc_,
       2, "DOCX filename",
       3, "Filename of image to be replaced",
-      4, "Filename of replacement image"))
-    return false;
+      4, "Filename of replacement image")) return false;
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
@@ -37,7 +36,7 @@ bool docx_archive_replace::ReplaceImage() {
           path_extract_ + "/" + file_in_zip.filename;
 
       if (!helper::File::Remove(path_image_original.c_str()))
-        throw "Failed replace " + image_original + "\n";
+        return docxbox::AppError::Output("Failed replace " + image_original);
 
       std::string path_image_replacement =
           helper::File::ResolvePath(path_working_directory_, argv_[4]);
@@ -48,8 +47,9 @@ bool docx_archive_replace::ReplaceImage() {
     }
 
     if (!found)
-      throw "Cannot replace " + image_original
-          + " - no such image within " + path_docx_in_ + "\n";
+      return docxbox::AppError::Output(
+          "Cannot replace " + image_original
+          + " - no such image within " + path_docx_in_);
 
     std::string path_docx_out =
         argc_ >= 6
@@ -61,7 +61,8 @@ bool docx_archive_replace::ReplaceImage() {
         : path_docx_in_;
 
     if (!Zip(false, path_extract_, path_docx_out + "tmp"))
-      throw "DOCX creation failed: "  + path_docx_out;
+      return docxbox::AppError::Output(
+          "DOCX creation failed: "  + path_docx_out);
 
     if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
 
@@ -80,8 +81,7 @@ bool docx_archive_replace::ReplaceText() {
       argc_,
       2, "DOCX filename",
       3, "String to be found (and replaced)",
-      4, "Replacement"))
-    return false;
+      4, "Replacement")) return false;
 
   std::string search = argv_[3];
   std::string replacement = argv_[4];
