@@ -6,6 +6,7 @@
 
 #include <docxbox/app/app_argument.h>
 #include <docxbox/app/app_error.h>
+#include <docxbox/docx/archive/docx_diff.h>
 #include <docxbox/docx/component/fontTable.h>
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
@@ -126,13 +127,6 @@ class docx_archive {
                    bool compress_xml = false) const;
 
   void CompressXmlFiles(const std::string &path_directory) const;
-
-  void OutputDiffUnified(const std::string &path_extract_left,
-                         const std::string &path_extract_right,
-                         const std::string &file) const;
-  void OutputDiffSideBySide(const std::string &path_extract_left,
-                            const std::string &path_extract_right,
-                            const std::string &file) const;
 };
 
 #endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_H_
