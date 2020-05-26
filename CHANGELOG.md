@@ -1,8 +1,11 @@
 docxBox Changelog
 =================
 
-V0.0.4 - Not finished yet
+V0.0.5 - Not finished yet
 -------------------------
+
+V0.0.4 - 2020-05-26
+-------------------
 * Extend list-fields (lsd): Search also within headers, footnotes, endnotes
 * Add colorized unified diff, add headline to side-by-side diff  
 * Add handler for all docxBox error messages 
