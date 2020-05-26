@@ -16,13 +16,28 @@ void docx_xml_field::CollectFields(const std::string& path_xml) {
 
   if (doc.ErrorID() != 0) return;
 
-  tinyxml2::XMLElement *body =
-      doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(doc, path_xml);
 
   CollectFieldsFromNodes(body);
 
   field_xml_files_.push_back(path_xml);
   fields_in_xml_files_.push_back(fields_in_current_xml_);
+}
+
+tinyxml2::XMLElement *docx_xml_field::GetBodyByComponentPath(
+    tinyxml2::XMLDocument &doc, const std::string& path_xml) const {
+
+  if (helper::String::Contains(path_xml, "word/endnotes.xml"))
+    return doc.FirstChildElement("w:endnotes")->FirstChildElement("w:endnote");
+
+  if (helper::String::Contains(path_xml, "word/footnotes.xml"))
+    return doc.FirstChildElement("w:footnotes")->FirstChildElement("w:footnote");
+
+  if (helper::String::Contains(path_xml, "word/header"))
+    return doc.FirstChildElement("w:hdr");
+
+  // Default, e.g. word/document.xml
+  return doc.FirstChildElement("w:document")->FirstChildElement("w:body");
 }
 
 void docx_xml_field::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {

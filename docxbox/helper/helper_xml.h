@@ -6,6 +6,8 @@
 
 #include <docxbox/app/app_error.h>
 
+#include <string>
+
 namespace helper {
 namespace Xml {
 

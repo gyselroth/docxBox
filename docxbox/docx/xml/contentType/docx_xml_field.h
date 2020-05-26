@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_XML_ENTITY_DOCX_XML_FIELD_H_
-#define DOCXBOX_DOCX_XML_ENTITY_DOCX_XML_FIELD_H_
+#ifndef DOCXBOX_DOCX_XML_CONTENTTYPE_DOCX_XML_FIELD_H_
+#define DOCXBOX_DOCX_XML_CONTENTTYPE_DOCX_XML_FIELD_H_
 
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/docx/xml/visitor/docx_xml_remove.h>
@@ -56,6 +56,8 @@ class docx_xml_field: docx_xml {
   static void RemoveFldCharsFromMergeField(tinyxml2::XMLElement *sub_node);
 
   void OutputAsJson();
+  tinyxml2::XMLElement *GetBodyByComponentPath(
+      tinyxml2::XMLDocument &doc, const std::string& path_xml) const;
 };
 
-#endif  // DOCXBOX_DOCX_XML_ENTITY_DOCX_XML_FIELD_H_
+#endif  // DOCXBOX_DOCX_XML_CONTENTTYPE_DOCX_XML_FIELD_H_
