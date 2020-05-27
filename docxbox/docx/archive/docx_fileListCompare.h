@@ -71,6 +71,13 @@ class docx_fileListCompare {
 
   void OutputHeadline(uint32_t len_path_left, u_int32_t len_line_max) const;
   void OutputLine(uint32_t len_summary_1, u_int32_t len_line_max) const;
+
+  static int ExtractFileSizeFromLine(const std::string &line);
+
+  void ColorizeFileSize(
+      const char *color,
+      const std::string &style_on,
+      std::string &line) const;
 };
 
 #endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_FILELISTCOMPARE_H_
