@@ -30,7 +30,8 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
-  * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis-modification)
+  * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis--modification)
+  * [Batch Templating](#batch-templating)
   * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
   * [Zip files into DOCX](#zip-files-into-docx)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
@@ -444,6 +445,19 @@ docxBox in the above example does:
   exiting the editor.
 4. **Unindent** all extracted XML files
 5. **Zip** the extracted files back into ``foo.docx``
+
+
+### Batch Templating
+
+docxBox's batch templating mode allows to perform multiple manipulations upon a 
+given DOCX document in sequence, thus allowing more complex templating than the
+the sum of its options for 
+[document manipulation and templating](#modify-document).
+
+**Example:** Replace a string by a table, containing images with captions:
+
+* TODO(kay): Write command + JSON example
+* TODO(kay): Explain temporary "replacement appendices"
 
 
 ### Unzip DOCX: All files, or only media files, format XML
