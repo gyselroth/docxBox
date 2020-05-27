@@ -17,45 +17,52 @@ std::string AppArguments::ResolvePathFromArgument(
     const std::string& pwd,
     int argc,
     char **argv,
-    int index_argument
+    int index_argument,
+    bool must_exist
 ) {
-  if (argc < index_argument) throw "Missing file argument.";
+  std::string path;
 
-  return helper::File::ResolvePath(pwd, argv[index_argument-1]);
+  if (argc >= index_argument) {
+    path = helper::File::ResolvePath(pwd, argv[index_argument-1]);
+  } else {
+    AppError::Output("Missing file argument");
+  }
+
+  if (must_exist
+      && !path.empty()
+      && !helper::File::FileExists(path)) {
+    docxbox::AppError::Output("File not found: " + path);
+
+    return "";
+  }
+
+  return path;
 }
 
 bool AppArguments::IsArgumentGiven(int argc,
                                    int index,
-                                   const std::string &argument_description,
-                                   bool do_throw) {
-  if (argc <= index) {
-    if (do_throw) throw "Missing argument: " + argument_description;
+                                   const std::string &argument_description) {
+  return argc <= index
+    ? docxbox::AppError::Output("Missing argument: " + argument_description)
+    : true;
+}
 
-    return docxbox::AppError::Output(
-        "Missing argument: " + argument_description);
-  }
-
-  return true;
+bool AppArguments::AreArgumentsGiven(
+    int argc,
+    int index_1, const std::string &arg_description_1,
+    int index_2, const std::string &arg_description_2) {
+  return !(!IsArgumentGiven(argc, index_1, arg_description_1)
+      || !IsArgumentGiven(argc, index_2, arg_description_2));
 }
 
 bool AppArguments::AreArgumentsGiven(
     int argc,
     int index_1, const std::string &arg_description_1,
     int index_2, const std::string &arg_description_2,
-    bool do_throw) {
-  return !(!IsArgumentGiven(argc, index_1, arg_description_1, do_throw)
-      || !IsArgumentGiven(argc, index_2, arg_description_2, do_throw));
-}
-
-bool AppArguments::AreArgumentsGiven(
-    int argc,
-    int index_1, const std::string &arg_description_1,
-    int index_2, const std::string &arg_description_2,
-    int index_3, const std::string &arg_description_3,
-    bool do_throw) {
-  return !(!IsArgumentGiven(argc, index_1, arg_description_1, do_throw)
-      || !IsArgumentGiven(argc, index_2, arg_description_2, do_throw)
-      || !IsArgumentGiven(argc, index_3, arg_description_3, do_throw));
+    int index_3, const std::string &arg_description_3) {
+  return !(!IsArgumentGiven(argc, index_1, arg_description_1)
+      || !IsArgumentGiven(argc, index_2, arg_description_2)
+      || !IsArgumentGiven(argc, index_3, arg_description_3));
 }
 
 bool AppArguments::Matches(int offset_argument, const std::string &identifier) {

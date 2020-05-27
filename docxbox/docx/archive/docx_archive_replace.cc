@@ -2,6 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/archive/docx_archive_replace.h>
+#include <docxbox/docx/component/contentTypes.h>
 
 docx_archive_replace::docx_archive_replace(
     int argc,
@@ -12,8 +13,7 @@ bool docx_archive_replace::ReplaceImage() {
       argc_,
       2, "DOCX filename",
       3, "Filename of image to be replaced",
-      4, "Filename of replacement image"))
-    return false;
+      4, "Filename of replacement image")) return false;
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
@@ -36,7 +36,7 @@ bool docx_archive_replace::ReplaceImage() {
           path_extract_ + "/" + file_in_zip.filename;
 
       if (!helper::File::Remove(path_image_original.c_str()))
-        throw "Failed replace " + image_original + "\n";
+        return docxbox::AppError::Output("Failed replace " + image_original);
 
       std::string path_image_replacement =
           helper::File::ResolvePath(path_working_directory_, argv_[4]);
@@ -47,8 +47,9 @@ bool docx_archive_replace::ReplaceImage() {
     }
 
     if (!found)
-      throw "Cannot replace " + image_original
-          + " - no such image within " + path_docx_in_ + "\n";
+      return docxbox::AppError::Output(
+          "Cannot replace " + image_original
+          + " - no such image within " + path_docx_in_);
 
     std::string path_docx_out =
         argc_ >= 6
@@ -60,7 +61,8 @@ bool docx_archive_replace::ReplaceImage() {
         : path_docx_in_;
 
     if (!Zip(false, path_extract_, path_docx_out + "tmp"))
-      throw "DOCX creation failed: "  + path_docx_out;
+      return docxbox::AppError::Output(
+          "DOCX creation failed: "  + path_docx_out);
 
     if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
 
@@ -79,8 +81,7 @@ bool docx_archive_replace::ReplaceText() {
       argc_,
       2, "DOCX filename",
       3, "String to be found (and replaced)",
-      4, "Replacement"))
-    return false;
+      4, "Replacement")) return false;
 
   std::string search = argv_[3];
   std::string replacement = argv_[4];
@@ -90,14 +91,20 @@ bool docx_archive_replace::ReplaceText() {
 
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
+  const char *kReplacement = replacement.c_str();
+
   try {
     // TODO(kay): single-out render-type detection
-    if (helper::String::StartsWith(replacement.c_str(), "{\"image\":{")
-        ||helper::String::StartsWith(replacement.c_str(), "{\"img\":{")) {
+    if (helper::String::StartsWith(kReplacement, "{\"image\":{")
+        || helper::String::StartsWith(kReplacement, "{\"img\":{")) {
       image_relationship_id = AddImageFileAndRelation(replacement);
-    } else if (helper::String::StartsWith(replacement.c_str(), "{\"link\":{")) {
+    } else if (helper::String::StartsWith(kReplacement, "{\"link\":{")) {
       hyperlink_relationship_id = AddHyperlinkRelation(replacement);
       // TODO(kay): ensure presence of hyperlink-style
+    } else if (helper::String::StartsWith(kReplacement, "{\"ol\":{")) {
+      std::string path_extract_absolute =
+          path_working_directory_ + "/" + path_extract_;
+      contentTypes::OverrideNumbering(path_extract_absolute);
     }
   } catch (std::string &message) {
     return docxbox::AppError::Output(message);

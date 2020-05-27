@@ -40,7 +40,8 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
       markup = RenderTable(json, markup);
       break;
     case docx_renderer::ElementType_None:default:
-      throw "Invalid markup config, failed to identify element type.";
+      docxbox::AppError::Output(
+          "Invalid markup config, failed to identify element type.");
   }
 
   return markup;

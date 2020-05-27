@@ -208,15 +208,18 @@ w/ different attributes or (identical attributes but) different content.
 
 ````docxbox ls foo_v1.docx foo_v2.docx````  
 
-#### Side-by-side compare file from two DOCX archives
+#### Compare specific file from two DOCX archives
 
-Files that have changed between versions of a given document, can be 
-inspected using the ``diff`` tool (which must be installed on your system).  
+Files that have changed between versions of a document, can be inspected using 
+the ``diff`` tool (which must be installed on your system).  
  
-The following shorthand:
+Display **side-by-side** comparison of the formatted XML of given file 
+(``word/settings.xml``), with differences indicated:  
 ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml````  
-displays a side-by-side comparison of the formatted XML of the given file 
-(``word/settings.xml``), with differences indicated.
+
+Display **unified** diff:
+````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml -u````  
+or: ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml --unified````
 
 
 ### Modify document
@@ -277,7 +280,7 @@ rendering and inserting the following
 * [Image](#insert-image-markup) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, 
   ``jpg``, ``png``, ``tif``, ``tiff``, ``wmf``)
 * [Table](#insert-table-markup)
-* [Ordered list, unordered list](#insert-list-markup)  
+* [Ordered list, unordered list](#insert-list)  
 
 Markup specification for such elements must be given as JSON, following these
 rules: 
@@ -306,9 +309,11 @@ docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 ##### Insert list
 
-**Example:** Replace string ``search`` by an unordered list:
-   
-````docxbox rpt foo.docx search "{\"ul\":[\"item-1\",\"item-2\",\"item-3\"]}"````  
+Replace string ``search`` by an unordered list:  
+````docxbox rpt foo.docx search "{\"ul\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"````  
+
+Replace string ``search`` by an ordered list:  
+````docxbox rpt foo.docx search "{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"````
 
 
 ##### Insert image

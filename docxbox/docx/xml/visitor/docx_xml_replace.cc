@@ -55,15 +55,13 @@ bool docx_xml_replace::ReplaceInXml(
     // 4. Remove injection from 1.
     runs_to_be_replaced_.clear();
 
-    try {
-      // Render and inject markup (initially) before body
-      helper::String::ReplaceAll(
-          doc_xml,
-          "<w:body>",
-          RenderMarkupFromJson(replacement) + "<w:body>");
-    } catch (std::string &message) {
-      return docxbox::AppError::Output(message);
-    }
+    // Render and inject markup (initially) before body
+    const std::string &kMarkup = RenderMarkupFromJson(replacement);
+
+    if (kMarkup.empty())
+      return docxbox::AppError::Output("Failed render markup from given JSON");
+
+    helper::String::ReplaceAll(doc_xml, "<w:body>", kMarkup + "<w:body>");
   }
 
   doc.Parse(doc_xml.c_str());

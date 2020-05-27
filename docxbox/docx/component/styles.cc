@@ -2,7 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/component/styles.h>
-#include <docxbox/docx/xml/entity/docx_xml_styles.h>
+#include <docxbox/docx/xml/component/docx_xml_styles.h>
 
 // Insert style if not existing yet
 std::string styles::AddStyle(

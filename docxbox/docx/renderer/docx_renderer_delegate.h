@@ -6,11 +6,11 @@
 
 #include <docxbox/docx/component/numbering.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
-#include <docxbox/docx/renderer/docx_renderer_heading.h>
-#include <docxbox/docx/renderer/docx_renderer_image.h>
-#include <docxbox/docx/renderer/docx_renderer_link.h>
-#include <docxbox/docx/renderer/docx_renderer_list.h>
-#include <docxbox/docx/renderer/docx_renderer_table.h>
+#include <docxbox/docx/renderer/contentType/docx_renderer_heading.h>
+#include <docxbox/docx/renderer/contentType/docx_renderer_image.h>
+#include <docxbox/docx/renderer/contentType/docx_renderer_link.h>
+#include <docxbox/docx/renderer/contentType/docx_renderer_list.h>
+#include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
 
 #include <string>
 

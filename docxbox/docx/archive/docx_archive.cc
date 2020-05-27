@@ -23,10 +23,7 @@ bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
       argv_,
       index_path_argument);
 
-  if (!helper::File::FileExists(path_docx_in_))
-    throw "File not found: " + path_docx_in_ + "\n";
-
-  return true;
+  return !path_docx_in_.empty();
 }
 
 // Render path (string) where to extract given DOCX file
@@ -137,8 +134,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
 // Ensure given file is a ZIP archive (must begin w/ "PK^C^D^T")
 bool docx_archive::IsZipArchive(const std::string& path_file) {
-  if (!helper::File::FileExists(path_file))
-    return docxbox::AppError::Output("File not found: " + path_file);
+  if (!helper::File::FileExists(path_file)) return false;
 
   return helper::String::StartsWith(
       helper::File::GetFileContents(path_file).c_str(),
@@ -200,8 +196,7 @@ bool docx_archive::Zip(
     if (!docxbox::AppArguments::AreArgumentsGiven(
         argc_,
         2, "Path of directory to be zipped",
-        3, "Filename of docx to be created"))
-      return false;
+        3, "Filename of docx to be created")) return false;
 
     path_directory =
         helper::File::ResolvePath(path_working_directory_, argv_[2]);
@@ -329,8 +324,7 @@ bool docx_archive::ViewFilesDiff() {
   if (!docxbox::AppArguments::AreArgumentsGiven(
       argc_,
       3, "DOCX file to compare with",
-      4, "File within DOCX archives to be compared"))
-    return false;
+      4, "File within DOCX archives to be compared")) return false;
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
@@ -351,18 +345,11 @@ bool docx_archive::ViewFilesDiff() {
     return docxbox::AppError::Output(
         "File not given in both DOCX archives: " + file);
 
-  int width = helper::File::GetLongestLineLength(
-      path_extract_left + "/" + file,
-      path_extract_right + "/" + file);
-
-  // TODO(kay): test/improve auto-width, add option for unified diff
-  if (width > 200) width = 200;
-
-  helper::Cli::Execute(
-      std::string("diff -y "
-                  "--width=" + std::to_string(width) + " "
-                  + path_extract_left + "/" + file + " "
-                  + path_extract_right + "/" + file).c_str());
+  if (argc_ > 5
+      && (0 == strcmp(argv_[5], "-u") || 0 == strcmp(argv_[5], "--unified")))
+    docx_diff::OutputUnified(path_extract_left, path_extract_right, file);
+  else
+    docx_diff::OutputSideBySide(path_extract_left, path_extract_right, file);
 
 // TODO(kay): TBD - implement optional wait for keypress
 //  std::cout << "\nHit [Enter] when done.";
@@ -514,7 +501,7 @@ void docx_archive::ZipUsingMinizCpp(bool compress_xml,
 
     std::string xml = helper::File::GetFileContents(path_file_absolute);
 
-    if (compress_xml) docx_xml_indent::CompressXml(xml);
+    if (compress_xml) helper::Xml::CompressXml(xml);
 
     file.writestr(file_in_zip, xml);
   }
@@ -536,9 +523,8 @@ void docx_archive::CompressXmlFiles(const std::string &path_directory) const {
 
     std::string xml = helper::File::GetFileContents(path_file_absolute);
 
-    docx_xml_indent::CompressXml(xml);
+    helper::Xml::CompressXml(xml);
 
-    helper::File::Remove(path_file_absolute.c_str());
     helper::File::WriteToNewFile(path_file_absolute, xml);
   }
 }

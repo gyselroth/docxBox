@@ -293,7 +293,11 @@ bool docx_archive_list::ListFieldsFromXmls(bool as_json) {
   for (const auto &file_in_zip : file_list) {
     // TODO(kay): fetch from all textual XML files, instead only document.xml
 
-    if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml"))
+    if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml")
+        && !helper::String::Contains(file_in_zip.filename, "word/header")
+        && !helper::String::Contains(file_in_zip.filename, "word/endnotes.xml")
+        && !helper::String::Contains(file_in_zip.filename, "word/footnotes.xml")
+    )
       continue;
 
     parser->CollectFields(path_extract_ + "/" + file_in_zip.filename);

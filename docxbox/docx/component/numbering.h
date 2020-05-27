@@ -19,10 +19,14 @@ class numbering {
  public:
   explicit numbering(std::string path_extract);
 
-  bool AddNumberingXml();
+  bool AddNumberingXml(bool unordered = true);
 
  private:
   std::string path_extract_;
+
+  static std::string RenderXml(bool unordered = true);
+  static std::string RenderXmlNamespaceTag();
+  static std::string RenderXmlAbstractNum0();
 };
 
 #endif  // DOCXBOX_DOCX_COMPONENT_NUMBERING_H_

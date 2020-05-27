@@ -11,7 +11,6 @@ namespace docxbox {
 class AppError {
  public:
   static bool Output(const std::string &message);
-
 };
 
 }  // namespace docxbox

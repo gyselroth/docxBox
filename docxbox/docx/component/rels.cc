@@ -2,7 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/component/rels.h>
-#include <docxbox/docx/xml/entity/docx_xml_rels.h>
+#include <docxbox/docx/xml/component/docx_xml_rels.h>
 
 // Get (add if not exists) relationship into _rels/document.xml.rels
 std::string rels::GetRelationshipId(
