@@ -489,7 +489,7 @@ generic content.
    "my-marker-1",
    "table": {
        "columns":2,
-       "rows":1,
+       "rows":2,
        "header":["A","B"],
        "content":[
            ["img-a1","img-b1"],
