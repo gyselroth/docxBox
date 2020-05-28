@@ -54,6 +54,7 @@ add_executable(docxbox
         docxbox/docx/renderer/component/docx_renderer_rels.cc
         docxbox/docx/renderer/component/docx_renderer_styles.cc
         docxbox/docx/renderer/contentType/docx_renderer_table.cc
+        docxbox/docx/renderer/contentType/docx_renderer_text.cc
 
         docxbox/docx/xml/docx_xml.cc
         docxbox/docx/xml/contentType/docx_xml_field.cc

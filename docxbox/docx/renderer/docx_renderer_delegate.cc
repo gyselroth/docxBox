@@ -39,6 +39,9 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
     case docx_renderer::ElementType_Table:
       markup = RenderTable(json, markup);
       break;
+    case docx_renderer::ElementType_Text:
+      markup = RenderText(json, markup);
+      break;
     case docx_renderer::ElementType_None:default:
       docxbox::AppError::Output(
           "Invalid markup config, failed to identify element type.");
@@ -46,6 +49,7 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
 
   return markup;
 }
+
 std::string &docx_renderer_delegate::RenderTable(
     const std::string &json, std::string &markup) {
   auto renderer = new docx_renderer_table(path_extract_, json);
@@ -79,6 +83,19 @@ std::string &docx_renderer_delegate::RenderHeading(
   replacement_xml_first_child_tag_ = "w:p";
 
   markup = renderer->Render(level);
+
+  delete renderer;
+
+  return markup;
+}
+
+std::string &docx_renderer_delegate::RenderText(
+    const std::string &json, std::string &markup) {
+  auto renderer = new docx_renderer_text(path_extract_, json);
+
+  replacement_xml_first_child_tag_ = "w:r";
+
+  markup = renderer->Render();
 
   delete renderer;
 

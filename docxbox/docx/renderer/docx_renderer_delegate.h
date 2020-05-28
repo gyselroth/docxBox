@@ -11,6 +11,7 @@
 #include <docxbox/docx/renderer/contentType/docx_renderer_link.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_list.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
+#include <docxbox/docx/renderer/contentType/docx_renderer_text.h>
 
 #include <string>
 
@@ -24,6 +25,7 @@ class docx_renderer_delegate {
 
   std::string path_extract_;
 
+  // TODO(kay): detect 1st child tag generic / spare manual specification
   std::string replacement_xml_first_child_tag_ = "w:r";
 
   // @see docx_xml_replace::SetImageRelationshipId()
@@ -42,7 +44,10 @@ class docx_renderer_delegate {
       bool is_ordered, const std::string &json, std::string &markup);
 
   std::string &RenderImage(const std::string &json, std::string &markup);
+
   std::string &RenderTable(const std::string &json, std::string &markup);
+
+  std::string &RenderText(const std::string &json, std::string &markup);
 };
 
 #endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_DELEGATE_H_

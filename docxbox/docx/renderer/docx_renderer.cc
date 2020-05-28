@@ -11,11 +11,12 @@ docx_renderer::ElementType docx_renderer::DetectElementType(
   if (identifier == "h1") return ElementType_Heading1;
   if (identifier == "h2") return ElementType_Heading2;
   if (identifier == "h3") return ElementType_Heading3;
+  if (identifier == "image" || identifier == "img") return ElementType_Image;
   if (identifier == "link") return ElementType_Link;
-  if (identifier == "image") return ElementType_Image;
-  if (identifier == "img") return ElementType_Image;
   if (identifier == "ol") return ElementType_ListOrdered;
+  if (identifier == "para" || identifier == "paragraph") return ElementType_Paragraph;
   if (identifier == "table") return ElementType_Table;
+  if (identifier == "text") return ElementType_Text;
   if (identifier == "ul") return ElementType_ListUnordered;
 
   return ElementType_None;

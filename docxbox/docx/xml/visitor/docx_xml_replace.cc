@@ -61,6 +61,9 @@ bool docx_xml_replace::ReplaceInXml(
     if (kMarkup.empty())
       return docxbox::AppError::Output("Failed render markup from given JSON");
 
+    // Insert temporarily before body, will later be moved into correct place
+    // TODO(kay): use resp. different root element instead of w:body,
+    //            when not within document.xml
     helper::String::ReplaceAll(doc_xml, "<w:body>", kMarkup + "<w:body>");
   }
 

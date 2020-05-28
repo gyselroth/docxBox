@@ -22,11 +22,13 @@ class docx_renderer {
     ElementType_Heading1,
     ElementType_Heading2,
     ElementType_Heading3,
+    ElementType_Image,
     ElementType_Link,
     ElementType_ListOrdered,
     ElementType_ListUnordered,
-    ElementType_Image,
+    ElementType_Paragraph,
     ElementType_Table,
+    ElementType_Text,
     ElementType_None
   };
 
