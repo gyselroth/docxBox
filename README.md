@@ -529,9 +529,9 @@ next (or another later) step of the batch sequence, by other generic content.
 
 **The full docxBox batch command in CLI:**
 
-**Note:** As when inserting new images via ``rpi`` command, also during 
-batch templating, image files to be added newly must be given as trailing 
-arguments
+**Note:** As when inserting new images in non-batch mode 
+(via [rpt](#insert-image) or [rpi](#replace-image)), also during batch
+templating, image files to be added newly must be given as trailing arguments.
  
 ````docxbox batch foo.docx "[\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}],\"rpt\":[\"my-marker-1\",\"table\": {\"columns\":2,\"rows\":1,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}],\"rpt\":[\"img-a1\",\"img\":{\"name\":\"block_blue_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b1\",\"img\":{\"name\":\"block_green_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-a2\",\"img\":{\"name\":\"block_orange_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b2\",\"img\":{\"name\":\"block_red_130x130.png\",\"size\":[2438400,1828800]}]]" block_blue_130x130.png block_green_130x130.png block_orange_130x130.png block_red_130x130.png````
 
