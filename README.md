@@ -432,17 +432,22 @@ docxBox's batch templating mode allows to perform a sequence of manipulations
 upon a given DOCX document.
 
 #### Replacement Pre/Post Marker
-Batch templating makes use of replacement-appendices:   
-[generic markup replacements](#modify-document) of docxBox allow for appending a
-"marker" string to the inserted element.   
-The marker is subsequently replaced again by another generic element.  
+Batch templating makes use of "marker" strings.
+Markers are temporarily inserted and subsequently replaced again by another 
+generic element. 
+
+**Rules:**
+* Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
+  the actual generic replacement
+* Markers can either be of the type ``text`` or a ``paragraph`` 
+  (to insert surrounding line-breaks), and contain a textual identifier
+* Marker identifiers can use any text (which is distinct within the document)
+  
 
 ### Example
 **Example:**
 * Replace string ``foo`` by a header with the text ``Foobar``
-* Replace the marker ``my-marker-1`` (marker identifiers can use any text, 
-  which is distinct within the document. markers can either be of the type 
-  ``text`` or a ``paragraph``, containing text) by a table 
+* Replace the marker ``my-marker-1`` by a table 
 * Replace (the placeholder texts within the) table cells by images
 
 **Batch config:**
@@ -453,7 +458,7 @@ The marker is subsequently replaced again by another generic element.
     {
      "h1":{
         "text":"Foobar",
-        "append":{"text":"my-marker-1"}
+        "post":{"text":"my-marker-1"}
      }
     }
  ],
