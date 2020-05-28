@@ -142,10 +142,6 @@ std::string docx_renderer_table::RenderTableCell(int index_cell) {
         "<w:tcPr>"
           "<w:tcW w:w=\"" + std::to_string(col_width_) + "\" w:type=\"dxa\"/>"
         "</w:tcPr>"
-        "<w:p>"
-          + kWRunLhs
-          + "<w:t>" + cell_content_[index_cell] + "</w:t>"
-          + kWRunRhs
-        + "</w:p>"
-      "</w:tc>";
+        + RenderTextInRunInParagraph(cell_content_[index_cell])
+    + "</w:tc>";
 }

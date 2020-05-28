@@ -62,10 +62,8 @@ std::string docx_renderer_heading::Render(int level) {
         "<w:pPr>"
           "<w:pStyle w:val=\"para" + std::to_string(level_) + "\"/>"
         "</w:pPr>"
-        "<w:r>"
-          "<w:t>" + text_ + "</w:t>"
-        "</w:r>"
-      "</w:p>";
+        + RenderTextInRun(text_)
+    + "</w:p>";
 
   RenderPreAndPostFixAroundWml();
 

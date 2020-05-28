@@ -95,7 +95,7 @@ std::string docx_renderer_list::Render() {
 
   wml_ = kWRunLhs;
 
-  for (const std::string& item : items_) {
+  for (std::string& item : items_) {
     wml_ +=
         "<w:p>"
           "<w:pPr>"
@@ -105,10 +105,8 @@ std::string docx_renderer_list::Render() {
             "</w:numPr>"
             "<w:ind w:left=\"360\" w:hanging=\"360\"/>"
           "</w:pPr>"
-          "<w:r>"
-            "<w:t>" + item + "</w:t>"
-          "</w:r>"
-        "</w:p>";
+          + RenderTextInRun(item)
+        + "</w:p>";
   }
 
   wml_ += kWRunRhs;
