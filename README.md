@@ -449,10 +449,13 @@ docxBox in the above example does:
 
 ### Batch Templating
 
-docxBox's batch templating mode allows to perform multiple manipulations upon a 
-given DOCX document in sequence, thus allowing more complex templating than the
-the sum of its options for 
-[document manipulation and templating](#modify-document).
+docxBox's batch templating mode allows to perform a sequence of manipulations 
+upon a given DOCX document.
+
+Batch templating makes use of replacement-appendices:   
+[generic markup replacements](#modify-document) of docxBox allow for appending a
+"marker" string to the inserted element. The marker is subsequently replaced 
+again by another generic element.  
 
 **Example:** Replace a string by a table, containing images with captions:
 
