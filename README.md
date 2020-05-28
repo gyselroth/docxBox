@@ -462,7 +462,7 @@ next (or another later) step of the batch sequence, by other generic content.
 * Marker identifiers can use any text (but should be distinct within the 
   document)
 
-##### Example: Replace string by header and table containing images 
+##### Example: Replace string by heading-1 followed by table containing images 
 
 **Templating sequence:**
 
