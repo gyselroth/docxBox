@@ -86,6 +86,20 @@ void docx_fileListCompare::Output() {
                          style_on_right,
                          style_off);
 
+    if (style_on_left == style_on_right
+        && !line_left.empty() && !line_right.empty()) {
+      auto file_size_left = ExtractFileSizeFromLine(line_left);
+      auto file_size_right = ExtractFileSizeFromLine(line_right);
+
+      if (file_size_left > file_size_right) {
+        ColorizeFileSize(kAnsiLightGreen, style_on_left, line_left);
+        ColorizeFileSize(kAnsiLightRed, style_on_right, line_right);
+      } else if (file_size_left < file_size_right) {
+        ColorizeFileSize(kAnsiLightGreen, style_on_right, line_right);
+        ColorizeFileSize(kAnsiLightRed, style_on_left, line_left);
+      }
+    }
+
     std::cout << style_on_left + line_left
               << RenderMargin(len_left, len_line_max)
               << style_off
@@ -96,6 +110,13 @@ void docx_fileListCompare::Output() {
   }
 
   OutputLine(len_summary_1, len_line_max);
+}
+
+void docx_fileListCompare::ColorizeFileSize(
+    const char *const color,
+    const std::string &style_on,
+    std::string &line) const {
+  line = color + line.insert(9, kAnsiReset + style_on);
 }
 
 void docx_fileListCompare::OutputLine(uint32_t len_summary_1,
@@ -214,7 +235,10 @@ void docx_fileListCompare::UpdateColumnStyles(const std::string &line_left,
   if (is_blank_left) {
     if (!is_blank_right) {
       style_on_right += kAnsiDim;
+      style_on_right += kAnsiLightGreen;
+
       style_on_left += kAnsiDim;
+      style_on_left += kAnsiLightRed;
     } else {
       style_on_left = "";
     }
@@ -223,11 +247,30 @@ void docx_fileListCompare::UpdateColumnStyles(const std::string &line_left,
   if (is_blank_right) {
     if (!is_blank_left) {
       style_on_left += kAnsiDim;
+      style_on_left += kAnsiLightGreen;
+
       style_on_right += kAnsiDim;
+      style_on_right += kAnsiLightRed;
     } else {
       style_on_right = "";
     }
   }
+}
+
+int docx_fileListCompare::ExtractFileSizeFromLine(
+    const std::string &line) {
+  auto line_tmp = line;
+  helper::String::LTrim(line_tmp);
+
+  auto parts = helper::String::Explode(line_tmp, ' ');
+
+  if (parts.empty()) {
+    return 0;
+  }
+
+  return helper::String::IsNumeric(parts[0], false, false, false)
+  ? std::stoi(parts[0])
+  : 0;
 }
 
 std::string docx_fileListCompare::RenderMargin(int len_str, int len_max) {
