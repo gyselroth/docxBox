@@ -457,10 +457,75 @@ Batch templating makes use of replacement-appendices:
 "marker" string to the inserted element. The marker is subsequently replaced 
 again by another generic element.  
 
-**Example:** Replace a string by a table, containing images with captions:
+**Example:**
+* Replace string ``foo`` by a header with the text ``Foobar``
+* Replace the marker ``my-marker-1`` (marker identifiers can use any text, 
+  which is distinct within the document. markers can either be of the type 
+  ``text`` or a ``paragraph``, containing text) by a table 
+* Replace (the placeholder texts within the) table cells by images
 
-* TODO(kay): Write command + JSON example
-* TODO(kay): Explain temporary "replacement appendices"
+**batch config:**
+````
+[
+ "rpt":[
+    "foo",
+    {
+     "h1":{
+        "text":"Foobar",
+        "append":{"text":"my-marker-1"}
+     }
+    }
+ ],
+ "rpt":[
+   "my-marker-1",
+   "table": {
+       "columns":2,
+       "rows":1,
+       "header":["A","B"],
+       "content":[
+           ["img-a1","img-b1"],
+           ["img-a2","img-b2"]
+       ]
+   }
+ ],
+ "rpt":[
+    "img-a1",
+    "img":{
+        "name":"block_blue_130x130.png",
+        "size":[2438400,1828800]
+    }
+ ],
+ "rpt":[
+    "img-b1",
+    "img":{
+        "name":"block_green_130x130.png",
+        "size":[2438400,1828800]
+    }
+ ],
+ "rpt":[
+    "img-a2",
+    "img":{
+        "name":"block_orange_130x130.png",
+        "size":[2438400,1828800]
+    }
+ ],
+ "rpt":[
+    "img-b2",
+    "img":{
+        "name":"block_red_130x130.png",
+        "size":[2438400,1828800]
+    }
+ ] 
+]
+````
+
+
+````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Foo\"}}"````
+
+
+
+````docxbox batch foo.docx {\"rpt\":{foo new}````
+
 
 
 ### Unzip DOCX: All files, or only media files, format XML
