@@ -452,15 +452,15 @@ upon a given DOCX document.
 #### Replacement Pre/Post Marker
 Batch templating makes use of "marker" strings.  
 Markers are temporarily inserted and can subsequently be replaced again at the 
-next (or another later) step of the batch sequence, by another generic element. 
+next (or another later) step of the batch sequence, by other generic content. 
 
 **Rules:**
 * Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
   the actual generic replacement content
 * Markers can either be of the type ``text`` or ``paragraph`` (or ``p``) 
   to insert surrounding line-breaks, and contain a textual identifier
-* Marker identifiers can use any text, but it should be distinct within the 
-  document
+* Marker identifiers can use any text (but should be distinct within the 
+  document)
 
 ##### Example: Replace string by header and table containing images 
 
