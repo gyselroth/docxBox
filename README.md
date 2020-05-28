@@ -338,7 +338,7 @@ Replace string ``search`` by an ordered list:
 * The ``offset`` argument is optional
 * Size is given in EMUs (English Metric Unit) that is: ``pixels * 9525``
 
-when inserting a new image file, it must be given as additional argument:  
+When inserting a new image file, it must be given as additional argument:  
 ````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````
 
 
@@ -506,9 +506,13 @@ generic element.
 ]
 ````
 
-The full docxBox batch command in CLI:  
+The full docxBox batch command in CLI:
+
+**Note:** Same as when inserting new images via ``rpi`` command, also during 
+batch templating, image files to be added newly must be given as trailing 
+arguments   
  
-````docxbox batch [\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}],\"rpt\":[\"my-marker-1\",\"table\": {\"columns\":2,\"rows\":1,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}],\"rpt\":[\"img-a1\",\"img\":{\"name\":\"block_blue_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b1\",\"img\":{\"name\":\"block_green_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-a2\",\"img\":{\"name\":\"block_orange_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b2\",\"img\":{\"name\":\"block_red_130x130.png\",\"size\":[2438400,1828800]}]]````
+````docxbox batch foo.docx "[\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}],\"rpt\":[\"my-marker-1\",\"table\": {\"columns\":2,\"rows\":1,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}],\"rpt\":[\"img-a1\",\"img\":{\"name\":\"block_blue_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b1\",\"img\":{\"name\":\"block_green_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-a2\",\"img\":{\"name\":\"block_orange_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b2\",\"img\":{\"name\":\"block_red_130x130.png\",\"size\":[2438400,1828800]}]]" block_blue_130x130.png block_green_130x130.png block_orange_130x130.png block_red_130x130.png````
 
 
 ### Unzip DOCX: All files, or only media files, format XML
