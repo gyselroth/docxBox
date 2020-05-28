@@ -24,6 +24,8 @@ class docx_renderer_image: docx_renderer {
   std::string Render(const std::string& image_relationship_id);
   std::string Render() override;
 
+  std::string generic_root_tag_;
+
  private:
   // Image specs from JSON
   std::string image_name;

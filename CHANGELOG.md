@@ -5,6 +5,7 @@ V0.0.5 - Not finished yet
 -------------------------
 * Colorize side-by-side DOCX comparison (ls) to indicate additions/removals
 * Add replace text by run with text
+* Add replace text by paragraph containing run with text
 
 V0.0.4 - 2020-05-26
 -------------------

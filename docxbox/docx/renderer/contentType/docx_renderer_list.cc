@@ -89,6 +89,8 @@ std::string docx_renderer_list::Render() {
     return wml_;
   }
 
+  generic_root_tag_ = "w:r";
+
   wml_ = kWRunLhs;
 
   for (const std::string& item : items_) {

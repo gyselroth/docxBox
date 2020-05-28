@@ -9,7 +9,7 @@ docx_xml_replace::docx_xml_replace(
 
 void docx_xml_replace::SetReplacementXmlFirstChildTag(
     const std::string &replacement_xml_first_child_tag) {
-  replacement_xml_first_child_tag_ = replacement_xml_first_child_tag;
+  replacement_xml_root_tag_ = replacement_xml_first_child_tag;
 }
 
 void docx_xml_replace::SetImageRelationshipId(std::string &relationship_id) {
@@ -76,7 +76,7 @@ bool docx_xml_replace::ReplaceInXml(
   if (is_replacement_xml_)
     replacement_xml_element_ =
         doc.FirstChildElement()->FirstChildElement(
-            replacement_xml_first_child_tag_.c_str());
+            replacement_xml_root_tag_.c_str());
 
   tinyxml2::XMLElement *body =
       doc.FirstChildElement("w:document")->FirstChildElement("w:body");

@@ -20,6 +20,8 @@ class docx_renderer_text: docx_renderer {
 
   std::string Render() override;
 
+  std::string generic_root_tag_;
+
  private:
   std::string text_;
 

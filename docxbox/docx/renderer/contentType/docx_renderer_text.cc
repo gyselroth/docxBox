@@ -42,5 +42,7 @@ std::string docx_renderer_text::Render() {
 
   wml_ = "<w:r><w:t>" + text_ + "</w:t></w:r>";
 
+  generic_root_tag_ = "w:r";
+
   return wml_;
 }

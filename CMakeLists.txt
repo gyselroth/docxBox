@@ -51,6 +51,7 @@ add_executable(docxbox
         docxbox/docx/renderer/contentType/docx_renderer_image.cc
         docxbox/docx/renderer/contentType/docx_renderer_link.cc
         docxbox/docx/renderer/contentType/docx_renderer_list.cc
+        docxbox/docx/renderer/contentType/docx_renderer_paragraph.cc
         docxbox/docx/renderer/component/docx_renderer_rels.cc
         docxbox/docx/renderer/component/docx_renderer_styles.cc
         docxbox/docx/renderer/contentType/docx_renderer_table.cc

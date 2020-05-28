@@ -24,6 +24,8 @@ class docx_renderer_link: docx_renderer {
   std::string Render(const std::string &relationship_id);
   std::string Render() override;
 
+  std::string generic_root_tag_;
+
  private:
   std::string text_;
   std::string url_;

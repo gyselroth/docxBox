@@ -22,6 +22,8 @@ class docx_renderer_table: docx_renderer {
 
   std::string Render() override;
 
+  std::string generic_root_tag_;
+
  private:
   // Table specs from JSON
   int amount_columns_ = 0;

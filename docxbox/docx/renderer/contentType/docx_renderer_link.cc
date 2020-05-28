@@ -50,6 +50,8 @@ std::string docx_renderer_link::Render(const std::string &relationship_id) {
 std::string docx_renderer_link::Render() {
   if (!is_json_valid_) throw "Failed render list markup.\n";
 
+  generic_root_tag_ = "w:p";
+
   wml_ =
       "<w:p>"
         "<w:pPr>"

@@ -23,6 +23,8 @@ class docx_renderer_heading: docx_renderer {
   std::string Render(int level);
   std::string Render() override;
 
+  std::string generic_root_tag_;
+
  private:
   int level_;
   std::string text_;
