@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_
-#define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_
+#ifndef DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_TABLE_H_
+#define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_TABLE_H_
 
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/app/app_error.h>
@@ -44,4 +44,4 @@ class docx_renderer_table: public docx_renderer {
   std::string RenderTableRowsAndCells();
 };
 
-#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_TABLE_H_
+#endif  // DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_TABLE_H_

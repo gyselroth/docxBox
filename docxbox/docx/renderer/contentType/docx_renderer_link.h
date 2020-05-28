@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
-#define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
+#ifndef DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LINK_H_
+#define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LINK_H_
 
 #include <docxbox/docx/component/numbering.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
@@ -35,4 +35,4 @@ class docx_renderer_link: public docx_renderer {
   bool InitFromJson() override;
 };
 
-#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
+#endif  // DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LINK_H_

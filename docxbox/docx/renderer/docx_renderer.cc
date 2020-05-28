@@ -41,7 +41,9 @@ void docx_renderer::ExtractPreOrPostfix(const nlohmann::json::iterator& it) {
         postfix_text_ = it_post_config.value();
       }
     }
-  } else if (key != "pre") return;
+  } else {
+    if (key != "pre") return;
+  }
 
   auto prefix_config = it.value();
 
@@ -69,19 +71,20 @@ void docx_renderer::RenderPreAndPostFixAroundWml() {
 
   if (!prefix_text_.empty()) {
     has_prefix = true;
+    wml_ = RenderTextInRunInParagraph(prefix_text_);
 
-    wml_ = (/*is_prefix_paragraph_
-            ?*/ RenderTextInRunInParagraph(prefix_text_)
-            /*: RenderTextInRun(prefix_text_)*/) + wml_;
+//    wml_ = (is_prefix_paragraph_
+//            ? RenderTextInRunInParagraph(prefix_text_)
+//            : RenderTextInRun(prefix_text_)) + wml_;
   }
 
   if (!postfix_text_.empty()) {
     has_postfix = true;
+    wml_ += RenderTextInRunInParagraph(postfix_text_);
 
-    wml_ += //is_postfix_paragraph_
-            /*?*/ RenderTextInRunInParagraph(postfix_text_);
-            /*: RenderTextInRun(postfix_text_);*/
-
+//    wml_ += is_postfix_paragraph_
+//            ? RenderTextInRunInParagraph(postfix_text_)
+//            : RenderTextInRun(postfix_text_);
   }
 
   if (has_prefix || has_postfix) {

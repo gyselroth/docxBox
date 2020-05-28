@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LIST_H_
-#define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LIST_H_
+#ifndef DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LIST_H_
+#define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LIST_H_
 
 #include <docxbox/app/app_error.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
@@ -39,4 +39,4 @@ class docx_renderer_list: public docx_renderer {
   void AddNumberingRels() const;
 };
 
-#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LIST_H_
+#endif  // DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LIST_H_

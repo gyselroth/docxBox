@@ -1,13 +1,14 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_PARAGRAPH_H_
-#define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_PARAGRAPH_H_
+#ifndef DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_PARAGRAPH_H_
+#define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_PARAGRAPH_H_
 
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/helper/helper_string.h>
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
@@ -26,4 +27,4 @@ class docx_renderer_paragraph: public docx_renderer {
   bool InitFromJson() override;
 };
 
-#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_PARAGRAPH_H_
+#endif  // DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_PARAGRAPH_H_
