@@ -441,7 +441,8 @@ generic element.
   the actual generic replacement
 * Markers can either be of the type ``text`` or a ``paragraph`` 
   (to insert surrounding line-breaks), and contain a textual identifier
-* Marker identifiers can use any text (which is distinct within the document)
+* Marker identifiers can use any text, which should be distinct within the 
+  document
   
 
 ### Example
