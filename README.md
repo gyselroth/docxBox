@@ -463,7 +463,9 @@ generic element.
   document
 
 
-##### Example
+##### Example: Replace string by header and table containing images 
+
+
 * Replace string ``foo`` by a header with the text ``Foobar``
 * Replace the marker ``my-marker-1`` by a table 
 * Replace (the placeholder texts within the) table cells by images
