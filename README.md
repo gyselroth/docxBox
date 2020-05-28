@@ -499,28 +499,28 @@ next (or another later) step of the batch sequence, by other generic content.
  "rpt":[
     "img-a1",
     "img":{
-        "name":"block_blue_130x130.png",
+        "name":"blue.png",
         "size":[2438400,1828800]
     }
  ],
  "rpt":[
     "img-b1",
     "img":{
-        "name":"block_green_130x130.png",
+        "name":"green.png",
         "size":[2438400,1828800]
     }
  ],
  "rpt":[
     "img-a2",
     "img":{
-        "name":"block_orange_130x130.png",
+        "name":"orange.png",
         "size":[2438400,1828800]
     }
  ],
  "rpt":[
     "img-b2",
     "img":{
-        "name":"block_red_130x130.png",
+        "name":"red.png",
         "size":[2438400,1828800]
     }
  ] 
