@@ -465,10 +465,12 @@ generic element.
 
 ##### Example: Replace string by header and table containing images 
 
+**Templating sequence:**
 
-* Replace string ``foo`` by a header with the text ``Foobar``
-* Replace the marker ``my-marker-1`` by a table 
+* Replace string ``foo`` by heading-1 with the text: ``Foobar``
+* Replace the marker ``my-marker-1`` by table containing 2x2 cells 
 * Replace (the placeholder texts within the) table cells by images
+* Add new image files into docx document
 
 **Batch config:**
 ````
