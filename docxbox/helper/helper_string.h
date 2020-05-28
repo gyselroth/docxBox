@@ -90,8 +90,7 @@ extern std::string ExtractRightMostNumber(
     std::string str, std::string default_if_none = "1");
 
 extern std::string Implode(
-    std::vector<std::string> strings,
-    const char* const delimiter = ", ");
+    std::vector<std::string> strings, const char* delimiter = ", ");
 
 extern std::string RenderTwoColumns(
     std::string col_1, std::string col_2, int amount_gap = 4);

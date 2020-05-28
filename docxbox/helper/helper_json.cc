@@ -15,7 +15,7 @@ std::string Json::GetFirstKey(const std::string &json) {
 }
 
 std::string Json::GetFirstValueOfKey(
-    const std::string &json, std::string key) {
+    const std::string &json, const std::string& key) {
   auto json_outer = nlohmann::json::parse(json);
 
   for (auto &json_inner : json_outer) {

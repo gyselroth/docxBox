@@ -17,7 +17,7 @@ namespace Json {
 extern std::string GetFirstKey(const std::string &json);
 
 extern std::string GetFirstValueOfKey(
-    const std::string &json, std::string key);
+    const std::string &json, const std::string& key);
 
 }  // namespace Json
 }  // namespace helper

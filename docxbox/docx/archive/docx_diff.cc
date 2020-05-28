@@ -48,9 +48,9 @@ void docx_diff::OutputUnified(const std::string &path_extract_left,
   auto lines = helper::String::Explode(output, '\n');
 
   for (auto line : lines) {
-    if (line[0] == '-') line = kAnsiLightRed + line + kAnsiReset;
-    else if (line[0] == '+') line = kAnsiLightGreen + line + kAnsiReset;
-    else if (line[0] == '@') line = kAnsiBold + line + kAnsiReset;
+    if (line[0] == '-') (line += kAnsiReset).insert(0, kAnsiLightRed);
+    else if (line[0] == '+') (line += kAnsiReset).insert(0, kAnsiLightGreen);
+    else if (line[0] == '@') (line += kAnsiReset).insert(0, kAnsiBold);
 
     output_colored += line + "\n";
   }
