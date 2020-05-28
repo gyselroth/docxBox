@@ -180,10 +180,10 @@ or ````docxbox ls foo.docx --fields --json````
 #### Output XML
 
 ````docxbox cat foo.docx word/_rels/document.xml.rels````  
-outputs the given file's content.
+outputs the given file's XML, indented for better readability.
 
 **Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use your 
-favorite text editor via the [cmd command](#arbitrary-manual-and-scripted-modification-and-analysis))
+favorite text editor via the [cmd command](#arbitrary-manual-and-scripted-analysis--modification)
 
 
 #### Output document as plaintext
