@@ -475,7 +475,7 @@ next (or another later) step of the batch sequence, by other generic content.
 **Batch config:**
 ````
 [
- "rpt":[
+ {"rpt":{
     "foo",
     {
      "h1":{
@@ -483,8 +483,8 @@ next (or another later) step of the batch sequence, by other generic content.
         "post":{"text":"my-marker-1"}
      }
     }
- ],
- "rpt":[
+ }},
+ {"rpt":{
    "my-marker-1",
    "table": {
        "columns":2,
@@ -495,35 +495,35 @@ next (or another later) step of the batch sequence, by other generic content.
            ["img-a2","img-b2"]
        ]
    }
- ],
- "rpt":[
+ }},
+ {"rpt":{
     "img-a1",
     "img":{
         "name":"blue.png",
         "size":[2438400,1828800]
     }
- ],
- "rpt":[
+ }},
+ {"rpt":{
     "img-b1",
     "img":{
         "name":"green.png",
         "size":[2438400,1828800]
     }
- ],
- "rpt":[
+ }},
+ {rpt":{
     "img-a2",
     "img":{
         "name":"orange.png",
         "size":[2438400,1828800]
     }
- ],
- "rpt":[
+ }},
+ {"rpt":{
     "img-b2",
     "img":{
         "name":"red.png",
         "size":[2438400,1828800]
     }
- ] 
+ }} 
 ]
 ````
 
@@ -533,6 +533,7 @@ next (or another later) step of the batch sequence, by other generic content.
 (via [rpt](#insert-image) or [rpi](#replace-image)), also during batch
 templating, image files to be added newly must be given as trailing arguments.
  
+**TODO(kay):adapt from above indented JSON** 
 ````docxbox batch foo.docx "[\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}],\"rpt\":[\"my-marker-1\",\"table\": {\"columns\":2,\"rows\":1,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}],\"rpt\":[\"img-a1\",\"img\":{\"name\":\"blue.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b1\",\"img\":{\"name\":\"green.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-a2\",\"img\":{\"name\":\"orange.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b2\",\"img\":{\"name\":\"red.png\",\"size\":[2438400,1828800]}]]" blue.png green.png orange.png red.png````
 
 
