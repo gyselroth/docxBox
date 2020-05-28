@@ -456,12 +456,11 @@ next (or another later) step of the batch sequence, by another generic element.
 
 **Rules:**
 * Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
-  the actual generic replacement
-* Markers can either be of the type ``text`` or a ``paragraph`` (or ``p``) 
-  (to insert surrounding line-breaks), and contain a textual identifier
-* Marker identifiers can use any text, which should be distinct within the 
+  the actual generic replacement content
+* Markers can either be of the type ``text`` or ``paragraph`` (or ``p``) 
+  to insert surrounding line-breaks, and contain a textual identifier
+* Marker identifiers can use any text, but it should be distinct within the 
   document
-
 
 ##### Example: Replace string by header and table containing images 
 
