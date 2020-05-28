@@ -459,8 +459,8 @@ generic content.
 * Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
   the actual generic replacement content
 * Markers can either be of the type ``text`` or ``paragraph`` (or ``p``) 
-  to insert surrounding line-breaks, and contain a textual identifier
-* Marker identifiers can use any text (but should be distinct within the 
+  to insert surrounding line-breaks
+* Markers contain a textual identifier, which can use any text (but should be distinct within the 
   document)
 
 ##### Example: Replace string by heading-1 followed by table containing images 
