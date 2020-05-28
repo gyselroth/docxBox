@@ -467,11 +467,11 @@ generic content.
 
 **Templating sequence:**
 
-* Replace string ``foo`` by heading-1 with the text: ``Foobar``
+1. Replace string ``foo`` by heading-1 with the text: ``Foobar``
   (followed by a temporary marker ``my-marker-1``)
-* Replace the marker ``my-marker-1`` by table containing 2x2 cells 
-* Replace (the placeholder texts within the) table cells by images
-* Add new image files into docx document
+2. Replace the marker ``my-marker-1`` by table containing 2x2 cells 
+3. Replace (the placeholder texts within the) table cells by images
+4. Add new image files into docx document
 
 **Batch config:**
 ````
