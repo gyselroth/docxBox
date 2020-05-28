@@ -454,8 +454,8 @@ upon a given DOCX document.
 
 Batch templating makes use of replacement-appendices:   
 [generic markup replacements](#modify-document) of docxBox allow for appending a
-"marker" string to the inserted element. The marker is subsequently replaced 
-again by another generic element.  
+"marker" string to the inserted element.   
+The marker is subsequently replaced again by another generic element.  
 
 **Example:**
 * Replace string ``foo`` by a header with the text ``Foobar``
