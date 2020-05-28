@@ -451,8 +451,9 @@ upon a given DOCX document.
 
 #### Replacement Pre/Post Marker
 Batch templating makes use of "marker" strings.  
-Markers are temporarily inserted and can subsequently be replaced again at the 
-next (or another later) step of the batch sequence, by other generic content. 
+Optional markers can temporarily be inserted and can subsequently be replaced 
+again at the next (or another later) step of the batch sequence, by other 
+generic content. 
 
 **Rules:**
 * Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
