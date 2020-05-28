@@ -533,7 +533,7 @@ next (or another later) step of the batch sequence, by other generic content.
 (via [rpt](#insert-image) or [rpi](#replace-image)), also during batch
 templating, image files to be added newly must be given as trailing arguments.
  
-````docxbox batch foo.docx "[\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}],\"rpt\":[\"my-marker-1\",\"table\": {\"columns\":2,\"rows\":1,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}],\"rpt\":[\"img-a1\",\"img\":{\"name\":\"block_blue_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b1\",\"img\":{\"name\":\"block_green_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-a2\",\"img\":{\"name\":\"block_orange_130x130.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b2\",\"img\":{\"name\":\"block_red_130x130.png\",\"size\":[2438400,1828800]}]]" block_blue_130x130.png block_green_130x130.png block_orange_130x130.png block_red_130x130.png````
+````docxbox batch foo.docx "[\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}],\"rpt\":[\"my-marker-1\",\"table\": {\"columns\":2,\"rows\":1,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}],\"rpt\":[\"img-a1\",\"img\":{\"name\":\"blue.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b1\",\"img\":{\"name\":\"green.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-a2\",\"img\":{\"name\":\"orange.png\",\"size\":[2438400,1828800]}],\"rpt\":[\"img-b2\",\"img\":{\"name\":\"red.png\",\"size\":[2438400,1828800]}]]" blue.png green.png orange.png red.png````
 
 
 ### Unzip DOCX: All files, or only media files, format XML
