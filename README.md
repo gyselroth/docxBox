@@ -23,6 +23,8 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Replace text](#replace-text)
       + [Replace by markup](#replace-by-markup)
         + [Insert heading](#insert-heading)
+        + [Insert text](#insert-text)
+        + [Insert paragraph containing text](#insert-paragraph-containing-text)
         + [Insert hyperlink](#insert-hyperlink) 
         + [Insert image](#insert-image)
         + [Insert list](#insert-list)
@@ -303,6 +305,20 @@ rules:
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 
+##### Insert text
+
+**Example:** Replace string ``search`` (by a new run) with the text 
+``Foo``:  
+````docxbox rpt foo.docx search "{\"text\":{\"text\":\"Foo\"}}"````  
+
+
+##### Insert paragraph containing text
+
+**Example:** Replace string ``search`` (by a new paragraph containing a run) 
+with the text ``Foo``:  
+````docxbox rpt foo.docx search "{\"paragraph\":{\"text\":\"Foo\"}}"````  
+
+
 ##### Insert hyperlink
 
 **Example:** Replace string ``search`` by a hyperlink:    
@@ -506,7 +522,7 @@ generic element.
 ]
 ````
 
-The full docxBox batch command in CLI:
+**The full docxBox batch command in CLI:**
 
 **Note:** Same as when inserting new images via ``rpi`` command, also during 
 batch templating, image files to be added newly must be given as trailing 
