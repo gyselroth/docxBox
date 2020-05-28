@@ -25,9 +25,11 @@ bool docx_renderer_link::InitFromJson() {
          it != json_inner.end();
          ++it) {
       const std::string &key = it.key();
+      auto &value = it.value();
 
-      if (key == "text") text_ = it.value();
-      else if (key == "url") url_ = it.value();
+      if (key == "text") text_ = value;
+      else if (key == "url") url_ = value;
+      else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
       // TODO(kay): add bookmark linking
 //      else if (key == "bookmark")
     }
@@ -68,6 +70,8 @@ std::string docx_renderer_link::Render() {
           "</w:r>"
         "</w:hyperlink>"
       "</w:p>";
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }

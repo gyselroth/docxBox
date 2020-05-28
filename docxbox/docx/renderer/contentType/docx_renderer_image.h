@@ -13,7 +13,7 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-class docx_renderer_image: docx_renderer {
+class docx_renderer_image: public docx_renderer {
  public:
   // Constructor
   explicit docx_renderer_image(
@@ -23,8 +23,6 @@ class docx_renderer_image: docx_renderer {
 
   std::string Render(const std::string& image_relationship_id);
   std::string Render() override;
-
-  std::string generic_root_tag_;
 
  private:
   // Image specs from JSON

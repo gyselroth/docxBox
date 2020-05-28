@@ -31,6 +31,7 @@ bool docx_renderer_text::InitFromJson() {
       const std::string &key = it.key();
 
       if (key == "text") text_ = it.value();
+      else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
     }
   }
 
@@ -40,9 +41,11 @@ bool docx_renderer_text::InitFromJson() {
 std::string docx_renderer_text::Render() {
   if (!is_json_valid_) throw "Failed render text markup.\n";
 
-  wml_ = "<w:r><w:t>" + text_ + "</w:t></w:r>";
-
   generic_root_tag_ = "w:r";
+
+  wml_ = RenderTextInRun(text_);
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }

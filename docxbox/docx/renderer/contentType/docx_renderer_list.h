@@ -15,7 +15,7 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-class docx_renderer_list: docx_renderer {
+class docx_renderer_list: public docx_renderer {
  public:
   // Constructor
   explicit docx_renderer_list(
@@ -25,8 +25,6 @@ class docx_renderer_list: docx_renderer {
 
   std::string Render(bool is_ordered);
   std::string Render() override;
-
-  std::string generic_root_tag_;
 
  private:
   bool is_ordered_ = false;

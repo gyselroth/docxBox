@@ -32,6 +32,9 @@ class docx_renderer {
     ElementType_None
   };
 
+  // Root tag of rendered XML
+  std::string generic_root_tag_;
+
   static docx_renderer::ElementType DetectElementType(const std::string& json);
 
   bool IsElementType(const std::vector<ElementType>& types);
@@ -45,7 +48,20 @@ class docx_renderer {
   std::string json_;
   bool is_json_valid_;
 
+  // Temporary markers for batch templating
+  std::string prefix_text_;
+  std::string postfix_text_;
+  // Pre- and postfix can be: paragraph or just text
+  bool is_prefix_paragraph_ = false;
+  bool is_postfix_paragraph_ = false;
+
   std::string wml_;
+
+  void ExtractPreOrPostfix(const nlohmann::json::iterator& it);
+  void RenderPreAndPostFixAroundWml();
+
+  static std::string RenderTextInRun(std::string &text);
+  static std::string RenderTextInRunInParagraph(std::string &text);
 
  private:
   virtual bool InitFromJson() = 0;

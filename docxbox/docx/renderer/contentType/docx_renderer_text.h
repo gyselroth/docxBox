@@ -12,15 +12,13 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-class docx_renderer_text: docx_renderer {
+class docx_renderer_text: public docx_renderer {
  public:
   // Constructor
   explicit docx_renderer_text(
       std::string path_extract, const std::string &json);
 
   std::string Render() override;
-
-  std::string generic_root_tag_;
 
  private:
   std::string text_;

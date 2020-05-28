@@ -318,7 +318,7 @@ docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
 
 **Example:** Replace string ``search`` (by a new paragraph containing a run) 
 with the text ``Foo``:  
-````docxbox rpt foo.docx search "{\"paragraph\":{\"text\":\"Foo\"}}"````  
+````docxbox rpt foo.docx search "{\"p\":{\"text\":\"Foo\"}}"````  
 
 
 ##### Insert hyperlink
@@ -457,11 +457,11 @@ generic element.
 **Rules:**
 * Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
   the actual generic replacement
-* Markers can either be of the type ``text`` or a ``paragraph`` 
+* Markers can either be of the type ``text`` or a ``paragraph`` (or ``p``) 
   (to insert surrounding line-breaks), and contain a textual identifier
 * Marker identifiers can use any text, which should be distinct within the 
   document
-  
+
 
 ### Example
 **Example:**

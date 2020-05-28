@@ -14,7 +14,7 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-class docx_renderer_link: docx_renderer {
+class docx_renderer_link: public docx_renderer {
  public:
   // Constructor
   docx_renderer_link(std::string path_extract, const std::string &json);

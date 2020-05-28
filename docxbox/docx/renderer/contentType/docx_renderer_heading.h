@@ -12,7 +12,7 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-class docx_renderer_heading: docx_renderer {
+class docx_renderer_heading: public docx_renderer {
  public:
   // Constructor
   explicit docx_renderer_heading(
@@ -22,8 +22,6 @@ class docx_renderer_heading: docx_renderer {
 
   std::string Render(int level);
   std::string Render() override;
-
-  std::string generic_root_tag_;
 
  private:
   int level_;

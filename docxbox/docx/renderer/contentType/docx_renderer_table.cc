@@ -63,6 +63,8 @@ bool docx_renderer_table::InitFromJson() {
 
           ++amount_rows_;
         }
+      } else if (key == "pre" || key == "post") {
+        ExtractPreOrPostfix(it);
       }
     }
   }
@@ -78,6 +80,8 @@ bool docx_renderer_table::InitFromJson() {
 std::string docx_renderer_table::Render() {
   if (!is_json_valid_) throw "Failed render table markup.\n";
 
+  generic_root_tag_ = "w:r";
+
   wml_ = std::string(kWRunLhs);
 
   wml_ += std::string(kWTableLhs);
@@ -88,6 +92,8 @@ std::string docx_renderer_table::Render() {
   wml_ += std::string(kWTableRhs);
 
   wml_ += std::string(kWRunRhs);
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }

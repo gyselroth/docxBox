@@ -14,15 +14,13 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-class docx_renderer_table: docx_renderer {
+class docx_renderer_table: public docx_renderer {
  public:
   // Constructor
   explicit docx_renderer_table(
       std::string path_extract, const std::string &json);
 
   std::string Render() override;
-
-  std::string generic_root_tag_;
 
  private:
   // Table specs from JSON

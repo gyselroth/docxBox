@@ -36,8 +36,10 @@ bool docx_renderer_heading::InitFromJson() {
          it != json_inner.end();
          ++it) {
       const std::string &key = it.key();
+      const std::string &value = it.value();
 
-      if (key == "text") text_ = it.value();
+      if (key == "text") text_ = value;
+      else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
     }
   }
 
@@ -53,6 +55,8 @@ std::string docx_renderer_heading::Render(int level) {
 
   if (level > 0) SetLevel(level);
 
+  generic_root_tag_ = "w:p";
+
   wml_ =
       "<w:p>"
         "<w:pPr>"
@@ -62,6 +66,8 @@ std::string docx_renderer_heading::Render(int level) {
           "<w:t>" + text_ + "</w:t>"
         "</w:r>"
       "</w:p>";
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }

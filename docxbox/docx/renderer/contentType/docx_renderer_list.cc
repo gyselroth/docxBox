@@ -60,6 +60,8 @@ bool docx_renderer_list::InitFromJson() {
                it_items != items.end();
                ++it_items)
             items_.push_back(it_items.value());
+        } else if (key == "pre" || key == "post") {
+          ExtractPreOrPostfix(it);
         }
       } catch (nlohmann::detail::invalid_iterator &e) {
         continue;
@@ -110,6 +112,8 @@ std::string docx_renderer_list::Render() {
   }
 
   wml_ += kWRunRhs;
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }
