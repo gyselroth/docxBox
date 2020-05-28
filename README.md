@@ -30,9 +30,11 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
-  * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis-modification)
+  * [Batch Templating](#batch-templating)
+    + [Replacement Pre/Post-Marker](#replacement-prepost-marker)
   * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
-  * [Zip files into DOCX](#zip-files-into-docx)  
+  * [Zip files into DOCX](#zip-files-into-docx)
+  * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis--modification)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
@@ -424,26 +426,89 @@ purposes:
 ````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
 
 
-### Arbitrary manual and scripted analysis / modification
+### Batch Templating
 
-docxBox eases conducting arbitrary modifications on files contained within a 
-DOCX, manually and scripted.  
-All steps besides the actual modification are automated via docxBox, with the 
-respective user-defined modification inserted.
+docxBox's batch templating mode allows to perform a sequence of manipulations 
+upon a given DOCX document.
 
-**Example - Edit XML file manually:**
+#### Replacement Pre/Post Marker
+Batch templating makes use of "marker" strings.
+Markers are temporarily inserted and subsequently replaced again by another 
+generic element. 
 
-````docxbox cmd foo.docx "nano *DOCX*/word/document.xml"````  
+**Rules:**
+* Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
+  the actual generic replacement
+* Markers can either be of the type ``text`` or a ``paragraph`` 
+  (to insert surrounding line-breaks), and contain a textual identifier
+* Marker identifiers can use any text, which should be distinct within the 
+  document
+  
 
-docxBox in the above example does:
-1. **Unzip** ``foo.docx``
-2. **Indent** all extracted XML files
-3. Render (= replace ``*DOCX*`` w/ the resp. extraction path)  
-  and **execute** the command: ``nano *DOCX*/word/document.xml``.  
-  -> Thereby opening ``document.xml`` for editing in nano, halting docxBox until 
-  exiting the editor.
-4. **Unindent** all extracted XML files
-5. **Zip** the extracted files back into ``foo.docx``
+### Example
+**Example:**
+* Replace string ``foo`` by a header with the text ``Foobar``
+* Replace the marker ``my-marker-1`` by a table 
+* Replace (the placeholder texts within the) table cells by images
+
+**Batch config:**
+````
+[
+ "rpt":[
+    "foo",
+    {
+     "h1":{
+        "text":"Foobar",
+        "post":{"text":"my-marker-1"}
+     }
+    }
+ ],
+ "rpt":[
+   "my-marker-1",
+   "table": {
+       "columns":2,
+       "rows":1,
+       "header":["A","B"],
+       "content":[
+           ["img-a1","img-b1"],
+           ["img-a2","img-b2"]
+       ]
+   }
+ ],
+ "rpt":[
+    "img-a1",
+    "img":{
+        "name":"block_blue_130x130.png",
+        "size":[2438400,1828800]
+    }
+ ],
+ "rpt":[
+    "img-b1",
+    "img":{
+        "name":"block_green_130x130.png",
+        "size":[2438400,1828800]
+    }
+ ],
+ "rpt":[
+    "img-a2",
+    "img":{
+        "name":"block_orange_130x130.png",
+        "size":[2438400,1828800]
+    }
+ ],
+ "rpt":[
+    "img-b2",
+    "img":{
+        "name":"block_red_130x130.png",
+        "size":[2438400,1828800]
+    }
+ ] 
+]
+````
+
+The full docxBox batch command in CLI:  
+ 
+````docxbox batch foo.docx {\"rpt\":{foo new}........````
 
 
 ### Unzip DOCX: All files, or only media files, format XML
@@ -472,6 +537,28 @@ the ``zpc`` command compresses (= unindents) all XML files before zipping them
 into a new DOCX:
 
 ````docxbox zpc path/to/directory out.docx````  
+
+
+### Arbitrary manual and scripted analysis / modification
+
+docxBox eases conducting arbitrary modifications on files contained within a 
+DOCX, manually and scripted.  
+All steps besides the actual modification are automated via docxBox, with the 
+respective user-defined modification inserted.
+
+**Example - Edit XML file manually:**
+
+````docxbox cmd foo.docx "nano *DOCX*/word/document.xml"````  
+
+docxBox in the above example does:
+1. **Unzip** ``foo.docx``
+2. **Indent** all extracted XML files
+3. Render (= replace ``*DOCX*`` w/ the resp. extraction path)  
+  and **execute** the command: ``nano *DOCX*/word/document.xml``.  
+  -> Thereby opening ``document.xml`` for editing in nano, halting docxBox until 
+  exiting the editor.
+4. **Unindent** all extracted XML files
+5. **Zip** the extracted files back into ``foo.docx``
 
 
 ### Output docxBox help or version number
