@@ -450,9 +450,9 @@ docxBox's batch templating mode allows to perform a sequence of manipulations
 upon a given DOCX document.
 
 #### Replacement Pre/Post Marker
-Batch templating makes use of "marker" strings.
-Markers are temporarily inserted and subsequently replaced again by another 
-generic element. 
+Batch templating makes use of "marker" strings.  
+Markers are temporarily inserted and can subsequently be replaced again at the 
+next (or another later) step of the batch sequence, by another generic element. 
 
 **Rules:**
 * Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
