@@ -479,7 +479,7 @@ docxBox's batch templating mode allows to perform an arbitrary sequence of manip
 For example merge fields can be transformed into text in one step of a sequence and in a later step be replaced by a table, which is later filled with content and so forth. Batch templating thereby can facilitate more templating options than the sum of commands directly available in docxBox.
 
 #### Replacement Pre/Post Markers
-Batch templating makes use of "markers": optional text elements containing a distinct identifier string.
+Batch templating can make use of "markers": optional text elements containing a distinct identifier string.
 Markers can temporarily be inserted and can subsequently be replaced again at the next (or another later)
 step of the batch sequence, by other generic content. 
 
