@@ -9,6 +9,8 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 ## Table of contents
 
 * [Commands](#commands)
+  * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
+  * [Zip files into DOCX](#zip-files-into-docx)
   * [Output DOCX contents](#output-docx-contents)
     + [List files: All, filtered, images only](#list-files-all-filtered-images-only)
     + [List meta data](#list-meta-data)
@@ -34,8 +36,6 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Randomize document text](#randomize-document-text)
   * [Batch Templating](#batch-templating)
     + [Replacement Pre/Post-Marker](#replacement-prepost-marker)
-  * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
-  * [Zip files into DOCX](#zip-files-into-docx)
   * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis--modification)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
@@ -50,6 +50,34 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 
 Commands
 --------
+
+### Unzip DOCX: All files, or only media files, format XML
+
+**Unzip all files:** ````docxbox uz foo.docx````  
+
+**Unzip only media files:**  
+````docxbox uzm foo.docx````
+or ````docxbox uz foo.docx -m````  
+or ````docxbox uz foo.docx --media````    
+
+**Unzip all files and indent XML files:**  
+````docxbox uzi foo.docx````  
+or ````docxbox uz foo.docx -i````  
+or ````docxbox uz foo.docx --indent````  
+
+
+### Zip files into DOCX
+
+````docxbox zp path/to/directory out.docx````
+
+**Compress XML, than zip files into DOCX:**
+
+When having indented XML (i.e. via [``uzi``](unzip-all-files-and-indent-xml-files) command) for manual manipulation,
+the ``zpc`` command compresses (= unindents) all XML files before zipping them 
+into a new DOCX:
+
+````docxbox zpc path/to/directory out.docx````  
+
 
 ### Output DOCX contents
 
@@ -538,41 +566,13 @@ generic content.
 ]
 ````
 
-**The full docxBox batch command in CLI:**
+**The full batch command:**
 
 **Note:** As when inserting new images in non-batch mode 
 (via [rpt](#insert-image) or [rpi](#replace-image)), also during batch
 templating, image files to be added newly must be given as trailing arguments.
  
 ````docxbox batch foo.docx "[{\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}]},{\"rpt\":[\"my-marker-1\",{\"table\":{\"columns\":2,\"rows\":2,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}}]},{\"rpt\":[\"img-a1\",{\"img\":{\"name\":\"blue.png\",\"size\":[2438400,1828800]}}]},{\"rpt\":[\"img-b1\",{\"img\":{\"name":\"green.png\",\"size\":[2438400,1828800]}}]},{\"rpt\":[\"img-a2\",{\"img\":{\"name\":\"orange.png\",\"size\":[2438400,1828800]}}]},{\"rpt\":[\"img-b2\",{\"img\":{\"name\":\"red.png\",\"size\":[2438400,1828800]}}]}]" blue.png green.png orange.png red.png````
-
-
-### Unzip DOCX: All files, or only media files, format XML
-
-**Unzip all files:** ````docxbox uz foo.docx````  
-
-**Unzip only media files:**  
-````docxbox uzm foo.docx````
-or ````docxbox uz foo.docx -m````  
-or ````docxbox uz foo.docx --media````    
-
-**Unzip all files and indent XML files:**  
-````docxbox uzi foo.docx````  
-or ````docxbox uz foo.docx -i````  
-or ````docxbox uz foo.docx --indent````  
-
-
-### Zip files into DOCX
-
-````docxbox zp path/to/directory out.docx````
-
-**Compress XML, than zip files into DOCX:**
-
-When having indented XML (i.e. via [``uzi``](unzip-all-files-and-indent-xml-files) command) for manual manipulation,
-the ``zpc`` command compresses (= unindents) all XML files before zipping them 
-into a new DOCX:
-
-````docxbox zpc path/to/directory out.docx````  
 
 
 ### Arbitrary manual and scripted analysis / modification
