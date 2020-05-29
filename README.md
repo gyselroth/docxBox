@@ -35,7 +35,7 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
   * [Batch Templating](#batch-templating)
-    + [Replacement Pre/Post-Marker](#replacement-prepost-marker)
+    + [Replacement Pre/Post-Markers](#replacement-prepost-markers)
   * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis--modification)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
