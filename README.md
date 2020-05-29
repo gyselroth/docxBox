@@ -142,7 +142,7 @@ or ````docxbox ls foo.docx --images --json````
 #### List meta data
 
 docxBox displays only attributes that are contained within the current 
-DOCX file (this differs by DOCX version and application), also if given empty.
+DOCX file (the attributes can vary by DOCX version and word processor used for creation), also if given empty.
 
 Output meta data of given DOCX:  
 
