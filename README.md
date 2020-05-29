@@ -474,8 +474,9 @@ purposes:
 
 ### Batch Templating
 
-docxBox's batch templating mode allows to perform a sequence of manipulations 
-upon a given DOCX document.
+docxBox's batch templating mode allows to perform an arbitrary sequence of manipulations 
+(supporting all docxBox commands) upon a given DOCX document, it thereby covers an extensive range of templating options:  
+For example merge fields can be transformed into text in one step of a sequence and in a later step be replaced by a table, which is later filled with content and so forth. Batch templating thereby can facilitate more templating options than the sum of commands directly available in docxBox.
 
 #### Replacement Pre/Post Markers
 Batch templating makes use of "markers":
