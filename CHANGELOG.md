@@ -4,6 +4,7 @@ docxBox Changelog
 V0.0.5 - Not finished yet
 -------------------------
 * Colorize side-by-side DOCX comparison (ls) to indicate additions/removals
+* Add insert paragraph and prefix/postfix
 
 V0.0.4 - 2020-05-26
 -------------------
