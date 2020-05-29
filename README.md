@@ -72,7 +72,7 @@ or ````docxbox uz foo.docx --indent````
 
 **Compress XML, than zip files into DOCX:**
 
-When having indented XML (i.e. via [``uzi``](unzip-all-files-and-indent-xml-files) command) for manual manipulation,
+When having indented XML (i.e. via [``uzi``](#unzip-all-files-and-indent-xml-files) command) for manual manipulation,
 the ``zpc`` command compresses (= unindents) all XML files before zipping them 
 into a new DOCX:
 
