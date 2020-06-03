@@ -292,6 +292,11 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
   return true;
 }
 
+bool docx_archive::Batch() {
+  std::cout << "TODO(kay): implement\n";
+  return true;
+}
+
 bool docx_archive::CatFile() {
   if (!docxbox::AppArguments::AreArgumentsGiven(
       argc_,

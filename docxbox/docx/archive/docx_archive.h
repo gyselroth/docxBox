@@ -71,6 +71,9 @@ class docx_archive {
   bool GetText(bool newline_at_segments);
 
   bool ExecuteUserCommand(std::string command = "");
+
+  bool Batch();
+
   bool CatFile();
   bool ViewFilesDiff();
 

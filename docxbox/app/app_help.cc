@@ -20,6 +20,7 @@ bool AppHelp::PrintHelp(bool with_title,
                         AppCommands::Commands command,
                         const std::string &command_identifier) {
   switch (command) {
+    case AppCommands::Command_Batch: return PrintHelpOnBatch();
     case AppCommands::Command_Cat: return PrintHelpOnCat();
     case AppCommands::Command_ExecuteUserCommand:
       return PrintHelpOnUserCommand();
@@ -131,8 +132,11 @@ bool AppHelp::PrintOverview(bool with_title) {
       "\n    sfv   - Set field value"
       "\n    lorem - Replace all text by random dummy text"
       "\n"
-      "\n  Run user-defined command on contained file(s):"
-      "\n    cmd   - Execute given command on given DOCX file(s)"
+      "\n  Batch process multiple docxBox commands on DOCX:"
+      "\n    batch"
+      "\n"
+      "\n  Execute user-defined command on contained file(s) of DOCX:"
+      "\n    cmd"
       "\n"
       "\n  Extract and create DOCX:"
       "\n    uz    - Unzip files from DOCX"
@@ -253,6 +257,16 @@ bool AppHelp::PrintHelpOnUserCommand() {
                "--------------------------------------------------------------\n"
                "Example: Edit contained XML file w/ nano\n"
                "  docxbox cmd foo.docx \"nano *DOCX*/word/settings.xml\"\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnBatch() {
+  std::cout << "Command batch - Process mutliple docxBox commands upon given DOCX\n"
+               "-----------------------------------------------------------------\n"
+               "Example: Replace string 'foo' by heading-1 w/ text \"Heading\",\n"
+               "         than insert a heading-2 with text \"Sub-Heading\" after it\n\n"
+               "  docxbox batch foo.docx {\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Heading\",\"post\":{\"para\":\"my-postfix\"}}}],\"rpt\":[\"my-postfix\",{\"h2\":{\"text\":\"Sub-Heading\"}}]}\n\n";
 
   return true;
 }

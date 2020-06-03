@@ -21,6 +21,7 @@ AppCommands::Commands AppCommands::Resolve() {
 
 AppCommands::Commands AppCommands::ResolveCommandByName(
     const std::string &command) {
+  if (command == "batch") return Command_Batch;
   if (command == "cat") return Command_Cat;
   if (command == "cmd") return Command_ExecuteUserCommand;
   if (command == "diff") return Command_FileDiff;

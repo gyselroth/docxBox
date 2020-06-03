@@ -16,6 +16,8 @@ class AppHelp {
  public:
   static bool PrintVersion();
 
+  static bool PrintHelpOnBatch();
+
   static bool PrintHelpOnCat();
   static bool PrintHelpOnDiff();
 
