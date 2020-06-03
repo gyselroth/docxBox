@@ -299,14 +299,12 @@ bool docx_compare::AreFilesInLinesDifferent(
   std::string path_file_left = path_extract_left_ + "/" + filename_left;
   std::string path_file_right = path_extract_right_ + "/" + filename_right;
 
-  if (filename_left == filename_right
-      && helper::File::FileExists(path_file_left)
-      && helper::File::FileExists(path_file_right)) {
+  if (filename_left != filename_right
+      || !helper::File::FileExists(path_file_left)
+      || !helper::File::FileExists(path_file_right)) return false;
+
     auto content_left = helper::File::GetFileContents(path_file_left);
     auto content_right = helper::File::GetFileContents(path_file_right);
 
     return content_left != content_right;
-  }
-
-  return false;
 }
