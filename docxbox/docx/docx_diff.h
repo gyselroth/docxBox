@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_ARCHIVE_DOCX_DIFF_H_
-#define DOCXBOX_DOCX_ARCHIVE_DOCX_DIFF_H_
+#ifndef DOCXBOX_DOCX_DOCX_DIFF_H_
+#define DOCXBOX_DOCX_DOCX_DIFF_H_
 
 #include <docxbox/helper/helper_cli.h>
 #include <docxbox/helper/helper_string.h>
@@ -22,4 +22,4 @@ class docx_diff {
                                const std::string &file);
 };
 
-#endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_DIFF_H_
+#endif  // DOCXBOX_DOCX_DOCX_DIFF_H_

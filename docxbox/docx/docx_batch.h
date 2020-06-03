@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_ARCHIVE_DOCX_BATCH_H_
-#define DOCXBOX_DOCX_ARCHIVE_DOCX_BATCH_H_
+#ifndef DOCXBOX_DOCX_DOCX_BATCH_H_
+#define DOCXBOX_DOCX_DOCX_BATCH_H_
 
 #include <docxbox/app/app_error.h>
 #include <docxbox/helper/helper_cli.h>
@@ -29,4 +29,4 @@ class docx_batch {
   bool InitFromJson();
 };
 
-#endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_BATCH_H_
+#endif  // DOCXBOX_DOCX_DOCX_BATCH_H_
