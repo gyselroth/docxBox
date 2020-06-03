@@ -253,20 +253,32 @@ bool AppHelp::PrintHelpOnListMergeFields(bool with_title) {
 }
 
 bool AppHelp::PrintHelpOnUserCommand() {
-  std::cout << "Command cmd - Execute given command on files(s) of given DOCX:\n"
-               "--------------------------------------------------------------\n"
-               "Example: Edit contained XML file w/ nano\n"
-               "  docxbox cmd foo.docx \"nano *DOCX*/word/settings.xml\"\n\n";
+  std::cout
+    << "Command cmd - Execute given command on files(s) of given DOCX:\n"
+       "--------------------------------------------------------------\n"
+       "Example: Edit contained XML file w/ nano\n"
+       "  docxbox cmd foo.docx \"nano *DOCX*/word/settings.xml\"\n\n";
 
   return true;
 }
 
 bool AppHelp::PrintHelpOnBatch() {
-  std::cout << "Command batch - Process multiple docxBox commands upon given DOCX\n"
-               "-----------------------------------------------------------------\n"
-               "Example: Replace string 'foo' by heading-1 w/ text \"Heading\",\n"
-               "         than insert a heading-2 with text \"Sub-Heading\" after it\n\n"
-               "  docxbox batch foo.docx {\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Heading\",\"post\":{\"para\":\"my-postfix\"}}}],\"rpt\":[\"my-postfix\",{\"h2\":{\"text\":\"Sub-Heading\"}}]}\n\n";
+  std::cout
+    << "Command batch - Process multiple docxBox commands upon given DOCX\n"
+       "-----------------------------------------------------------------\n"
+       "Example: Replace string 'foo' by heading-1 w/ text \"Heading\",\n"
+       "         than insert a heading-2 with text \"Sub-Heading\" after it\n\n"
+       "  docxbox batch foo.docx "
+       "{"
+        "\"rpt\":["
+          "\"foo\","
+          "{\"h1\":{\"text\":\"Heading\",\"post\":{\"para\":\"my-postfix\"}}}"
+        "],"
+        "\"rpt\":["
+          "\"my-postfix\","
+          "{\"h2\":{\"text\":\"Sub-Heading\"}}"
+        "]"
+       "}\n\n";
 
   return true;
 }
