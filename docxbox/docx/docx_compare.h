@@ -12,9 +12,10 @@
 #include <tuple>
 #include <vector>
 
-class docx_fileListCompare {
+// Compare contents (= all files, and their content) from two DOCX archives
+class docx_compare {
  public:
-  docx_fileListCompare(
+  docx_compare(
       std::string list_1, std::string summary_1,
       std::string list_2, std::string summary_2,
       std::string path_docx_1, std::string path_docx_2);

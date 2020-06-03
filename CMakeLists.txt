@@ -31,7 +31,7 @@ add_executable(docxbox
 
         docxbox/docx/docx_batch.cc
         docxbox/docx/docx_diff.cc
-        docxbox/docx/docx_fileListCompare.cc
+        docxbox/docx/docx_compare.cc
 
         docxbox/docx/archive/docx_archive.cc
         docxbox/docx/archive/docx_archive_list.cc

@@ -1,11 +1,11 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#include <docxbox/docx/docx_fileListCompare.h>
+#include <docxbox/docx/docx_compare.h>
 
 #include <utility>
 
-docx_fileListCompare::docx_fileListCompare(
+docx_compare::docx_compare(
     std::string list_1, std::string summary_1,
     std::string list_2, std::string summary_2,
     std::string path_docx_1, std::string path_docx_2) {
@@ -31,7 +31,7 @@ docx_fileListCompare::docx_fileListCompare(
   }
 }
 
-void docx_fileListCompare::Output() {
+void docx_compare::Output() {
   auto lines_left = SplitIntoSortedLines(list_1_);
   auto lines_right = SplitIntoSortedLines(list_2_);
 
@@ -112,15 +112,15 @@ void docx_fileListCompare::Output() {
   OutputLine(len_summary_1, len_line_max);
 }
 
-void docx_fileListCompare::ColorizeFileSize(
+void docx_compare::ColorizeFileSize(
     const char *const color,
     const std::string &style_on,
     std::string &line) const {
   line = color + line.insert(9, kAnsiReset + style_on);
 }
 
-void docx_fileListCompare::OutputLine(uint32_t len_summary_1,
-                                      u_int32_t len_line_max) const {
+void docx_compare::OutputLine(uint32_t len_summary_1,
+                              u_int32_t len_line_max) const {
   std::cout << "---------                     -------"
             << helper::String::Repeat("-", len_line_max - 37)
             << gap_
@@ -132,7 +132,7 @@ void docx_fileListCompare::OutputLine(uint32_t len_summary_1,
             << summary_2_ + "\n";
 }
 
-void docx_fileListCompare::GetCurrentLineAndFilename(
+void docx_compare::GetCurrentLineAndFilename(
     int index,
     const std::vector<std::string> &lines,
     uint16_t amount_lines,
@@ -147,7 +147,7 @@ void docx_fileListCompare::GetCurrentLineAndFilename(
   }
 }
 
-void docx_fileListCompare::OutputHeadline(
+void docx_compare::OutputHeadline(
     uint32_t len_path_left, u_int32_t len_line_max) const {
   std::cout << "\n"
             << path_docx_1_ << ":"
@@ -165,7 +165,7 @@ void docx_fileListCompare::OutputHeadline(
             << "\n";
 }
 
-std::vector<std::string> docx_fileListCompare::SplitIntoSortedLines(
+std::vector<std::string> docx_compare::SplitIntoSortedLines(
     std::string &file_list) {
   auto lines = helper::String::Explode(file_list, '\n');
 
@@ -178,7 +178,7 @@ std::vector<std::string> docx_fileListCompare::SplitIntoSortedLines(
 }
 
 // Comparator method for sorting
-bool docx_fileListCompare::CompareLinesByFilenames(
+bool docx_compare::CompareLinesByFilenames(
     std::string str_1, std::string str_2) {
   auto filename_1 = helper::String::GetTrailingWord(std::move(str_1));
   auto filename_2 = helper::String::GetTrailingWord(std::move(str_2));
@@ -186,13 +186,13 @@ bool docx_fileListCompare::CompareLinesByFilenames(
   return std::strcmp(filename_1.c_str(), filename_2.c_str()) < 0;
 }
 
-bool docx_fileListCompare::IsFileItemLine(const std::string &line) {
+bool docx_compare::IsFileItemLine(const std::string &line) {
   return line[0]
       && line[0] != '-'
       && helper::String::Contains(line, ".");
 }
 
-void docx_fileListCompare::AdvanceToAlphabeticalNextItem(
+void docx_compare::AdvanceToAlphabeticalNextItem(
     const std::string &filename_left,
     const std::string &filename_right,
     std::string &line_left,
@@ -220,11 +220,11 @@ void docx_fileListCompare::AdvanceToAlphabeticalNextItem(
   }
 }
 
-void docx_fileListCompare::UpdateColumnStyles(const std::string &line_left,
-                                              const std::string &line_right,
-                                              std::string &style_on_left,
-                                              std::string &style_on_right,
-                                              std::string &style_off) {
+void docx_compare::UpdateColumnStyles(const std::string &line_left,
+                                      const std::string &line_right,
+                                      std::string &style_on_left,
+                                      std::string &style_on_right,
+                                      std::string &style_off) {
   style_off = kAnsiReset;
 
   style_on_left = style_on_right = kAnsiReverse;
@@ -257,8 +257,7 @@ void docx_fileListCompare::UpdateColumnStyles(const std::string &line_left,
   }
 }
 
-int docx_fileListCompare::ExtractFileSizeFromLine(
-    const std::string &line) {
+int docx_compare::ExtractFileSizeFromLine(const std::string &line) {
   auto line_tmp = line;
   helper::String::LTrim(line_tmp);
 
@@ -273,13 +272,13 @@ int docx_fileListCompare::ExtractFileSizeFromLine(
   : 0;
 }
 
-std::string docx_fileListCompare::RenderMargin(int len_str, int len_max) {
+std::string docx_compare::RenderMargin(int len_str, int len_max) {
   return len_str < len_max
     ? helper::String::Repeat(" ", len_max - len_str)
     : "";
 }
 
-bool docx_fileListCompare::AreFilesInLinesDifferent(
+bool docx_compare::AreFilesInLinesDifferent(
     const std::string &line_1, const std::basic_string<char> &line_2) {
   if (line_1 != line_2) return true;
 

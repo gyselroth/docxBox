@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 
+// Shorthand for viewing diff of specific file from two DOCX archives
 class docx_diff {
  public:
   static void OutputUnified(const std::string &path_extract_left,
