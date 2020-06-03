@@ -262,7 +262,7 @@ bool AppHelp::PrintHelpOnUserCommand() {
 }
 
 bool AppHelp::PrintHelpOnBatch() {
-  std::cout << "Command batch - Process mutliple docxBox commands upon given DOCX\n"
+  std::cout << "Command batch - Process multiple docxBox commands upon given DOCX\n"
                "-----------------------------------------------------------------\n"
                "Example: Replace string 'foo' by heading-1 w/ text \"Heading\",\n"
                "         than insert a heading-2 with text \"Sub-Heading\" after it\n\n"
