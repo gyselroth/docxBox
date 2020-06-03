@@ -29,12 +29,13 @@ add_executable(docxbox
         docxbox/app/app_help.cc
         docxbox/app/app_help.h
 
+        docxbox/docx/docx_batch.cc
+        docxbox/docx/docx_diff.cc
+        docxbox/docx/docx_fileListCompare.cc
+
         docxbox/docx/archive/docx_archive.cc
         docxbox/docx/archive/docx_archive_list.cc
         docxbox/docx/archive/docx_archive_replace.cc
-        # TODO(kay): the following add to, but dont oop-extend docx_archive
-        docxbox/docx/archive/docx_diff.cc
-        docxbox/docx/archive/docx_fileListCompare.cc
 
         docxbox/docx/component/contentTypes.cc
         docxbox/docx/component/fontTable.cc

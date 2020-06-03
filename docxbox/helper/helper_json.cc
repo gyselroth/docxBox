@@ -5,6 +5,21 @@
 
 namespace helper {
 
+bool Json::IsJson(const std::string &str, bool contains_association) {
+  if (str.empty()) return false;
+
+  const char *kStr = str.c_str();
+
+  return
+      ((helper::String::StartsWith(kStr, "{")
+        && helper::String::EndsWith(str, "}"))
+          || (helper::String::StartsWith(kStr, "[")
+              && helper::String::EndsWith(str, "]")))
+       && (!contains_association
+           || (helper::String::Contains(kStr, "\"")
+               && helper::String::Contains(kStr, ":")));
+}
+
 // Extract 1st key out of JSON like: {"<KEY>"...}
 std::string Json::GetFirstKey(const std::string &json) {
   int offset_end_key = helper::String::OffsetChar(json, '"', 3);

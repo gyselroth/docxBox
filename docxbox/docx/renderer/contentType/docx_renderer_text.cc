@@ -16,7 +16,7 @@ docx_renderer_text::docx_renderer_text(
 }
 
 bool docx_renderer_text::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(ElementType_Text))
     return false;
 

@@ -38,7 +38,7 @@ bool docx_xml_replace::ReplaceInXml(
     previous_text_nodes_.clear();
   }
 
-  is_replacement_xml_ = helper::String::IsJson(replacement);
+  is_replacement_xml_ = helper::Json::IsJson(replacement);
 
   tinyxml2::XMLDocument doc;
 

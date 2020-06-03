@@ -15,7 +15,7 @@ docx_renderer_link::docx_renderer_link(
 }
 
 bool docx_renderer_link::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(ElementType_Link)) return false;
 
   auto json_outer = nlohmann::json::parse(json_);

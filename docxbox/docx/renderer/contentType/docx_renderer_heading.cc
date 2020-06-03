@@ -22,7 +22,7 @@ void docx_renderer_heading::SetLevel(int level) {
 }
 
 bool docx_renderer_heading::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(
       {ElementType_Heading1, ElementType_Heading2, ElementType_Heading3}))
     return false;

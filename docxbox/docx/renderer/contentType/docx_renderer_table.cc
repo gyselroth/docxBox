@@ -9,7 +9,7 @@ docx_renderer_table::docx_renderer_table(
   path_extract_ = std::move(path_extract);
 
   json_ = json;
-  is_json_valid_ = helper::String::IsJson(json);
+  is_json_valid_ = helper::Json::IsJson(json);
 
   if (is_json_valid_) InitFromJson();
 }

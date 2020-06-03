@@ -107,8 +107,6 @@ extern bool IsNumeric(
 
 extern bool IsAllUpper(const std::string& str);
 
-extern bool IsJson(const std::string &str);
-
 extern std::string ToLower(std::string str);
 extern std::string ToUpper(const std::string &str);
 

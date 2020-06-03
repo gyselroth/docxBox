@@ -188,8 +188,8 @@ bool docx_archive::Zip(
     bool compress_xml,
     std::string path_directory,
     std::string path_docx_result,
-    bool set_date_created_to_now,
     bool set_date_modified_to_now,
+    bool set_date_created_to_now,
     const std::string& date_created,
     const std::string& date_modified) {
   if (path_directory.empty()) {
@@ -293,8 +293,42 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
 }
 
 bool docx_archive::Batch() {
-  std::cout << "TODO(kay): implement\n";
-  return true;
+  if (!docxbox::AppArguments::AreArgumentsGiven(
+      argc_,
+      3, "DOCX file",
+      4, "Batch commands JSON")) return false;
+
+  if (!UnzipDocxByArgv(true, "", true, true)) return false;
+
+  auto batch = new docx_batch(path_extract_, std::string(argv_[4]));
+
+  if (!batch->Process()) {
+    return false;
+  }
+
+  std::string path_docx_out = argc_ >= 4
+    // Result filename is given as argument
+    ? helper::File::ResolvePath(path_working_directory_, argv_[4])
+    // Overwrite original DOCX
+    : path_docx_in_;
+
+  if (!Zip(false,
+           path_extract_,
+           path_docx_out + "tmp",
+           true,
+           false)) {
+    delete batch;
+
+    return docxbox::AppError::Output("DOCX creation failed.");
+  }
+
+  delete batch;
+
+  if (argc_ < 4) helper::File::Remove(path_docx_in_.c_str());
+
+  return 0 == std::rename(
+      std::string(path_docx_out).append("tmp").c_str(),
+      path_docx_out.c_str());
 }
 
 bool docx_archive::CatFile() {
@@ -422,9 +456,11 @@ bool docx_archive::ModifyMeta() {
       return false;
     }
   } else {*/
-    if (!Zip(false, path_extract_, path_docx_out + "tmp",
-             attribute != meta::Attribute_Created,
-             attribute != meta::Attribute_Modified)) {
+    if (!Zip(false,
+             path_extract_,
+             path_docx_out + "tmp",
+             attribute != meta::Attribute_Modified,
+             attribute != meta::Attribute_Created)) {
       delete meta_component;
 
       return docxbox::AppError::Output("DOCX creation failed.");

@@ -6,7 +6,8 @@
 
 #include <docxbox/app/app_argument.h>
 #include <docxbox/app/app_error.h>
-#include <docxbox/docx/archive/docx_diff.h>
+#include <docxbox/docx/docx_batch.h>
+#include <docxbox/docx/docx_diff.h>
 #include <docxbox/docx/component/fontTable.h>
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
@@ -63,8 +64,8 @@ class docx_archive {
       bool compress_xml = false,
       std::string path_directory = "",
       std::string path_docx_result = "",
-      bool set_date_created_to_now = false,
       bool set_date_modified_to_now = false,
+      bool set_date_created_to_now = false,
       const std::string& date_created = "",
       const std::string& date_modified = "");
 

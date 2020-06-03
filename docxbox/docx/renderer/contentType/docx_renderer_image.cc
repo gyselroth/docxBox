@@ -20,7 +20,7 @@ void docx_renderer_image::SetRelationshipId(
 }
 
 bool docx_renderer_image::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(ElementType_Image)) return false;
 
   auto json_outer = nlohmann::json::parse(json_);

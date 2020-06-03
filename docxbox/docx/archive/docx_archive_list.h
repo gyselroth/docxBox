@@ -7,7 +7,7 @@
 #include <docxbox/app/app_argument.h>
 #include <docxbox/app/app_error.h>
 #include <docxbox/docx/archive/docx_archive.h>
-#include <docxbox/docx/archive/docx_fileListCompare.h>
+#include <docxbox/docx/docx_fileListCompare.h>
 #include <docxbox/docx/component/fontTable.h>
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>

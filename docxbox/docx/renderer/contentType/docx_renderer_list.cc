@@ -38,7 +38,7 @@ void docx_renderer_list::AddNumberingRels() const {
 }
 
 bool docx_renderer_list::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(
           {ElementType_ListUnordered, ElementType_ListOrdered})) return false;
 

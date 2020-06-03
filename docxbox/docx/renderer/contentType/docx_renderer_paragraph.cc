@@ -13,7 +13,7 @@ docx_renderer_paragraph::docx_renderer_paragraph(
 }
 
 bool docx_renderer_paragraph::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(ElementType_Paragraph))
     return false;
 
