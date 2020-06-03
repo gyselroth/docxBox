@@ -79,7 +79,13 @@ std::string meta::GetLhsTagByAttribute(
       return GetLhsTagByTagName(kWmlTagDcTermsModified);
     case Attribute_LastPrinted:
       return GetLhsTagByTagName(kWmlTagCpLastPrinted);
-    default:throw "Attribute unknown";
+    case Attribute_Subject:
+      return GetLhsTagByTagName(kWmlTagDcSubject);
+    default:
+      docxbox::AppError::Output(
+          "Failed render opening tag. Unknown attribute: " + attribute);
+
+      return "";
   }
 }
 
@@ -102,7 +108,13 @@ std::string meta::GetRhsTagByAttribute(
       return GetRhsTagByTagName(kWmlTagDcTermsModified);
     case Attribute_LastPrinted:
       return GetRhsTagByTagName(kWmlTagCpLastPrinted);
-    default:throw "Attribute unknown";
+    case Attribute_Subject:
+      return GetRhsTagByTagName(kWmlTagDcSubject);
+    default:
+      docxbox::AppError::Output(
+          "Failed render closing tag. Unknown attribute: " + attribute);
+
+      return "";
   }
 }
 
@@ -215,15 +227,10 @@ bool meta::UpdateCoreAttribute(
     const std::string& value) {
   EnsureIsLoadedCoreXml();
 
-  std::string lhs_of_value;
-  std::string rhs_of_value;
+  std::string lhs_of_value = GetLhsTagByAttribute(attribute);
+  std::string rhs_of_value = GetRhsTagByAttribute(attribute);
 
-  try {
-    lhs_of_value = GetLhsTagByAttribute(attribute);
-    rhs_of_value = GetRhsTagByAttribute(attribute);
-  } catch (std::string &message) {
-    return docxbox::AppError::Output(message);
-  }
+  if (lhs_of_value.empty() || rhs_of_value.empty()) return false;
 
   helper::String::Replace(
       core_xml_,
@@ -242,13 +249,15 @@ bool meta::InsertCoreAttribute(
     const std::string& value) {
   EnsureIsLoadedCoreXml();
 
+  const std::string &kLhsTag = GetLhsTagByAttribute(attribute);
+  const std::string &kRhs = GetRhsTagByAttribute(attribute);
+
+  if (kLhsTag.empty() || kRhs.empty()) return false;
+
   helper::String::Replace(
       core_xml_,
       kWordMlCorePropertiesRhs,
-      (GetLhsTagByAttribute(attribute)
-          + value
-          + GetRhsTagByAttribute(attribute)
-          + kWordMlCorePropertiesRhs).c_str());
+      (kLhsTag + value + kRhs + kWordMlCorePropertiesRhs).c_str());
 
   return true;
 }
@@ -257,15 +266,11 @@ bool meta::InsertCoreAttribute(
 bool meta::AttributeExistsInCoreXml(Attribute attribute) {
   EnsureIsLoadedCoreXml();
 
-  std::string lhs_of_value;
+  std::string lhs_of_value = GetLhsTagByAttribute(attribute);
 
-  try {
-    lhs_of_value = GetLhsTagByAttribute(attribute);
-  } catch (std::string &message) {
-    return docxbox::AppError::Output(message);
-  }
-
-  return helper::String::Contains(core_xml_, lhs_of_value.c_str());
+  return lhs_of_value.empty()
+    ? false
+    : helper::String::Contains(core_xml_, lhs_of_value.c_str());
 }
 
 void meta::EnsureIsLoadedCoreXml() {
