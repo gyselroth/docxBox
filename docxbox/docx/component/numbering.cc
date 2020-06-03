@@ -60,7 +60,7 @@ std::string numbering::RenderXml(bool unordered) {
 
   return
       RenderXmlNamespaceTag() +
-      //RenderXmlAbstractNum0() +
+//      RenderXmlAbstractNum0() +
       "<w:abstractNum w:abstractNumId=\"2\">"
       "<w:multiLevelType w:val=\"hybridMultilevel\"/>"
       "<w:name w:val=\"Numbered list 1\"/>"
@@ -173,7 +173,7 @@ std::string numbering::RenderXml(bool unordered) {
       "</w:pPr>"
       "</w:lvl>"
       "</w:abstractNum>"
-      
+
       "<w:num w:numId=\"3\">"
         "<w:abstractNumId w:val=\"1\"/>"
       "</w:num>"

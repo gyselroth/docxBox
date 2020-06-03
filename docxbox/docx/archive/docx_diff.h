@@ -22,4 +22,4 @@ class docx_diff {
                                const std::string &file);
 };
 
-#endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_H_
+#endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_DIFF_H_
