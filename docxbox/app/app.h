@@ -36,11 +36,11 @@ class App {
 
   AppCommands *command_;
 
-  AppCommands::Commands PreProcess(AppArguments *arguments,
-                                   const AppCommands::Commands &command) const;
+  AppCommands::Command PreProcess(AppArguments *arguments,
+                                  const AppCommands::Command &command) const;
 
-  bool ProcessList(AppCommands::Commands command);
-  bool ProcessReplace(AppCommands::Commands command);
+  bool ProcessList(AppCommands::Command command);
+  bool ProcessReplace(AppCommands::Command command);
 };
 
 }  // namespace docxbox

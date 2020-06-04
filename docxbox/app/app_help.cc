@@ -17,7 +17,7 @@ bool AppHelp::PrintVersion() {
 }
 
 bool AppHelp::PrintHelp(bool with_title,
-                        AppCommands::Commands command,
+                        AppCommands::Command command,
                         const std::string &command_identifier) {
   switch (command) {
     case AppCommands::Command_Batch: return PrintHelpOnBatch();
@@ -268,17 +268,24 @@ bool AppHelp::PrintHelpOnBatch() {
        "-----------------------------------------------------------------\n"
        "Example: Replace string \"foo\" by heading-1 w/ text \"Heading\",\n"
        "         than insert a heading-2 with text \"Sub-Heading\" after it\n\n"
-       "  docxbox batch foo.docx "
+       "  docxbox batch foo.docx \""
        "{"
-        "\\\"rpt\\\":["
-          "\\\"foo\\\","
-          "{\\\"h1\\\":{\\\"text\\\":\\\"Heading\\\",\\\"post\\\":{\\\"para\\\":\\\"my-postfix\\\"}}}"
-        "],"
-        "\\\"rpt\\\":["
-          "\\\"my-postfix\\\","
-          "{\\\"h2\\\":{\\\"text\\\":\\\"Sub-Heading\\\"}}"
-        "]"
-       "}\n\n";
+        "\\\"1\\\":{"
+          "\\\"rpt\\\":["
+            "\\\"foo\\\","
+            "{"
+              "\\\"h1\\\":{"
+                "\\\"text\\\":\\\"Heading\\\","
+                "\\\"post\\\":{\\\"para\\\":\\\"my-postfix\\\"}"
+              "}"
+          "}]"
+        "},"
+        "\\\"2\\\":{"
+          "\\\"rpt\\\":["
+            "\\\"my-postfix\\\","
+            "{\\\"h2\\\":{\\\"text\\\":\\\"Sub-Heading\\\"}}"
+        "]}"
+       "}\"\n\n";
 
   return true;
 }
@@ -474,7 +481,7 @@ void AppHelp::PrintUnknownArgumentMessage(const char *arg) {
   std::cerr << "Unknown argument: \"" << arg << "\". ";
   std::cout << "Possible arguments are:\n";
 
-  PrintHelp(false, AppCommands::Commands::Command_Invalid);
+  PrintHelp(false, AppCommands::Command::Command_Invalid);
 }
 
 }  // namespace docxbox

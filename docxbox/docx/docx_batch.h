@@ -5,6 +5,7 @@
 #define DOCXBOX_DOCX_DOCX_BATCH_H_
 
 #include <docxbox/app/app_error.h>
+#include <docxbox/app/app_command.h>
 #include <docxbox/helper/helper_cli.h>
 #include <docxbox/helper/helper_string.h>
 #include <docxbox/helper/helper_file.h>
@@ -25,6 +26,8 @@ class docx_batch {
 
   std::string path_extract_;
   std::string json_;
+
+  std::vector<docxbox::AppCommands::Command> commands_;
 
   bool InitFromJson();
 };

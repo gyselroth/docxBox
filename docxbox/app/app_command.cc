@@ -10,16 +10,16 @@ AppCommands::AppCommands(std::string argc): argc_(std::move(argc)) {
   resolved_ = Resolve();
 }
 
-AppCommands::Commands AppCommands::GetResolved() {
+AppCommands::Command AppCommands::GetResolved() {
   return resolved_;
 }
 
 // Resolve name of command (1st argument) to related enum item, to allow switch
-AppCommands::Commands AppCommands::Resolve() {
+AppCommands::Command AppCommands::Resolve() {
   return ResolveCommandByName(argc_);
 }
 
-AppCommands::Commands AppCommands::ResolveCommandByName(
+AppCommands::Command AppCommands::ResolveCommandByName(
     const std::string &command) {
   if (command == "batch") return Command_Batch;
   if (command == "cat") return Command_Cat;
@@ -55,7 +55,7 @@ AppCommands::Commands AppCommands::ResolveCommandByName(
   return Command_Invalid;
 }
 
-bool AppCommands::IsListCommand(Commands command) {
+bool AppCommands::IsListCommand(Command command) {
   return command == Command_List
       || command == Command_ListAsJson
       || command == Command_ListFonts
@@ -70,7 +70,7 @@ bool AppCommands::IsListCommand(Commands command) {
       || command == Command_LocateFilesContainingAsJson;
 }
 
-bool AppCommands::IsReplaceCommand(Commands command) {
+bool AppCommands::IsReplaceCommand(Command command) {
   return command == Command_ReplaceText
       || command == Command_ReplaceImage
       || command == Command_RemoveBetweenText

@@ -295,12 +295,12 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
 bool docx_archive::Batch() {
   if (!docxbox::AppArguments::AreArgumentsGiven(
       argc_,
-      3, "DOCX file",
-      4, "Batch commands JSON")) return false;
+      2, "DOCX file",
+      3, "Batch commands JSON")) return false;
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
-  auto batch = new docx_batch(path_extract_, std::string(argv_[4]));
+  auto batch = new docx_batch(path_extract_, std::string(argv_[3]));
 
   if (!batch->Process()) {
     return false;

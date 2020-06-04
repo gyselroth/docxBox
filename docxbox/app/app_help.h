@@ -22,7 +22,7 @@ class AppHelp {
   static bool PrintHelpOnDiff();
 
   static bool PrintHelp(bool with_title,
-                        AppCommands::Commands command,
+                        AppCommands::Command command,
                         const std::string &command_identifier = "");
 
   static bool PrintHelpOnGetPlainText();

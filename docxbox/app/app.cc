@@ -9,7 +9,7 @@ namespace docxbox {
 App::App(int argc, char **argv) {
   if (argc == 1) {
     // No command given
-    AppHelp::PrintHelp(true, AppCommands::Commands::Command_Invalid);
+    AppHelp::PrintHelp(true, AppCommands::Command::Command_Invalid);
 
     return;
   }
@@ -21,9 +21,9 @@ App::App(int argc, char **argv) {
 }
 
 // Remap command + argument variations to rel. shorthand commands
-AppCommands::Commands App::PreProcess(
+AppCommands::Command App::PreProcess(
     AppArguments *arguments,
-    const AppCommands::Commands &command) const {
+    const AppCommands::Command &command) const {
   switch (command) {
     case AppCommands::Command_GetPlainText:  // txt
       if (arguments->Matches(3, "-s", "--segments"))
@@ -107,7 +107,7 @@ AppCommands::Commands App::PreProcess(
 bool App::Process() {
   auto arguments = new AppArguments(argc_, argv_);
 
-  AppCommands::Commands command = command_->GetResolved();
+  AppCommands::Command command = command_->GetResolved();
 
   // Preprocess: Remap command + argument(s) to rel. shorthand commands
   if (argc_ > 2) command = PreProcess(arguments, command);
@@ -135,7 +135,7 @@ bool App::Process() {
         result = docx_archive->ViewFilesDiff();
         break;
       case AppCommands::Command_Help: {  // h
-        AppCommands::Commands kCommand;
+        AppCommands::Command kCommand;
         std::string command_identifier;
 
         if (argc_ > 2) {
@@ -188,7 +188,7 @@ bool App::Process() {
   return result;
 }
 
-bool App::ProcessList(AppCommands::Commands command) {
+bool App::ProcessList(AppCommands::Command command) {
   bool result;
 
   auto *docx_archive = new docx_archive_list(argc_, argv_);
@@ -240,7 +240,7 @@ bool App::ProcessList(AppCommands::Commands command) {
   return result;
 }
 
-bool App::ProcessReplace(AppCommands::Commands command) {
+bool App::ProcessReplace(AppCommands::Command command) {
   bool result;
 
   auto *docx_archive = new docx_archive_replace(argc_, argv_);
