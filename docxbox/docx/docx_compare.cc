@@ -263,9 +263,7 @@ int docx_compare::ExtractFileSizeFromLine(const std::string &line) {
 
   auto parts = helper::String::Explode(line_tmp, ' ');
 
-  if (parts.empty()) {
-    return 0;
-  }
+  if (parts.empty()) return 0;
 
   return helper::String::IsNumeric(parts[0], false, false, false)
   ? std::stoi(parts[0])
