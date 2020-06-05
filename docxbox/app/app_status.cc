@@ -14,7 +14,7 @@ bool AppStatus::Error(const std::string& message) {
 bool AppStatus::Warning(const std::string& message) {
   std::cout << "docxBox Warning - " << message << "\n";
 
-  return false;
+  return true;
 }
 
 }  // namespace docxbox

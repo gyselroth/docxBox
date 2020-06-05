@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_DOCX_FILELISTCOMPARE_H_
-#define DOCXBOX_DOCX_DOCX_FILELISTCOMPARE_H_
+#ifndef DOCXBOX_DOCX_DOCX_COMPARE_H_
+#define DOCXBOX_DOCX_DOCX_COMPARE_H_
 
 #include <docxbox/docx/archive/docx_archive.h>
 #include <docxbox/helper/helper_string.h>
@@ -81,4 +81,4 @@ class docx_compare {
       std::string &line) const;
 };
 
-#endif  // DOCXBOX_DOCX_DOCX_FILELISTCOMPARE_H_
+#endif  // DOCXBOX_DOCX_DOCX_COMPARE_H_

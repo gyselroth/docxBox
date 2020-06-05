@@ -14,6 +14,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
+#include <vector>
 
 class docx_batch {
  public:
