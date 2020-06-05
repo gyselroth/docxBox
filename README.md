@@ -492,8 +492,8 @@ which can later be filled with more content.
 #### Replacement Pre/Post Markers
 Batch templating can make use of "markers": optional text elements containing a 
 distinct identifier string. Markers can temporarily be inserted and can 
-subsequently be replaced again at the next (or another later) step of the batch 
-sequence, by other generic content. 
+subsequently be replaced again at a later step of the batch sequence by other 
+generic content. 
 
 **Rules:**
 * Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
