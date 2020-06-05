@@ -72,9 +72,10 @@ or ````docxbox uz foo.docx --indent````
 
 **Compress XML, than zip files into DOCX:**
 
-When having indented XML (i.e. via [``uzi``](#unzip-all-files-and-indent-xml-files) command) for manual manipulation,
-the ``zpc`` command compresses (= unindents) all XML files before zipping them 
-into a new DOCX:
+When having indented XML 
+(i.e. via [``uzi``](#unzip-all-files-and-indent-xml-files) command) for manual 
+manipulation, the ``zpc`` command compresses (= unindents) all XML files before 
+zipping them into a new DOCX:
 
 ````docxbox zpc path/to/directory out.docx````  
 
@@ -142,7 +143,8 @@ or ````docxbox ls foo.docx --images --json````
 #### List meta data
 
 docxBox displays only attributes that are contained within the current 
-DOCX file (the attributes can vary by DOCX version and word processor used for creation), also if given empty.
+DOCX file (the attributes can vary by DOCX version and word processor used for 
+creation), also if given empty.
 
 Output meta data of given DOCX:  
 
@@ -210,8 +212,9 @@ or ````docxbox ls foo.docx --fields --json````
 ````docxbox cat foo.docx word/_rels/document.xml.rels````  
 outputs the given file's XML, indented for better readability.
 
-**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use your 
-favorite text editor via the [cmd command](#arbitrary-manual-and-scripted-analysis--modification)
+**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use 
+your favorite text editor via the 
+[cmd command](#arbitrary-manual-and-scripted-analysis--modification)
 
 
 #### Output document as plaintext
@@ -474,22 +477,30 @@ purposes:
 
 ### Batch Templating
 
-docxBox's batch templating mode allows to perform an arbitrary sequence of manipulations 
-(supporting all docxBox commands) upon a given DOCX document, it thereby covers an extensive range of templating options:  
-For example merge fields can be transformed into text in one step of a sequence and in a later step be replaced by a table, which is later filled with content and so forth. Batch templating thereby can facilitate more templating options than the sum of commands directly available in docxBox.
+docxBox's batch templating mode allows to perform an arbitrary sequence of 
+operations (supporting all docxBox commands for document manipulation) upon 
+a given DOCX. It thereby facilitates a more extensive range of templating
+options than the commands directly available without batch templating:  
+**Example:** docxBox does not support replacing merge fields by other than plain 
+textual content. Via batch templating, merge fields can be transformed into text
+in one step of a sequence, which can completely or in part, in a later step be 
+replaced by generic content like for example a table, which can later be filled 
+with more content.  
+
 
 #### Replacement Pre/Post Markers
-Batch templating can make use of "markers": optional text elements containing a distinct identifier string.
-Markers can temporarily be inserted and can subsequently be replaced again at the next (or another later)
-step of the batch sequence, by other generic content. 
+Batch templating can make use of "markers": optional text elements containing a 
+distinct identifier string. Markers can temporarily be inserted and can 
+subsequently be replaced again at the next (or another later) step of the batch 
+sequence, by other generic content. 
 
 **Rules:**
 * Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
   the actual generic replacement content
 * Markers can either be of the type ``text`` or ``paragraph`` (or ``p``) 
   to insert surrounding line-breaks
-* Markers contain a textual identifier, which can use any text (but should be distinct within the 
-  document)
+* Markers contain a textual identifier, which can use any text (but should be 
+distinct within the document)
 
 ##### Example: Replace string by heading-1 followed by table containing images 
 
@@ -497,8 +508,10 @@ step of the batch sequence, by other generic content.
 
 1. **Step "1":** Replace string ``foo`` by heading-1 with the text: ``Foobar``
    (followed by a temporary marker ``my-marker-1``)
-2. **Step "2":** Replace the marker ``my-marker-1`` by table containing 2x2 cells 
-3. **Steps "3" to "6":** Replace (the placeholder texts within the) table cells by images
+2. **Step "2":** Replace the marker ``my-marker-1`` by table containing 2x2 
+   cells 
+3. **Steps "3" to "6":** Replace (the placeholder texts within the) table cells 
+   by images
 4. Add new image files into docx document
 
 **Batch config:**
