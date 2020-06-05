@@ -6,8 +6,10 @@
 namespace docxbox {
 
 // Constructor: init (resolve) command and arguments
-App::App(int argc, char **argv) {
-  if (argc == 1) {
+App::App(int argc, char **argv, bool is_batch_mode) {
+  is_batch_mode_ = is_batch_mode;
+
+  if (!is_batch_mode && argc == 1) {
     // No command given
     AppHelp::PrintHelp(true, AppCommands::Command::Command_Invalid);
 
@@ -110,7 +112,7 @@ bool App::Process() {
   AppCommands::Command command = command_->GetResolved();
 
   // Preprocess: Remap command + argument(s) to rel. shorthand commands
-  if (argc_ > 2) command = PreProcess(arguments, command);
+  if (!is_batch_mode_ && argc_ > 2) command = PreProcess(arguments, command);
 
   bool result;
 
@@ -119,7 +121,7 @@ bool App::Process() {
   } else if (AppCommands::IsReplaceCommand(command)) {
     result = ProcessReplace(command);
   } else {
-    auto *docx_archive = new class docx_archive(argc_, argv_);
+    auto *docx_archive = new class docx_archive(argc_, argv_, is_batch_mode_);
 
     switch (command) {
       case AppCommands::Command_Batch:  // batch
@@ -243,7 +245,7 @@ bool App::ProcessList(AppCommands::Command command) {
 bool App::ProcessReplace(AppCommands::Command command) {
   bool result;
 
-  auto *docx_archive = new docx_archive_replace(argc_, argv_);
+  auto *docx_archive = new docx_archive_replace(argc_, argv_, is_batch_mode_);
 
   switch (command) {
     case AppCommands::Command_LoremIpsum:  // lorem

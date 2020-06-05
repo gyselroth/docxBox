@@ -6,7 +6,8 @@
 
 docx_archive_replace::docx_archive_replace(
     int argc,
-    char **argv) : docx_archive(argc, argv) {}
+    char **argv,
+    bool is_batch_mode) : docx_archive(argc, argv, is_batch_mode) {}
 
 bool docx_archive_replace::ReplaceImage() {
   if (!docxbox::AppArguments::AreArgumentsGiven(
@@ -265,7 +266,8 @@ bool docx_archive_replace::RemoveBetweenText() {
 }
 
 bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (!is_batch_mode_
+      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 

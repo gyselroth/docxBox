@@ -4,8 +4,7 @@
 #include <docxbox/docx/archive/docx_archive_list.h>
 
 docx_archive_list::docx_archive_list(
-    int argc,
-    char **argv) : docx_archive(argc, argv) {}
+    int argc, char **argv) : docx_archive(argc, argv, false) {}
 
 // List files inside DOCX archive and their attributes
 bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {

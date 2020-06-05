@@ -25,7 +25,7 @@ class App {
   static const std::string kAppExecutableName;
 
   // Constructor: init (resolve) command and arguments
-  App(int argc, char **argv);
+  App(int argc, char **argv, bool is_batch_mode = false);
 
   // Process command + arguments
   bool Process();
@@ -33,6 +33,8 @@ class App {
  private:
   int argc_;
   char **argv_;
+
+  bool is_batch_mode_ = false;
 
   AppCommands *command_;
 

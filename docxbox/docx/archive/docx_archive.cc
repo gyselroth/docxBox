@@ -3,9 +3,10 @@
 
 #include <docxbox/docx/archive/docx_archive.h>
 
-docx_archive::docx_archive(int argc, char **argv) {
+docx_archive::docx_archive(int argc, char **argv, bool is_batch_mode = false) {
   argc_ = argc;
   argv_ = argv;
+  is_batch_mode_ = is_batch_mode;
 
   path_working_directory_ = getenv("PWD");
 }
@@ -300,9 +301,9 @@ bool docx_archive::Batch() {
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
-  auto batch = new docx_batch(path_extract_, std::string(argv_[3]));
+  auto batch = new docx_batch(this, std::string(argv_[3]));
 
-  if (!batch->ProcessBatch()) {
+  if (!batch->ProcessSequence()) {
     return false;
   }
 
@@ -399,6 +400,8 @@ bool docx_archive::ViewFilesDiff() {
   return true;
 }
 
+// TODO(kay): move into class of its own (docx_archive_meta)
+//            along w/ rel. sub-methods
 bool docx_archive::ModifyMeta() {
   auto *meta_component = new meta(argc_, argv_);
 

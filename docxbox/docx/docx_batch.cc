@@ -3,8 +3,12 @@
 
 #include <docxbox/docx/docx_batch.h>
 
-docx_batch::docx_batch(std::string path_extract, std::string json)
-    : path_extract_(std::move(path_extract)), json_(std::move(json)) {
+class docx_archive_replace;
+
+docx_batch::docx_batch(class docx_archive *archive, std::string json) {
+  archive_ = archive;
+  json_ = std::move(json);
+
   is_json_valid_ = InitFromJson();
 }
 
@@ -18,7 +22,7 @@ bool docx_batch::InitFromJson() {
     for (nlohmann::json::iterator it = json_inner.begin();
          it != json_inner.end();
          ++it) {
-      commands_.push_back(docxbox::AppCommands::ResolveCommandByName(it.key()));
+      commands_.push_back(it.key());
 
       // note: dumped JSON string has associations alphabetically sorted,
       //       and not necessarily in same order as originally given
@@ -30,7 +34,7 @@ bool docx_batch::InitFromJson() {
          && commands_.size() == arguments_json.size();
 }
 
-bool docx_batch::ProcessBatch() {
+bool docx_batch::ProcessSequence() {
   if (!is_json_valid_)
     return docxbox::AppStatus::Error("Cannot process: Detected invalid JSON");
 
@@ -41,62 +45,10 @@ bool docx_batch::ProcessBatch() {
 }
 
 bool docx_batch::ProcessStep(int index) {
-  switch (commands_[index]) {
-    case docxbox::AppCommands::Command_Batch:
-      return docxbox::AppStatus::Error(
-          "Detected nested batch command (not supported)");
-    case docxbox::AppCommands::Command_ExecuteUserCommand:
-      return docxbox::AppStatus::Error(
-          "cmd command is not yet implemented in batch processor");
-    case docxbox::AppCommands::Command_LoremIpsum:
-      return docxbox::AppStatus::Error(
-          "lorem command is not yet implemented in batch processor");
-    case docxbox::AppCommands::Command_ModifyMeta:
-      return docxbox::AppStatus::Error(
-          "mm command is not yet implemented in batch processor");
-    case docxbox::AppCommands::Command_RemoveBetweenText:
-      return docxbox::AppStatus::Error(
-          "rmt command is not yet implemented in batch processor");
-    case docxbox::AppCommands::Command_ReplaceImage:
-      return docxbox::AppStatus::Error(
-          "rpi command is not yet implemented in batch processor");
-    case docxbox::AppCommands::Command_ReplaceText:
-      return docxbox::AppStatus::Error(
-          "rpt command is not yet implemented in batch processor");
-    case docxbox::AppCommands::Command_SetFieldValue:
-      return docxbox::AppStatus::Error(
-          "sfv command is not yet implemented in batch processor");
-      // Ignore non-modification commands
-    case docxbox::AppCommands::Command_Cat:break;
-    case docxbox::AppCommands::Command_FileDiff:break;
-    case docxbox::AppCommands::Command_Help:break;
-    case docxbox::AppCommands::Command_GetPlainText:break;
-    case docxbox::AppCommands::Command_GetPlainTextSegments:break;
-    case docxbox::AppCommands::Command_List:
-    case docxbox::AppCommands::Command_ListAsJson:
-    case docxbox::AppCommands::Command_ListImages:
-    case docxbox::AppCommands::Command_ListImagesAsJson:
-    case docxbox::AppCommands::Command_ListFonts:
-    case docxbox::AppCommands::Command_ListFontsAsJson:
-    case docxbox::AppCommands::Command_ListFields:
-    case docxbox::AppCommands::Command_ListFieldsAsJson:
-    case docxbox::AppCommands::Command_ListMeta:
-    case docxbox::AppCommands::Command_ListMetaAsJson:
-    case docxbox::AppCommands::Command_LocateFilesContaining:
-    case docxbox::AppCommands::Command_LocateFilesContainingAsJson:
-    case docxbox::AppCommands::Command_Unzip:
-    case docxbox::AppCommands::Command_UnzipAndIndentXml:
-    case docxbox::AppCommands::Command_UnzipMedia:
-    case docxbox::AppCommands::Command_Version:
-    case docxbox::AppCommands::Command_Zip:
-    case docxbox::AppCommands::Command_ZipCompressed:
-      return docxbox::AppStatus::Warning(
-          "Found non-modification command in batch (ignored)");
-    case docxbox::AppCommands::Command_Invalid:
-    default:
-      return docxbox::AppStatus::Error(
-          "Detected invalid command in batch processor");
-  }
+  // TODO(kay): create another docxbox::App instance
+  // TODO(kay): init batch mode on app instance (set argc, argv from archive_)
+  // TODO(kay): invoke App::Process()
+  // TODO(kay): adapt all DOCX modification methods for optional batch mode
 
   return false;
 }

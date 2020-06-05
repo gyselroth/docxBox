@@ -18,18 +18,19 @@
 
 class docx_batch {
  public:
-  docx_batch(std::string path_extract, std::string json);
+  docx_batch(class docx_archive *archive, std::string json);
 
-  bool ProcessBatch();
+  bool ProcessSequence();
 
  private:
   bool is_json_valid_;
 
-  std::string path_extract_;
+  docx_archive *archive_;
+
   std::string json_;
 
   // Batch commands. E.g.: {"rpt","rpi",...}
-  std::vector<docxbox::AppCommands::Command> commands_;
+  std::vector<std::string> commands_;
 
   // Arguments of batch commands, as JSON strings.
   // E.g: {

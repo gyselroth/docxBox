@@ -31,7 +31,7 @@
 
 class docx_archive {
  public:
-  docx_archive(int argc, char **argv);
+  docx_archive(int argc, char **argv, bool is_batch_mode);
 
   virtual ~docx_archive();
 
@@ -85,6 +85,14 @@ class docx_archive {
  protected:
   int argc_;
   char **argv_;
+
+  // When true:
+  // -Ignore non-manipulation commands
+  // -Ignore commands "cmd" and "batch"
+  // -Do not unzip before modification steps
+  // -Do not zip after modification steps
+  // -Do not remove temporary files during destruction
+  bool is_batch_mode_ = false;
 
   std::string path_working_directory_;
 

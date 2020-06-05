@@ -3,7 +3,6 @@
 
 #include <docxbox/docx/component/numbering.h>
 
-// TODO(kay): transform into docx_renderer_numbering
 numbering::numbering(std::string path_extract) {
   path_extract_ = std::move(path_extract);
 }

@@ -27,7 +27,7 @@
 
 class docx_archive_replace : public docx_archive {
  public:
-  docx_archive_replace(int argc, char **argv);
+  docx_archive_replace(int argc, char **argv, bool is_batch_mode);
 
   bool ReplaceImage();
   bool ReplaceText();
