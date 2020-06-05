@@ -526,12 +526,12 @@ Sequences of templating steps to be batch-processed must be given like:
 **Rules:**
 * Every step must be given as a tuple of step-number and -parameters
 * ``<STEP_NUMBER>`` is an arbitrary string, must be distinct within the sequence
-* Parameters must be given as a tuple of a command and its respective arguments.
+* Parameters must be given as a tuple of a command and its respective arguments
 * ``<COMMAND>`` accepts any of docxBox's templating commands 
   (``rpi``, ``rpt``, ``lorem``, ``mm`` and ``sfv``)
-* ``<ARGUMENT>``: Argument(s) for respective command, same as in non-batch mode.
+* ``<ARGUMENT>``: Argument(s) for respective command, same as in non-batch mode
 * When a command has no arguments (e.g. ``lorem``), an empty array must be 
-  given though (E.g.: ``{"lorem":[]}``).
+  given though (E.g.: ``{"lorem":[]}``)
 
  
 ##### Example: Replace string by heading-1 followed by table containing images 
