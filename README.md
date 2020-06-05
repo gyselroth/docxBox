@@ -518,7 +518,8 @@ Sequences of templating steps to be batch-processed must be given like:
 ````
 {
  "1": {"mm": ["description","foo"]},
- "2": {"rpt": ["bar","baz"]}
+ "2": {"rpt": ["bar","baz"]},
+ "3": {"rpt": ["qux","{\"h1\":{\"text\":\"Quux\"}}"]}
 }
 ````
 
