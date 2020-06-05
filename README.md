@@ -480,7 +480,7 @@ purposes:
 docxBox's batch templating mode allows to perform an arbitrary sequence of 
 operations (supporting all docxBox commands for document manipulation) upon 
 a given DOCX. It thereby facilitates a more extensive range of templating
-options than the commands directly available without batch templating.  
+options than the commands directly (= without batch templating) available.  
 
 **Example:** docxBox does not directly support replacing merge fields by other
 than plain textual content. Via batch templating, merge fields can be 
