@@ -8,23 +8,26 @@ docx_batch::docx_batch(std::string path_extract, std::string json)
   is_json_valid_ = InitFromJson();
 }
 
+// Extract batch commands and rel. arguments
 bool docx_batch::InitFromJson() {
   if (!helper::Json::IsJson(json_)) return false;
 
   auto json_outer = nlohmann::json::parse(json_);
 
-//  for (auto json_inner : json_outer) {
-//    for (nlohmann::json::iterator it = json_inner.begin();
-//         it != json_inner.end();
-//         ++it) {
-// TODO(kay): implement extract command-keys
-// TODO(kay): detect resp. commands
-// TODO(kay): push commands into commands_
-//      }
-//    }
-//  }
+  for (auto json_inner : json_outer) {
+    for (nlohmann::json::iterator it = json_inner.begin();
+         it != json_inner.end();
+         ++it) {
+      commands_.push_back(docxbox::AppCommands::ResolveCommandByName(it.key()));
 
-  return true; //!commands_.empty();
+      // note: dumped JSON string has associations alphabetically sorted,
+      //       and not necessarily in same order as originally given
+      arguments_json.push_back(it.value().dump());
+    }
+  }
+
+  return !commands_.empty()
+         && commands_.size() == arguments_json.size();
 }
 
 bool docx_batch::Process() {

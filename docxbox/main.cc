@@ -9,6 +9,27 @@
  * @param argv Array of arguments, argv[0] is name and path of executable
  */
 int main(int argc, char **argv) {
+//  std::cout << "debug is active: no dynamic arguments will be read!\n";
+//  argc=4;
+//  argv[1]="batch";
+//  argv[2]="/home/kay/CLionProjects/docxengine/test/files/docx/ohne_bild.docx";
+//  argv[3]="{"
+//            "\"1\":{"
+//              "\"rpt1\":"
+//              "["
+//                "\"foo\","
+//                "{\"h1\": {\"text\": \"Heading\",\"post\": {\"para\": \"my-postfix\"}}}"
+//              "]"
+//            "},"
+//            "\"2\":{"
+//              "\"rpt2\":"
+//              "["
+//                "\"my-postfix\","
+//                "{\"h2\": {\"text\": \"Sub-Heading\"}}"
+//              "]"
+//            "}"
+//          "}";
+
   // Process command arguments, display help if no valid command given
   auto *app = new docxbox::App(argc, argv);
 

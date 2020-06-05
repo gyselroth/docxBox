@@ -27,7 +27,15 @@ class docx_batch {
   std::string path_extract_;
   std::string json_;
 
+  // Batch commands. E.g.: {"rpt","rpi",...}
   std::vector<docxbox::AppCommands::Command> commands_;
+
+  // Arguments of batch commands, as JSON strings.
+  // E.g: {
+  //       "[\"foo\",{"h1":"{"text": "Heading"}}"]",
+  //       "[...
+  //      }
+  std::vector<std::string> arguments_json;
 
   bool InitFromJson();
 };
