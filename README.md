@@ -519,7 +519,10 @@ Sequences of templating steps to be batch-processed must be given like:
 {
  "1": {"mm": ["description", "foo"]},
  "2": {"rpt": ["bar", "baz"]},
- "3": {"rpt": ["qux", "{\"h1\": {\"text\": \"Quux\"}}"]}
+ "3": {"rpt": [
+    "qux", 
+    {"h1": {"text": "Quux"}}
+ ]}
 }
 ````
 
@@ -532,8 +535,10 @@ Sequences of templating steps to be batch-processed must be given like:
 * ``<ARGUMENT>``: Argument(s) for respective command, same as in non-batch mode
 * When a command has no arguments (e.g. ``lorem``), an empty array must be 
   given though (E.g.: ``{"lorem":[]}``)
+* Arguments for markup-configuration of generic document elements can be given 
+  as nested JSON   
 
- 
+
 ##### Example: Replace string by heading-1 followed by table containing images 
 
 **Templating sequence:**
