@@ -481,6 +481,7 @@ docxBox's batch templating mode allows to perform an arbitrary sequence of
 operations (supporting all docxBox commands for document manipulation) upon 
 a given DOCX. It thereby facilitates a more extensive range of templating
 options than the commands directly available without batch templating:  
+
 **Example:** docxBox does not support replacing merge fields by other than plain 
 textual content. Via batch templating, merge fields can be transformed into text
 in one step of a sequence, which can completely or in part, in a later step be 
