@@ -25,13 +25,13 @@ std::string AppArguments::ResolvePathFromArgument(
   if (argc >= index_argument) {
     path = helper::File::ResolvePath(pwd, argv[index_argument-1]);
   } else {
-    AppError::Output("Missing file argument");
+    AppStatus::Error("Missing file argument");
   }
 
   if (must_exist
       && !path.empty()
       && !helper::File::FileExists(path)) {
-    docxbox::AppError::Output("File not found: " + path);
+    docxbox::AppStatus::Error("File not found: " + path);
 
     return "";
   }
@@ -43,7 +43,7 @@ bool AppArguments::IsArgumentGiven(int argc,
                                    int index,
                                    const std::string &argument_description) {
   return argc <= index
-    ? docxbox::AppError::Output("Missing argument: " + argument_description)
+    ? docxbox::AppStatus::Error("Missing argument: " + argument_description)
     : true;
 }
 

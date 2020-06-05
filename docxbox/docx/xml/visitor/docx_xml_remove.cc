@@ -33,7 +33,7 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(
     RemoveNodes(nodes_to_be_removed_);
 
     return tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
-           ? docxbox::AppError::Output("Failed saving: " + path_xml)
+           ? docxbox::AppStatus::Error("Failed saving: " + path_xml)
            : true;
   }
 

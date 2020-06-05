@@ -8,9 +8,17 @@
 
 namespace docxbox {
 
-class AppError {
+class AppStatus {
  public:
-  static bool Output(const std::string &message);
+  // TODO(kay): implement handling of different resolve modes (atm: output only)
+  enum StatusResolveMode {
+    Mode_Log,
+    Mode_Output,
+    Mode_OutputAndLog
+  };
+
+  static bool Error(const std::string &message);
+  static bool Warning(const std::string &message);
 };
 
 }  // namespace docxbox

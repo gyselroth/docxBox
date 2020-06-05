@@ -30,11 +30,85 @@ bool docx_batch::InitFromJson() {
          && commands_.size() == arguments_json.size();
 }
 
-bool docx_batch::Process() {
+bool docx_batch::ProcessBatch() {
   if (!is_json_valid_)
-    return docxbox::AppError::Output("Cannot process: Detected invalid JSON");
+    return docxbox::AppStatus::Error("Cannot process: Detected invalid JSON");
 
-  std::cout << "TODO(kay): implement process JSON\n";
+  int index = 0;
+
+  for (auto command : commands_) {
+    ProcessStep(index);
+
+    ++index;
+  }
 
   return true;
+}
+
+bool docx_batch::ProcessStep(int index) {
+  switch (commands_[index]) {
+    case docxbox::AppCommands::Command_Batch:
+      docxbox::AppStatus::Error("Detected nested batch command (not supported)");
+      return false;
+    case docxbox::AppCommands::Command_ExecuteUserCommand:
+      docxbox::AppStatus::Error(
+          "cmd command is not yet implemented in batch processor");
+      return false;
+    case docxbox::AppCommands::Command_LoremIpsum:
+      docxbox::AppStatus::Error(
+          "lorem command is not yet implemented in batch processor");
+      return false;
+    case docxbox::AppCommands::Command_ModifyMeta:
+      docxbox::AppStatus::Error(
+          "mm command is not yet implemented in batch processor");
+      return false;
+    case docxbox::AppCommands::Command_RemoveBetweenText:
+      docxbox::AppStatus::Error(
+          "rmt command is not yet implemented in batch processor");
+      return false;
+    case docxbox::AppCommands::Command_ReplaceImage:
+      docxbox::AppStatus::Error(
+          "rpi command is not yet implemented in batch processor");
+      return false;
+    case docxbox::AppCommands::Command_ReplaceText:
+      docxbox::AppStatus::Error(
+          "rpt command is not yet implemented in batch processor");
+      return false;
+    case docxbox::AppCommands::Command_SetFieldValue:
+      docxbox::AppStatus::Error(
+          "sfv command is not yet implemented in batch processor");
+      return false;
+      // Ignore non-modification commands
+    case docxbox::AppCommands::Command_Cat:break;
+    case docxbox::AppCommands::Command_FileDiff:break;
+    case docxbox::AppCommands::Command_Help:break;
+    case docxbox::AppCommands::Command_GetPlainText:break;
+    case docxbox::AppCommands::Command_GetPlainTextSegments:break;
+    case docxbox::AppCommands::Command_List:
+    case docxbox::AppCommands::Command_ListAsJson:
+    case docxbox::AppCommands::Command_ListImages:
+    case docxbox::AppCommands::Command_ListImagesAsJson:
+    case docxbox::AppCommands::Command_ListFonts:
+    case docxbox::AppCommands::Command_ListFontsAsJson:
+    case docxbox::AppCommands::Command_ListFields:
+    case docxbox::AppCommands::Command_ListFieldsAsJson:
+    case docxbox::AppCommands::Command_ListMeta:
+    case docxbox::AppCommands::Command_ListMetaAsJson:
+    case docxbox::AppCommands::Command_LocateFilesContaining:
+    case docxbox::AppCommands::Command_LocateFilesContainingAsJson:
+    case docxbox::AppCommands::Command_Unzip:
+    case docxbox::AppCommands::Command_UnzipAndIndentXml:
+    case docxbox::AppCommands::Command_UnzipMedia:
+    case docxbox::AppCommands::Command_Version:
+    case docxbox::AppCommands::Command_Zip:
+    case docxbox::AppCommands::Command_ZipCompressed:
+      docxbox::AppStatus::Warning("Found non-modification command in batch (ignored)");
+      return true;
+    case docxbox::AppCommands::Command_Invalid:
+    default:
+      docxbox::AppStatus::Error("Detected invalid command in batch processor");
+      return false;
+  }
+
+  return false;
 }

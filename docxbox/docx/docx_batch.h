@@ -4,7 +4,7 @@
 #ifndef DOCXBOX_DOCX_DOCX_BATCH_H_
 #define DOCXBOX_DOCX_DOCX_BATCH_H_
 
-#include <docxbox/app/app_error.h>
+#include <docxbox/app/app_status.h>
 #include <docxbox/app/app_command.h>
 #include <docxbox/helper/helper_cli.h>
 #include <docxbox/helper/helper_string.h>
@@ -19,7 +19,7 @@ class docx_batch {
  public:
   docx_batch(std::string path_extract, std::string json);
 
-  bool Process();
+  bool ProcessBatch();
 
  private:
   bool is_json_valid_;
@@ -38,6 +38,8 @@ class docx_batch {
   std::vector<std::string> arguments_json;
 
   bool InitFromJson();
+
+  bool ProcessStep(int index);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_BATCH_H_

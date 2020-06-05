@@ -5,7 +5,7 @@
 #define DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_LIST_H_
 
 #include <docxbox/app/app_argument.h>
-#include <docxbox/app/app_error.h>
+#include <docxbox/app/app_status.h>
 #include <docxbox/docx/archive/docx_archive.h>
 #include <docxbox/docx/docx_compare.h>
 #include <docxbox/docx/component/fontTable.h>

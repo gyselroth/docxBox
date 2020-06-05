@@ -5,7 +5,7 @@
 #define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_TABLE_H_
 
 #include <docxbox/docx/renderer/docx_renderer.h>
-#include <docxbox/app/app_error.h>
+#include <docxbox/app/app_status.h>
 
 #include <iostream>
 #include <string>
