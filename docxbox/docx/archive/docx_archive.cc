@@ -15,6 +15,10 @@ docx_archive::~docx_archive() {
   RemoveTemporaryFiles();
 }
 
+char* docx_archive::GetArgValue(int index) {
+  return argv_[index];
+}
+
 // Setup path to DOCX file,
 // absolute or relative from execution path, from given argument
 bool docx_archive::InitPathDocxByArgV(int index_path_argument) {

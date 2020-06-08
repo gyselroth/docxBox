@@ -1,6 +1,7 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
+#include <docxbox/app/app.h>  // note: must be here for forward-declaration
 #include <docxbox/docx/docx_batch.h>
 
 class docx_archive_replace;
@@ -45,8 +46,19 @@ bool docx_batch::ProcessSequence() {
 }
 
 bool docx_batch::ProcessStep(int index) {
-  // TODO(kay): create another docxbox::App instance
-  // TODO(kay): init batch mode on app instance (set argc, argv from archive_)
+  // TODO(kay): resolve arguments_json_ at index
+  //            retrieve 1. current arguments, 2. required argc
+
+  int argc = 3;
+
+  char **argv = new char*[3];
+
+  argv[0] = archive_->GetArgValue(0);
+  argv[1] = (char*)commands_[index].c_str();
+  //argv[2] = "";
+
+  auto app = new docxbox::App(argc, argv, true);
+
   // TODO(kay): invoke App::Process()
   // TODO(kay): adapt all DOCX modification methods for optional batch mode
 

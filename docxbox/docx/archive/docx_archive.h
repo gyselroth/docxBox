@@ -35,6 +35,8 @@ class docx_archive {
 
   virtual ~docx_archive();
 
+  char* GetArgValue(int index);
+
   std::string UnzipDocx(
       const std::string &path_docx,
       const std::string &path_extract_appendix = "",
