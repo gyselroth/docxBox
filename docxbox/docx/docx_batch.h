@@ -37,7 +37,7 @@ class docx_batch {
   //       "[\"foo\",{"h1":"{"text": "Heading"}}"]",
   //       "[...
   //      }
-  std::vector<std::string> arguments_json;
+  std::vector<std::string> arguments_json_;
 
   bool InitFromJson();
 

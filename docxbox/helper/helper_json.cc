@@ -46,4 +46,10 @@ std::string Json::GetFirstValueOfKey(
   }
 }
 
+extern int Json::GetAmountItems(const std::string& json) {
+  auto deserialized = nlohmann::json::parse(json);
+
+  return deserialized.size();
+}
+
 }  // namespace helper

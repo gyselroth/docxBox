@@ -27,12 +27,12 @@ bool docx_batch::InitFromJson() {
 
       // note: dumped JSON string has associations alphabetically sorted,
       //       and not necessarily in same order as originally given
-      arguments_json.push_back(it.value().dump());
+      arguments_json_.push_back(it.value().dump());
     }
   }
 
   return !commands_.empty()
-         && commands_.size() == arguments_json.size();
+         && commands_.size() == arguments_json_.size();
 }
 
 bool docx_batch::ProcessSequence() {
@@ -46,21 +46,54 @@ bool docx_batch::ProcessSequence() {
 }
 
 bool docx_batch::ProcessStep(int index) {
-  // TODO(kay): resolve arguments_json_ at index
-  //            retrieve 1. current arguments, 2. required argc
+  // Resolve command + arguments
+  std::vector<std::string> values;
+  values.emplace_back(archive_->GetArgValue(0));
 
-  int argc = 3;
+  if (arguments_json_[index] == "[]") {
+    values.emplace_back(commands_[index]);
+  } else {
+    auto json_outer = nlohmann::json::parse(arguments_json_[index]);
 
-  char **argv = new char*[3];
+    for (auto json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        nlohmann::json basic_json = it.value();
 
-  argv[0] = archive_->GetArgValue(0);
-  argv[1] = (char*)commands_[index].c_str();
-  //argv[2] = "";
+        if (basic_json.is_object()) {
+          values.emplace_back(std::string(basic_json.dump()));
+        } else if (basic_json.is_string()) {
+          values.emplace_back(it.value().dump().c_str());
+        } else {
+          // TODO(kay): test - needs handling of other types?
+        }
+      }
+    }
+  }
+
+  int argc = values.size();
+
+  // Convert from std::vector<std::string> to char**
+  char **argv = new char*[argc + 1];
+  for(size_t i = 0; i < argc; ++i) argv[i] = strdup(values[i].c_str());
+  argv[argc] = nullptr;
 
   auto app = new docxbox::App(argc, argv, true);
 
-  // TODO(kay): invoke App::Process()
-  // TODO(kay): adapt all DOCX modification methods for optional batch mode
+  // TODO(kay): init DOCX path (source + extraction) from archive_
+
+  //app->Process();
+
+  // TODO(kay): extend DOCX modification methods for optional batch processing
+
+  // delete argv
+  for(size_t i = 0; i < argc; ++i)
+    delete argv[i];  // free memory for each c-style string
+
+  delete[] argv;  // free memory for outer char* array
+
+  delete app;
 
   return false;
 }

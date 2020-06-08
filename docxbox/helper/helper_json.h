@@ -21,6 +21,8 @@ extern std::string GetFirstKey(const std::string &json);
 extern std::string GetFirstValueOfKey(
     const std::string &json, const std::string& key);
 
+extern int GetAmountItems(const std::string& json);
+
 }  // namespace Json
 }  // namespace helper
 
