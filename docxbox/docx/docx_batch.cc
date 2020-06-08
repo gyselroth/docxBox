@@ -47,12 +47,12 @@ bool docx_batch::ProcessSequence() {
 
 bool docx_batch::ProcessStep(int index) {
   // Resolve command + arguments
-  std::vector<std::string> values;
-  values.emplace_back(archive_->GetArgValue(0));
+  std::vector<std::string> app_cli_arguments;
 
-  if (arguments_json_[index] == "[]") {
-    values.emplace_back(commands_[index]);
-  } else {
+  app_cli_arguments.emplace_back(archive_->GetArgValue(0));
+  app_cli_arguments.emplace_back(commands_[index]);
+
+  if (arguments_json_[index] != "[]") {
     auto json_outer = nlohmann::json::parse(arguments_json_[index]);
 
     for (auto json_inner : json_outer) {
@@ -62,9 +62,9 @@ bool docx_batch::ProcessStep(int index) {
         nlohmann::json basic_json = it.value();
 
         if (basic_json.is_object()) {
-          values.emplace_back(std::string(basic_json.dump()));
+          app_cli_arguments.emplace_back(std::string(basic_json.dump()));
         } else if (basic_json.is_string()) {
-          values.emplace_back(it.value().dump().c_str());
+          app_cli_arguments.emplace_back(it.value().dump().c_str());
         } else {
           // TODO(kay): test - needs handling of other types?
         }
@@ -72,11 +72,13 @@ bool docx_batch::ProcessStep(int index) {
     }
   }
 
-  int argc = values.size();
+  int argc = app_cli_arguments.size();
 
   // Convert from std::vector<std::string> to char**
   char **argv = new char*[argc + 1];
-  for(size_t i = 0; i < argc; ++i) argv[i] = strdup(values[i].c_str());
+  for(size_t i = 0; i < argc; ++i)
+    argv[i] = strdup(app_cli_arguments[i].c_str());
+
   argv[argc] = nullptr;
 
   auto app = new docxbox::App(argc, argv, true);
