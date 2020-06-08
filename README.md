@@ -531,7 +531,10 @@ Sequences of templating steps to be batch-processed must be given like:
 * ``<STEP_NUMBER>`` is an arbitrary string, must be distinct within the sequence
 * Parameters must be given as a tuple of a command and its respective arguments
 * ``<COMMAND>`` accepts any of docxBox's commands for DOCX manipulation 
-  (``rmt``, ``rpi``, ``rpt``, ``lorem``, ``mm`` and ``sfv``)
+  ([``rmt``](#remove-content-between-text), [``rpi``](#replace-image), 
+  [``rpt``](#replace-text), [``lorem``](#randomize-document-text), 
+  [``mm``](#modify-meta-data) and 
+  [``sfv``](#set-field-value-merge-fields-generic-fields))
 * ``<ARGUMENT>``: Argument(s) for respective command, same as in non-batch mode
 * When a command has no arguments (e.g. ``lorem``), an empty array must be 
   given though (E.g.: ``{"lorem":[]}``)
