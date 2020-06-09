@@ -218,8 +218,8 @@ or ````docxbox ls foo.docx --fields --json````
 ````docxbox cat foo.docx word/_rels/document.xml.rels````  
 outputs the given file's XML, indented for better readability.
 
-**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use 
-your favorite text editor via the 
+**Hint:** For viewing or editing complex XML, e.g. with syntax highlightning, 
+you can use your favorite text editor via the 
 [``cmd`` command](#arbitrary-manual-and-scripted-analysis--modification)
 
 
@@ -516,8 +516,8 @@ distinct within the document)
 Sequences of templating steps to be batch-processed must be given like:   
 ````
 {
- "<STEP_NUMBER>": {"<COMMAND>": [("<ARGUMENT_1>",)(,"<ARGUMENT_2>",...)]},
- "<STEP_NUMBER>": {"<COMMAND>": [("<ARGUMENT_1>",)(,"<ARGUMENT_2>",...)]},
+ "<STEP_ID>": {"<COMMAND>": [("<ARGUMENT_1>",)(,"<ARGUMENT_2>",...)]},
+ "<STEP_ID>": {"<COMMAND>": [("<ARGUMENT_1>",)(,"<ARGUMENT_2>",...)]},
  ...
 }
 ````
@@ -535,8 +535,8 @@ Sequences of templating steps to be batch-processed must be given like:
 ````
 
 **Rules:**
-* Every step must be given as a tuple of step-number and -parameters
-* ``<STEP_NUMBER>`` is an arbitrary string, must be distinct within the sequence
+* Every step must be given as a tuple of step-ID and -parameters
+* ``<STEP_ID>`` is an arbitrary string, must be distinct within the sequence
 * Parameters must be given as a tuple of a command and its respective arguments
 * ``<COMMAND>`` accepts any of docxBox's commands for DOCX manipulation 
   ([``rmt``](#remove-content-between-text), [``rpi``](#replace-image), 
