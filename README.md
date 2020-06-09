@@ -214,7 +214,7 @@ outputs the given file's XML, indented for better readability.
 
 **Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use 
 your favorite text editor via the 
-[cmd command](#arbitrary-manual-and-scripted-analysis--modification)
+[``cmd`` command](#arbitrary-manual-and-scripted-analysis--modification)
 
 
 #### Output document as plaintext
