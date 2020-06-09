@@ -84,6 +84,14 @@ class docx_archive {
 
   void RemoveTemporaryFiles();
 
+  void SetPathDocxIn(const std::string &path_docx_in);
+  void SetPathExtract(const std::string &path_extract);
+
+  void SetIsFinalBatchStep(bool is_final_batch_step);
+
+  const std::string &GetPathDocxIn() const;
+  const std::string &GetPathExtract() const;
+
  protected:
   int argc_;
   char **argv_;
@@ -95,6 +103,10 @@ class docx_archive {
   // -Do not zip after modification steps
   // -Do not remove temporary files during destruction
   bool is_batch_mode_ = false;
+
+  // Only upon final step of batch sequence, modification methods need to
+  // zip modified files back into the resulting DOCX
+  bool is_final_batch_step_ = false;
 
   std::string path_working_directory_;
 

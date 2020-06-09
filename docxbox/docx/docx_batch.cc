@@ -51,6 +51,7 @@ bool docx_batch::ProcessStep(int index) {
 
   app_cli_arguments.emplace_back(archive_->GetArgValue(0));
   app_cli_arguments.emplace_back(commands_[index]);
+  app_cli_arguments.emplace_back(archive_->GetArgValue(1));
 
   if (arguments_json_[index] != "[]") {
     auto json_outer = nlohmann::json::parse(arguments_json_[index]);
@@ -72,25 +73,30 @@ bool docx_batch::ProcessStep(int index) {
     }
   }
 
+  // TODO(kay): add optional destination path to app_cli_arguments
+//  app_cli_arguments.emplace_back(archive_->GetArgValue(1));
+
   int argc = app_cli_arguments.size();
 
   // Convert from std::vector<std::string> to char**
   char **argv = new char*[argc + 1];
-  for(size_t i = 0; i < argc; ++i)
+
+  for (size_t i = 0; i < argc; ++i)
     argv[i] = strdup(app_cli_arguments[i].c_str());
 
   argv[argc] = nullptr;
 
   auto app = new docxbox::App(argc, argv, true);
 
-  // TODO(kay): init DOCX path (source + extraction) from archive_
+  app->SetPathDocxIn(archive_->GetPathDocxIn());
+  app->SetPathExtract(archive_->GetPathExtract());
 
-  //app->Process();
+  if (index == commands_.size() - 1) app->SetIsFinalBatchStep(true);
 
-  // TODO(kay): extend DOCX modification methods for optional batch processing
+  app->Process();
 
   // delete argv
-  for(size_t i = 0; i < argc; ++i)
+  for (size_t i = 0; i < argc; ++i)
     delete argv[i];  // free memory for each c-style string
 
   delete[] argv;  // free memory for outer char* array

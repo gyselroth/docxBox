@@ -19,6 +19,26 @@ char* docx_archive::GetArgValue(int index) {
   return argv_[index];
 }
 
+void docx_archive::SetPathDocxIn(const std::string &path_docx_in) {
+  path_docx_in_ = path_docx_in;
+}
+
+void docx_archive::SetPathExtract(const std::string &path_extract) {
+  path_extract_ = path_extract;
+}
+
+void docx_archive::SetIsFinalBatchStep(bool is_final_batch_step) {
+  is_final_batch_step_ = is_final_batch_step;
+}
+
+const std::string &docx_archive::GetPathDocxIn() const {
+  return path_docx_in_;
+}
+
+const std::string &docx_archive::GetPathExtract() const {
+  return path_extract_;
+}
+
 // Setup path to DOCX file,
 // absolute or relative from execution path, from given argument
 bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
@@ -433,6 +453,14 @@ bool docx_archive::ModifyMeta() {
     meta_component->SaveCoreXml();
   } catch (std::string &message) {
     std::cerr << message;
+  }
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) {
+    delete meta_component;
+
+    return true;
   }
 
   std::string path_docx_out;

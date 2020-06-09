@@ -52,6 +52,10 @@ bool docx_archive_replace::ReplaceImage() {
           "Cannot replace " + image_original
               + " - no such image within " + path_docx_in_);
 
+    // Create resulting DOCX from files during non-batch mode
+    // or at final step of batch sequence
+    if (is_batch_mode_ && !is_final_batch_step_) return true;
+
     std::string path_docx_out =
         argc_ >= 6
         // Result filename is given as argument
@@ -90,7 +94,8 @@ bool docx_archive_replace::ReplaceText() {
   std::string image_relationship_id;
   std::string hyperlink_relationship_id;
 
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (!is_batch_mode_
+      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   const char *kReplacement = replacement.c_str();
 
@@ -137,6 +142,10 @@ bool docx_archive_replace::ReplaceText() {
   }
 
   delete parser;
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) return true;
 
   std::string path_docx_out;
 
@@ -253,6 +262,10 @@ bool docx_archive_replace::RemoveBetweenText() {
 
   delete parser;
 
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) return true;
+
   std::string path_docx_out =
       argc_ >= 7
       // Result filename is given as argument
@@ -289,6 +302,10 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
   }
 
   delete parser;
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) return true;
 
   bool overwrite_source_docx = argc_ < 4;
 
@@ -333,6 +350,10 @@ bool docx_archive_replace::SetFieldValue() {
   }
 
   delete parser;
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) return true;
 
   std::string path_docx_out =
       argc_ >= 6

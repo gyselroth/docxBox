@@ -22,6 +22,18 @@ App::App(int argc, char **argv, bool is_batch_mode) {
   command_ = new AppCommands(argc > 0 ? argv[1] : "");
 }
 
+void App::SetPathDocxIn(const std::string &path_docx_in) {
+  path_docx_in_ = path_docx_in;
+}
+
+void App::SetPathExtract(const std::string &path_extract) {
+  path_extract_ = path_extract;
+}
+
+void App::SetIsFinalBatchStep(bool is_final_batch_step) {
+  is_final_batch_step_ = is_final_batch_step;
+}
+
 // Remap command + argument variations to rel. shorthand commands
 AppCommands::Command App::PreProcess(
     AppArguments *arguments,
@@ -122,6 +134,7 @@ bool App::Process() {
     result = ProcessReplace(command);
   } else {
     auto *docx_archive = new class docx_archive(argc_, argv_, is_batch_mode_);
+    InitBatchProcessor(docx_archive);
 
     switch (command) {
       case AppCommands::Command_Batch:  // batch
@@ -193,7 +206,8 @@ bool App::Process() {
 bool App::ProcessList(AppCommands::Command command) {
   bool result;
 
-  auto *docx_archive = new docx_archive_list(argc_, argv_);
+  auto *docx_archive = new docx_archive_list(argc_, argv_, is_batch_mode_);
+  InitBatchProcessor(docx_archive);
 
   switch (command) {
     case AppCommands::Command_List:  // ls
@@ -246,6 +260,7 @@ bool App::ProcessReplace(AppCommands::Command command) {
   bool result;
 
   auto *docx_archive = new docx_archive_replace(argc_, argv_, is_batch_mode_);
+  InitBatchProcessor(docx_archive);
 
   switch (command) {
     case AppCommands::Command_LoremIpsum:  // lorem
@@ -271,6 +286,15 @@ bool App::ProcessReplace(AppCommands::Command command) {
   delete docx_archive;
 
   return result;
+}
+
+void App::InitBatchProcessor(docx_archive *docx_archive) const {
+  if (!is_batch_mode_) return;
+
+    docx_archive->SetPathDocxIn(path_docx_in_);
+    docx_archive->SetPathExtract(path_extract_);
+    docx_archive->SetIsFinalBatchStep(is_final_batch_step_);
+    // TODO(kay): set optional destination path
 }
 
 }  // namespace docxbox
