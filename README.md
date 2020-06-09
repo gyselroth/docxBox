@@ -154,6 +154,8 @@ Output meta data of given DOCX:
 or ````docxbox ls foo.docx -m````  
 or ````docxbox ls foo.docx --meta````
 
+![List document meta data](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/lsm.png)
+
 To output as JSON:
 
 ````docxbox lsmj foo.docx````  
