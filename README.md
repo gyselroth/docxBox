@@ -536,8 +536,8 @@ Sequences of templating steps to be batch-processed must be given like:
   [``mm``](#modify-meta-data) and 
   [``sfv``](#set-field-value-merge-fields-generic-fields))
 * ``<ARGUMENT>``: Argument(s) for respective command, same as in non-batch mode
-* When a command has no arguments (e.g. ``lorem``), an empty array must be 
-  given though (E.g.: ``{"lorem":[]}``)
+* When a command has no arguments (e.g. [``lorem``](#randomize-document-text)), 
+  an empty array must be given though (E.g.: ``{"lorem":[]}``)
 * Arguments for markup-configuration of generic document elements can be given 
   as nested JSON   
 
