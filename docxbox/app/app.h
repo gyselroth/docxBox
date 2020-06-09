@@ -27,7 +27,7 @@ class App {
   // Constructor: init (resolve) command and arguments
   App(int argc, char **argv, bool is_batch_mode = false);
 
-  // Setters for override paths of batch processing
+  // Setters for override-paths of batch processing
   void SetPathDocxIn(const std::string &path_docx_in);
   void SetPathExtract(const std::string &path_extract);
 
