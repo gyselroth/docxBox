@@ -1,10 +1,11 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_APP_APP_ERROR_H_
-#define DOCXBOX_APP_APP_ERROR_H_
+#ifndef DOCXBOX_APP_APP_STATUS_H_
+#define DOCXBOX_APP_APP_STATUS_H_
 
 #include <iostream>
+#include <string>
 
 namespace docxbox {
 
@@ -23,4 +24,4 @@ class AppStatus {
 
 }  // namespace docxbox
 
-#endif  // DOCXBOX_APP_APP_ERROR_H_
+#endif  // DOCXBOX_APP_APP_STATUS_H_

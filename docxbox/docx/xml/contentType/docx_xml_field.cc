@@ -31,7 +31,8 @@ tinyxml2::XMLElement *docx_xml_field::GetBodyByComponentPath(
     return doc.FirstChildElement("w:endnotes")->FirstChildElement("w:endnote");
 
   if (helper::String::Contains(path_xml, "word/footnotes.xml"))
-    return doc.FirstChildElement("w:footnotes")->FirstChildElement("w:footnote");
+    return
+        doc.FirstChildElement("w:footnotes")->FirstChildElement("w:footnote");
 
   if (helper::String::Contains(path_xml, "word/header"))
     return doc.FirstChildElement("w:hdr");
