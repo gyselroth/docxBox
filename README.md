@@ -188,6 +188,8 @@ or ````docxbox ls foo.docx --meta --json````
 or ````docxbox ls foo.docx -f````  
 or ````docxbox ls foo.docx --fonts````  
 
+![List referenced fonts](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/lsf.png)
+
 To output as JSON:
 
 ````docxbox lsfj foo.docx````  
