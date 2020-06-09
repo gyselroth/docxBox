@@ -3,7 +3,7 @@
 docxBox
 =======
 
-Linux tool for DOCX (Office Open XML) analysis and manipulation.
+Linux tool for DOCX (Office Open XML) analysis, manipulation and templating.
 
 
 ## Table of contents
@@ -88,6 +88,8 @@ zipping them into a new DOCX:
 attributes:
 
 ````docxbox ls foo.docx````
+
+![List contents of DOCX archive](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/ls.png)
 
 To output as JSON:
 
@@ -696,7 +698,6 @@ Roadmap
 -------
 
 * v0.0.5: Batch process sequences of manipulation operations
-* v0.0.5: Illustrate README w/ screenshots
 * v0.0.6: Ensure microsoft word compatibility
 * v0.1.0: Add optional configuration options via environment vars
 * v0.1.0: (Optional) logging of operations
