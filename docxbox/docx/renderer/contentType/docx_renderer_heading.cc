@@ -22,7 +22,7 @@ void docx_renderer_heading::SetLevel(int level) {
 }
 
 bool docx_renderer_heading::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(
       {ElementType_Heading1, ElementType_Heading2, ElementType_Heading3}))
     return false;
@@ -36,8 +36,10 @@ bool docx_renderer_heading::InitFromJson() {
          it != json_inner.end();
          ++it) {
       const std::string &key = it.key();
+      const std::string &value = it.value();
 
-      if (key == "text") text_ = it.value();
+      if (key == "text") text_ = value;
+      else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
     }
   }
 
@@ -53,15 +55,17 @@ std::string docx_renderer_heading::Render(int level) {
 
   if (level > 0) SetLevel(level);
 
+  generic_root_tag_ = "w:p";
+
   wml_ =
       "<w:p>"
         "<w:pPr>"
           "<w:pStyle w:val=\"para" + std::to_string(level_) + "\"/>"
         "</w:pPr>"
-        "<w:r>"
-          "<w:t>" + text_ + "</w:t>"
-        "</w:r>"
-      "</w:p>";
+        + RenderTextInRun(text_)
+    + "</w:p>";
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }

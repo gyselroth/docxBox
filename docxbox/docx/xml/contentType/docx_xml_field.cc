@@ -2,7 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
-#include <docxbox/app/app_error.h>
+#include <docxbox/app/app_status.h>
 
 docx_xml_field::docx_xml_field(int argc, char **argv) : docx_xml(argc, argv) {
 }
@@ -31,7 +31,8 @@ tinyxml2::XMLElement *docx_xml_field::GetBodyByComponentPath(
     return doc.FirstChildElement("w:endnotes")->FirstChildElement("w:endnote");
 
   if (helper::String::Contains(path_xml, "word/footnotes.xml"))
-    return doc.FirstChildElement("w:footnotes")->FirstChildElement("w:footnote");
+    return
+        doc.FirstChildElement("w:footnotes")->FirstChildElement("w:footnote");
 
   if (helper::String::Contains(path_xml, "word/header"))
     return doc.FirstChildElement("w:hdr");
@@ -78,7 +79,7 @@ bool docx_xml_field::SetFieldText(
 
   return has_xml_changed_
              && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
-         ? docxbox::AppError::Output("Failed saving: " + path_xml)
+         ? docxbox::AppStatus::Error("Failed saving: " + path_xml)
          : true;
 }
 

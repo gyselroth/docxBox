@@ -285,18 +285,6 @@ bool String::IsAllUpper(const std::string& str) {
   return true;
 }
 
-bool String::IsJson(const std::string &str) {
-  if (str.empty()) return false;
-
-  const char *kStr = str.c_str();
-
-  return
-      ((StartsWith(kStr, "{") && EndsWith(str, "}"))
-       || (StartsWith(kStr, "[") && EndsWith(str, "]")))
-       && Contains(kStr, "\"")
-       && Contains(kStr, ":");
-}
-
 std::string String::ToLower(std::string str) {
   std::transform(
       str.begin(),

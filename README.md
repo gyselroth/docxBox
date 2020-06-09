@@ -9,6 +9,8 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 ## Table of contents
 
 * [Commands](#commands)
+  * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
+  * [Zip files into DOCX](#zip-files-into-docx)
   * [Output DOCX contents](#output-docx-contents)
     + [List files: All, filtered, images only](#list-files-all-filtered-images-only)
     + [List meta data](#list-meta-data)
@@ -23,6 +25,8 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Replace text](#replace-text)
       + [Replace by markup](#replace-by-markup)
         + [Insert heading](#insert-heading)
+        + [Insert text](#insert-text)
+        + [Insert paragraph containing text](#insert-paragraph-containing-text)
         + [Insert hyperlink](#insert-hyperlink) 
         + [Insert image](#insert-image)
         + [Insert list](#insert-list)
@@ -30,9 +34,9 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
-  * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis-modification)
-  * [Unzip DOCX: All files, or only media files, format XML](#unzip-docx-all-files-or-only-media-files-format-xml)
-  * [Zip files into DOCX](#zip-files-into-docx)  
+  * [Batch Templating](#batch-templating)
+    + [Replacement Pre/Post-Markers](#replacement-prepost-markers)
+  * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis--modification)  
   * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
@@ -46,6 +50,35 @@ Linux tool for DOCX (Office Open XML) analysis and manipulation.
 
 Commands
 --------
+
+### Unzip DOCX: All files, or only media files, format XML
+
+**Unzip all files:** ````docxbox uz foo.docx````  
+
+**Unzip only media files:**  
+````docxbox uzm foo.docx````
+or ````docxbox uz foo.docx -m````  
+or ````docxbox uz foo.docx --media````    
+
+**Unzip all files and indent XML files:**  
+````docxbox uzi foo.docx````  
+or ````docxbox uz foo.docx -i````  
+or ````docxbox uz foo.docx --indent````  
+
+
+### Zip files into DOCX
+
+````docxbox zp path/to/directory out.docx````
+
+**Compress XML, than zip files into DOCX:**
+
+When having indented XML 
+(i.e. via [``uzi``](#unzip-all-files-and-indent-xml-files) command) for manual 
+manipulation, the ``zpc`` command compresses (= unindents) all XML files before 
+zipping them into a new DOCX:
+
+````docxbox zpc path/to/directory out.docx````  
+
 
 ### Output DOCX contents
 
@@ -110,7 +143,8 @@ or ````docxbox ls foo.docx --images --json````
 #### List meta data
 
 docxBox displays only attributes that are contained within the current 
-DOCX file (this differs by DOCX version and application), also if given empty.
+DOCX file (the attributes can vary by DOCX version and word processor used for 
+creation), also if given empty.
 
 Output meta data of given DOCX:  
 
@@ -176,10 +210,11 @@ or ````docxbox ls foo.docx --fields --json````
 #### Output XML
 
 ````docxbox cat foo.docx word/_rels/document.xml.rels````  
-outputs the given file's content.
+outputs the given file's XML, indented for better readability.
 
-**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use your 
-favorite text editor via the [cmd command](#arbitrary-manual-and-scripted-modification-and-analysis))
+**Hint:** For reviewing complex XML, e.g. w/ syntax highlightning, you can use 
+your favorite text editor via the 
+[cmd command](#arbitrary-manual-and-scripted-analysis--modification)
 
 
 #### Output document as plaintext
@@ -276,10 +311,12 @@ Moreover [replacing text](#replace-text) and
 rendering and inserting the following 
 [Office Open XML](https://en.wikipedia.org/wiki/Office_Open_XML) elements:
 
-* [Heading 1, 2, 3](#insert-heading-markup)
-* [Image](#insert-image-markup) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, 
+* [Heading 1, 2, 3](#insert-heading)
+* [Text](#insert-text)
+* [Paragraph containing text](#insert-paragraph-containing-text)
+* [Image](#insert-image) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, 
   ``jpg``, ``png``, ``tif``, ``tiff``, ``wmf``)
-* [Table](#insert-table-markup)
+* [Table](#insert-table)
 * [Ordered list, unordered list](#insert-list)  
 
 Markup specification for such elements must be given as JSON, following these
@@ -299,6 +336,20 @@ rules:
 ````docxbox rpt foo.docx search "{\"h1\":{\"text\":\"Foo\"}}"````  
 
 docxBox supports rendering of Header 1, 2 and 3 (``h1``, ``h2``, ``h3``).
+
+
+##### Insert text
+
+**Example:** Replace string ``search`` (by a new run) with the text 
+``Foo``:  
+````docxbox rpt foo.docx search "{\"text\":{\"text\":\"Foo\"}}"````  
+
+
+##### Insert paragraph containing text
+
+**Example:** Replace string ``search`` (by a new paragraph containing a run) 
+with the text ``Foo``:  
+````docxbox rpt foo.docx search "{\"p\":{\"text\":\"Foo\"}}"````  
 
 
 ##### Insert hyperlink
@@ -336,7 +387,7 @@ Replace string ``search`` by an ordered list:
 * The ``offset`` argument is optional
 * Size is given in EMUs (English Metric Unit) that is: ``pixels * 9525``
 
-when inserting a new image file, it must be given as additional argument:  
+When inserting a new image file, it must be given as additional argument:  
 ````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````
 
 
@@ -424,6 +475,160 @@ purposes:
 ````docxbox lorem foo.docx new.docx```` creates a new file new.docx  
 
 
+### Batch Templating
+
+docxBox's batch templating mode allows to perform an arbitrary sequence of 
+operations (supporting all docxBox commands for document manipulation) upon 
+a given DOCX. It thereby facilitates a more extensive range of templating
+options than the commands directly (= without batch templating) available.  
+
+**Example:** docxBox does not directly support replacing merge fields by other
+than plain textual content. Via batch templating, merge fields can be 
+transformed into text in one step of a sequence, which can completely or in 
+part, in a later step be replaced by generic content like for example a table, 
+which can later be filled with more content.  
+
+
+#### Replacement Pre/Post Markers
+Batch templating can make use of "markers": optional text elements containing a 
+distinct identifier string. Markers can temporarily be inserted and can 
+subsequently be replaced again at a later step of the batch sequence by other 
+generic content. 
+
+**Rules:**
+* Markers can be added **before** (key: ``pre``) and **after** (key: ``post``) 
+  the actual generic replacement content
+* Markers can either be of the type ``text`` or ``paragraph`` (or ``p``) 
+  to insert surrounding line-breaks
+* Markers contain a textual identifier, which can use any text (but should be 
+distinct within the document)
+
+##### Batch sequence JSON
+
+Sequences of templating steps to be batch-processed must be given like:   
+````
+{
+ "<STEP_NUMBER>": {"<COMMAND>": [("<ARGUMENT_1>",)(,"<ARGUMENT_2>",...)]},
+ "<STEP_NUMBER>": {"<COMMAND>": [("<ARGUMENT_1>",)(,"<ARGUMENT_2>",...)]},
+ ...
+}
+````
+
+**Example:**
+````
+{
+ "1": {"mm": ["description", "foo"]},
+ "2": {"rpt": ["bar", "baz"]},
+ "3": {"rpt": [
+    "qux", 
+    {"h1": {"text": "Quux"}}
+ ]}
+}
+````
+
+**Rules:**
+* Every step must be given as a tuple of step-number and -parameters
+* ``<STEP_NUMBER>`` is an arbitrary string, must be distinct within the sequence
+* Parameters must be given as a tuple of a command and its respective arguments
+* ``<COMMAND>`` accepts any of docxBox's commands for DOCX manipulation 
+  ([``rmt``](#remove-content-between-text), [``rpi``](#replace-image), 
+  [``rpt``](#replace-text), [``lorem``](#randomize-document-text), 
+  [``mm``](#modify-meta-data) and 
+  [``sfv``](#set-field-value-merge-fields-generic-fields))
+* ``<ARGUMENT>``: Argument(s) for respective command, same as in non-batch mode
+* When a command has no arguments (e.g. ``lorem``), an empty array must be 
+  given though (E.g.: ``{"lorem":[]}``)
+* Arguments for markup-configuration of generic document elements can be given 
+  as nested JSON   
+
+
+##### Example: Replace string by heading-1 followed by table containing images 
+
+**Templating sequence:**
+
+1. **Step "1":** Replace string ``foo`` by heading-1 with the text: ``Foobar``
+   (followed by a temporary marker ``my-marker-1``)
+2. **Step "2":** Replace the marker ``my-marker-1`` by table containing 2x2 
+   cells 
+3. **Steps "3" to "6":** Replace (the placeholder texts within the) table cells 
+   by images
+4. Add new image files into docx document
+
+**Batch config:**
+````
+{
+ "1": {"rpt": [
+    "foo",
+    {
+     "h1": {
+        "text": "Foobar",
+        "post": {"text": "my-marker-1"}
+     }
+    }
+ ]},
+ "2": {"rpt": [
+   "my-marker-1",
+   {
+     "table": {
+         "columns": 2,
+         "rows": 2,
+         "header": ["A","B"],
+         "content": [
+             ["img-a1", "img-b1"],
+             ["img-a2", "img-b2"]
+         ]
+     }
+   }  
+ ]},
+ "3": {"rpt": [
+    "img-a1",
+    {
+      "img": {
+          "name": "blue.png",
+          "size": [2438400, 1828800]
+      }
+    }  
+ ]},
+ "4": {"rpt": [
+    "img-b1",
+    {
+      "img": {
+          "name": "green.png",
+          "size": [2438400, 1828800]
+      }
+    }
+ ]},
+ "5": {
+    "rpt": [
+      "img-a2",
+      {
+        "img":{
+          "name": "orange.png",
+          "size": [2438400, 1828800]
+        }
+      }
+ ]},
+ "6": {"rpt": [
+    "img-b2",
+    {
+      "img": {
+          "name": "red.png",
+          "size": [2438400,1828800]
+      }
+    }
+ ]}  
+}
+````
+
+**The full batch command:**
+
+**Note:** As when inserting new images in non-batch mode 
+(via [rpt](#insert-image) or [rpi](#replace-image)), also during batch
+templating, image files to be added newly must be given as trailing arguments.
+ 
+````docxbox batch foo.docx "{\"1\":{\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}]},\"2\":{\"rpt\":[\"my-marker-1\",{\"table\":{\"columns\":2,\"rows\":2,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}}]},\"3\":{\"rpt\":[\"img-a1\",{\"img\":{\"name\":\"blue.png\",\"size\":[2438400,1828800]}}]},\"4\":{\"rpt\":[\"img-b1\",{\"img\":{\"name\":\"green.png\",\"size\":[2438400,1828800]}}]},\"5\":{\"rpt\":[\"img-a2\",{\"img\":{\"name\":\"orange.png\",\"size\":[2438400,1828800]}}]},\"6\":{\"rpt\":[\"img-b2\",{\"img\":{\"name\":\"red.png\",\"size\":[2438400,1828800]}}]}}" blue.png green.png orange.png red.png````
+
+
 ### Arbitrary manual and scripted analysis / modification
 
 docxBox eases conducting arbitrary modifications on files contained within a 
@@ -444,34 +649,6 @@ docxBox in the above example does:
   exiting the editor.
 4. **Unindent** all extracted XML files
 5. **Zip** the extracted files back into ``foo.docx``
-
-
-### Unzip DOCX: All files, or only media files, format XML
-
-**Unzip all files:** ````docxbox uz foo.docx````  
-
-**Unzip only media files:**  
-````docxbox uzm foo.docx````
-or ````docxbox uz foo.docx -m````  
-or ````docxbox uz foo.docx --media````    
-
-**Unzip all files and indent XML files:**  
-````docxbox uzi foo.docx````  
-or ````docxbox uz foo.docx -i````  
-or ````docxbox uz foo.docx --indent````  
-
-
-### Zip files into DOCX
-
-````docxbox zp path/to/directory out.docx````
-
-**Compress XML, than zip files into DOCX:**
-
-When having indented XML (i.e. via [``uzi``](unzip-all-files-and-indent-xml-files) command) for manual manipulation,
-the ``zpc`` command compresses (= unindents) all XML files before zipping them 
-into a new DOCX:
-
-````docxbox zpc path/to/directory out.docx````  
 
 
 ### Output docxBox help or version number

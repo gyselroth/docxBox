@@ -15,7 +15,7 @@ bool Xml::IndentXmlFile(const std::string& path_xml) {
   if (doc.ErrorID() != 0) return false;
 
   return tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str())
-         ? docxbox::AppError::Output("Failed saving: " + path_xml)
+         ? docxbox::AppStatus::Error("Failed saving: " + path_xml)
          : true;
 }
 

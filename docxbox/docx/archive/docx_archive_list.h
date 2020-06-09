@@ -5,9 +5,9 @@
 #define DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_LIST_H_
 
 #include <docxbox/app/app_argument.h>
-#include <docxbox/app/app_error.h>
+#include <docxbox/app/app_status.h>
 #include <docxbox/docx/archive/docx_archive.h>
-#include <docxbox/docx/archive/docx_fileListCompare.h>
+#include <docxbox/docx/docx_compare.h>
 #include <docxbox/docx/component/fontTable.h>
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
@@ -29,7 +29,7 @@
 
 class docx_archive_list : public docx_archive {
  public:
-  docx_archive_list(int argc, char **argv);
+  docx_archive_list(int argc, char **argv, bool is_batch_mode);
 
   bool LocateFilesContainingString(bool as_json = false);
 

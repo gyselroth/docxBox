@@ -5,8 +5,9 @@
 #define DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_H_
 
 #include <docxbox/app/app_argument.h>
-#include <docxbox/app/app_error.h>
-#include <docxbox/docx/archive/docx_diff.h>
+#include <docxbox/app/app_status.h>
+#include <docxbox/docx/docx_batch.h>
+#include <docxbox/docx/docx_diff.h>
 #include <docxbox/docx/component/fontTable.h>
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
@@ -30,9 +31,11 @@
 
 class docx_archive {
  public:
-  docx_archive(int argc, char **argv);
+  docx_archive(int argc, char **argv, bool is_batch_mode);
 
   virtual ~docx_archive();
+
+  char* GetArgValue(int index);
 
   std::string UnzipDocx(
       const std::string &path_docx,
@@ -63,14 +66,17 @@ class docx_archive {
       bool compress_xml = false,
       std::string path_directory = "",
       std::string path_docx_result = "",
-      bool set_date_created_to_now = false,
       bool set_date_modified_to_now = false,
+      bool set_date_created_to_now = false,
       const std::string& date_created = "",
       const std::string& date_modified = "");
 
   bool GetText(bool newline_at_segments);
 
   bool ExecuteUserCommand(std::string command = "");
+
+  bool Batch();
+
   bool CatFile();
   bool ViewFilesDiff();
 
@@ -78,9 +84,29 @@ class docx_archive {
 
   void RemoveTemporaryFiles();
 
+  void SetPathDocxIn(const std::string &path_docx_in);
+  void SetPathExtract(const std::string &path_extract);
+
+  void SetIsFinalBatchStep(bool is_final_batch_step);
+
+  const std::string &GetPathDocxIn() const;
+  const std::string &GetPathExtract() const;
+
  protected:
   int argc_;
   char **argv_;
+
+  // When true:
+  // -Ignore non-manipulation commands
+  // -Ignore commands "cmd" and "batch"
+  // -Do not unzip before modification steps
+  // -Do not zip after modification steps
+  // -Do not remove temporary files during destruction
+  bool is_batch_mode_ = false;
+
+  // Only upon final step of batch sequence, modification methods need to
+  // zip modified files back into the resulting DOCX
+  bool is_final_batch_step_ = false;
 
   std::string path_working_directory_;
 

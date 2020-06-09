@@ -5,6 +5,21 @@
 
 namespace helper {
 
+bool Json::IsJson(const std::string &str, bool contains_association) {
+  if (str.empty()) return false;
+
+  const char *kStr = str.c_str();
+
+  return
+      ((helper::String::StartsWith(kStr, "{")
+        && helper::String::EndsWith(str, "}"))
+          || (helper::String::StartsWith(kStr, "[")
+              && helper::String::EndsWith(str, "]")))
+       && (!contains_association
+           || (helper::String::Contains(kStr, "\"")
+               && helper::String::Contains(kStr, ":")));
+}
+
 // Extract 1st key out of JSON like: {"<KEY>"...}
 std::string Json::GetFirstKey(const std::string &json) {
   int offset_end_key = helper::String::OffsetChar(json, '"', 3);
@@ -15,7 +30,7 @@ std::string Json::GetFirstKey(const std::string &json) {
 }
 
 std::string Json::GetFirstValueOfKey(
-    const std::string &json, std::string key) {
+    const std::string &json, const std::string& key) {
   auto json_outer = nlohmann::json::parse(json);
 
   for (auto &json_inner : json_outer) {
@@ -29,6 +44,12 @@ std::string Json::GetFirstValueOfKey(
       // TODO(kay): on-demand: make recursive to handle multi-level JSON
     }
   }
+}
+
+extern int Json::GetAmountItems(const std::string& json) {
+  auto deserialized = nlohmann::json::parse(json);
+
+  return deserialized.size();
 }
 
 }  // namespace helper

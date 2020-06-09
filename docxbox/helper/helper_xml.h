@@ -4,7 +4,7 @@
 #ifndef DOCXBOX_HELPER_HELPER_XML_H_
 #define DOCXBOX_HELPER_HELPER_XML_H_
 
-#include <docxbox/app/app_error.h>
+#include <docxbox/app/app_status.h>
 
 #include <string>
 
