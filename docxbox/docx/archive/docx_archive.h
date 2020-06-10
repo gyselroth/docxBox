@@ -36,6 +36,7 @@ class docx_archive {
   virtual ~docx_archive();
 
   char* GetArgValue(int index);
+  char* GetLastArgValue();
 
   std::string UnzipDocx(
       const std::string &path_docx,
@@ -84,8 +85,9 @@ class docx_archive {
 
   void RemoveTemporaryFiles();
 
-  void SetPathDocxIn(const std::string &path_docx_in);
-  void SetPathExtract(const std::string &path_extract);
+  void SetPathDocxIn(const std::string &path);
+  void SetPathExtract(const std::string &path);
+  void SetPathDocxOut(const std::string &path);
 
   void SetIsFinalBatchStep(bool is_final_batch_step);
 
@@ -112,6 +114,9 @@ class docx_archive {
 
   // DOCX to be read or manipulated
   std::string path_docx_in_;
+
+  // DOCX output path with/or filename
+  std::string path_docx_out_;
 
   // Directory containing extracted XML files of DOCX
   std::string path_extract_;

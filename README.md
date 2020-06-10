@@ -638,6 +638,16 @@ templating, image files to be added newly must be given as trailing arguments.
 ````docxbox batch foo.docx "{\"1\":{\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}]},\"2\":{\"rpt\":[\"my-marker-1\",{\"table\":{\"columns\":2,\"rows\":2,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}}]},\"3\":{\"rpt\":[\"img-a1\",{\"img\":{\"name\":\"blue.png\",\"size\":[2438400,1828800]}}]},\"4\":{\"rpt\":[\"img-b1\",{\"img\":{\"name\":\"green.png\",\"size\":[2438400,1828800]}}]},\"5\":{\"rpt\":[\"img-a2\",{\"img\":{\"name\":\"orange.png\",\"size\":[2438400,1828800]}}]},\"6\":{\"rpt\":[\"img-b2\",{\"img\":{\"name\":\"red.png\",\"size\":[2438400,1828800]}}]}}" blue.png green.png orange.png red.png````
 
 
+##### Save batch processed document to new file
+
+To save the resulting document of batch processed manipulations to a new file, 
+instead of overwriting the source document, the destination filename can 
+optionally be given as the very last argument (also trailing other optional 
+arguments like image files):
+
+````docxbox batch foo.docx "{\"1\":{\"mm\":[\"description\",\"foo\"]},\"2\":{\"rpt\":[\"bar\",\"baz\"]},\"3\":{\"rpt\":[\"qux\",{\"h1\":{\"text\":\"Quux\"}}]}}" new.docx```` 
+
+
 ### Arbitrary manual and scripted analysis / modification
 
 docxBox eases conducting arbitrary modifications on files contained within a 

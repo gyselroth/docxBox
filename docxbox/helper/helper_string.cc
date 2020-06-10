@@ -18,10 +18,15 @@ bool String::StartsNumeric(const char *str) {
 }
 
 // Check whether given string ends w/ given string
-bool String::EndsWith(std::string const &value, std::string const &ending) {
+bool String::EndsWith(std::string const &str, std::string const &ending) {
   return ending.empty()
-      || (ending.size() <= value.size()
-          && std::equal(ending.rbegin(), ending.rend(), value.rbegin()));
+      || (ending.size() <= str.size()
+          && std::equal(ending.rbegin(), ending.rend(), str.rbegin()));
+}
+
+bool String::EndsWithCaseInsensitive(
+    const char *str, const std::string &ending) {
+  return EndsWith(ToLower(str), ending);
 }
 
 bool String::IsAnyOf(

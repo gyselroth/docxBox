@@ -48,7 +48,11 @@ namespace helper {
 namespace String {
 
 // Check whether given string ends w/ given string
-bool EndsWith(std::string const &value, std::string const &ending);
+bool EndsWith(std::string const &str, std::string const &ending);
+
+bool EndsWithCaseInsensitive(
+    const char *str, const std::string &ending);
+
 // Check whether given string starts w/ given prefix
 extern bool StartsWith(const char *str, const char *prefix);
 

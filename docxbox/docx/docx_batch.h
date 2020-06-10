@@ -16,6 +16,10 @@
 #include <utility>
 #include <vector>
 
+namespace docxbox {
+ class App;  // forward-declare docxbox::App
+}
+
 class docx_batch {
  public:
   docx_batch(class docx_archive *archive, std::string json);
@@ -42,6 +46,9 @@ class docx_batch {
   bool InitFromJson();
 
   bool ProcessStep(int index);
+
+  // Prepare write resulting DOCX during final step of batch processing
+  void InitFinalBatchStep(docxbox::App *app);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_BATCH_H_

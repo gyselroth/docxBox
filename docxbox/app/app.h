@@ -27,8 +27,8 @@ class App {
   // Constructor: init (resolve) command and arguments
   App(int argc, char **argv, bool is_batch_mode = false);
 
-  // Setters for override-paths of batch processing
   void SetPathDocxIn(const std::string &path_docx_in);
+  void SetPathDocxOut(const std::string &path_docx_out);
   void SetPathExtract(const std::string &path_extract);
 
   void SetIsFinalBatchStep(bool is_final_batch_step);
@@ -51,6 +51,9 @@ class App {
   // Only upon final step of batch sequence, modification methods need to
   // zip modified files back into the resulting DOCX
   bool is_final_batch_step_ = false;
+
+  // DOCX output path with/or filename
+  std::string path_docx_out_;
 
   AppCommands::Command PreProcess(AppArguments *arguments,
                                   const AppCommands::Command &command) const;
