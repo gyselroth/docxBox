@@ -44,10 +44,9 @@ AppCommands::Command App::PreProcess(
     const AppCommands::Command &command) const {
   switch (command) {
     case AppCommands::Command_GetPlainText:  // txt
-      if (arguments->Matches(3, "-s", "--segments"))
-        return AppCommands::Command_GetPlainTextSegments;
-
-      return command;
+      return arguments->Matches(3, "-s", "--segments")
+        ? AppCommands::Command_GetPlainTextSegments
+        : command;
     case AppCommands::Command_List:  // ls
       if (arguments->Matches(3, "-fj"))
         return AppCommands::Command_ListFontsAsJson;
