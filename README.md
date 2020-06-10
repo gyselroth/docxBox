@@ -84,8 +84,7 @@ zipping them into a new DOCX:
 
 #### List files: All, filtered, images only
 
-**Lists files** (and directories) contained within a given DOCX, and their 
-attributes:
+**Lists files** contained within a given DOCX, and their attributes:
 
 ````docxbox ls foo.docx````
 
