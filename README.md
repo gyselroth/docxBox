@@ -118,7 +118,7 @@ Lists all files containing 8-digit IDs, e.g. word recent session IDs
 
 ````docxbox lslj foo.docx foo````  
 or ````docxbox lsl foo.docx -j foo````  
-or ````docxbox ls foo.docx --lj foo````  
+or ````docxbox ls foo.docx -lj foo````  
 or ````docxbox lsl foo.docx --json foo````  
 or ````docxbox ls foo.docx --locate -j foo````  
 or ````docxbox ls foo.docx --locate --json foo````  
