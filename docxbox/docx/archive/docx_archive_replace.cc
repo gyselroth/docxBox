@@ -6,7 +6,8 @@
 
 docx_archive_replace::docx_archive_replace(
     int argc,
-    char **argv) : docx_archive(argc, argv) {}
+    char **argv,
+    bool is_batch_mode) : docx_archive(argc, argv, is_batch_mode) {}
 
 bool docx_archive_replace::ReplaceImage() {
   if (!docxbox::AppArguments::AreArgumentsGiven(
@@ -36,7 +37,7 @@ bool docx_archive_replace::ReplaceImage() {
           path_extract_ + "/" + file_in_zip.filename;
 
       if (!helper::File::Remove(path_image_original.c_str()))
-        return docxbox::AppError::Output("Failed replace " + image_original);
+        return docxbox::AppStatus::Error("Failed replace " + image_original);
 
       std::string path_image_replacement =
           helper::File::ResolvePath(path_working_directory_, argv_[4]);
@@ -47,9 +48,13 @@ bool docx_archive_replace::ReplaceImage() {
     }
 
     if (!found)
-      return docxbox::AppError::Output(
+      return docxbox::AppStatus::Error(
           "Cannot replace " + image_original
-          + " - no such image within " + path_docx_in_);
+              + " - no such image within " + path_docx_in_);
+
+    // Create resulting DOCX from files during non-batch mode
+    // or at final step of batch sequence
+    if (is_batch_mode_ && !is_final_batch_step_) return true;
 
     std::string path_docx_out =
         argc_ >= 6
@@ -61,8 +66,8 @@ bool docx_archive_replace::ReplaceImage() {
         : path_docx_in_;
 
     if (!Zip(false, path_extract_, path_docx_out + "tmp"))
-      return docxbox::AppError::Output(
-          "DOCX creation failed: "  + path_docx_out);
+      return docxbox::AppStatus::Error(
+          "DOCX creation failed: " + path_docx_out);
 
     if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
 
@@ -70,7 +75,7 @@ bool docx_archive_replace::ReplaceImage() {
         std::string(path_docx_out).append("tmp").c_str(),
         path_docx_out.c_str());
   } catch (std::string &message) {
-    return docxbox::AppError::Output(message);
+    return docxbox::AppStatus::Error(message);
   }
 
   return true;
@@ -89,7 +94,8 @@ bool docx_archive_replace::ReplaceText() {
   std::string image_relationship_id;
   std::string hyperlink_relationship_id;
 
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (!is_batch_mode_
+      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   const char *kReplacement = replacement.c_str();
 
@@ -107,7 +113,7 @@ bool docx_archive_replace::ReplaceText() {
       contentTypes::OverrideNumbering(path_extract_absolute);
     }
   } catch (std::string &message) {
-    return docxbox::AppError::Output(message);
+    return docxbox::AppStatus::Error(message);
   }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -131,11 +137,15 @@ bool docx_archive_replace::ReplaceText() {
     if (helper::File::IsDirectory(path_file_absolute)) continue;
 
     if (!parser->ReplaceInXml(path_file_absolute, search, replacement))
-      return docxbox::AppError::Output(
+      return docxbox::AppStatus::Error(
           "Failed replace string in: " + file_in_zip.filename);
   }
 
   delete parser;
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) return true;
 
   std::string path_docx_out;
 
@@ -245,12 +255,16 @@ bool docx_archive_replace::RemoveBetweenText() {
     if (!parser->RemoveBetweenStringsInXml(path_file_abs, lhs, rhs)) {
       delete parser;
 
-      return docxbox::AppError::Output(
+      return docxbox::AppStatus::Error(
           "Error: Failed to remove content from: " + file_in_zip.filename);
     }
   }
 
   delete parser;
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) return true;
 
   std::string path_docx_out =
       argc_ >= 7
@@ -265,7 +279,8 @@ bool docx_archive_replace::RemoveBetweenText() {
 }
 
 bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (!is_batch_mode_
+      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -281,12 +296,16 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
     if (!parser->RandomizeAllTextInXml(path_file_absolute)) {
       delete parser;
 
-      return docxbox::AppError::Output(
+      return docxbox::AppStatus::Error(
           "Error: Failed insert lorem ipsum in: " + file_in_zip.filename);
     }
   }
 
   delete parser;
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) return true;
 
   bool overwrite_source_docx = argc_ < 4;
 
@@ -332,6 +351,10 @@ bool docx_archive_replace::SetFieldValue() {
 
   delete parser;
 
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) return true;
+
   std::string path_docx_out =
       argc_ >= 6
       // Result filename is given as argument
@@ -342,7 +365,7 @@ bool docx_archive_replace::SetFieldValue() {
   std::string path_docx_out_tmp = path_docx_out + "tmp";
 
   if (!Zip(false, path_extract_, path_docx_out_tmp))
-    return docxbox::AppError::Output("DOCX creation failed.");
+    return docxbox::AppStatus::Error("DOCX creation failed.");
 
   return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out.c_str());
 }

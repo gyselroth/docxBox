@@ -4,8 +4,8 @@
 #include <docxbox/docx/archive/docx_archive_list.h>
 
 docx_archive_list::docx_archive_list(
-    int argc,
-    char **argv) : docx_archive(argc, argv) {}
+    int argc, char **argv, bool is_batch_mode) : docx_archive(
+        argc, argv, is_batch_mode) {}
 
 // List files inside DOCX archive and their attributes
 bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
@@ -15,7 +15,7 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    return docxbox::AppError::Output(message);
+    return docxbox::AppStatus::Error(message);
   }
 
   if (!IsZipArchive(path_docx_in_)) return false;
@@ -72,7 +72,7 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
 
   std::string summary_2 = miniz_ext->GetSummary();
 
-  auto renderer = new docx_fileListCompare(
+  auto renderer = new docx_compare(
       *file_list_1, *summary_1,
       file_list_2, summary_2,
       path_docx_in_, path_docx_in_2);

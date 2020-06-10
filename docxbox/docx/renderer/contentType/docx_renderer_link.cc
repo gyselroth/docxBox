@@ -15,7 +15,7 @@ docx_renderer_link::docx_renderer_link(
 }
 
 bool docx_renderer_link::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(ElementType_Link)) return false;
 
   auto json_outer = nlohmann::json::parse(json_);
@@ -25,9 +25,11 @@ bool docx_renderer_link::InitFromJson() {
          it != json_inner.end();
          ++it) {
       const std::string &key = it.key();
+      auto &value = it.value();
 
-      if (key == "text") text_ = it.value();
-      else if (key == "url") url_ = it.value();
+      if (key == "text") text_ = value;
+      else if (key == "url") url_ = value;
+      else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
       // TODO(kay): add bookmark linking
 //      else if (key == "bookmark")
     }
@@ -50,6 +52,8 @@ std::string docx_renderer_link::Render(const std::string &relationship_id) {
 std::string docx_renderer_link::Render() {
   if (!is_json_valid_) throw "Failed render list markup.\n";
 
+  generic_root_tag_ = "w:p";
+
   wml_ =
       "<w:p>"
         "<w:pPr>"
@@ -66,6 +70,8 @@ std::string docx_renderer_link::Render() {
           "</w:r>"
         "</w:hyperlink>"
       "</w:p>";
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }

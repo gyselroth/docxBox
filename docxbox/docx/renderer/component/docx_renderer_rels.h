@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_RELS_H_
-#define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_RELS_H_
+#ifndef DOCXBOX_DOCX_RENDERER_COMPONENT_DOCX_RENDERER_RELS_H_
+#define DOCXBOX_DOCX_RENDERER_COMPONENT_DOCX_RENDERER_RELS_H_
 
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/docx/xml/component/docx_xml_rels.h>
@@ -28,4 +28,4 @@ class docx_renderer_rels: docx_renderer {
       const std::string &relationship_id);
 };
 
-#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_RELS_H_
+#endif  // DOCXBOX_DOCX_RENDERER_COMPONENT_DOCX_RENDERER_RELS_H_

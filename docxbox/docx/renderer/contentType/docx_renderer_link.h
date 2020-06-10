@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
-#define DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
+#ifndef DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LINK_H_
+#define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LINK_H_
 
 #include <docxbox/docx/component/numbering.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
@@ -14,7 +14,7 @@
 
 #include <vendor/json/single_include/nlohmann/json.hpp>
 
-class docx_renderer_link: docx_renderer {
+class docx_renderer_link: public docx_renderer {
  public:
   // Constructor
   docx_renderer_link(std::string path_extract, const std::string &json);
@@ -23,6 +23,8 @@ class docx_renderer_link: docx_renderer {
 
   std::string Render(const std::string &relationship_id);
   std::string Render() override;
+
+  std::string generic_root_tag_;
 
  private:
   std::string text_;
@@ -33,4 +35,4 @@ class docx_renderer_link: docx_renderer {
   bool InitFromJson() override;
 };
 
-#endif  // DOCXBOX_DOCX_RENDERER_DOCX_RENDERER_LINK_H_
+#endif  // DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LINK_H_

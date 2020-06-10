@@ -6,11 +6,9 @@
 std::string docx_renderer_styles::RenderStyle(
     const int style_type,
     const std::string& style_id) {
-  switch (style_type) {
-    case rels::RelationType_Hyperlink:
-    default:
-      return RenderHyperlinkStyle(style_id);
-  }
+
+//  if (style_type == rels::RelationType_Hyperlink)
+    return RenderHyperlinkStyle(style_id);
 }
 
 std::string docx_renderer_styles::RenderHyperlinkStyle(

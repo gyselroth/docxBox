@@ -11,7 +11,8 @@ namespace docxbox {
 
 class AppCommands {
  public:
-  enum Commands {
+  enum Command {
+    Command_Batch,
     Command_Cat,
     Command_ExecuteUserCommand,
     Command_FileDiff,
@@ -47,22 +48,22 @@ class AppCommands {
 
   explicit AppCommands(std::string argc);
 
-  static Commands ResolveCommandByName(const std::string &command);
+  static Command ResolveCommandByName(const std::string &command);
 
-  static bool IsListCommand(Commands command);
-  static bool IsReplaceCommand(Commands command);
+  static bool IsListCommand(Command command);
+  static bool IsReplaceCommand(Command command);
 
-  Commands GetResolved();
+  Command GetResolved();
 
  private:
   // Argument value as received from CLI
   std::string argc_;
 
   // Argument resolved to Commands-enum
-  Commands resolved_;
+  Command resolved_;
 
   // Resolve command (1st argument) to rel. command enum item, allowing switch
-  Commands Resolve();
+  Command Resolve();
 };
 
 }  // namespace docxbox

@@ -36,21 +36,28 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
     case docx_renderer::ElementType_ListOrdered:
       markup = RenderList(true, json, markup);
       break;
+    case docx_renderer::ElementType_Paragraph:
+      markup = RenderParagraph(json, markup);
+      break;
     case docx_renderer::ElementType_Table:
       markup = RenderTable(json, markup);
       break;
+    case docx_renderer::ElementType_Text:
+      markup = RenderText(json, markup);
+      break;
     case docx_renderer::ElementType_None:default:
-      docxbox::AppError::Output(
+      docxbox::AppStatus::Error(
           "Invalid markup config, failed to identify element type.");
   }
 
   return markup;
 }
+
 std::string &docx_renderer_delegate::RenderTable(
     const std::string &json, std::string &markup) {
   auto renderer = new docx_renderer_table(path_extract_, json);
 
-  replacement_xml_first_child_tag_ = "w:r";
+  replacement_xml_root_tag_ = "w:r";
 
   markup = renderer->Render();
 
@@ -63,7 +70,7 @@ std::string &docx_renderer_delegate::RenderImage(const std::string &json,
                                            std::string &markup) {
   auto renderer = new docx_renderer_image(path_extract_, json);
 
-  replacement_xml_first_child_tag_ = "w:r";
+  replacement_xml_root_tag_ = "w:r";
 
   markup = renderer->Render(image_relationship_id_);
 
@@ -76,9 +83,33 @@ std::string &docx_renderer_delegate::RenderHeading(
     int level, const std::string &json, std::string &markup) {
   auto renderer = new docx_renderer_heading(path_extract_, json);
 
-  replacement_xml_first_child_tag_ = "w:p";
+  replacement_xml_root_tag_ = "w:p";
 
   markup = renderer->Render(level);
+
+  delete renderer;
+
+  return markup;
+}
+
+std::string &docx_renderer_delegate::RenderText(
+    const std::string &json, std::string &markup) {
+  auto renderer = new docx_renderer_text(path_extract_, json);
+
+  markup = renderer->Render();
+  replacement_xml_root_tag_ = renderer->generic_root_tag_;
+
+  delete renderer;
+
+  return markup;
+}
+
+std::string &docx_renderer_delegate::RenderParagraph(
+    const std::string &json, std::string &markup) {
+  auto renderer = new docx_renderer_paragraph(path_extract_, json);
+
+  markup = renderer->Render();
+  replacement_xml_root_tag_ = renderer->generic_root_tag_;
 
   delete renderer;
 
@@ -89,9 +120,8 @@ std::string &docx_renderer_delegate::RenderList(
     bool is_ordered, const std::string &json, std::string &markup) {
   auto renderer = new docx_renderer_list(path_extract_, json);
 
-  replacement_xml_first_child_tag_ = "w:r";
-
   markup = renderer->Render(is_ordered);
+  replacement_xml_root_tag_ = renderer->generic_root_tag_;
 
   delete renderer;
 
@@ -102,9 +132,8 @@ std::string &docx_renderer_delegate::RenderHyperlink(
     const std::string &json, std::string &markup) {
   auto renderer = new docx_renderer_link(path_extract_, json);
 
-  replacement_xml_first_child_tag_ = "w:p";
-
   markup = renderer->Render(hyperlink_relationship_id_);
+  replacement_xml_root_tag_ = renderer->generic_root_tag_;
 
   delete renderer;
 

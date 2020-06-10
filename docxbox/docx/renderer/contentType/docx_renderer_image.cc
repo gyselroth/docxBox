@@ -20,7 +20,7 @@ void docx_renderer_image::SetRelationshipId(
 }
 
 bool docx_renderer_image::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(ElementType_Image)) return false;
 
   auto json_outer = nlohmann::json::parse(json_);
@@ -43,6 +43,8 @@ bool docx_renderer_image::InitFromJson() {
 
         width_ = value.at(0);
         height_ = value.at(1);
+      } else if (key == "pre" || key == "post") {
+        ExtractPreOrPostfix(it);
       }
     }
   }
@@ -60,6 +62,8 @@ std::string docx_renderer_image::Render(
 // @see http://officeopenxml.com/drwPic.php
 std::string docx_renderer_image::Render() {
   if (!is_json_valid_) throw "Failed render image markup.\n";
+
+  generic_root_tag_ = "w:r";
 
   wml_ = kWRunLhs;
 
@@ -118,6 +122,8 @@ std::string docx_renderer_image::Render() {
     "</w:drawing>";
 
   wml_ += kWRunRhs;
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }

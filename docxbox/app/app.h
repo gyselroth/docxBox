@@ -25,7 +25,13 @@ class App {
   static const std::string kAppExecutableName;
 
   // Constructor: init (resolve) command and arguments
-  App(int argc, char **argv);
+  App(int argc, char **argv, bool is_batch_mode = false);
+
+  // Setters for override-paths of batch processing
+  void SetPathDocxIn(const std::string &path_docx_in);
+  void SetPathExtract(const std::string &path_extract);
+
+  void SetIsFinalBatchStep(bool is_final_batch_step);
 
   // Process command + arguments
   bool Process();
@@ -34,13 +40,25 @@ class App {
   int argc_;
   char **argv_;
 
+  bool is_batch_mode_ = false;
+
   AppCommands *command_;
 
-  AppCommands::Commands PreProcess(AppArguments *arguments,
-                                   const AppCommands::Commands &command) const;
+  // Override-paths to be passed-on to archive-object during batch processing
+  std::string path_docx_in_;
+  std::string path_extract_;
 
-  bool ProcessList(AppCommands::Commands command);
-  bool ProcessReplace(AppCommands::Commands command);
+  // Only upon final step of batch sequence, modification methods need to
+  // zip modified files back into the resulting DOCX
+  bool is_final_batch_step_ = false;
+
+  AppCommands::Command PreProcess(AppArguments *arguments,
+                                  const AppCommands::Command &command) const;
+
+  bool ProcessList(AppCommands::Command command);
+  bool ProcessReplace(AppCommands::Command command);
+
+  void InitBatchProcessor(docx_archive *docx_archive) const;
 };
 
 }  // namespace docxbox

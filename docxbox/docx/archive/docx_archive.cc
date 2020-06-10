@@ -3,15 +3,40 @@
 
 #include <docxbox/docx/archive/docx_archive.h>
 
-docx_archive::docx_archive(int argc, char **argv) {
+docx_archive::docx_archive(int argc, char **argv, bool is_batch_mode = false) {
   argc_ = argc;
   argv_ = argv;
+  is_batch_mode_ = is_batch_mode;
 
   path_working_directory_ = getenv("PWD");
 }
 
 docx_archive::~docx_archive() {
   RemoveTemporaryFiles();
+}
+
+char* docx_archive::GetArgValue(int index) {
+  return argv_[index];
+}
+
+void docx_archive::SetPathDocxIn(const std::string &path_docx_in) {
+  path_docx_in_ = path_docx_in;
+}
+
+void docx_archive::SetPathExtract(const std::string &path_extract) {
+  path_extract_ = path_extract;
+}
+
+void docx_archive::SetIsFinalBatchStep(bool is_final_batch_step) {
+  is_final_batch_step_ = is_final_batch_step;
+}
+
+const std::string &docx_archive::GetPathDocxIn() const {
+  return path_docx_in_;
+}
+
+const std::string &docx_archive::GetPathExtract() const {
+  return path_extract_;
 }
 
 // Setup path to DOCX file,
@@ -106,7 +131,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    return docxbox::AppError::Output(message);
+    return docxbox::AppStatus::Error(message);
   }
 
   if (!IsZipArchive(path_docx_in_)) return false;
@@ -125,7 +150,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
   if (ensure_is_docx && IsUnzippedDocx())
     // TODO(kay): check above condition, seems inverted
-    return docxbox::AppError::Output(path_docx_in_ + " is not a DOCX document");
+    return docxbox::AppStatus::Error(path_docx_in_ + " is not a DOCX document");
 
   return format_xml_files
          ? miniz_cpp_ext::IndentXmlFiles(path_extract_, file_list)
@@ -140,7 +165,7 @@ bool docx_archive::IsZipArchive(const std::string& path_file) {
       helper::File::GetFileContents(path_file).c_str(),
       "PK\003\004\024")
          ? true
-         : docxbox::AppError::Output("File is no ZIP archive: " + path_file);
+         : docxbox::AppStatus::Error("File is no ZIP archive: " + path_file);
 }
 
 // Check formal structure of DOCX archive - mandatory files given?
@@ -172,7 +197,7 @@ bool docx_archive::UnzipMedia() {
 bool docx_archive::CreateDocxFromExtract(
     const std::string &path_docx_out, bool overwrite_source_docx) {
   if (!Zip(false, path_extract_, path_docx_out + "tmp"))
-    return docxbox::AppError::Output("DOCX creation failed.");
+    return docxbox::AppStatus::Error("DOCX creation failed.");
 
   if (overwrite_source_docx) helper::File::Remove(path_docx_in_.c_str());
 
@@ -188,8 +213,8 @@ bool docx_archive::Zip(
     bool compress_xml,
     std::string path_directory,
     std::string path_docx_result,
-    bool set_date_created_to_now,
     bool set_date_modified_to_now,
+    bool set_date_created_to_now,
     const std::string& date_created,
     const std::string& date_modified) {
   if (path_directory.empty()) {
@@ -205,7 +230,7 @@ bool docx_archive::Zip(
         helper::File::ResolvePath(path_working_directory_, argv_[3], false);
   } else {
     if (!helper::File::IsDirectory(path_directory))
-      return docxbox::AppError::Output("Not a directory: " + path_directory);
+      return docxbox::AppStatus::Error("Not a directory: " + path_directory);
   }
 
   if (path_docx_result.empty() && !path_docx_in_.empty())
@@ -292,6 +317,45 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
   return true;
 }
 
+bool docx_archive::Batch() {
+  if (!docxbox::AppArguments::AreArgumentsGiven(
+      argc_,
+      2, "DOCX file",
+      3, "Batch commands JSON")) return false;
+
+  if (!UnzipDocxByArgv(true, "", true, true)) return false;
+
+  auto batch = new docx_batch(this, std::string(argv_[3]));
+
+  if (!batch->ProcessSequence()) {
+    return false;
+  }
+
+  std::string path_docx_out = argc_ >= 4
+    // Result filename is given as argument
+    ? helper::File::ResolvePath(path_working_directory_, argv_[4])
+    // Overwrite original DOCX
+    : path_docx_in_;
+
+  if (!Zip(false,
+           path_extract_,
+           path_docx_out + "tmp",
+           true,
+           false)) {
+    delete batch;
+
+    return docxbox::AppStatus::Error("DOCX creation failed.");
+  }
+
+  delete batch;
+
+  if (argc_ < 4) helper::File::Remove(path_docx_in_.c_str());
+
+  return 0 == std::rename(
+      std::string(path_docx_out).append("tmp").c_str(),
+      path_docx_out.c_str());
+}
+
 bool docx_archive::CatFile() {
   if (!docxbox::AppArguments::AreArgumentsGiven(
       argc_,
@@ -303,7 +367,7 @@ bool docx_archive::CatFile() {
   std::string path_file_relative = argv_[3];
 
   if (path_file_relative.empty())
-    return docxbox::AppError::Output(
+    return docxbox::AppStatus::Error(
         "Invalid file path: " + path_file_relative);
 
   if (path_file_relative[0] == '/')
@@ -313,7 +377,7 @@ bool docx_archive::CatFile() {
 
   if (!helper::File::FileExists(path_file))
     return
-      docxbox::AppError::Output(std::string("File not found: ") + argv_[3]);
+        docxbox::AppStatus::Error(std::string("File not found: ") + argv_[3]);
 
   std::cout << helper::File::GetFileContents(path_file) << "\n";
 
@@ -342,7 +406,7 @@ bool docx_archive::ViewFilesDiff() {
 
   if (!helper::File::FileExists(path_extract_left + "/" + file)
       || !helper::File::FileExists(path_extract_right + "/" + file))
-    return docxbox::AppError::Output(
+    return docxbox::AppStatus::Error(
         "File not given in both DOCX archives: " + file);
 
   if (argc_ > 5
@@ -360,6 +424,8 @@ bool docx_archive::ViewFilesDiff() {
   return true;
 }
 
+// TODO(kay): move into class of its own (docx_archive_meta)
+//            along w/ rel. sub-methods
 bool docx_archive::ModifyMeta() {
   auto *meta_component = new meta(argc_, argv_);
 
@@ -367,7 +433,7 @@ bool docx_archive::ModifyMeta() {
       || !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) {
     delete meta_component;
 
-    return docxbox::AppError::Output(
+    return docxbox::AppStatus::Error(
         "Initialization for meta modification failed.");
   }
 
@@ -379,7 +445,7 @@ bool docx_archive::ModifyMeta() {
   if (!meta_component->UpsertAttribute()) {
     delete meta_component;
 
-    return docxbox::AppError::Output("Update/Insert meta attribute failed.");
+    return docxbox::AppStatus::Error("Update/Insert meta attribute failed.");
   }
 
   // Modifiable meta attributes are in docProps/core.xml
@@ -387,6 +453,14 @@ bool docx_archive::ModifyMeta() {
     meta_component->SaveCoreXml();
   } catch (std::string &message) {
     std::cerr << message;
+  }
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_ && !is_final_batch_step_) {
+    delete meta_component;
+
+    return true;
   }
 
   std::string path_docx_out;
@@ -417,12 +491,14 @@ bool docx_archive::ModifyMeta() {
       return false;
     }
   } else {*/
-    if (!Zip(false, path_extract_, path_docx_out + "tmp",
-             attribute != meta::Attribute_Created,
-             attribute != meta::Attribute_Modified)) {
+    if (!Zip(false,
+             path_extract_,
+             path_docx_out + "tmp",
+             attribute != meta::Attribute_Modified,
+             attribute != meta::Attribute_Created)) {
       delete meta_component;
 
-      return docxbox::AppError::Output("DOCX creation failed.");
+      return docxbox::AppStatus::Error("DOCX creation failed.");
     }
   /*}*/
 
@@ -450,7 +526,7 @@ bool docx_archive::UpdateCoreXmlDate(
     meta_component->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
   } else {
     if (!helper::DateTime::IsIso8601Date(value))
-      return docxbox::AppError::Output(
+      return docxbox::AppStatus::Error(
           "Invalid date (must be ISO 8601): " + value);
 
     meta_component->SetValue(value);

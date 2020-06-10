@@ -4,7 +4,7 @@
 #ifndef DOCXBOX_APP_APP_ARGUMENT_H_
 #define DOCXBOX_APP_APP_ARGUMENT_H_
 
-#include <docxbox/app/app_error.h>
+#include <docxbox/app/app_status.h>
 #include <docxbox/helper/helper_string.h>
 #include <docxbox/helper/helper_file.h>
 

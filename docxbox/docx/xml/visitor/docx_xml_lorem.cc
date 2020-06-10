@@ -49,7 +49,7 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
 
   return has_xml_changed_
              && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
-         ? docxbox::AppError::Output("Failed saving: " + path_xml)
+         ? docxbox::AppStatus::Error("Failed saving: " + path_xml)
          : true;
 }
 

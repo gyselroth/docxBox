@@ -9,7 +9,7 @@ docx_renderer_table::docx_renderer_table(
   path_extract_ = std::move(path_extract);
 
   json_ = json;
-  is_json_valid_ = helper::String::IsJson(json);
+  is_json_valid_ = helper::Json::IsJson(json);
 
   if (is_json_valid_) InitFromJson();
 }
@@ -63,13 +63,15 @@ bool docx_renderer_table::InitFromJson() {
 
           ++amount_rows_;
         }
+      } else if (key == "pre" || key == "post") {
+        ExtractPreOrPostfix(it);
       }
     }
   }
 
   return amount_columns_ == 0
              || amount_rows_ == 0
-         ? docxbox::AppError::Output(
+         ? docxbox::AppStatus::Error(
           "Invalid table config: must contain column(s) / row(s)")
          : true;
 }
@@ -77,6 +79,8 @@ bool docx_renderer_table::InitFromJson() {
 // @see http://officeopenxml.com/WPtable.php
 std::string docx_renderer_table::Render() {
   if (!is_json_valid_) throw "Failed render table markup.\n";
+
+  generic_root_tag_ = "w:r";
 
   wml_ = std::string(kWRunLhs);
 
@@ -88,6 +92,8 @@ std::string docx_renderer_table::Render() {
   wml_ += std::string(kWTableRhs);
 
   wml_ += std::string(kWRunRhs);
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }
@@ -136,10 +142,6 @@ std::string docx_renderer_table::RenderTableCell(int index_cell) {
         "<w:tcPr>"
           "<w:tcW w:w=\"" + std::to_string(col_width_) + "\" w:type=\"dxa\"/>"
         "</w:tcPr>"
-        "<w:p>"
-          + kWRunLhs
-          + "<w:t>" + cell_content_[index_cell] + "</w:t>"
-          + kWRunRhs
-        + "</w:p>"
-      "</w:tc>";
+        + RenderTextInRunInParagraph(cell_content_[index_cell])
+    + "</w:tc>";
 }

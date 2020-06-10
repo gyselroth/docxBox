@@ -9,7 +9,7 @@ docx_xml_replace::docx_xml_replace(
 
 void docx_xml_replace::SetReplacementXmlFirstChildTag(
     const std::string &replacement_xml_first_child_tag) {
-  replacement_xml_first_child_tag_ = replacement_xml_first_child_tag;
+  replacement_xml_root_tag_ = replacement_xml_first_child_tag;
 }
 
 void docx_xml_replace::SetImageRelationshipId(std::string &relationship_id) {
@@ -38,7 +38,7 @@ bool docx_xml_replace::ReplaceInXml(
     previous_text_nodes_.clear();
   }
 
-  is_replacement_xml_ = helper::String::IsJson(replacement);
+  is_replacement_xml_ = helper::Json::IsJson(replacement);
 
   tinyxml2::XMLDocument doc;
 
@@ -59,8 +59,11 @@ bool docx_xml_replace::ReplaceInXml(
     const std::string &kMarkup = RenderMarkupFromJson(replacement);
 
     if (kMarkup.empty())
-      return docxbox::AppError::Output("Failed render markup from given JSON");
+      return docxbox::AppStatus::Error("Failed render markup from given JSON");
 
+    // Insert temporarily before body, will later be moved into correct place
+    // TODO(kay): use resp. different root element instead of w:body,
+    //            when not within document.xml
     helper::String::ReplaceAll(doc_xml, "<w:body>", kMarkup + "<w:body>");
   }
 
@@ -73,7 +76,7 @@ bool docx_xml_replace::ReplaceInXml(
   if (is_replacement_xml_)
     replacement_xml_element_ =
         doc.FirstChildElement()->FirstChildElement(
-            replacement_xml_first_child_tag_.c_str());
+            replacement_xml_root_tag_.c_str());
 
   tinyxml2::XMLElement *body =
       doc.FirstChildElement("w:document")->FirstChildElement("w:body");
@@ -98,7 +101,7 @@ bool docx_xml_replace::ReplaceInXml(
 
   return amount_replaced_ > 0
              && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
-         ? docxbox::AppError::Output("Failed saving: " + path_xml)
+         ? docxbox::AppStatus::Error("Failed saving: " + path_xml)
          : true;
 }
 

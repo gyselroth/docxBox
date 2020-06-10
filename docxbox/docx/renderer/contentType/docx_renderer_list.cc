@@ -38,7 +38,7 @@ void docx_renderer_list::AddNumberingRels() const {
 }
 
 bool docx_renderer_list::InitFromJson() {
-  if (!helper::String::IsJson(json_)
+  if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(
           {ElementType_ListUnordered, ElementType_ListOrdered})) return false;
 
@@ -60,6 +60,8 @@ bool docx_renderer_list::InitFromJson() {
                it_items != items.end();
                ++it_items)
             items_.push_back(it_items.value());
+        } else if (key == "pre" || key == "post") {
+          ExtractPreOrPostfix(it);
         }
       } catch (nlohmann::detail::invalid_iterator &e) {
         continue;
@@ -68,7 +70,7 @@ bool docx_renderer_list::InitFromJson() {
   }
 
   return items_.empty()
-    ? docxbox::AppError::Output("Invalid markup: list contains no items.")
+    ? docxbox::AppStatus::Error("Invalid markup: list contains no items.")
     : true;
 }
 
@@ -89,9 +91,11 @@ std::string docx_renderer_list::Render() {
     return wml_;
   }
 
+  generic_root_tag_ = "w:r";
+
   wml_ = kWRunLhs;
 
-  for (const std::string& item : items_) {
+  for (std::string& item : items_) {
     wml_ +=
         "<w:p>"
           "<w:pPr>"
@@ -101,13 +105,13 @@ std::string docx_renderer_list::Render() {
             "</w:numPr>"
             "<w:ind w:left=\"360\" w:hanging=\"360\"/>"
           "</w:pPr>"
-          "<w:r>"
-            "<w:t>" + item + "</w:t>"
-          "</w:r>"
-        "</w:p>";
+          + RenderTextInRun(item)
+        + "</w:p>";
   }
 
   wml_ += kWRunRhs;
+
+  RenderPreAndPostFixAroundWml();
 
   return wml_;
 }

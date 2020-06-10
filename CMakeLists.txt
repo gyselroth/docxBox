@@ -25,16 +25,17 @@ add_executable(docxbox
         docxbox/app/app.cc
         docxbox/app/app_argument.cc
         docxbox/app/app_command.cc
-        docxbox/app/app_error.cc
+        docxbox/app/app_status.cc
         docxbox/app/app_help.cc
         docxbox/app/app_help.h
+
+        docxbox/docx/docx_batch.cc
+        docxbox/docx/docx_diff.cc
+        docxbox/docx/docx_compare.cc
 
         docxbox/docx/archive/docx_archive.cc
         docxbox/docx/archive/docx_archive_list.cc
         docxbox/docx/archive/docx_archive_replace.cc
-        # TODO(kay): the following add to, but dont oop-extend docx_archive
-        docxbox/docx/archive/docx_diff.cc
-        docxbox/docx/archive/docx_fileListCompare.cc
 
         docxbox/docx/component/contentTypes.cc
         docxbox/docx/component/fontTable.cc
@@ -51,9 +52,11 @@ add_executable(docxbox
         docxbox/docx/renderer/contentType/docx_renderer_image.cc
         docxbox/docx/renderer/contentType/docx_renderer_link.cc
         docxbox/docx/renderer/contentType/docx_renderer_list.cc
+        docxbox/docx/renderer/contentType/docx_renderer_paragraph.cc
         docxbox/docx/renderer/component/docx_renderer_rels.cc
         docxbox/docx/renderer/component/docx_renderer_styles.cc
         docxbox/docx/renderer/contentType/docx_renderer_table.cc
+        docxbox/docx/renderer/contentType/docx_renderer_text.cc
 
         docxbox/docx/xml/docx_xml.cc
         docxbox/docx/xml/contentType/docx_xml_field.cc
