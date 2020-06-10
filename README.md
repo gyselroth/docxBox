@@ -224,8 +224,8 @@ you can use your favorite text editor via the
 
 #### Output document as plaintext
 
-````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and 
-footer)
+````docxbox txt foo.docx```` outputs the given document's plaintext
+(ATM: w/o header and footer)
 
 **Output plaintext segments:**  
 ````docxbox txt foo.docx -s````   
