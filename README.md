@@ -88,7 +88,7 @@ zipping them into a new DOCX:
 
 ````docxbox ls foo.docx````
 
-![List contents of DOCX archive](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/ls.png)
+![List contents of DOCX archive](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/docxbox-docx-ls.png)
 
 To output as JSON:
 
@@ -153,7 +153,7 @@ Output meta data of given DOCX:
 or ````docxbox ls foo.docx -m````  
 or ````docxbox ls foo.docx --meta````
 
-![List document meta data](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/lsm.png)
+![List document meta data](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/docxbox-docx-lsm.png)
 
 To output as JSON:
 
@@ -187,7 +187,7 @@ or ````docxbox ls foo.docx --meta --json````
 or ````docxbox ls foo.docx -f````  
 or ````docxbox ls foo.docx --fonts````  
 
-![List referenced fonts](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/lsf.png)
+![List referenced fonts](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/docxbox-docx-lsf.png)
 
 To output as JSON:
 
@@ -248,7 +248,7 @@ w/ different attributes or (identical attributes but) different content.
 
 ````docxbox ls foo_v1.docx foo_v2.docx````  
 
-![Compare two documents](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/ls-compare.png)
+![Compare two documents](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/docxbox-docx-ls-compare.png)
 
 #### Compare specific file from two DOCX archives
 
