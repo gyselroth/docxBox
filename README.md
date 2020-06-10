@@ -664,8 +664,8 @@ docxBox in the above example does:
 1. **Unzip** ``foo.docx``
 2. **Indent** all extracted XML files
 3. Render (= replace ``*DOCX*`` w/ the resp. extraction path)  
-  and **execute** the command: ``nano *DOCX*/word/document.xml``.  
-  -> Thereby opening ``document.xml`` for editing in nano, halting docxBox until 
+  and **execute** the command: ``nano *DOCX*/word/document.xml``, 
+  thereby opening ``document.xml`` for editing in nano, halting docxBox until 
   exiting the editor.
 4. **Unindent** all extracted XML files
 5. **Zip** the extracted files back into ``foo.docx``
