@@ -231,10 +231,10 @@ you can use your favorite text editor via the
 ````docxbox txt foo.docx -s````   
 or ````docxbox txt foo.docx --segments````   
 
-Outputs the text from document, w/ markup sections separated by newlines.
+Outputs the plaintext from document, with markup sections separated by newlines.
 This can be helpful to identify "segmented" sentences:
-Sentences which visually appear as a unit, but are segmented into separate XML 
-parent elements for formatting.
+Texts which visually appear as a unit, but are declared within multiple separate
+XML elements (due to formatting or change-tracking purposes).
 
 
 ### Compare DOCX documents
