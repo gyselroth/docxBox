@@ -17,7 +17,7 @@
 #include <vector>
 
 namespace docxbox {
- class App;  // forward-declare docxbox::App
+class App;  // forward-declare docxbox::App
 }
 
 class docx_batch {
