@@ -263,6 +263,8 @@ Display **unified** diff:
 ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml -u````  
 or: ````docxbox diff foo_v1.docx foo_v2.docx word/settings.xml --unified````
 
+![Compare file from two documents](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/docxbox-docx-diff.png)
+
 
 ### Modify document
 
