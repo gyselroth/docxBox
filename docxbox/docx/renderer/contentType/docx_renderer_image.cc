@@ -41,8 +41,17 @@ bool docx_renderer_image::InitFromJson() {
       } else if (key == "size") {
         auto value = it.value();
 
-        width_ = value.at(0);
-        height_ = value.at(1);
+        std::string width_str = value.at(0);
+
+        width_ = (helper::String::EndsWith(width_str, "px"))
+                 ? PixelsToEmus(width_str)
+                 : (int) value.at(0);
+
+        std::string height_str = value.at(1);
+
+        height_ = (helper::String::EndsWith(height_str, "px"))
+                  ? PixelsToEmus(height_str)
+                  : (int) value.at(1);
       } else if (key == "pre" || key == "post") {
         ExtractPreOrPostfix(it);
       }

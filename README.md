@@ -394,7 +394,9 @@ Replace string ``search`` by an ordered list:
 
 * The ``name`` parameter is optional
 * The ``offset`` argument is optional
-* Size is given in EMUs (English Metric Unit) that is: ``pixels * 9525``
+* Image size is per default expected to be given in EMUs 
+  (= English Metric Unit, being: ``pixels * 9525``), but can also be specified 
+  in Pixels like:  ``"size\":[\"256px\",\"192px\"]``
 
 When inserting a new image file, it must be given as additional argument:  
 ````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````

@@ -90,8 +90,11 @@ extern int OffsetChar(const std::string &str, char c, int offset = 0);
 extern std::vector<std::string> Explode(std::string const &str, char delimiter);
 
 extern std::string GetTrailingWord(std::string str);
-extern std::string ExtractRightMostNumber(
+
+extern std::string ExtractTrailingNumber(
     std::string str, std::string default_if_none = "1");
+
+extern std::string ExtractLeadingNumber(std::string str);
 
 extern std::string Implode(
     std::vector<std::string> strings, const char* delimiter = ", ");
@@ -105,9 +108,9 @@ extern void Trim(std::string &s);
 
 extern bool IsNumeric(
     std::string str,
-    bool trim,
-    bool can_contain_punctuation,
-    bool can_contain_spaces);
+    bool trim = false,
+    bool can_contain_punctuation = false,
+    bool can_contain_spaces = false);
 
 extern bool IsAllUpper(const std::string& str);
 
