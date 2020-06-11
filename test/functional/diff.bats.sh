@@ -38,13 +38,27 @@ title="Output of \"${base_command} otherFilename.docx {missing argument}\""
   [ "${pattern}" = "${lines[0]}" ]
 }
 
-description="a side by side view is displayed"
-@test "With \"${base_command} changedFilename.docx\" ${description}" {
+description="side by side view is displayed"
+@test "With \"${base_command} changedFilename.docx\" a ${description}" {
   path_changed_docx="test/functional/tmp/cp_table_unordered_list_images_v2.docx"
   
   run "${docxbox}" lorem "${path_docx_1}" "${path_changed_docx}"
+
+  result_original=$("${docxbox}" cat "${path_docx_1}" word/document.xml | wc --bytes)
+  result_changed=$("${docxbox}" diff "${path_docx_1}" "${path_changed_docx}" word/document.xml | wc --bytes )
   
-  "${docxbox}" diff "${path_docx_1}" "${path_changed_docx}" word/document.xml | grep "|"
+  "${docxbox}" diff "${path_docx_1}" "${path_changed_docx}" word/document.xml | (( ${result_original} < ${result_changed} ))
+}
+
+@test "With \"${base_command} changedFilename.docx -u\" a unified ${description}" {
+  path_changed_docx="test/functional/tmp/cp_table_unordered_list_images_v2.docx"
+
+  run "${docxbox}" rpt "${path_docx_1}" Officia Foo "${path_changed_docx}"
+
+  result_original=$("${docxbox}" cat "${path_docx_1}" word/document.xml | wc --bytes)
+  result_changed=$("${docxbox}" diff "${path_docx_1}" "${path_changed_docx}" word/document.xml -u | wc --bytes )
+
+  "${docxbox}" diff "${path_docx_1}" "${path_changed_docx}" word/document.xml -u | (( ${result_original} > ${result_changed} ))
 }
 
 @test "Output of \"docxbox diff nonexistent.docx\" is an error message" {

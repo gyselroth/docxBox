@@ -29,6 +29,14 @@ merge_format="\* MERGEFORMAT"
   "${docxbox}" lsd "${path_docx}" | grep --count "${merge_format}"
 }
 
+@test "With ${base_command} filename.docx\" the fields in the header are listed" {
+  "${docxbox}" lsd "${path_docx}" | grep --count "MERGEFIELD  Mergefield_Header"
+}
+
+@test "With ${base_command} filename.docx\" the fields in the footer are listed" {
+  "${docxbox}" lsd "${path_docx}" | grep --count "MERGEFIELD  Mergefield_Footer"
+}
+
 title="With \"docxbox ls filename.docx --fields\" "
 title+="the fields in the docx are listed"
 @test "$title" {

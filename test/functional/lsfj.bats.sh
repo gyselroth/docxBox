@@ -89,7 +89,7 @@ longhand="--fonts --json"
 }
 
 @test "Output of \"${base_command}\" can contain alternative font names" {
-  "${docxbox}" lsfj "${path_docx}" | grep --count "ＭＳ 明朝"
+  "${docxbox}" lsfj "${path_docx}" | grep --count "宋体"
 }
 
 @test "Output of \"${base_command}\" contains font-charSets" {
@@ -110,7 +110,6 @@ longhand="--fonts --json"
 
 @test "Output of \"${base_command}\" contains font-pitch" {
   "${docxbox}" lsfj "${path_docx}" | grep --count "variable"
-  "${docxbox}" lsfj "${path_docx}" | grep --count "fixed"
 }
 
 @test "Output of \"docxbox lsfj nonexistent.docx\" is an error message" {

@@ -9,6 +9,7 @@ docxbox=""$BATS_TEST_DIRNAME"/docxbox"
 
 base_command="\"docxbox ls filename.docx"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+path_new_docx="test/functional/tmp/changedFile.docx"
 
 @test "Exit code of ${base_command}\" is zero" {
   run "${docxbox}" ls "${path_docx}"
@@ -70,6 +71,15 @@ long_description="contains files with the given file ending"
 @test "Output of ${base_command} *.file-ending\" ${long_description}" {
   "${docxbox}" ls "${path_docx}" *.jpeg | grep --count "image2.jpeg"
   "${docxbox}" ls "${path_docx}" *.xml | grep --count "10 files"
+}
+
+@test "With \"${base_command} changedFile.docx\" a side-by-side comparison is displayed" {
+  run "${docxbox}" lorem "${path_docx}" "${path_new_docx}"
+
+  amount_chars_base=$("${docxbox}" ls "${path_docx}" | wc --bytes)
+  amount_chars_diff=$("${docxbox}" ls "${path_docx}" "${path_new_docx}" | wc --bytes)
+
+  "${docxbox}" ls "${path_docx}" "${path_new_docx}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
 }
 
 @test "Output of ${base_command} nonexistent.docx\" is an error message" {
