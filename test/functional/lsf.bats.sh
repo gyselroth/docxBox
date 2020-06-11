@@ -27,19 +27,19 @@ longhand_command="docxbox ls filename.docx"
 @test "Output of \"${base_command}\" contains ground informations" {
   run "${docxbox}" lsf "${path_docx}"
   [ "$status" -eq 0 ]
-  [ "word/fontTable.xml lists 8 fonts:" = "${lines[0]}" ]
+  [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
 
 @test "Output of \"${longhand_command} --fonts\" contains ground informations" {
   run "${docxbox}" ls "${path_docx}" --fonts
   [ "$status" -eq 0 ]
-  [ "word/fontTable.xml lists 8 fonts:" = "${lines[0]}" ]
+  [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
 
 @test "Output of \"${longhand_command} -f\" contains ground informations" {
   run "${docxbox}" ls "${path_docx}" -f
   [ "$status" -eq 0 ]
-  [ "word/fontTable.xml lists 8 fonts:" = "${lines[0]}" ]
+  [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
 
 @test "Output of \"${base_command}\" contains files' and directories' attributes" {
@@ -61,7 +61,7 @@ longhand_command="docxbox ls filename.docx"
 }
 
 @test "Output of \"${base_command}\" contains amount fonts" {
-  "${docxbox}" lsf "${path_docx}" | grep --count "8 fonts"
+  "${docxbox}" lsf "${path_docx}" | grep --count "10 fonts"
 }
 
 @test "Output of \"${base_command}\" contains font names" {
@@ -82,7 +82,7 @@ longhand_command="docxbox ls filename.docx"
 }
 
 @test "Output of \"${base_command}\" can contain alternative font names" {
-  "${docxbox}" lsf "${path_docx}" | grep --count "ＭＳ 明朝"
+  "${docxbox}" lsf "${path_docx}" | grep --count "宋体"
 }
 
 @test "Output of \"${base_command}\" contains font-charSets" {
@@ -103,7 +103,6 @@ longhand_command="docxbox ls filename.docx"
 
 @test "Output of \"${base_command}\" contains font-pitch" {
   "${docxbox}" lsf "${path_docx}" | grep --count "variable"
-  "${docxbox}" lsf "${path_docx}" | grep --count "fixed"
 }
 
 @test "Output of \"docxbox lsf nonexistent.docx\" is an error message" {

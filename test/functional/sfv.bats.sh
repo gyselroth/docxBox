@@ -9,7 +9,7 @@ docxbox=""$BATS_TEST_DIRNAME"/docxbox"
 path_docx="test/functional/tmp/cp_mergefields.docx"
 
 base_command="docxbox sfv"
-mergefield="MERGEFIELD  Schueler_Anrede"
+mergefield="MERGEFIELD  Mergefield_One"
 
 @test "Output of \"${base_command} {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
