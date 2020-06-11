@@ -98,5 +98,8 @@ bats ./test/functional/uzm.bats.sh
 printf "\n\033[4mTest creating (zp) DOCX from files (zp)\033[0m\n"
 bats ./test/functional/zp.bats.sh
 
+printf "\n\033[4mTest creating DOCX from indented files (zpc)\033[0m\n"
+bats ./test/functional/zpc.bats.sh
+
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
 printf "\nDone. Bats tests ran for $ELAPSED_TIME seconds.\n\n"
