@@ -167,18 +167,18 @@ or ````docxbox ls foo.docx --meta --json````
 #### Reference: Recognized meta attributes
 
 * **Authors:** Creator, lastModifiedBy (``<dc:creator>`` 
-  and ``<cp:lastModifiedBy>`` of core.xml)
+  and ``<cp:lastModifiedBy>`` of docProps/core.xml)
 * **Dates** (ISO 8601): Creation-, modification and print-date  
   (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` 
-  of core.xml) 
+  of docProps/core.xml) 
 * **Descriptions:** Description, Keywords, Subject, Title   
   (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` 
-  of core.xml)
-* **Language** (``<dc:language>`` of core.xml) 
-* **Revision** (``<cp:revision>`` of core.xml)
+  of docProps/core.xml)
+* **Language** (``<dc:language>`` of docProps/core.xml) 
+* **Revision** (``<cp:revision>`` of docProps/core.xml)
 * **Application** created with and its version, name of used template, company,
   XML schema of document (``<Application>``, ``<AppVersion>``, ``<Template>``, 
-  ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
+  ``<Properties xmlns ...`` and ``<Company>`` of docProps/app.xml)
 
 
 #### List referenced fonts

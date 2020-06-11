@@ -5,9 +5,11 @@
 #define DOCXBOX_DOCX_COMPONENT_META_H_
 
 #include <docxbox/app/app_argument.h>
+#include <docxbox/docx/component/meta_app.h>
+#include <docxbox/docx/component/meta_core.h>
+#include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_dateTime.h>
 #include <docxbox/helper/helper_string.h>
-#include <docxbox/docx/xml/docx_xml.h>
 
 #include <iostream>
 #include <string>
@@ -15,40 +17,21 @@
 #include <utility>
 #include <vector>
 
-// wordMl meta attribute tag names
-static const char *const kWmlTagApplication = "Application";
-static const char *const kWmlTagAppVersion = "AppVersion";
-static const char *const kWmlTagCompany = "Company";
-static const char *const kWmlTagTemplate = "Template";
-
-static const char *const kWmlTagCpLastModifiedBy = "cp:lastModifiedBy";
-static const char *const kWmlTagCpLastPrinted = "cp:lastPrinted";
-static const char *const kWmlTagCpRevision = "cp:revision";
-
-static const char *const kWmlTagDcCreator = "dc:creator";
-static const char *const kWmlTagDcDescription = "dc:description";
-static const char *const kWmlTagDcKeywords = "dc:keywords";
-static const char *const kWmlTagDcLanguage = "dc:language";
-static const char *const kWmlTagDcSubject = "dc:subject";
-static const char *const kWmlTagDcTitle = "dc:title";
-
 static const char *const kWmlAttributeDcTermsXsi =
     " xsi:type=\"dcterms:W3CDTF\"";
 
-static const char *const kWmlTagDcTermsCreated = "dcterms:created";
-static const char *const kWmlTagDcTermsModified = "dcterms:modified";
-
 static const char *const kWordMlXmlSchemeLhs = "<Properties xmlns=\"";
 static const char *const kWordMlXmlSchemeRhs = "\" ";
-
-static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
 
 class meta {
  public:
   // Known (supported for modification) attributes
   enum Attribute {
+    Attribute_Application,
+    Attribute_AppVersion,
     Attribute_Created,
     Attribute_Creator,
+    Attribute_Company,
     Attribute_Description,
     Attribute_Keywords,
     Attribute_Language,
@@ -57,7 +40,9 @@ class meta {
     Attribute_Modified,
     Attribute_Revision,
     Attribute_Subject,
+    Attribute_Template,
     Attribute_Title,
+    Attribute_XmlSchema,
     Attribute_Unknown
   };
 
@@ -136,8 +121,7 @@ class meta {
 
   void Clear();
 
-  static meta::Attribute ResolveAttributeByName(
-      const std::string &attribute);
+  static meta::Attribute ResolveAttributeByName(const std::string &attribute);
 
   bool AttributeExistsInCoreXml(Attribute attribute);
 
