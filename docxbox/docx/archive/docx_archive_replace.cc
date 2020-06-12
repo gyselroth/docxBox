@@ -355,10 +355,7 @@ bool docx_archive_replace::SetFieldValue() {
   auto parser = new docx_xml_field(argc_, argv_);
 
   for (const auto &file_in_zip : file_list) {
-    // TODO(kay): fetch from all textual XML files, instead only document.xml
-
-    if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml"))
-      continue;
+    if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
     if (!parser->SetFieldText(
         path_extract_ + "/" + file_in_zip.filename,

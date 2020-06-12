@@ -50,8 +50,7 @@ bool docx_xml_field::SetFieldText(
 
   if (doc.ErrorID() != 0) return false;
 
-  tinyxml2::XMLElement *body =
-      doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(doc, path_xml);
 
   is_inside_searched_field_ = false;
 
