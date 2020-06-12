@@ -127,8 +127,25 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   "${docxbox}" lsl "${path_docx}" "</w:hyperlink>" | grep --count "${display_file}"
 }
 
-@test "With \"${base_command} image_as_JSON\" the given string is replaced by an image" {
+image_replacement="the given string is replaced by an image"
+@test "With \"${base_command} image_as_JSON\" ${image_replacement} using EMU" {
   image="{\"image\":{\"size\":[2438400,1828800]}}"
+  image_path="test/files/images/2100x400.jpeg"
+
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "<w:drawing>"
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "</w:drawing>"
+
+  run "${docxbox}" rpt "${path_docx}" Officia ${image} ${image_path}
+  [ "$status" -eq 0 ]
+
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count "<w:drawing>"
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count "</w:drawing>"
+  "${docxbox}" lsl "${path_docx}" "<w:drawing>" | grep --count "${display_file}"
+  "${docxbox}" lsl "${path_docx}" "</w:drawing>" | grep --count "${display_file}"
+}
+
+@test "With \"${base_command} image_as_JSON\" ${image_replacement} using pixels" {
+  image="{\"image\":{\"size\":[\"2100px\",\"400px\"]}}"
   image_path="test/files/images/2100x400.jpeg"
 
   "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "<w:drawing>"
