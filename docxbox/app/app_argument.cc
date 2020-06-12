@@ -28,15 +28,13 @@ std::string AppArguments::ResolvePathFromArgument(
     AppStatus::Error("Missing file argument");
   }
 
-  if (must_exist
-      && !path.empty()
-      && !helper::File::FileExists(path)) {
+  if (!must_exist
+      || path.empty()
+      || helper::File::FileExists(path)) return path;
+
     docxbox::AppStatus::Error("File not found: " + path);
 
     return "";
-  }
-
-  return path;
 }
 
 bool AppArguments::IsArgumentGiven(int argc,

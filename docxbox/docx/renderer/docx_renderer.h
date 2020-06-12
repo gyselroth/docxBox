@@ -63,6 +63,8 @@ class docx_renderer {
   static std::string RenderTextInRun(std::string &text);
   static std::string RenderTextInRunInParagraph(std::string &text);
 
+  static int PixelsToEmus(std::string &str);
+
  private:
   virtual bool InitFromJson() = 0;
 };

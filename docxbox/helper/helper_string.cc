@@ -18,10 +18,15 @@ bool String::StartsNumeric(const char *str) {
 }
 
 // Check whether given string ends w/ given string
-bool String::EndsWith(std::string const &value, std::string const &ending) {
+bool String::EndsWith(std::string const &str, std::string const &ending) {
   return ending.empty()
-      || (ending.size() <= value.size()
-          && std::equal(ending.rbegin(), ending.rend(), value.rbegin()));
+      || (ending.size() <= str.size()
+          && std::equal(ending.rbegin(), ending.rend(), str.rbegin()));
+}
+
+bool String::EndsWithCaseInsensitive(
+    const char *str, const std::string &ending) {
+  return EndsWith(ToLower(str), ending);
 }
 
 bool String::IsAnyOf(
@@ -156,7 +161,7 @@ std::string String::GetTrailingWord(std::string str) {
   return words[words.size() - 1];
 }
 
-extern std::string String::ExtractRightMostNumber(
+extern std::string String::ExtractTrailingNumber(
     std::string str, std::string default_if_none) {
   auto offset_end =  str.find_last_of('.');
 
@@ -180,6 +185,17 @@ extern std::string String::ExtractRightMostNumber(
   return -1 == offset_start
     ? default_if_none
     : str.substr(offset_start, offset_end - offset_start);
+}
+
+std::string String::ExtractLeadingNumber(std::string str) {
+  std::string number;
+
+  for (uint16_t i = 0; i < str.length(); i++) {
+    if (isdigit(str[i])) number += str[i];
+    else return number;
+  }
+
+  return number;
 }
 
 std::string String::Implode(

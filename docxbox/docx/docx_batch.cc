@@ -25,7 +25,7 @@ bool docx_batch::InitFromJson() {
          ++it) {
       commands_.push_back(it.key());
 
-      // note: dumped JSON string has associations alphabetically sorted,
+      // NOTE: Dumped JSON string has associations alphabetically sorted,
       //       and not necessarily in same order as originally given
       arguments_json_.push_back(it.value().dump());
     }
@@ -73,9 +73,6 @@ bool docx_batch::ProcessStep(int index) {
     }
   }
 
-  // TODO(kay): add optional destination path to app_cli_arguments
-//  app_cli_arguments.emplace_back(archive_->GetArgValue(1));
-
   int argc = app_cli_arguments.size();
 
   // Convert from std::vector<std::string> to char**
@@ -86,12 +83,13 @@ bool docx_batch::ProcessStep(int index) {
 
   argv[argc] = nullptr;
 
+  // Init process
   auto app = new docxbox::App(argc, argv, true);
 
   app->SetPathDocxIn(archive_->GetPathDocxIn());
   app->SetPathExtract(archive_->GetPathExtract());
 
-  if (index == commands_.size() - 1) app->SetIsFinalBatchStep(true);
+  if (index == commands_.size() - 1) InitFinalBatchStep(app);
 
   app->Process();
 
@@ -104,4 +102,18 @@ bool docx_batch::ProcessStep(int index) {
   delete app;
 
   return false;
+}
+
+// Prepare write resulting DOCX during final step of batch processing
+void docx_batch::InitFinalBatchStep(docxbox::App *app) {
+  app->SetIsFinalBatchStep(true);
+
+  auto last_argument = archive_->GetLastArgValue();
+
+  app->SetPathDocxOut(
+      helper::String::EndsWithCaseInsensitive(last_argument, ".docx")
+      // Set given destination path with/or filename for DOCX result file
+      ? last_argument
+      // Overwrite source DOCX
+      : archive_->GetPathDocxIn());
 }

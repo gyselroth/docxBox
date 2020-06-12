@@ -114,3 +114,11 @@ std::string docx_renderer::RenderTextInRun(std::string &text) {
 std::string docx_renderer::RenderTextInRunInParagraph(std::string &text) {
   return "<w:p>" + RenderTextInRun(text) + "</w:p>";
 }
+
+int docx_renderer::PixelsToEmus(std::string &str) {
+  std::string number = helper::String::ExtractLeadingNumber(str);
+
+  return helper::String::IsNumeric(number)
+    ? std::stoi(number) * 9525
+    : 0;
+}

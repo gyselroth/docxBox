@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 namespace docxbox {
 
@@ -20,6 +21,9 @@ class AppStatus {
 
   static bool Error(const std::string &message);
   static bool Warning(const std::string &message);
+
+ private:
+  std::vector<std::string> messages_;
 };
 
 }  // namespace docxbox

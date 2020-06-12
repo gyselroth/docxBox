@@ -167,18 +167,18 @@ or ````docxbox ls foo.docx --meta --json````
 #### Reference: Recognized meta attributes
 
 * **Authors:** Creator, lastModifiedBy (``<dc:creator>`` 
-  and ``<cp:lastModifiedBy>`` of core.xml)
+  and ``<cp:lastModifiedBy>`` of docProps/core.xml)
 * **Dates** (ISO 8601): Creation-, modification and print-date  
   (``<dcterms:created>`` and ``<cp:modified>`` and ``<cp:lastPrinted>`` 
-  of core.xml) 
+  of docProps/core.xml) 
 * **Descriptions:** Description, Keywords, Subject, Title   
   (``<dc:description>``, ``<dc:keywords>``, ``<dc:subject>``, ``<dc:title>`` 
-  of core.xml)
-* **Language** (``<dc:language>`` of core.xml) 
-* **Revision** (``<cp:revision>`` of core.xml)
+  of docProps/core.xml)
+* **Language** (``<dc:language>`` of docProps/core.xml) 
+* **Revision** (``<cp:revision>`` of docProps/core.xml)
 * **Application** created with and its version, name of used template, company,
   XML schema of document (``<Application>``, ``<AppVersion>``, ``<Template>``, 
-  ``<Properties xmlns ...`` and ``<Company>`` of app.xml)
+  ``<Properties xmlns ...`` and ``<Company>`` of docProps/app.xml)
 
 
 #### List referenced fonts
@@ -224,17 +224,17 @@ you can use your favorite text editor via the
 
 #### Output document as plaintext
 
-````docxbox txt foo.docx```` outputs the text from document (ATM: w/o header and 
-footer)
+````docxbox txt foo.docx```` outputs the given document's plaintext
+(ATM: w/o header and footer)
 
 **Output plaintext segments:**  
 ````docxbox txt foo.docx -s````   
 or ````docxbox txt foo.docx --segments````   
 
-Outputs the text from document, w/ markup sections separated by newlines.
+Outputs the plaintext from document, with markup sections separated by newlines.
 This can be helpful to identify "segmented" sentences:
-Sentences which visually appear as a unit, but are segmented into separate XML 
-parent elements for formatting.
+Texts which visually appear as a unit, but are declared within multiple separate
+XML elements (due to formatting or change-tracking purposes).
 
 
 ### Compare DOCX documents
@@ -394,7 +394,9 @@ Replace string ``search`` by an ordered list:
 
 * The ``name`` parameter is optional
 * The ``offset`` argument is optional
-* Size is given in EMUs (English Metric Unit) that is: ``pixels * 9525``
+* Image size is per default expected to be given in EMUs 
+  (= English Metric Unit, being: ``pixels * 9525``), but can also be specified 
+  in Pixels like:  ``"size\":[\"256px\",\"192px\"]``
 
 When inserting a new image file, it must be given as additional argument:  
 ````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````
@@ -633,9 +635,20 @@ Sequences of templating steps to be batch-processed must be given like:
 
 **Note:** As when inserting new images in non-batch mode 
 (via [``rpt``](#insert-image) or [``rpi``](#replace-image)), also during batch
-templating, image files to be added newly must be given as trailing arguments.
+templating, image files to be added into the document must be given as trailing 
+arguments.
  
 ````docxbox batch foo.docx "{\"1\":{\"rpt\":[\"foo\",{\"h1\":{\"text\":\"Foobar\",\"post\":{\"text\":\"my-marker-1\"}}}]},\"2\":{\"rpt\":[\"my-marker-1\",{\"table\":{\"columns\":2,\"rows\":2,\"header\":[\"A\",\"B\"],\"content\":[[\"img-a1\",\"img-b1\"],[\"img-a2\",\"img-b2\"]]}}]},\"3\":{\"rpt\":[\"img-a1\",{\"img\":{\"name\":\"blue.png\",\"size\":[2438400,1828800]}}]},\"4\":{\"rpt\":[\"img-b1\",{\"img\":{\"name\":\"green.png\",\"size\":[2438400,1828800]}}]},\"5\":{\"rpt\":[\"img-a2\",{\"img\":{\"name\":\"orange.png\",\"size\":[2438400,1828800]}}]},\"6\":{\"rpt\":[\"img-b2\",{\"img\":{\"name\":\"red.png\",\"size\":[2438400,1828800]}}]}}" blue.png green.png orange.png red.png````
+
+
+##### Save batch processed document to new file
+
+To save the resulting document of batch processed manipulations to a new file, 
+instead of overwriting the source document, the destination filename can 
+optionally be given as the very last argument (also trailing other optional 
+arguments like image files):
+
+````docxbox batch foo.docx "{\"1\":{\"mm\":[\"description\",\"foo\"]},\"2\":{\"rpt\":[\"bar\",\"baz\"]},\"3\":{\"rpt\":[\"qux\",{\"h1\":{\"text\":\"Quux\"}}]}}" new.docx```` 
 
 
 ### Arbitrary manual and scripted analysis / modification
@@ -653,8 +666,8 @@ docxBox in the above example does:
 1. **Unzip** ``foo.docx``
 2. **Indent** all extracted XML files
 3. Render (= replace ``*DOCX*`` w/ the resp. extraction path)  
-  and **execute** the command: ``nano *DOCX*/word/document.xml``.  
-  -> Thereby opening ``document.xml`` for editing in nano, halting docxBox until 
+  and **execute** the command: ``nano *DOCX*/word/document.xml``, 
+  thereby opening ``document.xml`` for editing in nano, halting docxBox until 
   exiting the editor.
 4. **Unindent** all extracted XML files
 5. **Zip** the extracted files back into ``foo.docx``

@@ -19,12 +19,20 @@ char* docx_archive::GetArgValue(int index) {
   return argv_[index];
 }
 
-void docx_archive::SetPathDocxIn(const std::string &path_docx_in) {
-  path_docx_in_ = path_docx_in;
+char* docx_archive::GetLastArgValue() {
+  return argv_[argc_ - 1];
 }
 
-void docx_archive::SetPathExtract(const std::string &path_extract) {
-  path_extract_ = path_extract;
+void docx_archive::SetPathDocxIn(const std::string &path) {
+  path_docx_in_ = path;
+}
+
+void docx_archive::SetPathDocxOut(const std::string &path) {
+  path_docx_out_ = path;
+}
+
+void docx_archive::SetPathExtract(const std::string &path) {
+  path_extract_ = path;
 }
 
 void docx_archive::SetIsFinalBatchStep(bool is_final_batch_step) {
@@ -430,7 +438,8 @@ bool docx_archive::ModifyMeta() {
   auto *meta_component = new meta(argc_, argv_);
 
   if (!meta_component->InitModificationArguments()
-      || !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) {
+      || (!is_batch_mode_
+          && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName()))) {
     delete meta_component;
 
     return docxbox::AppStatus::Error(
@@ -457,21 +466,19 @@ bool docx_archive::ModifyMeta() {
 
   // Create resulting DOCX from files during non-batch mode
   // or at final step of batch sequence
-  if (is_batch_mode_ && !is_final_batch_step_) {
-    delete meta_component;
+  if (is_batch_mode_) {
+    if (!is_final_batch_step_) {
+      delete meta_component;
 
-    return true;
-  }
-
-  std::string path_docx_out;
-
-  if (argc_ >= 6) {
-    // Result filename is given as argument
-    path_docx_out =
-        helper::File::ResolvePath(path_working_directory_, argv_[5]);
+      return true;
+    }
   } else {
-    // Overwrite original DOCX
-    path_docx_out = path_docx_in_;
+    path_docx_out_ = argc_ >= 6
+                    // Result filename is given as argument
+                    ? helper::File::ResolvePath(path_working_directory_,
+                                                argv_[5])
+                    // Overwrite original DOCX
+                    : path_docx_in_;
   }
 
   auto attribute = meta_component->GetAttribute();
@@ -479,7 +486,7 @@ bool docx_archive::ModifyMeta() {
   /*if (attribute == docx_meta::Attribute_LastPrinted) {
     std::string date = meta->GetValue();
 
-    if (!Zip(false, path_extract_, path_docx_out + "tmp",
+    if (!Zip(false, path_extract_, path_docx_out_ + "tmp",
              false,
              false,
              date,
@@ -493,7 +500,7 @@ bool docx_archive::ModifyMeta() {
   } else {*/
     if (!Zip(false,
              path_extract_,
-             path_docx_out + "tmp",
+             path_docx_out_ + "tmp",
              attribute != meta::Attribute_Modified,
              attribute != meta::Attribute_Created)) {
       delete meta_component;
@@ -504,11 +511,12 @@ bool docx_archive::ModifyMeta() {
 
   delete meta_component;
 
-  if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
+  if (path_docx_in_ == path_docx_out_)
+    helper::File::Remove(path_docx_in_.c_str());
 
   return 0 == std::rename(
-      std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
+      std::string(path_docx_out_).append("tmp").c_str(),
+      path_docx_out_.c_str());
 }
 
 // Update given meta date attribute and immediately save updated core.xml

@@ -34,16 +34,19 @@ void App::SetIsFinalBatchStep(bool is_final_batch_step) {
   is_final_batch_step_ = is_final_batch_step;
 }
 
+void App::SetPathDocxOut(const std::string &path_docx_out) {
+  path_docx_out_ = path_docx_out;
+}
+
 // Remap command + argument variations to rel. shorthand commands
 AppCommands::Command App::PreProcess(
     AppArguments *arguments,
     const AppCommands::Command &command) const {
   switch (command) {
     case AppCommands::Command_GetPlainText:  // txt
-      if (arguments->Matches(3, "-s", "--segments"))
-        return AppCommands::Command_GetPlainTextSegments;
-
-      return command;
+      return arguments->Matches(3, "-s", "--segments")
+        ? AppCommands::Command_GetPlainTextSegments
+        : command;
     case AppCommands::Command_List:  // ls
       if (arguments->Matches(3, "-fj"))
         return AppCommands::Command_ListFontsAsJson;
@@ -291,10 +294,11 @@ bool App::ProcessReplace(AppCommands::Command command) {
 void App::InitBatchProcessor(docx_archive *docx_archive) const {
   if (!is_batch_mode_) return;
 
-    docx_archive->SetPathDocxIn(path_docx_in_);
-    docx_archive->SetPathExtract(path_extract_);
-    docx_archive->SetIsFinalBatchStep(is_final_batch_step_);
-    // TODO(kay): set optional destination path
+  docx_archive->SetPathDocxIn(path_docx_in_);
+  docx_archive->SetPathExtract(path_extract_);
+  docx_archive->SetPathDocxOut(path_docx_out_);
+
+  docx_archive->SetIsFinalBatchStep(is_final_batch_step_);
 }
 
 }  // namespace docxbox

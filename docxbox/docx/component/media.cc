@@ -40,7 +40,7 @@ std::string media::GetNextImageNumber() {
   for (const auto& filename : image_files) {
     if (!helper::File::IsWordCompatibleImage(filename)) continue;
 
-    std::string no_current = helper::String::ExtractRightMostNumber(filename);
+    std::string no_current = helper::String::ExtractTrailingNumber(filename);
 
     if (no_current.empty()) continue;
 

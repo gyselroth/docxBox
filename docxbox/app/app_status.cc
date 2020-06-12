@@ -6,6 +6,9 @@
 namespace docxbox {
 
 bool AppStatus::Error(const std::string& message) {
+  // TODO(kay): Collect messages instead of directly outputting them
+  //messages_.push_back(message);
+
   std::cout << "docxBox Error - " << message << "\n";
 
   return false;
@@ -16,5 +19,10 @@ bool AppStatus::Warning(const std::string& message) {
 
   return true;
 }
+
+// TODO(kay): Add method for removing duplicate messages
+//            and outputting to stdout or file
+
+// TODO(kay): Call output method before exiting docxBox
 
 }  // namespace docxbox

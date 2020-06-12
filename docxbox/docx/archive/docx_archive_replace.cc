@@ -16,7 +16,8 @@ bool docx_archive_replace::ReplaceImage() {
       3, "Filename of image to be replaced",
       4, "Filename of replacement image")) return false;
 
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (!is_batch_mode_
+      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   std::string image_original = argv_[3];
 
@@ -39,6 +40,8 @@ bool docx_archive_replace::ReplaceImage() {
       if (!helper::File::Remove(path_image_original.c_str()))
         return docxbox::AppStatus::Error("Failed replace " + image_original);
 
+      // TODO(kay): add adaptation for batch process-
+      //            needs use of dynamic offset instead argv_[4] than
       std::string path_image_replacement =
           helper::File::ResolvePath(path_working_directory_, argv_[4]);
 
@@ -52,28 +55,32 @@ bool docx_archive_replace::ReplaceImage() {
           "Cannot replace " + image_original
               + " - no such image within " + path_docx_in_);
 
+    bool overwrite_source_docx;
+
     // Create resulting DOCX from files during non-batch mode
     // or at final step of batch sequence
-    if (is_batch_mode_ && !is_final_batch_step_) return true;
+    if (is_batch_mode_) {
+      if (!is_final_batch_step_) return true;
 
-    std::string path_docx_out =
-        argc_ >= 6
-        // Result filename is given as argument
-        ? helper::File::ResolvePath(
-            path_working_directory_,
-            argv_[5])
-        // Overwrite original DOCX
-        : path_docx_in_;
+      overwrite_source_docx = path_docx_in_ == path_docx_out_;
+    } else {
+      overwrite_source_docx = argc_ < 6;
 
-    if (!Zip(false, path_extract_, path_docx_out + "tmp"))
+      path_docx_out_ = overwrite_source_docx
+          ? path_docx_in_
+          // Result filename is given as argument
+          : helper::File::ResolvePath(path_working_directory_, argv_[5]);
+    }
+
+    if (!Zip(false, path_extract_, path_docx_out_ + "tmp"))
       return docxbox::AppStatus::Error(
-          "DOCX creation failed: " + path_docx_out);
+          "DOCX creation failed: " + path_docx_out_);
 
-    if (argc_ < 6) helper::File::Remove(path_docx_in_.c_str());
+    if (overwrite_source_docx) helper::File::Remove(path_docx_in_.c_str());
 
     std::rename(
-        std::string(path_docx_out).append("tmp").c_str(),
-        path_docx_out.c_str());
+        std::string(path_docx_out_).append("tmp").c_str(),
+        path_docx_out_.c_str());
   } catch (std::string &message) {
     return docxbox::AppStatus::Error(message);
   }
@@ -143,21 +150,22 @@ bool docx_archive_replace::ReplaceText() {
 
   delete parser;
 
+  bool overwrite_source_docx;
+
   // Create resulting DOCX from files during non-batch mode
   // or at final step of batch sequence
-  if (is_batch_mode_ && !is_final_batch_step_) return true;
+  if (is_batch_mode_) {
+    if (!is_final_batch_step_) return true;
 
-  std::string path_docx_out;
+    overwrite_source_docx = path_docx_in_ == path_docx_out_;
+  } else {
+    InitPathDocxOutForReplaceText(path_docx_out_, overwrite_source_docx);
+  }
 
-  bool overwrite_source_docx;
-  InitDocxOutPathForReplaceText(path_docx_out, overwrite_source_docx);
-
-  CreateDocxFromExtract(path_docx_out, overwrite_source_docx);
-
-  return true;
+  return CreateDocxFromExtract(path_docx_out_, overwrite_source_docx);
 }
 
-void docx_archive_replace::InitDocxOutPathForReplaceText(
+void docx_archive_replace::InitPathDocxOutForReplaceText(
     std::string &path_docx_out, bool &overwrite_source_docx) const {
   path_docx_out = path_docx_in_;
   overwrite_source_docx = true;
@@ -239,7 +247,8 @@ bool docx_archive_replace::RemoveBetweenText() {
   std::string lhs = argv_[3];
   std::string rhs = argv_[4];
 
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (!is_batch_mode_
+      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
@@ -264,18 +273,21 @@ bool docx_archive_replace::RemoveBetweenText() {
 
   // Create resulting DOCX from files during non-batch mode
   // or at final step of batch sequence
-  if (is_batch_mode_ && !is_final_batch_step_) return true;
+  if (is_batch_mode_) {
+    if (!is_final_batch_step_) return true;
+  } else {
+    path_docx_out_ =
+        argc_ >= 7
+        // Result filename is given as argument
+        ? helper::File::ResolvePath(
+            path_working_directory_,
+            argv_[6])
+        // Overwrite original DOCX
+        : path_docx_in_;
+  }
 
-  std::string path_docx_out =
-      argc_ >= 7
-      // Result filename is given as argument
-      ? helper::File::ResolvePath(
-          path_working_directory_,
-          argv_[6])
-      // Overwrite original DOCX
-      : path_docx_in_;
-
-  return CreateDocxFromExtract(path_docx_out, argc_ < 7);
+  return CreateDocxFromExtract(path_docx_out_,
+                               path_docx_in_ == path_docx_out_);
 }
 
 bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
@@ -303,23 +315,32 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 
   delete parser;
 
+  std::string path_docx_out;
+  bool overwrite_source_docx;
+
   // Create resulting DOCX from files during non-batch mode
   // or at final step of batch sequence
-  if (is_batch_mode_ && !is_final_batch_step_) return true;
+  if (is_batch_mode_) {
+    if (!is_final_batch_step_) return true;
 
-  bool overwrite_source_docx = argc_ < 4;
+    overwrite_source_docx = path_docx_in_ == path_docx_out_;
+  } else {
+    overwrite_source_docx = argc_ < 4;
 
-  std::string path_docx_out = overwrite_source_docx
-      // Overwrite original DOCX
-      ? path_docx_in_
-      // Result filename is given as argument
-      : helper::File::ResolvePath(path_working_directory_, argv_[3]);
+    path_docx_out_ = overwrite_source_docx
+                    // Overwrite original DOCX
+                    ? path_docx_in_
+                    // Result filename is given as argument
+                    : helper::File::ResolvePath(path_working_directory_,
+                                                argv_[3]);
+  }
 
-  return CreateDocxFromExtract(path_docx_out, overwrite_source_docx);
+  return CreateDocxFromExtract(path_docx_out_, overwrite_source_docx);
 }
 
 bool docx_archive_replace::SetFieldValue() {
-  if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())
+  if ((!is_batch_mode_
+       && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName()))
       || !docxbox::AppArguments::AreArgumentsGiven(
       argc_,
       3, "Field identifier",
@@ -353,19 +374,21 @@ bool docx_archive_replace::SetFieldValue() {
 
   // Create resulting DOCX from files during non-batch mode
   // or at final step of batch sequence
-  if (is_batch_mode_ && !is_final_batch_step_) return true;
+  if (is_batch_mode_) {
+    if (!is_final_batch_step_) return true;
+  } else {
+    path_docx_out_ =
+        argc_ >= 6
+        // Result filename is given as argument
+        ? helper::File::ResolvePath(path_working_directory_, argv_[5])
+        // Overwrite original DOCX
+        : path_docx_in_;
+  }
 
-  std::string path_docx_out =
-      argc_ >= 6
-      // Result filename is given as argument
-      ? helper::File::ResolvePath(path_working_directory_, argv_[5])
-      // Overwrite original DOCX
-      : path_docx_in_;
-
-  std::string path_docx_out_tmp = path_docx_out + "tmp";
+  std::string path_docx_out_tmp = path_docx_out_ + "tmp";
 
   if (!Zip(false, path_extract_, path_docx_out_tmp))
     return docxbox::AppStatus::Error("DOCX creation failed.");
 
-  return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out.c_str());
+  return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out_.c_str());
 }
