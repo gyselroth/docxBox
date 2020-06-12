@@ -38,7 +38,7 @@ bool docx_archive_replace::ReplaceImage() {
           path_extract_ + "/" + file_in_zip.filename;
 
       if (!helper::File::Remove(path_image_original.c_str()))
-        return docxbox::AppStatus::Error("Failed replace " + image_original);
+        return docxbox::AppLog::Error("Failed replace " + image_original);
 
       // TODO(kay): add adaptation for batch process-
       //            needs use of dynamic offset instead argv_[4] than
@@ -51,7 +51,7 @@ bool docx_archive_replace::ReplaceImage() {
     }
 
     if (!found)
-      return docxbox::AppStatus::Error(
+      return docxbox::AppLog::Error(
           "Cannot replace " + image_original
               + " - no such image within " + path_docx_in_);
 
@@ -73,7 +73,7 @@ bool docx_archive_replace::ReplaceImage() {
     }
 
     if (!Zip(false, path_extract_, path_docx_out_ + "tmp"))
-      return docxbox::AppStatus::Error(
+      return docxbox::AppLog::Error(
           "DOCX creation failed: " + path_docx_out_);
 
     if (overwrite_source_docx) helper::File::Remove(path_docx_in_.c_str());
@@ -82,7 +82,7 @@ bool docx_archive_replace::ReplaceImage() {
         std::string(path_docx_out_).append("tmp").c_str(),
         path_docx_out_.c_str());
   } catch (std::string &message) {
-    return docxbox::AppStatus::Error(message);
+    return docxbox::AppLog::Error(message);
   }
 
   return true;
@@ -120,7 +120,7 @@ bool docx_archive_replace::ReplaceText() {
       contentTypes::OverrideNumbering(path_extract_absolute);
     }
   } catch (std::string &message) {
-    return docxbox::AppStatus::Error(message);
+    return docxbox::AppLog::Error(message);
   }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -144,7 +144,7 @@ bool docx_archive_replace::ReplaceText() {
     if (helper::File::IsDirectory(path_file_absolute)) continue;
 
     if (!parser->ReplaceInXml(path_file_absolute, search, replacement))
-      return docxbox::AppStatus::Error(
+      return docxbox::AppLog::Error(
           "Failed replace string in: " + file_in_zip.filename);
   }
 
@@ -264,7 +264,7 @@ bool docx_archive_replace::RemoveBetweenText() {
     if (!parser->RemoveBetweenStringsInXml(path_file_abs, lhs, rhs)) {
       delete parser;
 
-      return docxbox::AppStatus::Error(
+      return docxbox::AppLog::Error(
           "Error: Failed to remove content from: " + file_in_zip.filename);
     }
   }
@@ -308,7 +308,7 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
     if (!parser->RandomizeAllTextInXml(path_file_absolute)) {
       delete parser;
 
-      return docxbox::AppStatus::Error(
+      return docxbox::AppLog::Error(
           "Error: Failed insert lorem ipsum in: " + file_in_zip.filename);
     }
   }
@@ -385,7 +385,7 @@ bool docx_archive_replace::SetFieldValue() {
   std::string path_docx_out_tmp = path_docx_out_ + "tmp";
 
   if (!Zip(false, path_extract_, path_docx_out_tmp))
-    return docxbox::AppStatus::Error("DOCX creation failed.");
+    return docxbox::AppLog::Error("DOCX creation failed.");
 
   return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out_.c_str());
 }

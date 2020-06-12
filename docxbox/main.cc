@@ -12,9 +12,13 @@ int main(int argc, char **argv) {
   // Process command arguments, display help if no valid command given
   auto *app = new docxbox::App(argc, argv);
 
-  bool success = argc > 1 ? app->Process() : false;
+  bool success = argc > 1
+      ? app->Process()
+      : false;
 
   delete app;
+
+  docxbox::AppLog::Output();
 
   // TODO(kay): return comprehensible bash error codes instead of 125
   return success ? 0 : 125;

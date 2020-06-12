@@ -2,7 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
-#include <docxbox/app/app_status.h>
+#include <docxbox/app/app_log.h>
 
 docx_xml_field::docx_xml_field(int argc, char **argv) : docx_xml(argc, argv) {
 }
@@ -61,7 +61,7 @@ bool docx_xml_field::SetFieldText(
 
   return has_xml_changed_
              && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
-         ? docxbox::AppStatus::Error("Failed saving: " + path_xml)
+         ? docxbox::AppLog::Error("Failed saving: " + path_xml)
          : true;
 }
 

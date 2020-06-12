@@ -4,7 +4,7 @@
 #ifndef DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_LOREM_H_
 #define DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_LOREM_H_
 
-#include <docxbox/app/app_status.h>
+#include <docxbox/app/app_log.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>

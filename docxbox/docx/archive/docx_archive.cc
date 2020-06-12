@@ -139,7 +139,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    return docxbox::AppStatus::Error(message);
+    return docxbox::AppLog::Error(message);
   }
 
   if (!IsZipArchive(path_docx_in_)) return false;
@@ -158,7 +158,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
   if (ensure_is_docx && IsUnzippedDocx())
     // TODO(kay): check above condition, seems inverted
-    return docxbox::AppStatus::Error(path_docx_in_ + " is not a DOCX document");
+    return docxbox::AppLog::Error(path_docx_in_ + " is not a DOCX document");
 
   return format_xml_files
          ? miniz_cpp_ext::IndentXmlFiles(path_extract_, file_list)
@@ -173,7 +173,7 @@ bool docx_archive::IsZipArchive(const std::string& path_file) {
       helper::File::GetFileContents(path_file).c_str(),
       "PK\003\004\024")
          ? true
-         : docxbox::AppStatus::Error("File is no ZIP archive: " + path_file);
+         : docxbox::AppLog::Error("File is no ZIP archive: " + path_file);
 }
 
 // Check formal structure of DOCX archive - mandatory files given?
@@ -205,7 +205,7 @@ bool docx_archive::UnzipMedia() {
 bool docx_archive::CreateDocxFromExtract(
     const std::string &path_docx_out, bool overwrite_source_docx) {
   if (!Zip(false, path_extract_, path_docx_out + "tmp"))
-    return docxbox::AppStatus::Error("DOCX creation failed.");
+    return docxbox::AppLog::Error("DOCX creation failed.");
 
   if (overwrite_source_docx) helper::File::Remove(path_docx_in_.c_str());
 
@@ -238,7 +238,7 @@ bool docx_archive::Zip(
         helper::File::ResolvePath(path_working_directory_, argv_[3], false);
   } else {
     if (!helper::File::IsDirectory(path_directory))
-      return docxbox::AppStatus::Error("Not a directory: " + path_directory);
+      return docxbox::AppLog::Error("Not a directory: " + path_directory);
   }
 
   if (path_docx_result.empty() && !path_docx_in_.empty())
@@ -349,7 +349,7 @@ bool docx_archive::Batch() {
            false)) {
     delete batch;
 
-    return docxbox::AppStatus::Error("DOCX creation failed.");
+    return docxbox::AppLog::Error("DOCX creation failed.");
   }
 
   delete batch;
@@ -372,7 +372,7 @@ bool docx_archive::CatFile() {
   std::string path_file_relative = argv_[3];
 
   if (path_file_relative.empty())
-    return docxbox::AppStatus::Error(
+    return docxbox::AppLog::Error(
         "Invalid file path: " + path_file_relative);
 
   if (path_file_relative[0] == '/')
@@ -382,7 +382,7 @@ bool docx_archive::CatFile() {
 
   if (!helper::File::FileExists(path_file))
     return
-        docxbox::AppStatus::Error(std::string("File not found: ") + argv_[3]);
+        docxbox::AppLog::Error(std::string("File not found: ") + argv_[3]);
 
   std::cout << helper::File::GetFileContents(path_file) << "\n";
 
@@ -411,7 +411,7 @@ bool docx_archive::ViewFilesDiff() {
 
   if (!helper::File::FileExists(path_extract_left + "/" + file)
       || !helper::File::FileExists(path_extract_right + "/" + file))
-    return docxbox::AppStatus::Error(
+    return docxbox::AppLog::Error(
         "File not given in both DOCX archives: " + file);
 
   if (argc_ > 5
@@ -439,7 +439,7 @@ bool docx_archive::ModifyMeta() {
           && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName()))) {
     delete meta_component;
 
-    return docxbox::AppStatus::Error(
+    return docxbox::AppLog::Error(
         "Initialization for meta modification failed.");
   }
 
@@ -451,7 +451,7 @@ bool docx_archive::ModifyMeta() {
   if (!meta_component->UpsertAttribute()) {
     delete meta_component;
 
-    return docxbox::AppStatus::Error("Update/Insert meta attribute failed.");
+    return docxbox::AppLog::Error("Update/Insert meta attribute failed.");
   }
 
   // Modifiable meta attributes are in docProps/core.xml
@@ -502,7 +502,7 @@ bool docx_archive::ModifyMeta() {
              attribute != meta::Attribute_Created)) {
       delete meta_component;
 
-      return docxbox::AppStatus::Error("DOCX creation failed.");
+      return docxbox::AppLog::Error("DOCX creation failed.");
     }
   /*}*/
 
@@ -531,7 +531,7 @@ bool docx_archive::UpdateCoreXmlDate(
     meta_component->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
   } else {
     if (!helper::DateTime::IsIso8601Date(value))
-      return docxbox::AppStatus::Error(
+      return docxbox::AppLog::Error(
           "Invalid date (must be ISO 8601): " + value);
 
     meta_component->SetValue(value);

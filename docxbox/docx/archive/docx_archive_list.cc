@@ -15,7 +15,7 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    return docxbox::AppStatus::Error(message);
+    return docxbox::AppLog::Error(message);
   }
 
   if (!IsZipArchive(path_docx_in_)) return false;

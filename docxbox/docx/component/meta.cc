@@ -94,7 +94,7 @@ std::string meta::GetLhsTagByAttribute(const meta::Attribute &attribute) {
     case Attribute_XmlSchema:
       return GetLhsTagByTagName(kTagNameXmlSchema);
     default:
-      docxbox::AppStatus::Error(
+      docxbox::AppLog::Error(
           "Failed render opening tag. Unknown attribute: " + attribute);
 
       return "";
@@ -134,7 +134,7 @@ std::string meta::GetRhsTagByAttribute(const meta::Attribute &attribute) {
     case Attribute_XmlSchema:
       return GetRhsTagByTagName(kTagNameXmlSchema);
     default:
-      docxbox::AppStatus::Error(
+      docxbox::AppLog::Error(
           "Failed render closing tag. Unknown attribute: " + attribute);
 
       return "";
@@ -210,7 +210,7 @@ bool meta::InitModificationArguments() {
   attribute_ = ResolveAttributeByName(argv_[3]);
 
   if (attribute_ == Attribute::Attribute_Unknown)
-    return docxbox::AppStatus::Error(
+    return docxbox::AppLog::Error(
         std::string(
             "Invalid argument: Unknown or unsupported attribute: ") + argv_[3]);
 
@@ -232,7 +232,7 @@ bool meta::UpsertAttribute(bool saveXml) {
   try {
     if (IsDateAttribute(attribute_)
         && !helper::DateTime::IsIso8601Date(value_))
-      return docxbox::AppStatus::Error(
+      return docxbox::AppLog::Error(
           "Invalid date (must be given as ISO 8601): " + value_);
 
     bool attribute_exists = AttributeExistsInCoreXml(attribute_);
@@ -241,7 +241,7 @@ bool meta::UpsertAttribute(bool saveXml) {
            ? UpdateCoreAttribute(attribute_, value_)
            : InsertCoreAttribute(attribute_, value_);
   } catch (std::string &message) {
-    return docxbox::AppStatus::Error(message);
+    return docxbox::AppLog::Error(message);
   }
 
   return result && saveXml
