@@ -27,6 +27,9 @@ class docx_xml {
   std::string path_xml_file_;
   std::string xml_;
 
+  tinyxml2::XMLElement *GetBodyByComponentPath(
+      tinyxml2::XMLDocument &doc, const std::string& path_xml) const;
+
   bool SaveXml(bool compress);
 };
 

@@ -281,10 +281,7 @@ bool docx_archive::GetText(bool newline_at_segments) {
   auto parser = new docx_xml_to_plaintext(argc_, argv_);
 
   for (const auto &file_in_zip : file_list) {
-    // TODO(kay): fetch from all textual XML files, instead only document.xml
-
-    if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml"))
-      continue;
+    if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
     parser->GetTextFromXmlFile(
         path_extract_ + "/" + file_in_zip.filename,
