@@ -22,9 +22,9 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
-  std::string file_ending = ParseFileWildcard(3);
+  std::string file_pattern = ParseFileWildcard(3);
 
-  bool compare_two_docx = file_ending.empty()
+  bool compare_two_docx = file_pattern.empty()
       && argc_ >= 4
       && helper::String::EndsWith(argv_[3], ".docx")
       && helper::File::FileExists(argv_[3]);
@@ -33,14 +33,14 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
 
   std::string files_list = miniz_ext->PrintDir(
       docx_file,
-      as_json, images_only, file_ending, {},
+      as_json, images_only, file_pattern, {},
       false, compare_two_docx);
 
   if (compare_two_docx) {
     std::string kSummary1 = miniz_ext->GetSummary();
 
     ListFilesInDocxCompare(
-        as_json, images_only, file_ending, &files_list, &kSummary1);
+        as_json, images_only, file_pattern, &files_list, &kSummary1);
   } else {
     // Output files list of single DOCX
     std::cout << files_list;
@@ -54,7 +54,7 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
 // Output two DOCX file lists side-by-side
 void docx_archive_list::ListFilesInDocxCompare(bool as_json,
                                                bool images_only,
-                                               const std::string &file_ending,
+                                               const std::string &file_pattern,
                                                std::string *file_list_1,
                                                std::string *summary_1) {
   const std::string &path_docx_in_2 =
@@ -67,7 +67,7 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
 
   std::string file_list_2 = miniz_ext->PrintDir(
       docx_file_2,
-      as_json, images_only, file_ending, {},
+      as_json, images_only, file_pattern, {},
       false, true);
 
   std::string summary_2 = miniz_ext->GetSummary();

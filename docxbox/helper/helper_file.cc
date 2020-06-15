@@ -287,6 +287,24 @@ std::vector<std::string> File::ScanDirRecursive(
   return files;
 }
 
+void File::GlobPatternToRegEx(std::string &pattern) {
+  if (pattern.empty() || pattern == "*") return;
+
+  // Escape reg-ex control characters that aren't globbing control characters
+  helper::String::ReplaceAll(pattern, "\\", "\\\\");
+  helper::String::ReplaceAll(pattern, ".", "\\.");
+  helper::String::ReplaceAll(pattern, "(", "\\(");
+  helper::String::ReplaceAll(pattern, ")", "\\)");
+  helper::String::ReplaceAll(pattern, "[", "\\[");
+  helper::String::ReplaceAll(pattern, "]", "\\]");
+  helper::String::ReplaceAll(pattern, "{", "\\{");
+  helper::String::ReplaceAll(pattern, "}", "\\}");
+
+  // Convert globbing- to regex control characters
+  helper::String::ReplaceAll(pattern, "*", ".*");
+  helper::String::ReplaceAll(pattern, "?", ".");
+}
+
 std::string File::GetTmpName() {
   char *buffer;
   size_t max_len;

@@ -85,13 +85,15 @@ void docx_archive::RememberTemporaryExtractionPath(const std::string& path) {
   paths_temporary_.push_back(path);
 }
 
-// TODO(kay): handle more variations of wildcards, not only file-ending
+// Detect globbing wildcard and convert to regular expression if any
 std::string docx_archive::ParseFileWildcard(int index_argument) const {
-  return argc_ >= index_argument + 1
-             && argv_[3][0] == '*'
-             && argv_[3][1] == '.'
-         ? std::string(argv_[3]).substr(2)
-         : "";
+  if (argc_ < index_argument + 1) return "";
+
+  std::string glob_pattern = argv_[index_argument];
+
+  helper::File::GlobPatternToRegEx(glob_pattern);
+
+  return glob_pattern;
 }
 
 void docx_archive::RemoveTemporaryFiles() {

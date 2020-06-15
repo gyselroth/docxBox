@@ -97,7 +97,7 @@ To output as JSON:
 or ````docxbox ls foo.docx -j````  
 or ````docxbox ls foo.docx --json````  
 
-##### Filter by file ending
+##### Filter by wildcard
 
 ````docxbox ls foo.docx *.xml```` Lists only files ending w/ ``.xml`` 
 

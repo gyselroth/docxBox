@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <regex>
 
 namespace helper {
 
@@ -39,6 +40,17 @@ bool String::IsAnyOf(
   }
 
   return false;
+}
+
+bool String::Matches(const std::string &subject, const std::string &pattern) {
+  bool str_empty = subject.empty();
+  bool pattern_empty = subject.empty();
+
+  if (str_empty != pattern_empty) return false;
+
+  if (str_empty && pattern_empty) return true;
+
+  return std::regex_match(subject, std::regex(pattern));
 }
 
 bool String::Contains(const std::string &haystack, const char *needle) {

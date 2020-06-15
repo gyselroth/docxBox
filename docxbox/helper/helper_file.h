@@ -59,10 +59,13 @@ extern std::string GetExtension(const std::string& file_path);
 extern std::string GetLastPathSegment(std::string path);
 
 extern std::vector<std::string> ScanDir(const char *path);
+
 extern std::vector<std::string> ScanDirRecursive(
     const char *path,
     std::vector<std::string> files,
     const std::string& remove_prefix = "");
+
+extern void GlobPatternToRegEx(std::string &pattern);
 
 extern std::string GetTmpName();
 

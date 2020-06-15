@@ -137,6 +137,7 @@ class docx_archive {
 
   void RememberTemporaryExtractionPath(const std::string& path);
 
+  // Detect globbing wildcard and convert to regular expression if any
   std::string ParseFileWildcard(int index_argument) const;
 
  private:
