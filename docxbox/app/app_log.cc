@@ -18,25 +18,19 @@ void AppLog::DeleteInstance() {
 }
 
 bool AppLog::Error(const std::string& message) {
-  auto instance = GetInstance();
-
-  instance->messages_.push_back("docxBox Error - " + message);
+  GetInstance()->messages_.push_back("docxBox Error - " + message);
 
   return false;
 }
 
 bool AppLog::Info(const std::string& message) {
-  auto instance = GetInstance();
-
-  instance->messages_.push_back("docxBox Info - " + message);
+  GetInstance()->messages_.push_back("docxBox Info - " + message);
 
   return true;
 }
 
 bool AppLog::Warning(const std::string& message) {
-  auto instance = GetInstance();
-
-  instance->messages_.push_back("docxBox Warning - " + message);
+  GetInstance()->messages_.push_back("docxBox Warning - " + message);
 
   return true;
 }
@@ -45,16 +39,21 @@ void AppLog::Output(LogMode mode, bool delete_instance) {
   auto instance = GetInstance();
 
   std::string prev_message;
+  std::string out;
 
   for (auto &message : instance->messages_) {
     if (message == prev_message) continue;
 
-    if (mode == LogMode::Mode_Output || mode == LogMode::Mode_OutputAndLog)
-      std::cout << message << "\n";
-
-    // TODO(kay): if mode involves that append message to log-file
+    out += message + "\n";
 
     prev_message = message;
+  }
+
+  if (mode == LogMode::Mode_Output || mode == LogMode::Mode_OutputAndLog)
+    std::cout << out;
+
+  if (mode == LogMode::Mode_OutputAndLog || mode == LogMode::Mode_Log) {
+    helper::File::WriteToNewFile("out.log", out);
   }
 
   if (delete_instance) DeleteInstance();

@@ -27,22 +27,22 @@ class meta {
  public:
   // Known (supported for modification) attributes
   enum Attribute {
-    Attribute_Application,
-    Attribute_AppVersion,
-    Attribute_Created,
-    Attribute_Creator,
-    Attribute_Company,
-    Attribute_Description,
-    Attribute_Keywords,
-    Attribute_Language,
-    Attribute_LastModifiedBy,
-    Attribute_LastPrinted,
-    Attribute_Modified,
-    Attribute_Revision,
-    Attribute_Subject,
-    Attribute_Template,
-    Attribute_Title,
-    Attribute_XmlSchema,
+    Attribute_App_Application,
+    Attribute_App_AppVersion,
+    Attribute_Core_Created,
+    Attribute_Core_Creator,
+    Attribute_App_Company,
+    Attribute_Core_Description,
+    Attribute_Core_Keywords,
+    Attribute_Core_Language,
+    Attribute_Core_LastModifiedBy,
+    Attribute_Core_LastPrinted,
+    Attribute_Core_Modified,
+    Attribute_Core_Revision,
+    Attribute_Core_Subject,
+    Attribute_App_Template,
+    Attribute_Core_Title,
+    Attribute_App_XmlSchema,
     Attribute_Unknown
   };
 
@@ -58,8 +58,17 @@ class meta {
   void SetPathExtract(const std::string &path_extract);
   void SetOutputAsJson(bool output_as_json);
 
+  void LoadAppXml(const std::string& path);
   void LoadCoreXml(const std::string& path);
+
+  // Save modified XML (core.xml or app.xml)
+  bool SaveXml();
+  bool SaveAppXml();
   bool SaveCoreXml();
+
+  // Known attribute is declared in app.xml? (or core.xml)
+  // Set within ResolveAttributeByName()
+  bool IsAppAttribute();
 
   static bool IsDateAttribute(Attribute);
 
@@ -86,6 +95,8 @@ class meta {
   bool InitModificationArguments();
 
   bool UpsertAttribute(bool saveXml = false);
+  bool UpsertAttributeInCoreXml(bool saveXml = false);
+  bool UpsertAttributeInAppXml(bool saveXml = false);
 
   void CollectFromAppXml(std::string path_app_xml, std::string app_xml);
   void CollectFromCoreXml(std::string path_core_xml_current);
@@ -111,6 +122,10 @@ class meta {
 
   // Attribute + value for single modification
   Attribute attribute_ = Attribute::Attribute_Unknown;
+
+  // For known attributes: Is declared in app.xml (otherwise: core.xml)
+  bool is_app_attribute_ = false;
+
   std::string value_;
 
   // Extracted meta values, string if contained / nullptr if not contained
@@ -121,13 +136,18 @@ class meta {
 
   void Clear();
 
-  static meta::Attribute ResolveAttributeByName(const std::string &attribute);
+  meta::Attribute ResolveAttribute(const std::string &attribute);
 
+  bool AttributeExistsInAppXml(Attribute attribute);
   bool AttributeExistsInCoreXml(Attribute attribute);
 
+  // TODO(kay): extract duplications from app.xml / core.xml - related methods
+  bool UpdateAppAttribute(Attribute attribute, const std::string& value);
   bool UpdateCoreAttribute(Attribute attribute, const std::string& value);
+  bool InsertAppAttribute(Attribute attribute, const std::string& value);
   bool InsertCoreAttribute(Attribute attribute, const std::string& value);
 
+  void EnsureIsLoadedAppXml();
   void EnsureIsLoadedCoreXml();
 
   static std::string GetLhsTagByTagName(const char *tag_name);

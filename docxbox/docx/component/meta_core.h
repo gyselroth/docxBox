@@ -19,7 +19,6 @@ static const char *const kTagNameDcTitle = "dc:title";
 static const char *const kTagNameDcTermsCreated = "dcterms:created";
 static const char *const kTagNameDcTermsModified = "dcterms:modified";
 
-// coreProperties closing tag
 static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
 
 #endif  // DOCXBOX_DOCX_COMPONENT_META_CORE_H_

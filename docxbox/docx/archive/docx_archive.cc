@@ -247,21 +247,21 @@ bool docx_archive::Zip(
 
   if (!date_created.empty()) {
     if (!UpdateCoreXmlDate(
-        meta::Attribute::Attribute_Created, date_created)) return false;
+        meta::Attribute::Attribute_Core_Created, date_created)) return false;
 
   } else {
     if (set_date_created_to_now)
       if (!UpdateCoreXmlDate(
-          meta::Attribute::Attribute_Created)) return false;
+          meta::Attribute::Attribute_Core_Created)) return false;
   }
 
   if (!date_modified.empty()) {
     if (!UpdateCoreXmlDate(
-        meta::Attribute::Attribute_Modified, date_modified)) return false;
+        meta::Attribute::Attribute_Core_Modified, date_modified)) return false;
   } else {
     if (set_date_modified_to_now)
       if (!UpdateCoreXmlDate(
-          meta::Attribute::Attribute_Modified)) return false;
+          meta::Attribute::Attribute_Core_Modified)) return false;
   }
 
 // ZipUsingMinizCpp(compress_xml, path_directory, path_docx_result);
@@ -454,12 +454,8 @@ bool docx_archive::ModifyMeta() {
     return docxbox::AppLog::Error("Update/Insert meta attribute failed.");
   }
 
-  // Modifiable meta attributes are in docProps/core.xml
-  try {
-    meta_component->SaveCoreXml();
-  } catch (std::string &message) {
-    std::cerr << message;
-  }
+  // Modifiable meta attributes are in docProps/app.xml or docProps/core.xml
+  meta_component->SaveXml();
 
   // Create resulting DOCX from files during non-batch mode
   // or at final step of batch sequence
@@ -480,7 +476,7 @@ bool docx_archive::ModifyMeta() {
 
   auto attribute = meta_component->GetAttribute();
 
-  /*if (attribute == docx_meta::Attribute_LastPrinted) {
+  /*if (attribute == docx_meta::Attribute_Core_LastPrinted) {
     std::string date = meta->GetValue();
 
     if (!Zip(false, path_extract_, path_docx_out_ + "tmp",
@@ -498,8 +494,8 @@ bool docx_archive::ModifyMeta() {
     if (!Zip(false,
              path_extract_,
              path_docx_out_ + "tmp",
-             attribute != meta::Attribute_Modified,
-             attribute != meta::Attribute_Created)) {
+             attribute != meta::Attribute_Core_Modified,
+             attribute != meta::Attribute_Core_Created)) {
       delete meta_component;
 
       return docxbox::AppLog::Error("DOCX creation failed.");
@@ -537,7 +533,7 @@ bool docx_archive::UpdateCoreXmlDate(
     meta_component->SetValue(value);
   }
 
-  auto result = meta_component->UpsertAttribute(true);
+  auto result = meta_component->UpsertAttributeInCoreXml(true);
 
   delete meta_component;
 
