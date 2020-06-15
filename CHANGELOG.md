@@ -1,8 +1,13 @@
 docxBox Changelog
 =================
 
-V0.0.5 - Not finished yet
+V0.0.6 - Not finished yet
 -------------------------
+
+
+V0.0.5 - 2020-06-15
+-------------------
+* Enable globbing wildcards in ``ls``
 * Add optional logging to file
 * Add configuration options via environment variables
 * Prevent identical message from being logged/output immediately repeatedly
