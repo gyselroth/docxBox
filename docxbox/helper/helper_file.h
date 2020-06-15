@@ -43,9 +43,10 @@ extern u_int32_t GetLongestLineLength(const std::string &path_file_1,
                                       const std::string &path_file_2 = "",
                                       bool ensure_files_exist = false);
 
-extern bool WriteToNewFile(
-    const std::string &path_file,
-    const std::string &content);
+extern bool WriteToNewFile(const std::string &path_file,
+                           const std::string &content);
+
+extern int AppendToFile(const std::string &filename, std::string content);
 
 extern bool CopyFile(
     const std::string &path_source,

@@ -8,7 +8,7 @@ docx_archive::docx_archive(int argc, char **argv, bool is_batch_mode = false) {
   argv_ = argv;
   is_batch_mode_ = is_batch_mode;
 
-  path_working_directory_ = getenv("PWD");
+  path_working_directory_ = std::getenv("PWD");
 }
 
 docx_archive::~docx_archive() {

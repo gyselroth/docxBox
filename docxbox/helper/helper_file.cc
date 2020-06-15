@@ -99,10 +99,22 @@ bool File::WriteToNewFile(
   if (FileExists(path_file)) Remove(path_file.c_str());
 
   std::ofstream outfile(path_file);
-  outfile << content;
+
+  if (!content.empty()) outfile << content;
+
   outfile.close();
 
   return FileExists(path_file);
+}
+
+int File::AppendToFile(const std::string &filename, std::string content) {
+  std::ofstream out_file;
+  out_file.open (filename, std::ios_base::app);
+  out_file << content;
+
+  out_file.close();
+
+  return 0;
 }
 
 bool File::CopyFile(

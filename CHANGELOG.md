@@ -3,6 +3,8 @@ docxBox Changelog
 
 V0.0.5 - Not finished yet
 -------------------------
+* Add optional logging to file
+* Add configuration options via environment variables
 * Prevent identical message from being logged/output immediately repeatedly
 * Add batch sequence processing
 * Colorize side-by-side DOCX comparison (ls) to indicate additions/removals
