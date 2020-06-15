@@ -27,23 +27,23 @@ class meta {
  public:
   // Known (supported for modification) attributes
   enum Attribute {
-    Attribute_App_Application,
-    Attribute_App_AppVersion,
-    Attribute_Core_Created,
-    Attribute_Core_Creator,
-    Attribute_App_Company,
-    Attribute_Core_Description,
-    Attribute_Core_Keywords,
-    Attribute_Core_Language,
-    Attribute_Core_LastModifiedBy,
-    Attribute_Core_LastPrinted,
-    Attribute_Core_Modified,
-    Attribute_Core_Revision,
-    Attribute_Core_Subject,
-    Attribute_App_Template,
-    Attribute_Core_Title,
-    Attribute_App_XmlSchema,
-    Attribute_Unknown
+    Attr_App_Application,
+    Attr_App_AppVersion,
+    Attr_App_Company,
+    Attr_App_Template,
+    Attr_App_XmlSchema,
+    Attr_Core_Created,
+    Attr_Core_Creator,
+    Attr_Core_Description,
+    Attr_Core_Keywords,
+    Attr_Core_Language,
+    Attr_Core_LastModifiedBy,
+    Attr_Core_LastPrinted,
+    Attr_Core_Modified,
+    Attr_Core_Revision,
+    Attr_Core_Subject,
+    Attr_Core_Title,
+    Attr_Unknown
   };
 
   meta(int argc, char **argv);
@@ -121,7 +121,7 @@ class meta {
   std::string core_xml_;
 
   // Attribute + value for single modification
-  Attribute attribute_ = Attribute::Attribute_Unknown;
+  Attribute attribute_ = Attribute::Attr_Unknown;
 
   // For known attributes: Is declared in app.xml (otherwise: core.xml)
   bool is_app_attribute_ = false;
