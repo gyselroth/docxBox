@@ -15,7 +15,7 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    return docxbox::AppStatus::Error(message);
+    return docxbox::AppLog::Error(message);
   }
 
   if (!IsZipArchive(path_docx_in_)) return false;
@@ -291,14 +291,7 @@ bool docx_archive_list::ListFieldsFromXmls(bool as_json) {
   auto parser = new docx_xml_field(argc_, argv_);
 
   for (const auto &file_in_zip : file_list) {
-    // TODO(kay): fetch from all textual XML files, instead only document.xml
-
-    if (!helper::String::EndsWith(file_in_zip.filename, "word/document.xml")
-        && !helper::String::Contains(file_in_zip.filename, "word/header")
-        && !helper::String::Contains(file_in_zip.filename, "word/endnotes.xml")
-        && !helper::String::Contains(file_in_zip.filename, "word/footnotes.xml")
-    )
-      continue;
+    if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
     parser->CollectFields(path_extract_ + "/" + file_in_zip.filename);
   }

@@ -70,7 +70,7 @@ bool docx_renderer_list::InitFromJson() {
   }
 
   return items_.empty()
-    ? docxbox::AppStatus::Error("Invalid markup: list contains no items.")
+    ? docxbox::AppLog::Error("Invalid markup: list contains no items.")
     : true;
 }
 

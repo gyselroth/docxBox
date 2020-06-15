@@ -2,7 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
-#include <docxbox/app/app_status.h>
+#include <docxbox/app/app_log.h>
 
 docx_xml_field::docx_xml_field(int argc, char **argv) : docx_xml(argc, argv) {
 }
@@ -22,23 +22,6 @@ void docx_xml_field::CollectFields(const std::string& path_xml) {
 
   field_xml_files_.push_back(path_xml);
   fields_in_xml_files_.push_back(fields_in_current_xml_);
-}
-
-tinyxml2::XMLElement *docx_xml_field::GetBodyByComponentPath(
-    tinyxml2::XMLDocument &doc, const std::string& path_xml) const {
-
-  if (helper::String::Contains(path_xml, "word/endnotes.xml"))
-    return doc.FirstChildElement("w:endnotes")->FirstChildElement("w:endnote");
-
-  if (helper::String::Contains(path_xml, "word/footnotes.xml"))
-    return
-        doc.FirstChildElement("w:footnotes")->FirstChildElement("w:footnote");
-
-  if (helper::String::Contains(path_xml, "word/header"))
-    return doc.FirstChildElement("w:hdr");
-
-  // Default, e.g. word/document.xml
-  return doc.FirstChildElement("w:document")->FirstChildElement("w:body");
 }
 
 void docx_xml_field::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
@@ -67,8 +50,7 @@ bool docx_xml_field::SetFieldText(
 
   if (doc.ErrorID() != 0) return false;
 
-  tinyxml2::XMLElement *body =
-      doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(doc, path_xml);
 
   is_inside_searched_field_ = false;
 
@@ -79,7 +61,7 @@ bool docx_xml_field::SetFieldText(
 
   return has_xml_changed_
              && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
-         ? docxbox::AppStatus::Error("Failed saving: " + path_xml)
+         ? docxbox::AppLog::Error("Failed saving: " + path_xml)
          : true;
 }
 

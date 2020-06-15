@@ -56,8 +56,6 @@ class docx_xml_field: docx_xml {
   static void RemoveFldCharsFromMergeField(tinyxml2::XMLElement *sub_node);
 
   void OutputAsJson();
-  tinyxml2::XMLElement *GetBodyByComponentPath(
-      tinyxml2::XMLDocument &doc, const std::string& path_xml) const;
 };
 
 #endif  // DOCXBOX_DOCX_XML_CONTENTTYPE_DOCX_XML_FIELD_H_

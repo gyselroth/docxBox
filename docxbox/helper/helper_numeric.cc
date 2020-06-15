@@ -13,4 +13,15 @@ int Numeric::GetAmountDigits(int n) {
   return floor (log10(n)) + 1;
 }
 
+int Numeric::ExtractLeadingNumber(std::string str) {
+  std::string number;
+
+  for (uint16_t i = 0; i < str.length(); i++) {
+    if (isdigit(str[i])) number += str[i];
+    else break;
+  }
+
+  return number.empty() ? 0 : std::stoi(number);
+}
+
 }  // namespace helper

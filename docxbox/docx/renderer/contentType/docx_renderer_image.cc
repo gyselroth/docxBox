@@ -41,17 +41,27 @@ bool docx_renderer_image::InitFromJson() {
       } else if (key == "size") {
         auto value = it.value();
 
-        std::string width_str = value.at(0);
+        try {
+          width_ = value.at(0);
+        } catch (nlohmann::detail::type_error &error) {
+          // Fallback: Value not given as int, assume it being a string
+          std::string width_str = value.at(0);
 
-        width_ = (helper::String::EndsWith(width_str, "px"))
-                 ? PixelsToEmus(width_str)
-                 : (int) value.at(0);
+          width_ = (helper::String::EndsWith(width_str, "px"))
+                   ? PixelsToEmus(width_str)
+                   : helper::Numeric::ExtractLeadingNumber(width_str);
+        }
 
-        std::string height_str = value.at(1);
+        try {
+          height_ = value.at(1);
+        } catch (nlohmann::detail::type_error &error) {
+          // Fallback: Value not given as int, assume it being a string
+          std::string height_str = value.at(1);
 
-        height_ = (helper::String::EndsWith(height_str, "px"))
-                  ? PixelsToEmus(height_str)
-                  : (int) value.at(1);
+          height_ = (helper::String::EndsWith(height_str, "px"))
+                   ? PixelsToEmus(height_str)
+                   : helper::Numeric::ExtractLeadingNumber(height_str);
+        }
       } else if (key == "pre" || key == "post") {
         ExtractPreOrPostfix(it);
       }

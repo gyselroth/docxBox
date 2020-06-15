@@ -4,8 +4,7 @@
 #include <docxbox/docx/xml/visitor/docx_xml_to_plaintext.h>
 
 docx_xml_to_plaintext::docx_xml_to_plaintext(int argc, char **argv) : docx_xml(
-    argc,
-    argv) {
+    argc, argv) {
 }
 
 std::string docx_xml_to_plaintext::GetTextFromXmlFile(
@@ -17,8 +16,7 @@ std::string docx_xml_to_plaintext::GetTextFromXmlFile(
 
   if (doc.ErrorID() != 0) return "";
 
-  tinyxml2::XMLElement *body = doc.FirstChildElement("w:document")
-      ->FirstChildElement("w:body");
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(doc, path_xml);
 
   GetChildNodesText(body, newline_at_segments);
 

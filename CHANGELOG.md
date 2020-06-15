@@ -3,6 +3,7 @@ docxBox Changelog
 
 V0.0.5 - Not finished yet
 -------------------------
+* Prevent identical message from being logged/output immediately repeatedly
 * Add batch sequence processing
 * Colorize side-by-side DOCX comparison (ls) to indicate additions/removals
 * Add replace text by run with text

@@ -4,7 +4,7 @@
 #ifndef DOCXBOX_DOCX_DOCX_BATCH_H_
 #define DOCXBOX_DOCX_DOCX_BATCH_H_
 
-#include <docxbox/app/app_status.h>
+#include <docxbox/app/app_log.h>
 #include <docxbox/app/app_command.h>
 #include <docxbox/helper/helper_cli.h>
 #include <docxbox/helper/helper_string.h>

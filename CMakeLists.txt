@@ -25,7 +25,7 @@ add_executable(docxbox
         docxbox/app/app.cc
         docxbox/app/app_argument.cc
         docxbox/app/app_command.cc
-        docxbox/app/app_status.cc
+        docxbox/app/app_log.cc
         docxbox/app/app_help.cc
         docxbox/app/app_help.h
 

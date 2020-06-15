@@ -9,15 +9,33 @@ docx_xml::docx_xml(int argc, char **argv) {
 }
 
 bool docx_xml::IsXmlFileContainingText(const std::string &filename) {
-  return
-      !helper::String::EndsWith(filename, "/")
-      && helper::String::Contains(filename, "word/")
+  return !helper::String::EndsWith(filename, "/")
       && helper::String::EndsWith(filename, ".xml")
-      && !helper::String::EndsWith(filename, "fontTable.xml")
-      && !helper::String::EndsWith(filename, "settings.xml")
-      && !helper::String::EndsWith(filename, "style.xml")
-      && !helper::String::EndsWith(filename, "stylesWithEffects.xml")
-      && !helper::String::EndsWith(filename, "webSettings.xml");
+      && (helper::String::EndsWith(filename, "word/document.xml")
+      || helper::String::Contains(filename, "word/header")
+      || helper::String::Contains(filename, "word/endnotes.xml")
+      || helper::String::Contains(filename, "word/footnotes.xml")
+      || helper::String::Contains(filename, "word/footer"));
+}
+
+tinyxml2::XMLElement *docx_xml::GetBodyByComponentPath(
+    tinyxml2::XMLDocument &doc, const std::string& path_xml) const {
+
+  if (helper::String::Contains(path_xml, "word/endnotes.xml"))
+    return doc.FirstChildElement("w:endnotes")->FirstChildElement("w:endnote");
+
+  if (helper::String::Contains(path_xml, "word/footnotes.xml"))
+    return
+        doc.FirstChildElement("w:footnotes")->FirstChildElement("w:footnote");
+
+  if (helper::String::Contains(path_xml, "word/header"))
+    return doc.FirstChildElement("w:hdr");
+
+  if (helper::String::Contains(path_xml, "word/footer"))
+    return doc.FirstChildElement("w:ftr");
+
+  // Default, e.g. word/document.xml
+  return doc.FirstChildElement("w:document")->FirstChildElement("w:body");
 }
 
 bool docx_xml::SaveXml(bool compress) {

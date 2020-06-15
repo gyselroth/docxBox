@@ -6,6 +6,7 @@
 
 #include <cstdio>
 #include <cstdint>
+#include <string>
 #include <cmath>
 
 namespace helper {
@@ -14,6 +15,8 @@ namespace Numeric {
 bool IsEven(int number);
 
 int GetAmountDigits(int n);
+
+int ExtractLeadingNumber(std::string str);
 
 }  // namespace Numeric
 }  // namespace helper

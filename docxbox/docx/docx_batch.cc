@@ -37,7 +37,7 @@ bool docx_batch::InitFromJson() {
 
 bool docx_batch::ProcessSequence() {
   if (!is_json_valid_)
-    return docxbox::AppStatus::Error("Cannot process: Detected invalid JSON");
+    return docxbox::AppLog::Error("Cannot process: Detected invalid JSON");
 
   for (int index = 0; index < commands_.size(); ++index)
     if (!ProcessStep(index)) return false;
