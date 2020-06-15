@@ -3,7 +3,7 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
-
+* Notify/log more manipulation details
 
 V0.0.5 - 2020-06-15
 -------------------
