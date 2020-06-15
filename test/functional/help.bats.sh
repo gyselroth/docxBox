@@ -5,6 +5,8 @@
 
 load _helper
 
+docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+
 # Meta commands
 @test "Running w/o any command displays help" {
   "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
@@ -12,23 +14,23 @@ load _helper
 
 regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 @test "Running w/o any command displays version" {
-  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "${regex_version_check}"
+  "${docxbox}" | grep --perl-regexp --only-matching "${regex_version_check}"
 }
 
 @test "\"docxbox h\" displays help" {
-  "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
+  "${docxbox}" h | grep "Usage: docxbox <command> \[args\]"
 }
 
 @test "\"docxbox h\" displays version" {
-  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "${regex_version_check}"
+  "${docxbox}" h | grep --perl-regexp --only-matching "${regex_version_check}"
 }
 
 @test "\"docxbox ?\" displays help" {
-  "$BATS_TEST_DIRNAME"/docxbox | grep "Usage: docxbox <command> \[args\]"
+  "$BATS_TEST_DIRNAME"/docxbox ? | grep "Usage: docxbox <command> \[args\]"
 }
 
 @test "\"docxbox ?\" displays version" {
-  "$BATS_TEST_DIRNAME"/docxbox | grep -Po "${regex_version_check}"
+  "${docxbox}" ? | grep --perl-regexp --only-matching "${regex_version_check}"
 }
 
 # List DOCX contents:
