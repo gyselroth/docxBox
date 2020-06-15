@@ -1,7 +1,7 @@
 docxBox Changelog
 =================
 
-V0.0.6 - Not finished yet
+V1.0.0 - Not finished yet
 -------------------------
 
 

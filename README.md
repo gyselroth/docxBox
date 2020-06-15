@@ -734,8 +734,8 @@ See [Changelog](https://github.com/gyselroth/docxbox/blob/master/CHANGELOG.md)
 Roadmap
 -------
 
-* v0.0.6: Ensure all templating options work and output is microsoft word compatible
-* v1.0.0: Libre-Office compatible appending of two DOCX files into a single one 
+* v1.0.0: Ensure all templating options work and output is microsoft word compatible
+* v1.1.0: Libre-Office compatible appending of two DOCX files into a single one 
   (by XML appending, instead of adding sub-documents) 
 
 
