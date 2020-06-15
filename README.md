@@ -734,9 +734,7 @@ See [Changelog](https://github.com/gyselroth/docxbox/blob/master/CHANGELOG.md)
 Roadmap
 -------
 
-* v0.0.5: Batch process sequences of manipulation operations
-* v0.0.6: Ensure microsoft word compatibility
-* v0.1.0: Add optional configuration options via environment vars
+* v0.0.6: Ensure all templating options work and output is microsoft word compatible
 * v1.0.0: Libre-Office compatible appending of two DOCX files into a single one 
   (by XML appending, instead of adding sub-documents) 
 
