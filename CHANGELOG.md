@@ -4,6 +4,7 @@ docxBox Changelog
 V1.0.0 - Not finished yet
 -------------------------
 * Notify/log more manipulation details
+* Add option to disable all notifications and logging
 
 V0.0.5 - 2020-06-15
 -------------------

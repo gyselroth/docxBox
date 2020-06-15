@@ -10,7 +10,7 @@ AppLog* AppLog::m_pThis_ = nullptr;
 AppLog::AppLog() {
   InitMode();
 
-  if (mode_ != LogTo_StdOut) InitLogFile();
+  if (mode_ != LogTo_StdOut && mode_ != LogTo_None) InitLogFile();
 }
 
 void AppLog::InitMode() {
@@ -28,6 +28,8 @@ void AppLog::InitMode() {
     mode_ = LogMode::LogTo_File;
   } else if (option == "both") {
     mode_ = LogMode::LogTo_FileAndStdOut;
+  } else if (option == "off") {
+    mode_ = LogMode::LogTo_None;
   }
 }
 
@@ -64,43 +66,45 @@ void AppLog::DeleteInstance() {
 }
 
 bool AppLog::Error(const std::string& message) {
-  GetInstance()->messages_.push_back("docxBox Error - " + message);
+  AppLog *kInstance = GetInstance();
+
+  if (kInstance->mode_ != LogTo_None)
+    kInstance->messages_.push_back("docxBox Error - " + message);
 
   return false;
 }
 
 bool AppLog::Info(const std::string& message) {
-  GetInstance()->messages_.push_back("docxBox Info - " + message);
+  AppLog *kInstance = GetInstance();
 
-  return true;
-}
-
-bool AppLog::Warning(const std::string& message) {
-  GetInstance()->messages_.push_back("docxBox Warning - " + message);
+  if (kInstance->mode_ != LogTo_None)
+    kInstance->messages_.push_back("docxBox Info - " + message);
 
   return true;
 }
 
 void AppLog::Output(bool delete_instance) {
-  auto instance = GetInstance();
+  auto kInstance = GetInstance();
 
-  std::string prev_message;
-  std::string out;
+  if (kInstance->mode_ != LogTo_None) {
+    std::string prev_message;
+    std::string out;
 
-  for (auto &message : instance->messages_) {
-    if (message == prev_message) continue;
+    for (auto &message : kInstance->messages_) {
+      if (message == prev_message) continue;
 
-    out += message + "\n";
+      out += message + "\n";
 
-    prev_message = message;
-  }
+      prev_message = message;
+    }
 
-  if (instance->mode_ == LogMode::LogTo_StdOut
-      || instance->mode_ == LogMode::LogTo_FileAndStdOut) std::cout << out;
+    if (kInstance->mode_ == LogMode::LogTo_StdOut
+        || kInstance->mode_ == LogMode::LogTo_FileAndStdOut) std::cout << out;
 
-  if (instance->mode_ == LogMode::LogTo_FileAndStdOut
-      || instance->mode_ == LogMode::LogTo_File) {
-    helper::File::AppendToFile(instance->path_log_file_, out);
+    if (kInstance->mode_ == LogMode::LogTo_FileAndStdOut
+        || kInstance->mode_ == LogMode::LogTo_File) {
+      helper::File::AppendToFile(kInstance->path_log_file_, out);
+    }
   }
 
   if (delete_instance) DeleteInstance();

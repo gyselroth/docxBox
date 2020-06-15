@@ -693,8 +693,9 @@ docxBox can optionally be configured using the following environment variables:
 | Option                         | Possible Values                                                        | Default    |
 |--------------------------------|------------------------------------------------------------------------|----------- |
 | ``docxBox_notify``             | ``stdout`` = Output notifications to stdout only                       | ``stdout`` |
-|                                | ``log`` = Log all exclusively notifications to file                    |            |
+|                                | ``log`` = Log all notifications to file only                           |            |
 |                                | ``both`` = Output notifications to stdout and log file                 |            |
+|                                | ``off`` = Do not output any notifications                              |            |
 | ``docxBox_log_path``           | empty = out.log is written to ``out.log`` in current working directory | empty      |
 |                                | ``arbitary_path/filename.out`` = log file is written to given path     |            |
 | ``docxBox_clear_log_on_start`` | ``0`` = docxBox appends notifications to logfile                       | ``0``      |

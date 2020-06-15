@@ -17,7 +17,8 @@ class AppLog {
   enum LogMode {
     LogTo_File,
     LogTo_FileAndStdOut,
-    LogTo_StdOut
+    LogTo_StdOut,
+    LogTo_None
   };
 
   // Create singleton instance of class
@@ -30,7 +31,6 @@ class AppLog {
 
   static bool Error(const std::string &message);
   static bool Info(const std::string &message);
-  static bool Warning(const std::string &message);
 
   static void Output(bool delete_instance = true);
 
