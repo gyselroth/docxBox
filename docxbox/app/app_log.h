@@ -1,8 +1,10 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_APP_APP_STATUS_H_
-#define DOCXBOX_APP_APP_STATUS_H_
+#ifndef DOCXBOX_APP_APP_LOG_H_
+#define DOCXBOX_APP_APP_LOG_H_
+
+#include <docxbox/helper/helper_file.h>
 
 #include <iostream>
 #include <string>
@@ -46,4 +48,4 @@ class AppLog {
 
 }  // namespace docxbox
 
-#endif  // DOCXBOX_APP_APP_STATUS_H_
+#endif  // DOCXBOX_APP_APP_LOG_H_

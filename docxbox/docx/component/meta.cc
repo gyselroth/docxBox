@@ -32,6 +32,45 @@ void meta::SetOutputAsJson(bool output_as_json) {
   output_as_json_ = output_as_json;
 }
 
+meta::Attribute meta::ResolveAttribute(const std::string &attribute) {
+  is_app_attribute_ = true;
+
+  if (attribute == "Application") return Attr_App_Application;
+  if (attribute == "AppVersion") return Attr_App_AppVersion;
+  if (attribute == "Company") return Attr_App_Company;
+  if (attribute == "Template") return Attr_App_Template;
+  if (attribute == "xmlSchema") return Attr_App_XmlSchema;
+
+  is_app_attribute_ = false;
+
+  if (attribute == kAttrCoreCreated) return Attr_Core_Created;
+  if (attribute == kAttrCoreCreator) return Attr_Core_Creator;
+  if (attribute == kAttrCoreDescription) return Attr_Core_Description;
+  if (attribute == kAttrCoreKeywords) return Attr_Core_Keywords;
+  if (attribute == kAttrCoreLanguage) return Attr_Core_Language;
+  if (attribute == kAttrCoreLastModifiedBy) return Attr_Core_LastModifiedBy;
+  if (attribute == kAttrCoreLastPrinted) return Attr_Core_LastPrinted;
+  if (attribute == kAttrCoreModified) return Attr_Core_Modified;
+  if (attribute == kAttrCoreRevision) return Attr_Core_Revision;
+  if (attribute == kAttrCoreSubject) return Attr_Core_Subject;
+  if (attribute == kAttrCoreTitle) return Attr_Core_Title;
+
+  return Attr_Unknown;
+}
+
+// Known attribute is declared in app.xml? (or core.xml)
+// Set within ResolveAttributeByName()
+bool meta::IsAppAttribute() {
+  return is_app_attribute_;
+}
+
+bool meta::IsDateAttribute(Attribute attribute) {
+  return
+      attribute == Attr_Core_LastPrinted
+          || attribute == Attr_Core_Created
+          || attribute == Attr_Core_Modified;
+}
+
 /**
  * @param tag_name
  * @param label     Optional, if empty: same as tag_name
@@ -63,36 +102,22 @@ std::string meta::GetLhsTagByTagName(const char *tag_name) {
 // TODO(kay): merge GetLhsTagByAttribute + GetRhsTagByAttribute methods
 std::string meta::GetLhsTagByAttribute(const meta::Attribute &attribute) {
   switch (attribute) {
-    case Attribute_Application:
-      return GetLhsTagByTagName(kTagNameApplication);
-    case Attribute_AppVersion:
-      return GetLhsTagByTagName(kTagNameAppVersion);
-    case Attribute_Created:
-      return GetLhsTagByTagName(kTagNameDcTermsCreated);
-    case Attribute_Creator:
-      return GetLhsTagByTagName(kTagNameDcCreator);
-    case Attribute_Company:
-      return GetLhsTagByTagName(kTagNameCompany);
-    case Attribute_Description:
-      return GetLhsTagByTagName(kTagNameDcDescription);
-    case Attribute_Title:
-      return GetLhsTagByTagName(kTagNameDcTitle);
-    case Attribute_Language:
-      return GetLhsTagByTagName(kTagNameDcLanguage);
-    case Attribute_Revision:
-      return GetLhsTagByTagName(kTagNameCpRevision);
-    case Attribute_LastModifiedBy:
+    case Attr_App_Application:return GetLhsTagByTagName(kTagNameApplication);
+    case Attr_App_AppVersion:return GetLhsTagByTagName(kTagNameAppVersion);
+    case Attr_Core_Created:return GetLhsTagByTagName(kTagNameDcTermsCreated);
+    case Attr_Core_Creator:return GetLhsTagByTagName(kTagNameDcCreator);
+    case Attr_App_Company:return GetLhsTagByTagName(kTagNameCompany);
+    case Attr_Core_Description:return GetLhsTagByTagName(kTagNameDcDescription);
+    case Attr_Core_Title:return GetLhsTagByTagName(kTagNameDcTitle);
+    case Attr_Core_Language:return GetLhsTagByTagName(kTagNameDcLanguage);
+    case Attr_Core_Revision:return GetLhsTagByTagName(kTagNameCpRevision);
+    case Attr_Core_LastModifiedBy:
       return GetLhsTagByTagName(kTagNameCpLastModifiedBy);
-    case Attribute_Modified:
-      return GetLhsTagByTagName(kTagNameDcTermsModified);
-    case Attribute_LastPrinted:
-      return GetLhsTagByTagName(kTagNameCpLastPrinted);
-    case Attribute_Subject:
-      return GetLhsTagByTagName(kTagNameDcSubject);
-    case Attribute_Template:
-      return GetLhsTagByTagName(kTagNameTemplate);
-    case Attribute_XmlSchema:
-      return GetLhsTagByTagName(kTagNameXmlSchema);
+    case Attr_Core_Modified:return GetLhsTagByTagName(kTagNameDcTermsModified);
+    case Attr_Core_LastPrinted:return GetLhsTagByTagName(kTagNameCpLastPrinted);
+    case Attr_Core_Subject:return GetLhsTagByTagName(kTagNameDcSubject);
+    case Attr_App_Template:return GetLhsTagByTagName(kTagNameTemplate);
+    case Attr_App_XmlSchema:return GetLhsTagByTagName(kTagNameXmlSchema);
     default:
       docxbox::AppLog::Error(
           "Failed render opening tag. Unknown attribute: " + attribute);
@@ -103,36 +128,22 @@ std::string meta::GetLhsTagByAttribute(const meta::Attribute &attribute) {
 
 std::string meta::GetRhsTagByAttribute(const meta::Attribute &attribute) {
   switch (attribute) {
-    case Attribute_Application:
-      return GetRhsTagByTagName(kTagNameApplication);
-    case Attribute_AppVersion:
-      return GetRhsTagByTagName(kTagNameAppVersion);
-    case Attribute_Created:
-      return GetRhsTagByTagName(kTagNameDcTermsCreated);
-    case Attribute_Creator:
-      return GetRhsTagByTagName(kTagNameDcCreator);
-    case Attribute_Company:
-      return GetRhsTagByTagName(kTagNameCompany);
-    case Attribute_Description:
-      return GetRhsTagByTagName(kTagNameDcDescription);
-    case Attribute_Title:
-      return GetRhsTagByTagName(kTagNameDcTitle);
-    case Attribute_Language:
-      return GetRhsTagByTagName(kTagNameDcLanguage);
-    case Attribute_Revision:
-      return GetRhsTagByTagName(kTagNameCpRevision);
-    case Attribute_LastModifiedBy:
+    case Attr_App_Application:return GetRhsTagByTagName(kTagNameApplication);
+    case Attr_App_AppVersion:return GetRhsTagByTagName(kTagNameAppVersion);
+    case Attr_Core_Created:return GetRhsTagByTagName(kTagNameDcTermsCreated);
+    case Attr_Core_Creator:return GetRhsTagByTagName(kTagNameDcCreator);
+    case Attr_App_Company:return GetRhsTagByTagName(kTagNameCompany);
+    case Attr_Core_Description:return GetRhsTagByTagName(kTagNameDcDescription);
+    case Attr_Core_Title:return GetRhsTagByTagName(kTagNameDcTitle);
+    case Attr_Core_Language:return GetRhsTagByTagName(kTagNameDcLanguage);
+    case Attr_Core_Revision:return GetRhsTagByTagName(kTagNameCpRevision);
+    case Attr_Core_LastModifiedBy:
       return GetRhsTagByTagName(kTagNameCpLastModifiedBy);
-    case Attribute_Modified:
-      return GetRhsTagByTagName(kTagNameDcTermsModified);
-    case Attribute_LastPrinted:
-      return GetRhsTagByTagName(kTagNameCpLastPrinted);
-    case Attribute_Subject:
-      return GetRhsTagByTagName(kTagNameDcSubject);
-    case Attribute_Template:
-      return GetRhsTagByTagName(kTagNameTemplate);
-    case Attribute_XmlSchema:
-      return GetRhsTagByTagName(kTagNameXmlSchema);
+    case Attr_Core_Modified:return GetRhsTagByTagName(kTagNameDcTermsModified);
+    case Attr_Core_LastPrinted:return GetRhsTagByTagName(kTagNameCpLastPrinted);
+    case Attr_Core_Subject:return GetRhsTagByTagName(kTagNameDcSubject);
+    case Attr_App_Template:return GetRhsTagByTagName(kTagNameTemplate);
+    case Attr_App_XmlSchema:return GetRhsTagByTagName(kTagNameXmlSchema);
     default:
       docxbox::AppLog::Error(
           "Failed render closing tag. Unknown attribute: " + attribute);
@@ -178,27 +189,6 @@ std::string meta::FetchAttributeFromCoreXml(
   return value;
 }
 
-meta::Attribute meta::ResolveAttributeByName(const std::string &attribute) {
-  if (attribute == "Application") return Attribute_Application;
-  if (attribute == "AppVersion") return Attribute_AppVersion;
-  if (attribute == "created") return Attribute_Created;
-  if (attribute == "creator") return Attribute_Creator;
-  if (attribute == "Company") return Attribute_Company;
-  if (attribute == "description") return Attribute_Description;
-  if (attribute == "keywords") return Attribute_Keywords;
-  if (attribute == "language") return Attribute_Language;
-  if (attribute == "lastModifiedBy") return Attribute_LastModifiedBy;
-  if (attribute == "lastPrinted") return Attribute_LastPrinted;
-  if (attribute == "modified") return Attribute_Modified;
-  if (attribute == "revision") return Attribute_Revision;
-  if (attribute == "subject") return Attribute_Subject;
-  if (attribute == "Template") return Attribute_Template;
-  if (attribute == "title") return Attribute_Title;
-  if (attribute == "xmlSchema") return Attribute_XmlSchema;
-
-  return Attribute_Unknown;
-}
-
 // Explicit meta modification CLI call:
 // Validate CLI arguments and initialize rel. properties
 bool meta::InitModificationArguments() {
@@ -207,9 +197,9 @@ bool meta::InitModificationArguments() {
       2, "DOCX filename",
       3, "Meta attribute to be set")) return false;
 
-  attribute_ = ResolveAttributeByName(argv_[3]);
+  attribute_ = ResolveAttribute(argv_[3]);
 
-  if (attribute_ == Attribute::Attribute_Unknown)
+  if (attribute_ == Attribute::Attr_Unknown)
     return docxbox::AppLog::Error(
         std::string(
             "Invalid argument: Unknown or unsupported attribute: ") + argv_[3]);
@@ -223,6 +213,12 @@ bool meta::InitModificationArguments() {
 }
 
 bool meta::UpsertAttribute(bool saveXml) {
+    return IsAppAttribute()
+      ? UpsertAttributeInAppXml(saveXml)
+      : UpsertAttributeInCoreXml(saveXml);
+}
+
+bool meta::UpsertAttributeInCoreXml(bool saveXml) {
   path_core_xml_ = path_extract_ + "/docProps/core.xml";
 
   LoadCoreXml(path_core_xml_);
@@ -249,6 +245,51 @@ bool meta::UpsertAttribute(bool saveXml) {
     : result;
 }
 
+bool meta::UpsertAttributeInAppXml(bool saveXml) {
+  path_app_xml_ = path_extract_ + "/docProps/app.xml";
+
+  LoadAppXml(path_app_xml_);
+
+  bool result;
+
+  try {
+    if (IsDateAttribute(attribute_)
+        && !helper::DateTime::IsIso8601Date(value_))
+      return docxbox::AppLog::Error(
+          "Invalid date (must be given as ISO 8601): " + value_);
+
+    bool attribute_exists = AttributeExistsInAppXml(attribute_);
+
+    result = attribute_exists
+           ? UpdateAppAttribute(attribute_, value_)
+           : InsertAppAttribute(attribute_, value_);
+  } catch (std::string &message) {
+    return docxbox::AppLog::Error(message);
+  }
+
+  return result && saveXml
+    ? SaveAppXml()
+    : result;
+}
+
+bool meta::UpdateAppAttribute(Attribute attribute, const std::string& value) {
+  EnsureIsLoadedAppXml();
+
+  std::string lhs_of_value = GetLhsTagByAttribute(attribute);
+  std::string rhs_of_value = GetRhsTagByAttribute(attribute);
+
+  if (lhs_of_value.empty() || rhs_of_value.empty()) return false;
+
+  helper::String::Replace(
+      app_xml_,
+      (std::string(lhs_of_value)
+          + FetchAttributeFromAppXml(
+              lhs_of_value.c_str(), rhs_of_value.c_str(), "")).c_str(),
+      std::string(lhs_of_value).append(value).c_str());
+
+  return true;
+}
+
 bool meta::UpdateCoreAttribute(
     Attribute attribute,
     const std::string& value) {
@@ -271,6 +312,22 @@ bool meta::UpdateCoreAttribute(
   return true;
 }
 
+bool meta::InsertAppAttribute(Attribute attribute, const std::string& value) {
+  EnsureIsLoadedAppXml();
+
+  const std::string &kLhsTag = GetLhsTagByAttribute(attribute);
+  const std::string &kRhs = GetRhsTagByAttribute(attribute);
+
+  if (kLhsTag.empty() || kRhs.empty()) return false;
+
+  helper::String::Replace(
+      app_xml_,
+      kWordMlCorePropertiesRhs,
+      (kLhsTag + value + kRhs).c_str());
+
+  return true;
+}
+
 bool meta::InsertCoreAttribute(Attribute attribute, const std::string& value) {
   EnsureIsLoadedCoreXml();
 
@@ -288,6 +345,17 @@ bool meta::InsertCoreAttribute(Attribute attribute, const std::string& value) {
 }
 
 // Check whether core.xml of current DOCX contains given attribute
+bool meta::AttributeExistsInAppXml(Attribute attribute) {
+  EnsureIsLoadedAppXml();
+
+  std::string lhs_of_tag = GetLhsTagByAttribute(attribute);
+
+  return lhs_of_tag.empty()
+    ? false
+    : helper::String::Contains(app_xml_, lhs_of_tag.c_str());
+}
+
+// Check whether core.xml of current DOCX contains given attribute
 bool meta::AttributeExistsInCoreXml(Attribute attribute) {
   EnsureIsLoadedCoreXml();
 
@@ -298,6 +366,13 @@ bool meta::AttributeExistsInCoreXml(Attribute attribute) {
     : helper::String::Contains(core_xml_, lhs_of_tag.c_str());
 }
 
+void meta::EnsureIsLoadedAppXml() {
+  if (app_xml_.empty()) {
+    path_app_xml_ = path_extract_ + "/docProps/app.xml";
+    app_xml_ = helper::File::GetFileContents(path_app_xml_);
+  }
+}
+
 void meta::EnsureIsLoadedCoreXml() {
   if (core_xml_.empty()) {
     path_core_xml_ = path_extract_ + "/docProps/core.xml";
@@ -305,22 +380,32 @@ void meta::EnsureIsLoadedCoreXml() {
   }
 }
 
+void meta::LoadAppXml(const std::string& path) {
+  app_xml_ = helper::File::GetFileContents(path);
+}
+
 void meta::LoadCoreXml(const std::string& path) {
   core_xml_ = helper::File::GetFileContents(path);
 }
 
-bool meta::SaveCoreXml() {
-  if (!helper::File::WriteToNewFile(path_core_xml_, core_xml_))
-    throw "Failed saving: " + path_core_xml_;
-
-  return true;
+bool meta::SaveAppXml() {
+  return helper::File::WriteToNewFile(path_app_xml_, app_xml_)
+         ? true
+         : docxbox::AppLog::Error("Failed saving app.xml: " + path_app_xml_);
 }
 
-bool meta::IsDateAttribute(Attribute attribute) {
-  return
-    attribute == Attribute_LastPrinted
-    || attribute == Attribute_Created
-    || attribute == Attribute_Modified;
+bool meta::SaveXml() {
+  if (!path_app_xml_.empty() && !app_xml_.empty()) return SaveAppXml();
+
+  if (!path_core_xml_.empty() && !core_xml_.empty()) return SaveCoreXml();
+
+  return false;
+}
+
+bool meta::SaveCoreXml() {
+  return helper::File::WriteToNewFile(path_core_xml_, core_xml_)
+    ? true
+    : docxbox::AppLog::Error("Failed saving core.xml: " + path_core_xml_);
 }
 
 void meta::CollectFromAppXml(std::string path_app_xml_current,
@@ -378,17 +463,20 @@ void meta::CollectFromCoreXml(std::string path_core_xml_current) {
 
   path_core_xml_ = std::move(path_core_xml_current);
 
-  FetchAttributeFromCoreXml(kTagNameDcTermsCreated, "created");
-  FetchAttributeFromCoreXml(kTagNameDcCreator, "creator");
-  FetchAttributeFromCoreXml(kTagNameDcDescription, "description");
-  FetchAttributeFromCoreXml(kTagNameDcKeywords, "keywords");
-  FetchAttributeFromCoreXml(kTagNameDcLanguage, "language");
-  FetchAttributeFromCoreXml(kTagNameCpLastModifiedBy, "lastModifiedBy");
-  FetchAttributeFromCoreXml(kTagNameCpLastPrinted, "lastPrinted");
-  FetchAttributeFromCoreXml(kTagNameDcTermsModified, "modified");
-  FetchAttributeFromCoreXml(kTagNameCpRevision, "revision");
-  FetchAttributeFromCoreXml(kTagNameDcSubject, "subject");
-  FetchAttributeFromCoreXml(kTagNameDcTitle, "title");
+  FetchAttributeFromCoreXml(kTagNameDcTermsCreated, kAttrCoreCreated);
+  FetchAttributeFromCoreXml(kTagNameDcCreator, kAttrCoreCreator);
+  FetchAttributeFromCoreXml(kTagNameDcDescription, kAttrCoreDescription);
+  FetchAttributeFromCoreXml(kTagNameDcKeywords, kAttrCoreKeywords);
+  FetchAttributeFromCoreXml(kTagNameDcLanguage, kAttrCoreLanguage);
+  
+  FetchAttributeFromCoreXml(
+      kTagNameCpLastModifiedBy, kAttrCoreLastModifiedBy);
+  
+  FetchAttributeFromCoreXml(kTagNameCpLastPrinted, kAttrCoreLastPrinted);
+  FetchAttributeFromCoreXml(kTagNameDcTermsModified, kAttrCoreModified);
+  FetchAttributeFromCoreXml(kTagNameCpRevision, kAttrCoreRevision);
+  FetchAttributeFromCoreXml(kTagNameDcSubject, kAttrCoreSubject);
+  FetchAttributeFromCoreXml(kTagNameDcTitle, kAttrCoreTitle);
 
   has_collected_from_core_xml_ = true;
 
