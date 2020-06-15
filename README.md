@@ -3,7 +3,7 @@
 docxBox
 =======
 
-Linux tool for DOCX (Office Open XML) analysis, manipulation and templating.
+CLI tool for Word DOCX templating and analysis.
 
 
 ## Table of contents
@@ -37,7 +37,8 @@ Linux tool for DOCX (Office Open XML) analysis, manipulation and templating.
   * [Batch Templating](#batch-templating)
     + [Replacement Pre/Post-Markers](#replacement-prepost-markers)
   * [Arbitrary manual and scripted anlysis / modification](#arbitrary-manual-and-scripted-analysis--modification)  
-  * [Output docxBox help or version number](#output-docxbox-help-or-version-number)  
+  * [Output docxBox help or version number](#output-docxbox-help-or-version-number)
+* [Configuration](#configuration)  
 * [Build Instructions](#build-instructions)
 * [Running Tests](#running-tests)
 * [Code Convention](#code-convention)
@@ -684,6 +685,22 @@ Outputs docxBox's help text.
 ````docxbox v```` Outputs the installed docxBox's version number.
 
 
+Configuration
+-------------
+
+docxBox can optionally be configured using the following environment variables: 
+
+| Option                         | Possible Values                                                        | Default    |
+|--------------------------------|------------------------------------------------------------------------|----------- |
+| ``docxBox_notify``             | ``stdout`` = Output notifications to stdout only                       | ``stdout`` |
+|                                | ``log`` = Log notifications to file                                    |            |
+|                                | ``both`` = Output notifications to stdout and log file                 |            |
+| ``docxBox_log_path``           | empty = out.log is written to ``out.log`` in current working directory | empty      |
+|                                | ``arbitary_path/filename.out`` = log file is written to given path     |            |
+| ``docxBox_clear_log_on_start`` | ``0`` = docxBox appends notifications to logfile                       | ``0``      |
+|                                | ``1`` = docxBox resets the logfile on startup                          |            |
+
+
 Build Instructions
 ------------------
 
@@ -720,7 +737,6 @@ Roadmap
 * v0.0.5: Batch process sequences of manipulation operations
 * v0.0.6: Ensure microsoft word compatibility
 * v0.1.0: Add optional configuration options via environment vars
-* v0.1.0: (Optional) logging of operations
 * v1.0.0: Libre-Office compatible appending of two DOCX files into a single one 
   (by XML appending, instead of adding sub-documents) 
 
