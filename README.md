@@ -693,16 +693,18 @@ Configuration
 
 docxBox can optionally be configured using the following environment variables: 
 
-| Option                         | Possible Values                                                        | Default    |
-|--------------------------------|------------------------------------------------------------------------|----------- |
-| ``docxBox_notify``             | ``stdout`` = Output notifications to stdout only                       | ``stdout`` |
-|                                | ``log`` = Log all notifications to file only                           |            |
-|                                | ``both`` = Output notifications to stdout and log file                 |            |
-|                                | ``off`` = Do not output any notifications                              |            |
-| ``docxBox_log_path``           | empty = out.log is written to ``out.log`` in current working directory | empty      |
-|                                | ``arbitary_path/filename.out`` = log file is written to given path     |            |
-| ``docxBox_clear_log_on_start`` | ``0`` = docxBox appends notifications to logfile                       | ``0``      |
-|                                | ``1`` = docxBox resets the logfile on startup                          |            |
+| Option                         | Possible Values                                                                 | Default    |
+|--------------------------------|---------------------------------------------------------------------------------|----------- |
+| ``docxBox_notify``             | ``stdout`` = Output notifications to stdout only                                | ``stdout`` |
+|                                | ``log`` = Log all notifications to file only                                    |            |
+|                                | ``both`` = Output notifications to stdout and log file                          |            |
+|                                | ``off`` = Do not output any notifications                                       |            |
+| ``docxBox_log_path``           | empty = out.log is written to ``out.log`` in current working directory          | empty      |
+|                                | ``arbitary_path/filename.out`` = log file is written to given path              |            |
+| ``docxBox_clear_log_on_start`` | ``0`` = docxBox appends notifications to logfile                                | ``0``      |
+|                                | ``1`` = docxBox resets the logfile on startup                                   |            |
+| ``docxBox_verbose``            | ``0`` = Only most relevant notifications, if not disabled, are output to stdout | ``0``      |
+|                                | ``1`` = If enabled, all modification notifications are output to stdout         |            |
 
 
 Build Instructions

@@ -3,6 +3,7 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
+* Add optional ``verbose`` mode 
 * Log execution startup w/ arguments, errors, and return signal
 * Notify/log more manipulation details
 * Add option to disable all notifications and logging

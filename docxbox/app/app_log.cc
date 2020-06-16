@@ -31,6 +31,9 @@ void AppLog::InitMode() {
   } else if (option == "off") {
     mode_ = LogMode::LogTo_None;
   }
+
+  env_var = std::getenv("docxBox_verbose");
+  verbose_ = env_var != nullptr && 0 == strcmp(env_var, "1");
 }
 
 void AppLog::InitLogFile() {
@@ -71,7 +74,7 @@ void AppLog::Notify(const std::string& message,
                     bool file_only) {
   if (mode_ == LogTo_None) return;
 
-  file_only_messages_.push_back(file_only);
+  file_only_messages_.push_back(verbose_ || file_only);
 
   if (mode_ == LogTo_File || mode_ == LogTo_FileAndStdOut) PushBackTime();
 

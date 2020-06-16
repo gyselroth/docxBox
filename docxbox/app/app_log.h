@@ -69,6 +69,7 @@ class AppLog {
   std::string path_log_file_;
 
   bool clear_log_initially_ = false;
+  bool verbose_ = false;
 
   // Copy constructor
   AppLog(const AppLog&) {}
