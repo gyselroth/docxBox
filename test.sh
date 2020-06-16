@@ -221,4 +221,7 @@ printf "\nDone. Bats tests ran for $ELAPSED_TIME seconds.\n\n"
 if $IS_ERROR;
 then
     printf "\n${AMOUNT_ERRORS} error(s) while executing tests\n\n"
+    exit 1
+else
+  exit 0
 fi
