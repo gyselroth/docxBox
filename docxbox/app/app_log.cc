@@ -49,9 +49,9 @@ void AppLog::InitLogFile() {
   if (env_var == nullptr) return;
 
   std::string setting_flush_on_start = std::string(env_var);
+  clear_log_initially_ = setting_flush_on_start == "1";
 
-  if (setting_flush_on_start == "1"
-      || !helper::File::FileExists(path_log_file_))
+  if (clear_log_initially_ || !helper::File::FileExists(path_log_file_))
     helper::File::WriteToNewFile(path_log_file_, "");
 }
 
@@ -167,6 +167,8 @@ void AppLog::OutputToLogFile() {
 
     prev_message = message;
   }
+
+  if (!clear_log_initially_) out = "\n" + out;
 
   helper::File::AppendToFile(path_log_file_, out);
 }
