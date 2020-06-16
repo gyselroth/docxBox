@@ -50,7 +50,7 @@ const std::string &docx_archive::GetPathExtract() const {
 // Setup path to DOCX file,
 // absolute or relative from execution path, from given argument
 bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
-  path_docx_in_ = docxbox::AppArguments::ResolvePathFromArgument(
+  path_docx_in_ = docxbox::AppArgument::ResolvePathFromArgument(
       path_working_directory_,
       argc_,
       argv_,
@@ -90,6 +90,8 @@ std::string docx_archive::ParseFileWildcard(int index_argument) const {
   if (argc_ < index_argument + 1) return "";
 
   std::string glob_pattern = argv_[index_argument];
+
+  if (docxbox::AppArgument::IsKnownOption(glob_pattern)) return "";
 
   helper::File::GlobPatternToRegEx(glob_pattern);
 
@@ -135,7 +137,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
                                    const std::string &directory_appendix,
                                    bool ensure_is_docx,
                                    bool format_xml_files) {
-  if (!docxbox::AppArguments::IsArgumentGiven(
+  if (!docxbox::AppArgument::IsArgumentGiven(
       argc_, 2, "Filename of DOCX to be extracted")) return false;
 
   try {
@@ -232,7 +234,7 @@ bool docx_archive::Zip(
     const std::string& date_created,
     const std::string& date_modified) {
   if (path_directory.empty()) {
-    if (!docxbox::AppArguments::AreArgumentsGiven(
+    if (!docxbox::AppArgument::AreArgumentsGiven(
         argc_,
         2, "Path of directory to be zipped",
         3, "Filename of docx to be created")) return false;
@@ -303,7 +305,7 @@ bool docx_archive::GetText(bool newline_at_segments) {
 
 bool docx_archive::ExecuteUserCommand(std::string command) {
   if (command.empty()) {
-      if (!docxbox::AppArguments::AreArgumentsGiven(
+      if (!docxbox::AppArgument::AreArgumentsGiven(
         argc_,
         2, "DOCX filename",
         3, "Command")) return false;
@@ -325,7 +327,7 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
 }
 
 bool docx_archive::Batch() {
-  if (!docxbox::AppArguments::AreArgumentsGiven(
+  if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       2, "DOCX file",
       3, "Batch commands JSON")) return false;
@@ -366,7 +368,7 @@ bool docx_archive::Batch() {
 }
 
 bool docx_archive::CatFile() {
-  if (!docxbox::AppArguments::AreArgumentsGiven(
+  if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       2, "DOCX filename",
       3, "File to be displayed")) return false;
@@ -394,7 +396,7 @@ bool docx_archive::CatFile() {
 }
 
 bool docx_archive::ViewFilesDiff() {
-  if (!docxbox::AppArguments::AreArgumentsGiven(
+  if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       3, "DOCX file to compare with",
       4, "File within DOCX archives to be compared")) return false;

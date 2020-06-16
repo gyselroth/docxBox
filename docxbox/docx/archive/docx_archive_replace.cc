@@ -10,7 +10,7 @@ docx_archive_replace::docx_archive_replace(
     bool is_batch_mode) : docx_archive(argc, argv, is_batch_mode) {}
 
 bool docx_archive_replace::ReplaceImage() {
-  if (!docxbox::AppArguments::AreArgumentsGiven(
+  if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       2, "DOCX filename",
       3, "Filename of image to be replaced",
@@ -89,7 +89,7 @@ bool docx_archive_replace::ReplaceImage() {
 }
 
 bool docx_archive_replace::ReplaceText() {
-  if (!docxbox::AppArguments::AreArgumentsGiven(
+  if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       2, "DOCX filename",
       3, "String to be found (and replaced)",
@@ -194,7 +194,7 @@ void docx_archive_replace::InitPathDocxOutForReplaceText(
  */
 std::string docx_archive_replace::AddImageFileAndRelation(
   const std::string &image_markup_json) {
-  if (!docxbox::AppArguments::isArgImageFile(argc_, argv_, 5))
+  if (!docxbox::AppArgument::isArgImageFile(argc_, argv_, 5))
     // No media file given: successfully done (nothing)
     return "";
 
@@ -238,7 +238,7 @@ std::string docx_archive_replace::AddHyperlinkRelation(
 }
 
 bool docx_archive_replace::RemoveBetweenText() {
-  if (!docxbox::AppArguments::AreArgumentsGiven(
+  if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       2, "DOCX filename",
       3, "String left-hand-side of part to be removed",
@@ -341,7 +341,7 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 bool docx_archive_replace::SetFieldValue() {
   if ((!is_batch_mode_
        && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName()))
-      || !docxbox::AppArguments::AreArgumentsGiven(
+      || !docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       3, "Field identifier",
       4, "Value to be set")) return false;

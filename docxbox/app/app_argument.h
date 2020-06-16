@@ -13,9 +13,9 @@
 
 namespace docxbox {
 
-class AppArguments {
+class AppArgument {
  public:
-  AppArguments(int argc, char **argv);
+  AppArgument(int argc, char **argv);
 
   static std::string ResolvePathFromArgument(const std::string &pwd,
                                              int argc,
@@ -44,6 +44,8 @@ class AppArguments {
                const std::string &identifier_long);
 
   static bool isArgImageFile(int argc, char **argv, int index_argument);
+
+  static bool IsKnownOption(const std::string &str);
 
  private:
   int argc_;

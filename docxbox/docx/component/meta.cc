@@ -192,7 +192,7 @@ std::string meta::FetchAttributeFromCoreXml(
 // Explicit meta modification CLI call:
 // Validate CLI arguments and initialize rel. properties
 bool meta::InitModificationArguments() {
-  if (!docxbox::AppArguments::AreArgumentsGiven(
+  if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       2, "DOCX filename",
       3, "Meta attribute to be set")) return false;
@@ -204,7 +204,7 @@ bool meta::InitModificationArguments() {
         std::string(
             "Invalid argument: Unknown or unsupported attribute: ") + argv_[3]);
 
-  if (!docxbox::AppArguments::IsArgumentGiven(
+  if (!docxbox::AppArgument::IsArgumentGiven(
       argc_, 4, "Value to set attribute to")) return false;
 
   value_ = argv_[4];

@@ -40,7 +40,7 @@ void App::SetPathDocxOut(const std::string &path_docx_out) {
 
 // Remap command + argument variations to rel. shorthand commands
 AppCommands::Command App::PreProcess(
-    AppArguments *arguments,
+    AppArgument *arguments,
     const AppCommands::Command &command) const {
   switch (command) {
     case AppCommands::Command_GetPlainText:  // txt
@@ -56,6 +56,9 @@ AppCommands::Command App::PreProcess(
 
       if (arguments->Matches(3, "-ij"))
         return AppCommands::Command_ListImagesAsJson;
+
+      if (arguments->Matches(3, "-j", "--json"))
+        return AppCommands::Command_ListAsJson;
 
       if (arguments->Matches(3, "-lj"))
         return AppCommands::Command_LocateFilesContaining;
@@ -122,7 +125,7 @@ AppCommands::Command App::PreProcess(
 }
 
 bool App::Process() {
-  auto arguments = new AppArguments(argc_, argv_);
+  auto arguments = new AppArgument(argc_, argv_);
 
   AppCommands::Command command = command_->GetResolved();
 

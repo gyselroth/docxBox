@@ -6,14 +6,14 @@
 namespace docxbox {
 
 // Constructor
-AppArguments::AppArguments(int argc, char **argv) {
+AppArgument::AppArgument(int argc, char **argv) {
   argc_ = argc;
   argv_ = argv;
 }
 
 // Resolve path from given argument:
 // keep absolute or make relative from execution path
-std::string AppArguments::ResolvePathFromArgument(
+std::string AppArgument::ResolvePathFromArgument(
     const std::string& pwd,
     int argc,
     char **argv,
@@ -37,15 +37,15 @@ std::string AppArguments::ResolvePathFromArgument(
     return "";
 }
 
-bool AppArguments::IsArgumentGiven(int argc,
-                                   int index,
-                                   const std::string &argument_description) {
+bool AppArgument::IsArgumentGiven(int argc,
+                                  int index,
+                                  const std::string &argument_description) {
   return argc <= index
     ? docxbox::AppLog::Error("Missing argument: " + argument_description)
     : true;
 }
 
-bool AppArguments::AreArgumentsGiven(
+bool AppArgument::AreArgumentsGiven(
     int argc,
     int index_1, const std::string &arg_description_1,
     int index_2, const std::string &arg_description_2) {
@@ -53,7 +53,7 @@ bool AppArguments::AreArgumentsGiven(
       || !IsArgumentGiven(argc, index_2, arg_description_2));
 }
 
-bool AppArguments::AreArgumentsGiven(
+bool AppArgument::AreArgumentsGiven(
     int argc,
     int index_1, const std::string &arg_description_1,
     int index_2, const std::string &arg_description_2,
@@ -63,12 +63,12 @@ bool AppArguments::AreArgumentsGiven(
       || !IsArgumentGiven(argc, index_3, arg_description_3));
 }
 
-bool AppArguments::Matches(int offset_argument, const std::string &identifier) {
+bool AppArgument::Matches(int offset_argument, const std::string &identifier) {
   return argc_ > offset_argument
       && 0 == strcmp(argv_[offset_argument], identifier.c_str());
 }
 
-bool AppArguments::Matches(
+bool AppArgument::Matches(
     int offset_argument,
     const std::string& identifier_short,
     const std::string& identifier_long
@@ -78,9 +78,35 @@ bool AppArguments::Matches(
         || 0 == strcmp(argv_[offset_argument], identifier_long.c_str()));
 }
 
-bool AppArguments::isArgImageFile(int argc, char **argv, int index_argument) {
+bool AppArgument::isArgImageFile(int argc, char **argv, int index_argument) {
   return argc > index_argument
       && helper::File::IsWordCompatibleImage(argv[index_argument]);
+}
+
+bool AppArgument::IsKnownOption(const std::string &str) {
+  if (str[0] != '-' || str == "-") return false;
+
+  if (str[1] != '-') {
+    return
+        str == "-d" || str == "-dj"
+        || str == "-f" || str == "-fj"
+        || str == "-i" || str == "-ij"
+        || str == "-j"
+        || str == "-l" || str == "-lj"
+        || str == "-m" || str == "-mj"
+        || str == "-s"
+        || str == "-u";
+  }
+
+  return
+    str == "--fields"
+    || str == "--fonts"
+    || str == "--indent" || str == "--images"
+    || str == "--json"
+    || str == "--locate"
+    || str == "--media" || str == "--meta"
+    || str == "--segments"
+    || str == "--unified";
 }
 
 }  // namespace docxbox
