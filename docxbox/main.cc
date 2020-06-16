@@ -9,6 +9,8 @@
  * @param argv Array of arguments, argv[0] is name and path of executable
  */
 int main(int argc, char **argv) {
+  docxbox::AppLog::LogStartUp(argc, argv);
+
   // Process command arguments, display help if no valid command given
   auto *app = new docxbox::App(argc, argv);
 
@@ -18,8 +20,14 @@ int main(int argc, char **argv) {
 
   delete app;
 
+  // TODO(kay): return comprehensible bash error codes instead of 125
+  int return_signal = success ? 0 : 125;
+
+  docxbox::AppLog::NotifyInfo(
+      "docxBox finished w/ return code: " + std::to_string(return_signal),
+      true);
+
   docxbox::AppLog::Output();
 
-  // TODO(kay): return comprehensible bash error codes instead of 125
-  return success ? 0 : 125;
+  return return_signal;
 }
