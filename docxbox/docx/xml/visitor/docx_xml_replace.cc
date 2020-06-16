@@ -59,7 +59,8 @@ bool docx_xml_replace::ReplaceInXml(
     const std::string &kMarkup = RenderMarkupFromJson(replacement);
 
     if (kMarkup.empty())
-      return docxbox::AppLog::NotifyError("Failed render markup from given JSON");
+      return docxbox::AppLog::NotifyError(
+          "Failed render markup from given JSON");
 
     // Insert temporarily before body, will later be moved into correct place
     // TODO(kay): use resp. different root element instead of w:body,

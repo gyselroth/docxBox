@@ -66,32 +66,34 @@ void AppLog::DeleteInstance() {
 }
 
 // Store given message for later output to stdout / logout
-void AppLog::Notify(const std::string& message, const std::string& type) {
+void AppLog::Notify(const std::string& message,
+                    NotificationType type,
+                    bool file_only) {
   if (mode_ == LogTo_None) return;
+
+  file_only_messages_.push_back(file_only);
 
   if (mode_ == LogTo_File || mode_ == LogTo_FileAndStdOut) PushBackTime();
 
-  messages_.push_back("docxBox " + type + " - " + message);
+  std::string type_str = type == NotificationType::Notification_Error
+      ? "Error"
+      : "Info";
+
+  messages_.push_back("docxBox " + type_str + " - " + message);
 }
 
 // Store given error message for later output to stdout / logout
-bool AppLog::NotifyError(const std::string& message) {
-  AppLog *kInstance = GetInstance();
-
-  kInstance->Notify(message, "Error");
-
-  kInstance->file_only_messages_.push_back(false);
+bool AppLog::NotifyError(const std::string& message, bool file_only) {
+  GetInstance()->Notify(
+      message, NotificationType::Notification_Error, file_only);
 
   return false;
 }
 
 // Store given informational message for later output to stdout / logout
 bool AppLog::NotifyInfo(const std::string& message, bool file_only) {
-  AppLog *kInstance = GetInstance();
-
-  kInstance->Notify(message, "Info ");
-  
-  kInstance->file_only_messages_.push_back(file_only);
+  GetInstance()->Notify(
+      message, NotificationType::Notification_Info, file_only);
 
   return true;
 }
@@ -141,7 +143,10 @@ void AppLog::OutputToStdOut() {
     if (message == prev_message
         || file_only_messages_.at(index)) continue;
 
-    std::cout << message + "\n";
+    if (helper::String::StartsWith(message.c_str(), "docxBox E"))
+      std::cerr << message + "\n";
+    else
+      std::cout << message + "\n";
 
     prev_message = message;
   }

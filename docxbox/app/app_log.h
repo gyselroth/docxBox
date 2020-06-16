@@ -24,6 +24,11 @@ class AppLog {
     LogTo_None
   };
 
+  enum NotificationType {
+    Notification_Error,
+    Notification_Info
+  };
+
   // Create singleton instance of class
   static AppLog* GetInstance();
 
@@ -33,9 +38,11 @@ class AppLog {
   static void DeleteInstance();
 
   // Store given message for later output to stdout / logout
-  void Notify(const std::string& message, const std::string& type);
+  void Notify(const std::string& message,
+              NotificationType type,
+              bool file_only = false);
 
-  static bool NotifyError(const std::string &message);
+  static bool NotifyError(const std::string &message, bool file_only = false);
   static bool NotifyInfo(const std::string &message, bool file_only = false);
 
   // Log docxBox execution arguments to log file
