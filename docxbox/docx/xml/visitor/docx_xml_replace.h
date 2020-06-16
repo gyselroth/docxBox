@@ -26,6 +26,8 @@ class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
       const std::string& replacement,
       bool replace_segmented = false);
 
+  int GetAmountReplaced();
+
   void SetImageRelationshipId(std::string &relationship_id);
   void SetHyperlinkRelationshipId(std::string &relationship_id);
 
@@ -46,6 +48,7 @@ class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
   // (having child-nodes containing the text) must be replaced
   std::vector<tinyxml2::XMLElement *> runs_to_be_replaced_;
 
+ private:
   tinyxml2::XMLElement *current_run_;
 
   tinyxml2::XMLElement *replacement_xml_element_;

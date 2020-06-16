@@ -146,6 +146,11 @@ bool docx_archive_replace::ReplaceText() {
     if (!parser->ReplaceInXml(path_file_absolute, search, replacement))
       return docxbox::AppLog::NotifyError(
           "Failed replace string in: " + file_in_zip.filename);
+
+    docxbox::AppLog::NotifyInfo(
+        std::to_string(parser->GetAmountReplaced())
+        + " replacement(s) done in: " + file_in_zip.filename,
+        true);
   }
 
   delete parser;

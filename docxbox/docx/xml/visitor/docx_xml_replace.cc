@@ -21,6 +21,10 @@ void docx_xml_replace::SetHyperlinkRelationshipId(
   hyperlink_relationship_id_ = relationship_id;
 }
 
+int docx_xml_replace::GetAmountReplaced() {
+  return amount_replaced_;
+}
+
 // Replace given search string by replacement, which can be:
 // 1. A regular string: will replace the given string
 // 2. A string containing JSON: will be interpreted for rendering word markup,
