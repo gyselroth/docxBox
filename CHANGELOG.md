@@ -5,6 +5,7 @@ V1.0.0 - Not finished yet
 -------------------------
 * Notify/log more manipulation details
 * Add option to disable all notifications and logging
+* Improve recognition and edge case handling of arguments and options  
 
 V0.0.5 - 2020-06-15
 -------------------

@@ -9,7 +9,7 @@ docx_archive_list::docx_archive_list(
 
 // List files inside DOCX archive and their attributes
 bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
-  if (!docxbox::AppArguments::IsArgumentGiven(argc_, 2, "DOCX filename"))
+  if (!docxbox::AppArgument::IsArgumentGiven(argc_, 2, "DOCX filename"))
     return false;
 
   try {
@@ -22,21 +22,20 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
-  std::string file_pattern = ParseFileWildcard(3);
-
-  bool compare_two_docx = file_pattern.empty()
-      && argc_ >= 4
-      && helper::String::EndsWith(argv_[3], ".docx")
+  bool has_second_docx = argc_ >= 4
+      && helper::String::EndsWithCaseInsensitive(argv_[3], ".docx")
       && helper::File::FileExists(argv_[3]);
+
+  std::string file_pattern = has_second_docx ? "" : ParseFileWildcard(3);
 
   auto miniz_ext = new miniz_cpp_ext();
 
   std::string files_list = miniz_ext->PrintDir(
       docx_file,
       as_json, images_only, file_pattern, {},
-      false, compare_two_docx);
+      false, has_second_docx);
 
-  if (compare_two_docx) {
+  if (has_second_docx) {
     std::string kSummary1 = miniz_ext->GetSummary();
 
     ListFilesInDocxCompare(
@@ -58,7 +57,7 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
                                                std::string *file_list_1,
                                                std::string *summary_1) {
   const std::string &path_docx_in_2 =
-      docxbox::AppArguments::ResolvePathFromArgument(
+      docxbox::AppArgument::ResolvePathFromArgument(
           path_working_directory_, argc_, argv_, 4);
 
   miniz_cpp::zip_file docx_file_2(path_docx_in_2);
@@ -130,25 +129,25 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
 
 bool docx_archive_list::InitLocateFilesContaining(
   bool *as_json, std::string &needle) const {
-  if (!docxbox::AppArguments::IsArgumentGiven(
+  if (!docxbox::AppArgument::IsArgumentGiven(
       argc_,
       2, "DOCX filename")) return false;
 
-  if (!docxbox::AppArguments::IsArgumentGiven(
+  if (!docxbox::AppArgument::IsArgumentGiven(
       argc_,
       3, "String or regular expression to be located")) return false;
 
   needle = argv_[3];
 
   if (needle == "-l" || needle == "--locate") {
-    if (!docxbox::AppArguments::IsArgumentGiven(
+    if (!docxbox::AppArgument::IsArgumentGiven(
         argc_,
         4, "String or regular expression to be located")) return false;
 
     needle = argv_[4];
 
     if (needle == "-j" || needle == "--json") {
-      if (!docxbox::AppArguments::IsArgumentGiven(
+      if (!docxbox::AppArgument::IsArgumentGiven(
           argc_,
           5, "String or regular expression to be located")) return false;
 
@@ -160,7 +159,7 @@ bool docx_archive_list::InitLocateFilesContaining(
   }
 
   if (needle == "-lj") {
-    if (!docxbox::AppArguments::IsArgumentGiven(
+    if (!docxbox::AppArgument::IsArgumentGiven(
         argc_,
         4, "String or regular expression to be located")) return false;
 
@@ -169,7 +168,7 @@ bool docx_archive_list::InitLocateFilesContaining(
   }
 
   if (needle == "-j" || needle == "--json") {
-    if (!docxbox::AppArguments::IsArgumentGiven(
+    if (!docxbox::AppArgument::IsArgumentGiven(
         argc_,
         4, "String or regular expression to be located")) return false;
 
@@ -178,7 +177,7 @@ bool docx_archive_list::InitLocateFilesContaining(
   }
 
   if (needle == "-lj") {
-    if (!docxbox::AppArguments::IsArgumentGiven(
+    if (!docxbox::AppArgument::IsArgumentGiven(
         argc_,
         4, "String or regular expression to be located")) return false;
 

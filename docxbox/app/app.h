@@ -55,7 +55,7 @@ class App {
   // DOCX output path with/or filename
   std::string path_docx_out_;
 
-  AppCommands::Command PreProcess(AppArguments *arguments,
+  AppCommands::Command PreProcess(AppArgument *arguments,
                                   const AppCommands::Command &command) const;
 
   bool ProcessList(AppCommands::Command command);
