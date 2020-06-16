@@ -76,7 +76,11 @@ void AppLog::Notify(const std::string& message, const std::string& type) {
 
 // Store given error message for later output to stdout / logout
 bool AppLog::NotifyError(const std::string& message) {
-  GetInstance()->Notify(message, "Error");
+  AppLog *kInstance = GetInstance();
+
+  kInstance->Notify(message, "Error");
+
+  kInstance->file_only_messages_.push_back(false);
 
   return false;
 }
