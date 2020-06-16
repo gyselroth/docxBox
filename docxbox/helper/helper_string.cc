@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <iterator>
-#include <regex>
+#include <regex>  // NOLINT [build/c++11]
 
 namespace helper {
 
@@ -203,8 +203,9 @@ std::string String::ExtractLeadingNumber(std::string str) {
   std::string number;
 
   for (uint16_t i = 0; i < str.length(); i++) {
-    if (isdigit(str[i])) number += str[i];
-    else return number;
+    if (!isdigit(str[i])) return number;
+
+    number += str[i];
   }
 
   return number;

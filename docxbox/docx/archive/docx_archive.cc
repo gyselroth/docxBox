@@ -219,7 +219,8 @@ bool docx_archive::CreateDocxFromExtract(
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str())
          ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
-         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
+         : docxbox::AppLog::Error(
+             "Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 // Zip files into given path into DOCX of given filename
@@ -364,7 +365,8 @@ bool docx_archive::Batch() {
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str())
          ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
-         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
+         : docxbox::AppLog::Error(
+             "Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 bool docx_archive::CatFile() {
@@ -513,7 +515,8 @@ bool docx_archive::ModifyMeta() {
       std::string(path_docx_out_).append("tmp").c_str(),
       path_docx_out_.c_str())
          ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
-         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
+         : docxbox::AppLog::Error(
+             "Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 // Update given meta date attribute and immediately save updated core.xml

@@ -468,10 +468,10 @@ void meta::CollectFromCoreXml(std::string path_core_xml_current) {
   FetchAttributeFromCoreXml(kTagNameDcDescription, kAttrCoreDescription);
   FetchAttributeFromCoreXml(kTagNameDcKeywords, kAttrCoreKeywords);
   FetchAttributeFromCoreXml(kTagNameDcLanguage, kAttrCoreLanguage);
-  
+
   FetchAttributeFromCoreXml(
       kTagNameCpLastModifiedBy, kAttrCoreLastModifiedBy);
-  
+
   FetchAttributeFromCoreXml(kTagNameCpLastPrinted, kAttrCoreLastPrinted);
   FetchAttributeFromCoreXml(kTagNameDcTermsModified, kAttrCoreModified);
   FetchAttributeFromCoreXml(kTagNameCpRevision, kAttrCoreRevision);

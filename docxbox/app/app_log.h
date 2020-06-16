@@ -49,10 +49,10 @@ class AppLog {
 
  private:
   // Copy constructor
-  AppLog(const AppLog&){};
+  AppLog(const AppLog&) {}
 
   // Assignment operator
-  AppLog& operator=(const AppLog&){ return *this; };
+  AppLog& operator = (const AppLog&) { return *this; }
 
   void InitMode();
   void InitLogFile();

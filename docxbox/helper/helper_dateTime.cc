@@ -13,7 +13,7 @@ std::string DateTime::GetCurrentDateTimeFormatted(const char *format) {
   char buffer[80];
 
   time(&raw_time);
-  time_info = localtime(&raw_time);
+  time_info = localtime(&raw_time);  // NOLINT [build/c++11]
 
   strftime(buffer, sizeof(buffer), format, time_info);
   std::string str(buffer);
