@@ -184,8 +184,7 @@ bool docx_archive::IsZipArchive(const std::string& path_file) {
 // Check formal structure of DOCX archive - mandatory files given?
 bool docx_archive::IsUnzippedDocx() {
   return
-      helper::File::IsDirectory(path_extract_ + "/rels")
-          && helper::File::IsDirectory(path_extract_ + "/docProps")
+      helper::File::IsDirectory(path_extract_ + "/docProps")
           && helper::File::IsDirectory(path_extract_ + "/word")
           && helper::File::FileExists(path_extract_ + "/[Content_Types].xml")
           && helper::File::FileExists(path_extract_ + "/_rels/.rels")
