@@ -10,7 +10,7 @@
 namespace helper {
 namespace DateTime {
 
-static const char *const kFormatIso8601DateTime = "%Y-%m-%dT%H:%M:%SZ";
+static const char *const kFormatDateTimeIso8601 = "%Y-%m-%dT%H:%M:%SZ";
 
 // @see https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s07.html
 static const char *const kRegExIso8601DateTime =

@@ -109,7 +109,7 @@ bool File::WriteToNewFile(
 
 int File::AppendToFile(const std::string &filename, std::string content) {
   std::ofstream out_file;
-  out_file.open (filename, std::ios_base::app);
+  out_file.open(filename, std::ios_base::app);
   out_file << content;
 
   out_file.close();

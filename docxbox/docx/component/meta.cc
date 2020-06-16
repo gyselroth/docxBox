@@ -119,7 +119,7 @@ std::string meta::GetLhsTagByAttribute(const meta::Attribute &attribute) {
     case Attr_App_Template:return GetLhsTagByTagName(kTagNameTemplate);
     case Attr_App_XmlSchema:return GetLhsTagByTagName(kTagNameXmlSchema);
     default:
-      docxbox::AppLog::Error(
+      docxbox::AppLog::NotifyError(
           "Failed render opening tag. Unknown attribute: " + attribute);
 
       return "";
@@ -145,7 +145,7 @@ std::string meta::GetRhsTagByAttribute(const meta::Attribute &attribute) {
     case Attr_App_Template:return GetRhsTagByTagName(kTagNameTemplate);
     case Attr_App_XmlSchema:return GetRhsTagByTagName(kTagNameXmlSchema);
     default:
-      docxbox::AppLog::Error(
+      docxbox::AppLog::NotifyError(
           "Failed render closing tag. Unknown attribute: " + attribute);
 
       return "";
@@ -200,7 +200,7 @@ bool meta::InitModificationArguments() {
   attribute_ = ResolveAttribute(argv_[3]);
 
   if (attribute_ == Attribute::Attr_Unknown)
-    return docxbox::AppLog::Error(
+    return docxbox::AppLog::NotifyError(
         std::string(
             "Invalid argument: Unknown or unsupported attribute: ") + argv_[3]);
 
@@ -228,7 +228,7 @@ bool meta::UpsertAttributeInCoreXml(bool saveXml) {
   try {
     if (IsDateAttribute(attribute_)
         && !helper::DateTime::IsIso8601Date(value_))
-      return docxbox::AppLog::Error(
+      return docxbox::AppLog::NotifyError(
           "Invalid date (must be given as ISO 8601): " + value_);
 
     bool attribute_exists = AttributeExistsInCoreXml(attribute_);
@@ -237,7 +237,7 @@ bool meta::UpsertAttributeInCoreXml(bool saveXml) {
            ? UpdateCoreAttribute(attribute_, value_)
            : InsertCoreAttribute(attribute_, value_);
   } catch (std::string &message) {
-    return docxbox::AppLog::Error(message);
+    return docxbox::AppLog::NotifyError(message);
   }
 
   return result && saveXml
@@ -255,7 +255,7 @@ bool meta::UpsertAttributeInAppXml(bool saveXml) {
   try {
     if (IsDateAttribute(attribute_)
         && !helper::DateTime::IsIso8601Date(value_))
-      return docxbox::AppLog::Error(
+      return docxbox::AppLog::NotifyError(
           "Invalid date (must be given as ISO 8601): " + value_);
 
     bool attribute_exists = AttributeExistsInAppXml(attribute_);
@@ -264,7 +264,7 @@ bool meta::UpsertAttributeInAppXml(bool saveXml) {
            ? UpdateAppAttribute(attribute_, value_)
            : InsertAppAttribute(attribute_, value_);
   } catch (std::string &message) {
-    return docxbox::AppLog::Error(message);
+    return docxbox::AppLog::NotifyError(message);
   }
 
   return result && saveXml
@@ -391,7 +391,8 @@ void meta::LoadCoreXml(const std::string& path) {
 bool meta::SaveAppXml() {
   return helper::File::WriteToNewFile(path_app_xml_, app_xml_)
          ? true
-         : docxbox::AppLog::Error("Failed saving app.xml: " + path_app_xml_);
+         : docxbox::AppLog::NotifyError(
+          "Failed saving app.xml: " + path_app_xml_);
 }
 
 bool meta::SaveXml() {
@@ -405,7 +406,7 @@ bool meta::SaveXml() {
 bool meta::SaveCoreXml() {
   return helper::File::WriteToNewFile(path_core_xml_, core_xml_)
     ? true
-    : docxbox::AppLog::Error("Failed saving core.xml: " + path_core_xml_);
+    : docxbox::AppLog::NotifyError("Failed saving core.xml: " + path_core_xml_);
 }
 
 void meta::CollectFromAppXml(std::string path_app_xml_current,
@@ -468,10 +469,10 @@ void meta::CollectFromCoreXml(std::string path_core_xml_current) {
   FetchAttributeFromCoreXml(kTagNameDcDescription, kAttrCoreDescription);
   FetchAttributeFromCoreXml(kTagNameDcKeywords, kAttrCoreKeywords);
   FetchAttributeFromCoreXml(kTagNameDcLanguage, kAttrCoreLanguage);
-  
+
   FetchAttributeFromCoreXml(
       kTagNameCpLastModifiedBy, kAttrCoreLastModifiedBy);
-  
+
   FetchAttributeFromCoreXml(kTagNameCpLastPrinted, kAttrCoreLastPrinted);
   FetchAttributeFromCoreXml(kTagNameDcTermsModified, kAttrCoreModified);
   FetchAttributeFromCoreXml(kTagNameCpRevision, kAttrCoreRevision);

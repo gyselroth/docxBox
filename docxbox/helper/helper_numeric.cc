@@ -17,8 +17,9 @@ int Numeric::ExtractLeadingNumber(std::string str) {
   std::string number;
 
   for (uint16_t i = 0; i < str.length(); i++) {
-    if (isdigit(str[i])) number += str[i];
-    else break;
+    if (!isdigit(str[i])) break;
+
+    number += str[i];
   }
 
   return number.empty() ? 0 : std::stoi(number);

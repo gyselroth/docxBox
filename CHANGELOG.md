@@ -3,6 +3,7 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
+* Log execution startup w/ arguments, errors, and return signal
 * Notify/log more manipulation details
 * Add option to disable all notifications and logging
 * Improve recognition and edge case handling of arguments and options  

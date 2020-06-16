@@ -143,7 +143,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    return docxbox::AppLog::Error(message);
+    return docxbox::AppLog::NotifyError(message);
   }
 
   if (!IsZipArchive(path_docx_in_)) return false;
@@ -161,11 +161,12 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
   docx_file.extractall(path_working_directory_ + "/" + path_extract_);
 
   if (ensure_is_docx && !IsUnzippedDocx())
-    return docxbox::AppLog::Error(path_docx_in_ + " is not a DOCX document");
+    return docxbox::AppLog::NotifyError(
+        path_docx_in_ + " is not a DOCX document");
 
-  docxbox::AppLog::Info(
+  docxbox::AppLog::NotifyInfo(
       "Unzipped DOCX: " + path_docx_in_
-      + " to: " + path_working_directory_ + "/" + path_extract_);
+          + " to: " + path_working_directory_ + "/" + path_extract_);
 
   return format_xml_files
          ? miniz_cpp_ext::IndentXmlFiles(path_extract_, file_list)
@@ -180,7 +181,7 @@ bool docx_archive::IsZipArchive(const std::string& path_file) {
       helper::File::GetFileContents(path_file).c_str(),
       "PK\003\004\024")
          ? true
-         : docxbox::AppLog::Error("File is no ZIP archive: " + path_file);
+         : docxbox::AppLog::NotifyError("File is no ZIP archive: " + path_file);
 }
 
 // Check formal structure of DOCX archive - mandatory files given?
@@ -211,15 +212,16 @@ bool docx_archive::UnzipMedia() {
 bool docx_archive::CreateDocxFromExtract(
     const std::string &path_docx_out, bool overwrite_source_docx) {
   if (!Zip(false, path_extract_, path_docx_out + "tmp"))
-    return docxbox::AppLog::Error("DOCX creation failed.");
+    return docxbox::AppLog::NotifyError("DOCX creation failed.");
 
   if (overwrite_source_docx) helper::File::Remove(path_docx_in_.c_str());
 
   return 0 == std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str())
-         ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
-         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
+         ? docxbox::AppLog::NotifyInfo("Saved DOCX: " + path_docx_out_)
+         : docxbox::AppLog::NotifyError(
+          "Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 // Zip files into given path into DOCX of given filename
@@ -246,7 +248,7 @@ bool docx_archive::Zip(
         helper::File::ResolvePath(path_working_directory_, argv_[3], false);
   } else {
     if (!helper::File::IsDirectory(path_directory))
-      return docxbox::AppLog::Error("Not a directory: " + path_directory);
+      return docxbox::AppLog::NotifyError("Not a directory: " + path_directory);
   }
 
   if (path_docx_result.empty() && !path_docx_in_.empty())
@@ -353,7 +355,7 @@ bool docx_archive::Batch() {
            false)) {
     delete batch;
 
-    return docxbox::AppLog::Error("DOCX creation failed.");
+    return docxbox::AppLog::NotifyError("DOCX creation failed.");
   }
 
   delete batch;
@@ -363,8 +365,9 @@ bool docx_archive::Batch() {
   return 0 == std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
       path_docx_out.c_str())
-         ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
-         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
+         ? docxbox::AppLog::NotifyInfo("Saved DOCX: " + path_docx_out_)
+         : docxbox::AppLog::NotifyError(
+          "Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 bool docx_archive::CatFile() {
@@ -378,7 +381,7 @@ bool docx_archive::CatFile() {
   std::string path_file_relative = argv_[3];
 
   if (path_file_relative.empty())
-    return docxbox::AppLog::Error(
+    return docxbox::AppLog::NotifyError(
         "Invalid file path: " + path_file_relative);
 
   if (path_file_relative[0] == '/')
@@ -388,7 +391,7 @@ bool docx_archive::CatFile() {
 
   if (!helper::File::FileExists(path_file))
     return
-        docxbox::AppLog::Error(std::string("File not found: ") + argv_[3]);
+        docxbox::AppLog::NotifyError(std::string("File not found: ") + argv_[3]);
 
   std::cout << helper::File::GetFileContents(path_file) << "\n";
 
@@ -417,7 +420,7 @@ bool docx_archive::ViewFilesDiff() {
 
   if (!helper::File::FileExists(path_extract_left + "/" + file)
       || !helper::File::FileExists(path_extract_right + "/" + file))
-    return docxbox::AppLog::Error(
+    return docxbox::AppLog::NotifyError(
         "File not given in both DOCX archives: " + file);
 
   if (argc_ > 5
@@ -441,7 +444,7 @@ bool docx_archive::ModifyMeta() {
           && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName()))) {
     delete meta_component;
 
-    return docxbox::AppLog::Error(
+    return docxbox::AppLog::NotifyError(
         "Initialization for meta modification failed.");
   }
 
@@ -453,7 +456,7 @@ bool docx_archive::ModifyMeta() {
   if (!meta_component->UpsertAttribute()) {
     delete meta_component;
 
-    return docxbox::AppLog::Error("Update/Insert meta attribute failed.");
+    return docxbox::AppLog::NotifyError("Update/Insert meta attribute failed.");
   }
 
   // Modifiable meta attributes are in docProps/app.xml or docProps/core.xml
@@ -500,7 +503,7 @@ bool docx_archive::ModifyMeta() {
              attribute != meta::Attr_Core_Created)) {
       delete meta_component;
 
-      return docxbox::AppLog::Error("DOCX creation failed.");
+      return docxbox::AppLog::NotifyError("DOCX creation failed.");
     }
   /*}*/
 
@@ -512,8 +515,9 @@ bool docx_archive::ModifyMeta() {
   return 0 == std::rename(
       std::string(path_docx_out_).append("tmp").c_str(),
       path_docx_out_.c_str())
-         ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
-         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
+         ? docxbox::AppLog::NotifyInfo("Saved DOCX: " + path_docx_out_)
+         : docxbox::AppLog::NotifyError(
+          "Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 // Update given meta date attribute and immediately save updated core.xml
@@ -531,7 +535,7 @@ bool docx_archive::UpdateCoreXmlDate(
     meta_component->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
   } else {
     if (!helper::DateTime::IsIso8601Date(value))
-      return docxbox::AppLog::Error(
+      return docxbox::AppLog::NotifyError(
           "Invalid date (must be ISO 8601): " + value);
 
     meta_component->SetValue(value);
