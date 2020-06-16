@@ -61,7 +61,7 @@ bool docx_xml_field::SetFieldText(
 
   return has_xml_changed_
              && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
-         ? docxbox::AppLog::Error("Failed saving: " + path_xml)
+         ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
          : true;
 }
 

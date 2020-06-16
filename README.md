@@ -249,6 +249,9 @@ w/ different attributes or (identical attributes but) different content.
 
 ````docxbox ls foo_v1.docx foo_v2.docx````  
 
+**Note** Comparisons are always output as plaintext, JSON output is not supported. 
+
+
 ![Compare two documents](https://raw.githubusercontent.com/gyselroth/docxbox/master/screenshots/docxbox-docx-ls-compare.png)
 
 #### Compare specific file from two DOCX archives

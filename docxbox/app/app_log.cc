@@ -65,49 +65,108 @@ void AppLog::DeleteInstance() {
   delete m_pThis_;
 }
 
-bool AppLog::Error(const std::string& message) {
-  AppLog *kInstance = GetInstance();
+// Store given message for later output to stdout / logout
+void AppLog::Notify(const std::string& message, const std::string& type) {
+  if (mode_ == LogTo_None) return;
 
-  if (kInstance->mode_ != LogTo_None)
-    kInstance->messages_.push_back("docxBox Error - " + message);
+  if (mode_ == LogTo_File || mode_ == LogTo_FileAndStdOut) PushBackTime();
+
+  messages_.push_back("docxBox " + type + " - " + message);
+}
+
+// Store given error message for later output to stdout / logout
+bool AppLog::NotifyError(const std::string& message) {
+  GetInstance()->Notify(message, "Error");
 
   return false;
 }
 
-bool AppLog::Info(const std::string& message) {
+// Store given informational message for later output to stdout / logout
+bool AppLog::NotifyInfo(const std::string& message, bool file_only) {
   AppLog *kInstance = GetInstance();
 
-  if (kInstance->mode_ != LogTo_None)
-    kInstance->messages_.push_back("docxBox Info - " + message);
+  kInstance->Notify(message, "Info ");
+  
+  kInstance->file_only_messages_.push_back(file_only);
 
   return true;
+}
+
+// Log docxBox execution arguments to log file
+void AppLog::LogStartUp(int argc, char *const *argv) {
+  std::string arg_values;
+
+  for (int index = 0; index < argc; ++index) {
+    arg_values += argv[index];
+    arg_values += " ";
+  }
+
+  NotifyInfo("docxBox executing w/ arguments: " + arg_values, true);
+}
+
+// Remember current dateTime (notification occurred)
+void AppLog::PushBackTime() {
+  timestamps_.push_back(
+      helper::DateTime::GetCurrentDateTimeFormatted(kFormatDateTimeLog));
 }
 
 void AppLog::Output(bool delete_instance) {
   auto kInstance = GetInstance();
 
   if (kInstance->mode_ != LogTo_None) {
-    std::string prev_message;
-    std::string out;
-
-    for (auto &message : kInstance->messages_) {
-      if (message == prev_message) continue;
-
-      out += message + "\n";
-
-      prev_message = message;
-    }
-
     if (kInstance->mode_ == LogMode::LogTo_StdOut
-        || kInstance->mode_ == LogMode::LogTo_FileAndStdOut) std::cout << out;
+        || kInstance->mode_ == LogMode::LogTo_FileAndStdOut)
+      kInstance->OutputToStdOut();
 
     if (kInstance->mode_ == LogMode::LogTo_FileAndStdOut
-        || kInstance->mode_ == LogMode::LogTo_File) {
-      helper::File::AppendToFile(kInstance->path_log_file_, out);
-    }
+        || kInstance->mode_ == LogMode::LogTo_File)
+      kInstance->OutputToLogFile();
   }
 
   if (delete_instance) DeleteInstance();
+}
+
+void AppLog::OutputToStdOut() {
+  std::string prev_message;
+
+  int index = -1;
+
+  for (auto &message : messages_) {
+    ++index;
+
+    if (message == prev_message
+        || file_only_messages_.at(index)) continue;
+
+    std::cout << message + "\n";
+
+    prev_message = message;
+  }
+}
+
+void AppLog::OutputToLogFile() {
+  std::string out;
+  std::string prev_message;
+
+  int index = -1;
+
+  for (auto &message : messages_) {
+    ++index;
+
+    if (message == prev_message) continue;
+
+    out += timestamps_.at(index) + " - " + message.substr(8) + "\n";
+
+    prev_message = message;
+  }
+
+  helper::File::AppendToFile(path_log_file_, out);
+}
+
+bool AppLog::IsSilent() {
+  AppLog *kInstance = GetInstance();
+
+  return kInstance->mode_ != LogTo_StdOut
+      && kInstance->mode_ != LogTo_FileAndStdOut;
 }
 
 }  // namespace docxbox

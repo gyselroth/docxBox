@@ -71,7 +71,7 @@ bool docx_renderer_table::InitFromJson() {
 
   return amount_columns_ == 0
              || amount_rows_ == 0
-         ? docxbox::AppLog::Error(
+         ? docxbox::AppLog::NotifyError(
           "Invalid table config: must contain column(s) / row(s)")
          : true;
 }

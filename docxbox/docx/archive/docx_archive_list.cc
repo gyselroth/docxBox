@@ -15,16 +15,19 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
   try {
     InitPathDocxByArgV(3);
   } catch (std::string &message) {
-    return docxbox::AppLog::Error(message);
+    return docxbox::AppLog::NotifyError(message);
   }
 
   if (!IsZipArchive(path_docx_in_)) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
-  bool has_second_docx = argc_ >= 4
+  bool has_second_docx =
+      argc_ >= 4
       && helper::String::EndsWithCaseInsensitive(argv_[3], ".docx")
       && helper::File::FileExists(argv_[3]);
+
+  if (has_second_docx && as_json) as_json = false;
 
   std::string file_pattern = has_second_docx ? "" : ParseFileWildcard(3);
 
