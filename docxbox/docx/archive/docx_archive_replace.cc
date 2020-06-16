@@ -55,6 +55,9 @@ bool docx_archive_replace::ReplaceImage() {
           "Cannot replace " + image_original
               + " - no such image within " + path_docx_in_);
 
+    docxbox::AppLog::NotifyInfo(
+        "Replaced " + image_original + " in " + path_docx_in_, true);
+
     bool overwrite_source_docx;
 
     // Create resulting DOCX from files during non-batch mode
@@ -85,7 +88,7 @@ bool docx_archive_replace::ReplaceImage() {
     return docxbox::AppLog::NotifyError(message);
   }
 
-  return true;
+  return docxbox::AppLog::NotifyInfo("Saved DOCX: " + path_docx_out_);
 }
 
 bool docx_archive_replace::ReplaceText() {
