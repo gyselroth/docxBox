@@ -93,7 +93,7 @@ class miniz_cpp_ext {
       miniz_cpp::zip_file &docx_file,
       bool as_json = false,
       bool images_only = false,
-      const std::string& filter_ending = "",
+      const std::string& filter_pattern = "",
       const std::vector<std::string>& filter_filenames = {},
       bool output_directories = false,
       bool files_only = false) {
@@ -114,7 +114,7 @@ class miniz_cpp_ext {
     std::vector<std::string> dates;
     std::vector<std::string> times;
 
-    auto filter_by_ending = !filter_ending.empty();
+    auto filter_by_regex = !filter_pattern.empty();
     auto filter_by_filenames = !filter_filenames.empty();
 
     for (auto &member : docx_file.infolist()) {
@@ -127,8 +127,8 @@ class miniz_cpp_ext {
       } else {
         if ((images_only
              && !helper::File::IsWordCompatibleImage(member.filename))
-            || (filter_by_ending
-                && !helper::String::EndsWith(member.filename, filter_ending)))
+            || (filter_by_regex
+                && !helper::String::Matches(member.filename, filter_pattern)))
           continue;
       }
 

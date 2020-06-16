@@ -8,7 +8,7 @@ docx_archive::docx_archive(int argc, char **argv, bool is_batch_mode = false) {
   argv_ = argv;
   is_batch_mode_ = is_batch_mode;
 
-  path_working_directory_ = getenv("PWD");
+  path_working_directory_ = std::getenv("PWD");
 }
 
 docx_archive::~docx_archive() {
@@ -85,13 +85,15 @@ void docx_archive::RememberTemporaryExtractionPath(const std::string& path) {
   paths_temporary_.push_back(path);
 }
 
-// TODO(kay): handle more variations of wildcards, not only file-ending
+// Detect globbing wildcard and convert to regular expression if any
 std::string docx_archive::ParseFileWildcard(int index_argument) const {
-  return argc_ >= index_argument + 1
-             && argv_[3][0] == '*'
-             && argv_[3][1] == '.'
-         ? std::string(argv_[3]).substr(2)
-         : "";
+  if (argc_ < index_argument + 1) return "";
+
+  std::string glob_pattern = argv_[index_argument];
+
+  helper::File::GlobPatternToRegEx(glob_pattern);
+
+  return glob_pattern;
 }
 
 void docx_archive::RemoveTemporaryFiles() {
@@ -156,9 +158,12 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
   docx_file.extractall(path_working_directory_ + "/" + path_extract_);
 
-  if (ensure_is_docx && IsUnzippedDocx())
-    // TODO(kay): check above condition, seems inverted
+  if (ensure_is_docx && !IsUnzippedDocx())
     return docxbox::AppLog::Error(path_docx_in_ + " is not a DOCX document");
+
+  docxbox::AppLog::Info(
+      "Unzipped DOCX: " + path_docx_in_
+      + " to: " + path_working_directory_ + "/" + path_extract_);
 
   return format_xml_files
          ? miniz_cpp_ext::IndentXmlFiles(path_extract_, file_list)
@@ -209,9 +214,11 @@ bool docx_archive::CreateDocxFromExtract(
 
   if (overwrite_source_docx) helper::File::Remove(path_docx_in_.c_str());
 
-  return 0 == rename(
+  return 0 == std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
+      path_docx_out.c_str())
+         ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
+         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 // Zip files into given path into DOCX of given filename
@@ -311,10 +318,6 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
 
   helper::Cli::Execute(command.c_str());
 
-// TODO(kay): TBD - implement optional wait for keypress
-//  std::cout << "\nHit [Enter] when done.";
-//  getchar();
-
   Zip(true, path_extract_, "", true, true);
 
   std::cout << "\n";
@@ -358,7 +361,9 @@ bool docx_archive::Batch() {
 
   return 0 == std::rename(
       std::string(path_docx_out).append("tmp").c_str(),
-      path_docx_out.c_str());
+      path_docx_out.c_str())
+         ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
+         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 bool docx_archive::CatFile() {
@@ -419,10 +424,6 @@ bool docx_archive::ViewFilesDiff() {
     docx_diff::OutputUnified(path_extract_left, path_extract_right, file);
   else
     docx_diff::OutputSideBySide(path_extract_left, path_extract_right, file);
-
-// TODO(kay): TBD - implement optional wait for keypress
-//  std::cout << "\nHit [Enter] when done.";
-//  getchar();
 
   std::cout << "\n";
 
@@ -509,7 +510,9 @@ bool docx_archive::ModifyMeta() {
 
   return 0 == std::rename(
       std::string(path_docx_out_).append("tmp").c_str(),
-      path_docx_out_.c_str());
+      path_docx_out_.c_str())
+         ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
+         : docxbox::AppLog::Error("Failed rename temporary DOCX to: " + path_docx_out_);
 }
 
 // Update given meta date attribute and immediately save updated core.xml

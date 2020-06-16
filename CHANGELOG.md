@@ -1,8 +1,16 @@
 docxBox Changelog
 =================
 
-V0.0.5 - Not finished yet
+V1.0.0 - Not finished yet
 -------------------------
+* Notify/log more manipulation details
+* Add option to disable all notifications and logging
+
+V0.0.5 - 2020-06-15
+-------------------
+* Enable globbing wildcards in ``ls``
+* Add optional logging to file
+* Add configuration options via environment variables
 * Prevent identical message from being logged/output immediately repeatedly
 * Add batch sequence processing
 * Colorize side-by-side DOCX comparison (ls) to indicate additions/removals

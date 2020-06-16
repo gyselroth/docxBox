@@ -387,5 +387,8 @@ bool docx_archive_replace::SetFieldValue() {
   if (!Zip(false, path_extract_, path_docx_out_tmp))
     return docxbox::AppLog::Error("DOCX creation failed.");
 
-  return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out_.c_str());
+  return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out_.c_str())
+         ? docxbox::AppLog::Info("Saved DOCX: " + path_docx_out_)
+         : docxbox::AppLog::Error(
+          "Failed rename temporary DOCX to: " + path_docx_out_);
 }

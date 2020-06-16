@@ -50,7 +50,7 @@ class docx_archive_list : public docx_archive {
   // Output two DOCX file lists side-by-side
   void ListFilesInDocxCompare(bool as_json,
                               bool images_only,
-                              const std::string &file_ending,
+                              const std::string &file_pattern,
                               std::string *file_list_1,
                               std::string *summary_1);
 };
