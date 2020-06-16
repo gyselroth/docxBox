@@ -218,7 +218,7 @@ fi
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
 printf "\nDone. Bats tests ran for $ELAPSED_TIME seconds.\n\n"
 
-if [ ${IS_ERROR}=true ];
+if $IS_ERROR;
 then
     printf "\n${AMOUNT_ERRORS} error(s) while executing tests\n\n"
 fi
