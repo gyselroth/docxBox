@@ -22,14 +22,13 @@ base_command="docxbox txt filename.docx"
 
 appendix="is the segmented plain text from given file"
 @test "Output of \"${base_command} -s \" ${appendix}" {
-  "${docxbox}" txt "${path_docx}" -s | wc --lines | grep --count "581"
-  "${docxbox}" txt "${path_docx}" | wc --lines | grep --count "26"
+  "${docxbox}" txt "${path_docx}" -s | wc --lines | grep --count "582"
+  "${docxbox}" txt "${path_docx}" | wc --lines | grep --count "27"
 }
 
-appendix="is the segmented plain text from given file"
 @test "Output of \"${base_command} --segments \" ${appendix}" {
-  "${docxbox}" txt "${path_docx}" --segments | wc --lines | grep --count "581"
-  "${docxbox}" txt "${path_docx}" | wc --lines | grep --count "26"
+  "${docxbox}" txt "${path_docx}" --segments | wc --lines | grep --count "582"
+  "${docxbox}" txt "${path_docx}" | wc --lines | grep --count "27"
 }
 
 @test "Output of \"docxbox txt nonexistent.docx\" is an error message" {

@@ -161,7 +161,7 @@ image_replacement="the given string is replaced by an image"
 }
 
 @test "With \"${base_command} table_as_JSON\" the given string is replaced by a table" {
-  header="\"header\":[\"A\",\"B\",\"C\"]"
+  header="\"header\":[\"header_one\",\"B\",\"C\"]"
   first_column="[\"a1\",\"a2\",\"a3\"]"
   second_column="[\"b1\",\"b2\",\"b3\"]"
   third_column="[\"c1\",\"c2\",\"c3\"]"
@@ -174,6 +174,8 @@ image_replacement="the given string is replaced by an image"
 
   run "${docxbox}" rpt "${path_docx}" Officia ${table}
   [ "$status" -eq 0 ]
+
+  grep --count "header_one" "${path_docx}"
 
   "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count "${pattern}"
   "${docxbox}" lsl "${path_docx}" "<w:tbl>" | grep --count "${display_file}"
