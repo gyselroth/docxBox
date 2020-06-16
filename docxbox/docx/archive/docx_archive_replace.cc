@@ -272,6 +272,11 @@ bool docx_archive_replace::RemoveBetweenText() {
       return docxbox::AppLog::NotifyError(
           "Error: Failed to remove content from: " + file_in_zip.filename);
     }
+
+    docxbox::AppLog::NotifyInfo(
+        std::to_string(parser->GetAmountRemoved())
+        + " removal(s) done in: " + file_in_zip.filename,
+        true);
   }
 
   delete parser;
