@@ -2,7 +2,6 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/app/app.h>
-#include <docxbox/helper/helper_dateTime.h>
 
 /**
  * @param argc Amount of arguments

@@ -390,7 +390,7 @@ void meta::LoadCoreXml(const std::string& path) {
 
 bool meta::SaveAppXml() {
   return helper::File::WriteToNewFile(path_app_xml_, app_xml_)
-         ? true
+         ? docxbox::AppLog::NotifyInfo("Saved modified docProps/app.xml", true)
          : docxbox::AppLog::NotifyError(
           "Failed saving app.xml: " + path_app_xml_);
 }
@@ -405,7 +405,7 @@ bool meta::SaveXml() {
 
 bool meta::SaveCoreXml() {
   return helper::File::WriteToNewFile(path_core_xml_, core_xml_)
-    ? true
+    ? docxbox::AppLog::NotifyInfo("Saved modified docProps/core.xml", true)
     : docxbox::AppLog::NotifyError("Failed saving core.xml: " + path_core_xml_);
 }
 

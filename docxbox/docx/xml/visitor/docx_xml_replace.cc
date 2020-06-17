@@ -21,6 +21,10 @@ void docx_xml_replace::SetHyperlinkRelationshipId(
   hyperlink_relationship_id_ = relationship_id;
 }
 
+int docx_xml_replace::GetAmountReplaced() {
+  return amount_replaced_;
+}
+
 // Replace given search string by replacement, which can be:
 // 1. A regular string: will replace the given string
 // 2. A string containing JSON: will be interpreted for rendering word markup,
@@ -59,7 +63,8 @@ bool docx_xml_replace::ReplaceInXml(
     const std::string &kMarkup = RenderMarkupFromJson(replacement);
 
     if (kMarkup.empty())
-      return docxbox::AppLog::NotifyError("Failed render markup from given JSON");
+      return docxbox::AppLog::NotifyError(
+          "Failed render markup from given JSON");
 
     // Insert temporarily before body, will later be moved into correct place
     // TODO(kay): use resp. different root element instead of w:body,

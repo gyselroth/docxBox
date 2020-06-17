@@ -55,6 +55,9 @@ bool docx_archive_replace::ReplaceImage() {
           "Cannot replace " + image_original
               + " - no such image within " + path_docx_in_);
 
+    docxbox::AppLog::NotifyInfo(
+        "Replaced " + image_original + " in " + path_docx_in_, true);
+
     bool overwrite_source_docx;
 
     // Create resulting DOCX from files during non-batch mode
@@ -85,7 +88,7 @@ bool docx_archive_replace::ReplaceImage() {
     return docxbox::AppLog::NotifyError(message);
   }
 
-  return true;
+  return docxbox::AppLog::NotifyInfo("Saved DOCX: " + path_docx_out_);
 }
 
 bool docx_archive_replace::ReplaceText() {
@@ -146,6 +149,11 @@ bool docx_archive_replace::ReplaceText() {
     if (!parser->ReplaceInXml(path_file_absolute, search, replacement))
       return docxbox::AppLog::NotifyError(
           "Failed replace string in: " + file_in_zip.filename);
+
+    docxbox::AppLog::NotifyInfo(
+        std::to_string(parser->GetAmountReplaced())
+        + " replacement(s) done in: " + file_in_zip.filename,
+        true);
   }
 
   delete parser;
@@ -267,6 +275,11 @@ bool docx_archive_replace::RemoveBetweenText() {
       return docxbox::AppLog::NotifyError(
           "Error: Failed to remove content from: " + file_in_zip.filename);
     }
+
+    docxbox::AppLog::NotifyInfo(
+        std::to_string(parser->GetAmountRemoved())
+        + " removal(s) done in: " + file_in_zip.filename,
+        true);
   }
 
   delete parser;

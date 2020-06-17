@@ -323,7 +323,7 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
 
   Zip(true, path_extract_, "", true, true);
 
-  std::cout << "\n";
+  if (!docxbox::AppLog::IsSilent()) std::cout << "\n";
 
   return true;
 }
@@ -390,8 +390,8 @@ bool docx_archive::CatFile() {
   std::string path_file = path_extract_ + "/" + path_file_relative;
 
   if (!helper::File::FileExists(path_file))
-    return
-        docxbox::AppLog::NotifyError(std::string("File not found: ") + argv_[3]);
+    return docxbox::AppLog::NotifyError(
+        std::string("File not found: ") + argv_[3]);
 
   std::cout << helper::File::GetFileContents(path_file) << "\n";
 
@@ -489,7 +489,7 @@ bool docx_archive::ModifyMeta() {
              false,
              date,
              date)) {
-      std::cerr << "DOCX creation failed.\n";
+      docxbox::AppLog::NotifyError("DOCX creation failed.");
 
       delete meta;
 

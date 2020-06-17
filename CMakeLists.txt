@@ -5,9 +5,9 @@ project(docxbox)
 
 include_directories(${CMAKE_SOURCE_DIR})
 
-set (VERSION_MAJOR "0")
+set (VERSION_MAJOR "1")
 set (VERSION_MINOR "0")
-set (VERSION_PATCH "5")
+set (VERSION_PATCH "0")
 
 # configure config.h to be generated from config.h.in,
 # with injected version number
@@ -25,9 +25,8 @@ add_executable(docxbox
         docxbox/app/app.cc
         docxbox/app/app_argument.cc
         docxbox/app/app_command.cc
-        docxbox/app/app_log.cc
         docxbox/app/app_help.cc
-        docxbox/app/app_help.h
+        docxbox/app/app_log.cc
 
         docxbox/docx/docx_batch.cc
         docxbox/docx/docx_diff.cc

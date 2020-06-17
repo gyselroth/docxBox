@@ -74,7 +74,7 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_ZipCompressed:return PrintHelpOnZip(false);
     case AppCommands::Command_Invalid:
       if (!command_identifier.empty()) {
-        std::cerr << "Unknown command: " << command_identifier << ".\n\n";
+        docxbox::AppLog::NotifyError("Unknown command: " + command_identifier);
 
         with_title = true;
       }
