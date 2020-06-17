@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 base_command="docxbox lorem filename.docx"
 
 @test "Exit code of \"${base_command}\" is zero" {

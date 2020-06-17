@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 
 unzipped_folder="cp_bio_assay.docx-extracted"
 

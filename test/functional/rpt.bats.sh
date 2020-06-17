@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 error="is an error message"
 display_file="word/document.xml"

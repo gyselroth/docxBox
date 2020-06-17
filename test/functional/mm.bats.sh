@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 path_docx="test/functional/tmp/cp_bio_assay.docx"
 
 base_command="docxbox mm filename.docx"
