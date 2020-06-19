@@ -40,7 +40,8 @@ class docx_renderer_table: public docx_renderer {
 
   std::string RenderTableProperties();
   std::string RenderTableGrid();
-  std::string RenderTableCell(int index_cell);
+  std::string RenderTableHeader();
+  std::string RenderTableCell(int index_cell, bool is_header = false);
   std::string RenderTableRowsAndCells();
 };
 

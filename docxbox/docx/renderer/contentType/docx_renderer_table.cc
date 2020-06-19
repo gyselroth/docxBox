@@ -87,7 +87,7 @@ std::string docx_renderer_table::Render() {
   wml_ += std::string(kWTableLhs);
   wml_ += RenderTableProperties();
   wml_ += RenderTableGrid();
-  // TODO(kay): add rendering of header
+  wml_ += RenderTableHeader();
   wml_ += RenderTableRowsAndCells();
   wml_ += std::string(kWTableRhs);
 
@@ -116,6 +116,14 @@ std::string docx_renderer_table::RenderTableGrid() {
   return markup + "</w:tblGrid>";
 }
 
+std::string docx_renderer_table::RenderTableHeader() {
+  std::string markup = "<w:tblHeader><w:tr>";
+
+  for (int i = 0; i < amount_columns_; i++) markup += RenderTableCell(i, true);
+
+  return markup + "</w:tr></w:tblHeader>";
+}
+
 std::string docx_renderer_table::RenderTableRowsAndCells() {
   std::string markup;
 
@@ -136,12 +144,14 @@ std::string docx_renderer_table::RenderTableRowsAndCells() {
   return markup;
 }
 
-std::string docx_renderer_table::RenderTableCell(int index_cell) {
+std::string docx_renderer_table::RenderTableCell(
+    int index_cell, bool is_header) {
   return
       "<w:tc>"
         "<w:tcPr>"
           "<w:tcW w:w=\"" + std::to_string(col_width_) + "\" w:type=\"dxa\"/>"
         "</w:tcPr>"
-        + RenderTextInRunInParagraph(cell_content_[index_cell])
-    + "</w:tc>";
+        + RenderTextInRunInParagraph(is_header
+            ? column_headers_[index_cell]
+            : cell_content_[index_cell]) + "</w:tc>";
 }
