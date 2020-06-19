@@ -63,8 +63,8 @@ search_values=(
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
-  "${docxbox}" lsj "${path_docx}" | grep --count "5/25/2020"
-  "${docxbox}" lsj "${path_docx}" | grep --count "16:32"
+  "${docxbox}" lsj "${path_docx}" | grep --count "6/18/2020"
+  "${docxbox}" lsj "${path_docx}" | grep --count "10:30"
 }
 
 @test "Output of \"docxbox lsj {missing argument}\" is an error message" {
