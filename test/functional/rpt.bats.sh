@@ -100,19 +100,18 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   "${docxbox}" lsl "${path_docx}" "w:numPr" | grep --count "${display_file}"
 }
 
-# ordered list can not be inserted atm, so no assertions can be made
-#@test "With \"${base_command} ol_as_JSON\" the given string is replaced by a ordered list" {
-#  list="{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
-#  path_docx="test/functional/tmp/cp_bio_assay.docx"
-#
-#  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "<w:numId w:val=\"2\"/>"
-#
-#  run "${docxbox}" rpt "${path_docx}" 5NISINisi ${list}
-#  [ "$status" -eq 0 ]
-#
-#  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count "<w:numId w:val=\"2\"/>"
-#  "${docxbox}" lsl "${path_docx}" "w:numPr" | grep --count "${display_file}"
-#}
+@test "With \"${base_command} ol_as_JSON\" the given string is replaced by a ordered list" {
+  list="{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
+  path_docx="test/functional/tmp/cp_bio_assay.docx"
+
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "<w:numId w:val=\"2\"/>"
+
+  run "${docxbox}" rpt "${path_docx}" 5NISINisi ${list}
+  [ "$status" -eq 0 ]
+
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count "<w:numId w:val=\"2\"/>"
+  "${docxbox}" lsl "${path_docx}" "w:numPr" | grep --count -q "${display_file}"
+}
 
 @test "With \"${base_command} hyperlink_as_JSON\" the given string is replaced by a hyperlink" {
   url="\"url\":\"https://github.com/gyselroth/docxbox\""
@@ -130,7 +129,7 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
 image_replacement="the given string is replaced by an image"
 @test "With \"${base_command} image_as_JSON\" ${image_replacement} using EMU" {
   image="{\"image\":{\"size\":[2438400,1828800]}}"
-  image_path="test/files/images/2100x400.jpeg"
+  image_path="test/assets/images/2100x400.jpeg"
 
   "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "<w:drawing>"
   "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "</w:drawing>"
@@ -146,7 +145,7 @@ image_replacement="the given string is replaced by an image"
 
 @test "With \"${base_command} image_as_JSON\" ${image_replacement} using pixels" {
   image="{\"image\":{\"size\":[\"2100px\",\"400px\"]}}"
-  image_path="test/files/images/2100x400.jpeg"
+  image_path="test/assets/images/2100x400.jpeg"
 
   "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "<w:drawing>"
   "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "</w:drawing>"
@@ -175,7 +174,8 @@ image_replacement="the given string is replaced by an image"
   run "${docxbox}" rpt "${path_docx}" Officia ${table}
   [ "$status" -eq 0 ]
 
-  grep --count "header_one" "${path_docx}"
+  "${docxbox}" lsl "${path_docx}" "header_one" | grep --count -q "${display_file}"
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count -q "header_one"
 
   "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count "${pattern}"
   "${docxbox}" lsl "${path_docx}" "<w:tbl>" | grep --count "${display_file}"
