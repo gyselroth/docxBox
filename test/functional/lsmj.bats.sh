@@ -12,7 +12,7 @@ base_command="docxbox lsmj filename.docx"
 
 description="contains information about the creation time and date"
 
-pattern="\"created\": \"2020-05-25T16:32:27Z\""
+pattern="\"created\": \"2020-06-18T10:30:11Z\""
 
 @test "Exit code of \"${base_command}\" is zero" {
   run "${docxbox}" lsmj "${path_docx}"

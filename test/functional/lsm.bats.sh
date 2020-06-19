@@ -30,7 +30,7 @@ base_command="docxbox lsm filename.docx"
 title="Output of \"${base_command}\" "
 title+="contains information about the creation time and date"
 @test "${title}" {
-  created="created: 2020-05-25T16:32:27Z"
+  created="created: 2020-06-18T10:30:11Z"
 
   "${docxbox}" lsm "${path_docx}" | grep --count "${created}"
 }
