@@ -26,7 +26,9 @@ class App {
   static const std::string kAppExecutableName;
 
   // Constructor: init (resolve) command and arguments
-  App(int argc, char **argv, bool is_batch_mode = false);
+  App(int argc,
+      const std::vector<std::string>& argv,
+      bool is_batch_mode = false);
 
   void SetPathDocxIn(const std::string &path_docx_in);
   void SetPathDocxOut(const std::string &path_docx_out);
@@ -39,7 +41,7 @@ class App {
 
  private:
   int argc_;
-  char **argv_;
+  std::vector<std::string> argv_;
 
   bool is_batch_mode_ = false;
 

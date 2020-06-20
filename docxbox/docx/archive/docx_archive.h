@@ -31,12 +31,12 @@
 
 class docx_archive {
  public:
-  docx_archive(int argc, char **argv, bool is_batch_mode);
+  docx_archive(int argc, const std::vector<std::string>& argv, bool is_batch_mode);
 
   virtual ~docx_archive();
 
-  char* GetArgValue(int index);
-  char* GetLastArgValue();
+  std::string GetArgValue(int index);
+  std::string GetLastArgValue();
 
   std::string UnzipDocx(
       const std::string &path_docx,
@@ -96,7 +96,7 @@ class docx_archive {
 
  protected:
   int argc_;
-  char **argv_;
+  std::vector<std::string> argv_;
 
   // When true:
   // -Ignore non-manipulation commands

@@ -22,7 +22,7 @@ docx_compare::docx_compare(
     gap_ = helper::String::Repeat(" ", amount_spaces_gap_);
 
   if (compare_content_) {
-    auto *archive = new docx_archive(0, nullptr, false);
+    auto *archive = new docx_archive(0, {}, false);
 
     path_extract_left_ = archive->UnzipDocx(path_docx_1_, "", "cmp_left_");
     path_extract_right_ = archive->UnzipDocx(path_docx_2_, "", "cmp_right_");

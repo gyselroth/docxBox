@@ -6,7 +6,7 @@
 
 docx_archive_replace::docx_archive_replace(
     int argc,
-    char **argv,
+    const std::vector<std::string>& argv,
     bool is_batch_mode) : docx_archive(argc, argv, is_batch_mode) {}
 
 bool docx_archive_replace::ReplaceImage() {

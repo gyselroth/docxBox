@@ -50,7 +50,7 @@ class AppHelp {
 
   static bool PrintOverview(bool with_title);
 
-  static void PrintUnknownArgumentMessage(const char *arg);
+  static void PrintUnknownArgumentMessage(const std::string& arg);
 };
 
 }  // namespace docxbox

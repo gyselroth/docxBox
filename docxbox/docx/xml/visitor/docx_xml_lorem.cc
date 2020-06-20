@@ -3,9 +3,9 @@
 
 #include <docxbox/docx/xml/visitor/docx_xml_lorem.h>
 
-docx_xml_lorem::docx_xml_lorem(int argc, char **argv) : docx_xml(
-    argc,
-    argv) {
+docx_xml_lorem::docx_xml_lorem(
+    int argc,
+    const std::vector<std::string>& argv) : docx_xml(argc, argv) {
   unsigned seed = time(nullptr);
   srand(seed);
 }

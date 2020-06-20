@@ -102,13 +102,10 @@ bool AppLog::NotifyInfo(const std::string& message, bool file_only) {
 }
 
 // Log docxBox execution arguments to log file
-void AppLog::LogStartUp(int argc, char *const *argv) {
+void AppLog::LogStartUp(const std::vector<std::string>& arguments) {
   std::string arg_values;
 
-  for (int index = 0; index < argc; ++index) {
-    arg_values += argv[index];
-    arg_values += " ";
-  }
+  for (const auto& argument : arguments) arg_values += argument + " ";
 
   NotifyInfo("docxBox executing w/ arguments: " + arg_values, true);
 }

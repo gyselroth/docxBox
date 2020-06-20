@@ -3,7 +3,8 @@
 
 #include <docxbox/docx/xml/visitor/docx_xml_to_plaintext.h>
 
-docx_xml_to_plaintext::docx_xml_to_plaintext(int argc, char **argv) : docx_xml(
+docx_xml_to_plaintext::docx_xml_to_plaintext(
+    int argc, const std::vector<std::string>& argv) : docx_xml(
     argc, argv) {
 }
 

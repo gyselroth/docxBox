@@ -46,7 +46,7 @@ class AppLog {
   static bool NotifyInfo(const std::string &message, bool file_only = false);
 
   // Log docxBox execution arguments to log file
-  static void LogStartUp(int argc, char *const *argv);
+  static void LogStartUp(const std::vector<std::string>& arguments);
 
   static void Output(bool delete_instance = true);
   void OutputToStdOut();

@@ -4,7 +4,7 @@
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
 #include <docxbox/app/app_log.h>
 
-docx_xml_field::docx_xml_field(int argc, char **argv) : docx_xml(argc, argv) {
+docx_xml_field::docx_xml_field(int argc, const std::vector<std::string>& argv) : docx_xml(argc, argv) {
 }
 
 void docx_xml_field::CollectFields(const std::string& path_xml) {

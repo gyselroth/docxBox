@@ -3,7 +3,7 @@
 
 #include <docxbox/docx/component/meta.h>
 
-meta::meta(int argc, char **argv) {
+meta::meta(int argc, const std::vector<std::string>& argv) {
     argc_ = argc;
     argv_ = argv;
 }

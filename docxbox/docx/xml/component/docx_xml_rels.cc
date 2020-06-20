@@ -8,7 +8,9 @@
 #include <utility>
 
 docx_xml_rels::docx_xml_rels(
-    std::string path_extract, int argc, char **argv) : docx_xml(
+    std::string path_extract,
+    int argc,
+    const std::vector<std::string>& argv) : docx_xml(
     argc,
     argv) {
   path_xml_file_ = path_extract + "/word/_rels/document.xml.rels";

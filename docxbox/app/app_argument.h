@@ -15,13 +15,14 @@ namespace docxbox {
 
 class AppArgument {
  public:
-  AppArgument(int argc, char **argv);
+  AppArgument(int argc, const std::vector<std::string>& argv);
 
-  static std::string ResolvePathFromArgument(const std::string &pwd,
-                                             int argc,
-                                             char **argv,
-                                             int index_argument,
-                                             bool must_exist = true);
+  static std::string ResolvePathFromArgument(
+      const std::string &pwd,
+      int argc,
+      const std::vector<std::string> &argv,
+      int index_argument,
+      bool must_exist = true);
 
   static bool IsArgumentGiven(int argc,
                               int index,
@@ -43,13 +44,14 @@ class AppArgument {
                const std::string &identifier_short,
                const std::string &identifier_long);
 
-  static bool isArgImageFile(int argc, char **argv, int index_argument);
+  static bool isArgImageFile(
+      int argc, const std::vector<std::string>& argv, int index_argument);
 
   static bool IsKnownOption(const std::string &str);
 
  private:
   int argc_;
-  char **argv_;
+  std::vector<std::string> argv_;
 };
 
 }  // namespace docxbox

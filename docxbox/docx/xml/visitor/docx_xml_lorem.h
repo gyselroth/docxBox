@@ -17,7 +17,7 @@
 
 class docx_xml_lorem:docx_xml {
  public:
-  docx_xml_lorem(int argc, char **argv);
+  docx_xml_lorem(int argc, const std::vector<std::string>& argv);
 
   bool RandomizeAllTextInXml(const std::string& path_xml);
 

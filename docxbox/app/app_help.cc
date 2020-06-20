@@ -477,8 +477,8 @@ bool AppHelp::PrintHelpOnZip(bool with_zip) {
   return true;
 }
 
-void AppHelp::PrintUnknownArgumentMessage(const char *arg) {
-  AppLog::NotifyError("Unknown argument: \"" + std::string(arg) + "\". ");
+void AppHelp::PrintUnknownArgumentMessage(const std::string& arg) {
+  AppLog::NotifyError("Unknown argument: \"" + arg + "\". ");
 
   if (AppLog::IsSilent()) return;
 

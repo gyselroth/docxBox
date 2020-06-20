@@ -3,7 +3,9 @@
 
 #include <docxbox/docx/archive/docx_archive.h>
 
-docx_archive::docx_archive(int argc, char **argv, bool is_batch_mode = false) {
+docx_archive::docx_archive(int argc,
+                           const std::vector<std::string>& argv,
+                           bool is_batch_mode = false) {
   argc_ = argc;
   argv_ = argv;
   is_batch_mode_ = is_batch_mode;
@@ -15,11 +17,11 @@ docx_archive::~docx_archive() {
   RemoveTemporaryFiles();
 }
 
-char* docx_archive::GetArgValue(int index) {
+std::string docx_archive::GetArgValue(int index) {
   return argv_[index];
 }
 
-char* docx_archive::GetLastArgValue() {
+std::string docx_archive::GetLastArgValue() {
   return argv_[argc_ - 1];
 }
 
@@ -424,7 +426,7 @@ bool docx_archive::ViewFilesDiff() {
         "File not given in both DOCX archives: " + file);
 
   if (argc_ > 5
-      && (0 == strcmp(argv_[5], "-u") || 0 == strcmp(argv_[5], "--unified")))
+      && (argv_[5] == "-u" || argv_[5] == "--unified"))
     docx_diff::OutputUnified(path_extract_left, path_extract_right, file);
   else
     docx_diff::OutputSideBySide(path_extract_left, path_extract_right, file);

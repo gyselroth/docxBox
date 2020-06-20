@@ -3,7 +3,7 @@
 
 #include <docxbox/docx/xml/docx_xml.h>
 
-docx_xml::docx_xml(int argc, char **argv) {
+docx_xml::docx_xml(int argc, const std::vector<std::string>& argv) {
   argc_ = argc;
   argv_ = argv;
 }

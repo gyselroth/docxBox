@@ -6,7 +6,7 @@
 namespace docxbox {
 
 // Constructor
-AppArgument::AppArgument(int argc, char **argv) {
+AppArgument::AppArgument(int argc, const std::vector<std::string>& argv) {
   argc_ = argc;
   argv_ = argv;
 }
@@ -16,14 +16,13 @@ AppArgument::AppArgument(int argc, char **argv) {
 std::string AppArgument::ResolvePathFromArgument(
     const std::string& pwd,
     int argc,
-    char **argv,
+    const std::vector<std::string>& argv,
     int index_argument,
-    bool must_exist
-) {
+    bool must_exist) {
   std::string path;
 
   if (argc >= index_argument) {
-    path = helper::File::ResolvePath(pwd, argv[index_argument-1]);
+    path = helper::File::ResolvePath(pwd, argv[index_argument - 1]);
   } else {
     AppLog::NotifyError("Missing file argument");
   }
@@ -65,7 +64,7 @@ bool AppArgument::AreArgumentsGiven(
 
 bool AppArgument::Matches(int offset_argument, const std::string &identifier) {
   return argc_ > offset_argument
-      && 0 == strcmp(argv_[offset_argument], identifier.c_str());
+      && argv_[offset_argument] == identifier;
 }
 
 bool AppArgument::Matches(
@@ -74,11 +73,12 @@ bool AppArgument::Matches(
     const std::string& identifier_long
 ) {
   return argc_ > offset_argument
-    && (0 == strcmp(argv_[offset_argument], identifier_short.c_str())
-        || 0 == strcmp(argv_[offset_argument], identifier_long.c_str()));
+    && (argv_[offset_argument] == identifier_short
+        || argv_[offset_argument] == identifier_long);
 }
 
-bool AppArgument::isArgImageFile(int argc, char **argv, int index_argument) {
+bool AppArgument::isArgImageFile(
+    int argc, const std::vector<std::string>& argv, int index_argument) {
   return argc > index_argument
       && helper::File::IsWordCompatibleImage(argv[index_argument]);
 }

@@ -4,8 +4,7 @@
 #include <docxbox/docx/xml/visitor/docx_xml_remove.h>
 
 docx_xml_remove::docx_xml_remove(
-    int argc,
-    char **argv) : docx_xml(argc, argv) {}
+    int argc, const std::vector<std::string>& argv) : docx_xml(argc, argv) {}
 
 bool docx_xml_remove::RemoveBetweenStringsInXml(
     const std::string& path_xml,

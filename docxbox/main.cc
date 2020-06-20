@@ -8,10 +8,16 @@
  * @param argv Array of arguments, argv[0] is name and path of executable
  */
 int main(int argc, char **argv) {
-  docxbox::AppLog::LogStartUp(argc, argv);
+  std::vector<std::string> arguments;
+  arguments.reserve(argc);
+
+  for (int index = 0; index < argc; ++index)
+    arguments.emplace_back(argv[index]);
+
+  docxbox::AppLog::LogStartUp(arguments);
 
   // Process command arguments, display help if no valid command given
-  auto *app = new docxbox::App(argc, argv);
+  auto *app = new docxbox::App(arguments.size(), arguments);
 
   bool success = argc > 1
       ? app->Process()

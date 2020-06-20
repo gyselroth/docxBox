@@ -6,6 +6,7 @@
 #include <iostream>
 #include <iterator>
 #include <regex>  // NOLINT [build/c++11]
+#include <utility>
 
 namespace helper {
 
@@ -28,6 +29,11 @@ bool String::EndsWith(std::string const &str, std::string const &ending) {
 bool String::EndsWithCaseInsensitive(
     const char *str, const std::string &ending) {
   return EndsWith(ToLower(str), ending);
+}
+
+bool String::EndsWithCaseInsensitive(
+    std::string str, const std::string &ending) {
+  return EndsWith(ToLower(std::move(str)), ending);
 }
 
 bool String::IsAnyOf(

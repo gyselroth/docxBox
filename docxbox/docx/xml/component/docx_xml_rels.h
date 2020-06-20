@@ -20,7 +20,9 @@
 class docx_xml_rels: docx_xml {
  public:
   explicit docx_xml_rels(
-      std::string path_extract, int argc = 0, char **argv = nullptr);
+      std::string path_extract,
+      int argc = 0,
+      const std::vector<std::string>& argv = {});
 
   // Get (insert if not exists) relationship id of given image target
   std::string GetRelationShipIdByTarget(

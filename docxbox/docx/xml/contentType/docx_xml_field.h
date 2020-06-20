@@ -17,7 +17,7 @@
 
 class docx_xml_field: docx_xml {
  public:
-  docx_xml_field(int argc, char **argv);
+  docx_xml_field(int argc, const std::vector<std::string>& argv);
 
   void CollectFields(const std::string& path_xml);
 

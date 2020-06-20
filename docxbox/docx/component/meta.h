@@ -46,7 +46,7 @@ class meta {
     Attr_Unknown
   };
 
-  meta(int argc, char **argv);
+  meta(int argc, const std::vector<std::string>& argv);
 
   Attribute GetAttribute() const;
 
@@ -105,7 +105,7 @@ class meta {
 
  private:
   int argc_;
-  char **argv_;
+  std::vector<std::string> argv_;
 
   std::string path_extract_;
 
