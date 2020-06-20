@@ -23,7 +23,7 @@ std::string docx_renderer_rels::RenderHyperlinkRelationship(
     const std::string &relationship_id) {
   return "<Relationship "
            "Id=\"" + relationship_id +"\" "
-           "Type=\"" + kUrlRelationshipSchemaHyperlink + "\" "
+           "Type=\"" + rels::URL_SCHEMA_RELS_HYPERLINK + "\" "
            "Target=\"" + url + "\" "
            "TargetMode=\"External\"/>";
 }
@@ -33,7 +33,7 @@ std::string docx_renderer_rels::RenderImageRelationship(
     const std::string &relationship_id) {
   return "<Relationship "
          "Id=\"" + relationship_id + "\" "
-         "Type=\"" + kUrlRelationshipSchemaImage + "\" "
+         "Type=\"" + rels::URL_SCHEMA_RELS_IMAGE + "\" "
          "Target=\"" + path_target + "\"/>";
 }
 
@@ -41,6 +41,6 @@ std::string docx_renderer_rels::RenderNumberingRelationship(
     const std::string &relationship_id) {
   return "<Relationship "
            "Id=\"" + relationship_id + "\" "
-           "Type=\"" + kUrlRelationshipSchemaNumbering + "\" "
+           "Type=\"" + rels::URL_SCHEMA_RELS_NUMBERING + "\" "
            "Target=\"numbering.xml\"/>";
 }
