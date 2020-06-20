@@ -7,7 +7,7 @@ namespace helper {
 
 // Get string of current timestamp, w/ given offset in days added,
 // in given format.
-std::string DateTime::GetCurrentDateTimeFormatted(const char *format) {
+std::string DateTime::GetCurrentDateTimeFormatted(const std::string& format) {
   time_t raw_time;
   struct tm *time_info;
   char buffer[80];
@@ -15,7 +15,7 @@ std::string DateTime::GetCurrentDateTimeFormatted(const char *format) {
   time(&raw_time);
   time_info = localtime(&raw_time);  // NOLINT [build/c++11]
 
-  strftime(buffer, sizeof(buffer), format, time_info);
+  strftime(buffer, sizeof(buffer), format.c_str(), time_info);
   std::string str(buffer);
 
   return str;

@@ -7,6 +7,8 @@ namespace docxbox {
 
 AppLog* AppLog::m_pThis_ = nullptr;
 
+const std::string AppLog::FORMAT_TIMESTAMP = "%Y-%m-%d %H:%M:%S";
+
 AppLog::AppLog() {
   InitMode();
 
@@ -113,7 +115,7 @@ void AppLog::LogStartUp(const std::vector<std::string>& arguments) {
 // Remember current dateTime (notification occurred)
 void AppLog::PushBackTime() {
   timestamps_.push_back(
-      helper::DateTime::GetCurrentDateTimeFormatted(kFormatDateTimeLog));
+      helper::DateTime::GetCurrentDateTimeFormatted(FORMAT_TIMESTAMP));
 }
 
 void AppLog::Output(bool delete_instance) {

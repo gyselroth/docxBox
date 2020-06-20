@@ -13,8 +13,6 @@
 
 namespace docxbox {
 
-static const char *const kFormatDateTimeLog = "%Y-%m-%d %H:%M:%S";
-
 class AppLog {
  public:
   enum LogMode {
@@ -55,6 +53,8 @@ class AppLog {
   static bool IsSilent();
 
  private:
+  static const std::string FORMAT_TIMESTAMP;
+
   // Singleton instance pointer
   static AppLog* m_pThis_;
 

@@ -27,7 +27,7 @@ bool docx_xml_contentTypes::OverrideNumbering() {
       "</Types>",
 
       (std::string(R"(<Override PartName="/word/numbering.xml" ContentType=")")
-      + kMimeContentTypeNumbering + "\"/></Types>").c_str());
+      + contentTypes::MIME_CONTENT_TYPE_NUMBERING + "\"/></Types>").c_str());
 
   return SaveXml(false);
 }

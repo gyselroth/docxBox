@@ -9,43 +9,19 @@
 #include <string>
 #include <utility>
 
-static const char *const kMimeContentTypeApp =
-    "application/vnd.openxmlformats-officedocument.extended-properties+xml";
-
-static const char *const kMimeContentTypeBin =
-    "\"application/vnd.openxmlformats-officedocument.oleObject";
-
-static const char *const kMimeContentTypeCore =
-    "application/vnd.openxmlformats-package.core-properties+xml";
-
-static const char *const kMimeContentTypeDocument =
-    "application/vnd.openxmlformats-officedocument.wordprocessingml."
-    "document.main+xml";
-
-static const char *const kMimeContentTypeFontTable =
-    "application/vnd.openxmlformats-officedocument.wordprocessingml."
-    "fontTable+xml";
-
-static const char *const kMimeContentTypeNumbering =
-    "application/vnd.openxmlformats-officedocument.wordprocessingml."
-    "numbering+xml";
-
-static const char *const kMimeContentTypeSettings =
-    "application/vnd.openxmlformats-officedocument.wordprocessingml."
-    "settings+xml";
-
-static const char *const kMimeContentTypeStyles =
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml";
-
-static const char *const kMimeContentTypeStylesWithEffects =
-    "application/vnd.ms-word.stylesWithEffects+xml";
-
-static const char *const kMimeContentTypeWebSettings =
-    "application/vnd.openxmlformats-officedocument.wordprocessingml."
-    "webSettings+xml";
-
 class contentTypes {
  public:
+  static const std::string MIME_CONTENT_TYPE_APP;
+  static const std::string MIME_CONTENT_TYPE_BIN;
+  static const std::string MIME_CONTENT_TYPE_CORE;
+  static const std::string MIME_CONTENT_TYPE_DOCUMENT;
+  static const std::string MIME_CONTENT_TYPE_FONT_TABLE;
+  static const std::string MIME_CONTENT_TYPE_NUMBERING;
+  static const std::string MIME_CONTENT_TYPE_SETTINGS;
+  static const std::string MIME_CONTENT_TYPE_STYLES;
+  static const std::string MIME_CONTENT_TYPE_STYLES_WITH_EFFECTS;
+  static const std::string MIME_CONTENT_TYPE_WEB_SETTINGS;
+
   enum ContentType {
     ContentType_Hyperlink,
     ContentType_Image,
