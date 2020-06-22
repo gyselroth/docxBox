@@ -24,9 +24,8 @@ std::string docx_xml_to_plaintext::GetTextFromXmlFile(
   return document_text_;
 }
 
-void docx_xml_to_plaintext::GetChildNodesText(
-    tinyxml2::XMLElement *node,
-    bool newline_at_segments) {
+void docx_xml_to_plaintext::GetChildNodesText(tinyxml2::XMLElement *node,
+                                              bool newline_at_segments) {
   if (!node || node->NoChildren()) return;
 
   if (0 == strcmp(node->Value(), "w:p")) document_text_ += "\n";

@@ -19,10 +19,9 @@ class docx_xml_remove:docx_xml {
  public:
   docx_xml_remove(int argc, const std::vector<std::string>& argv);
 
-  bool RemoveBetweenStringsInXml(
-      const std::string& path_xml,
-      const std::string& lhs,
-      const std::string& rhs);
+  bool RemoveBetweenStringsInXml(const std::string& path_xml,
+                                 const std::string &lhs,
+                                 const std::string &rhs);
 
   bool RemoveNodes(std::vector<tinyxml2::XMLElement*> nodes);
 

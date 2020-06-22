@@ -21,9 +21,8 @@ class docx_xml_to_plaintext:docx_xml {
   std::string GetTextFromXmlFile(const std::string &path_xml,
                                  bool newline_at_segments = false);
 
-  void GetChildNodesText(
-      tinyxml2::XMLElement *node,
-      bool newline_at_segments = false);
+  void GetChildNodesText(tinyxml2::XMLElement *node,
+                         bool newline_at_segments = false);
 
   void Output();
 };

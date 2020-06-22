@@ -131,8 +131,8 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
   return true;
 }
 
-bool docx_archive_list::InitLocateFilesContaining(
-  bool *as_json, std::string &needle) const {
+bool docx_archive_list::InitLocateFilesContaining(bool *as_json,
+                                                  std::string &needle) const {
   if (!docxbox::AppArgument::IsArgumentGiven(
       argc_,
       2, "DOCX filename")) return false;

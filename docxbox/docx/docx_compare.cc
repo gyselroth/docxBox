@@ -5,10 +5,9 @@
 
 #include <utility>
 
-docx_compare::docx_compare(
-    std::string list_1, std::string summary_1,
-    std::string list_2, std::string summary_2,
-    std::string path_docx_1, std::string path_docx_2) {
+docx_compare::docx_compare(std::string list_1, std::string summary_1,
+                           std::string list_2, std::string summary_2,
+                           std::string path_docx_1, std::string path_docx_2) {
   list_1_ = std::move(list_1);
   list_2_ = std::move(list_2);
 
@@ -116,10 +115,9 @@ void docx_compare::Output() {
   OutputLine(len_summary_1, len_line_max);
 }
 
-void docx_compare::ColorizeFileSize(
-    std::string color,
-    const std::string &style_on,
-    std::string &line) const {
+void docx_compare::ColorizeFileSize(const std::string& color,
+                                    const std::string &style_on,
+                                    std::string &line) const {
   line = color + line.insert(9, helper::Cli::ANSI_RESET + style_on);
 }
 
@@ -151,8 +149,8 @@ void docx_compare::GetCurrentLineAndFilename(
   }
 }
 
-void docx_compare::OutputHeadline(
-    uint32_t len_path_left, u_int32_t len_line_max) const {
+void docx_compare::OutputHeadline(uint32_t len_path_left,
+                                  u_int32_t len_line_max) const {
   std::cout << "\n"
             << path_docx_1_ << ":"
             << RenderMargin(len_path_left, len_line_max)
@@ -182,8 +180,8 @@ std::vector<std::string> docx_compare::SplitIntoSortedLines(
 }
 
 // Comparator method for sorting
-bool docx_compare::CompareLinesByFilenames(
-    std::string str_1, std::string str_2) {
+bool docx_compare::CompareLinesByFilenames(std::string str_1,
+                                           std::string str_2) {
   auto filename_1 = helper::String::GetTrailingWord(std::move(str_1));
   auto filename_2 = helper::String::GetTrailingWord(std::move(str_2));
 

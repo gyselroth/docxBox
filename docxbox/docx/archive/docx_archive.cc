@@ -228,14 +228,13 @@ bool docx_archive::CreateDocxFromExtract(const std::string &path_docx_out,
 // Zip files into given path into DOCX of given filename
 // Optionally update "creation" and "modified" meta attributes (core.xml)
 // to current date-time value
-bool docx_archive::Zip(
-    bool compress_xml,
-    std::string path_directory,
-    std::string path_docx_result,
-    bool set_date_modified_to_now,
-    bool set_date_created_to_now,
-    const std::string& date_created,
-    const std::string& date_modified) {
+bool docx_archive::Zip(bool compress_xml,
+                       std::string path_directory,
+                       std::string path_docx_result,
+                       bool set_date_modified_to_now,
+                       bool set_date_created_to_now,
+                       const std::string &date_created,
+                       const std::string &date_modified) {
   if (path_directory.empty()) {
     if (!docxbox::AppArgument::AreArgumentsGiven(
         argc_,
@@ -524,9 +523,8 @@ bool docx_archive::ModifyMeta() {
 // Update given meta date attribute and immediately save updated core.xml
 // TODO(kay): add multi-attributes variation of method
 //  to load/save only once than
-bool docx_archive::UpdateCoreXmlDate(
-    meta::Attribute attribute,
-    const std::string& value) {
+bool docx_archive::UpdateCoreXmlDate(meta::Attribute attribute,
+                                     const std::string &value) {
   auto meta_component = new meta(argc_, argv_);
 
   meta_component->SetPathExtract(path_extract_);
