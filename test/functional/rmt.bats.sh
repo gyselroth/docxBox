@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 
 @test "Output of \"docxbox rmt {missing filename}\" is an error message" {
   run "${docxbox}" rmt

@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 
 base_command="\"docxbox ls filename.docx"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
@@ -63,8 +63,8 @@ search_values=(
 }
 
 @test "Output of ${base_command}\" contains files' date and time" {
-  "${docxbox}" ls "${path_docx}" | grep --count "5/25/2020"
-  "${docxbox}" ls "${path_docx}" | grep --count "16:32"
+  "${docxbox}" ls "${path_docx}" | grep --count "6/18/2020"
+  "${docxbox}" ls "${path_docx}" | grep --count "10:30"
 }
 
 long_description="contains files with the given file ending"

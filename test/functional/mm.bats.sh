@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 path_docx="test/functional/tmp/cp_bio_assay.docx"
 
 base_command="docxbox mm filename.docx"
@@ -31,18 +31,26 @@ title="the meta attribute title can be changed"
   "${docxbox}" lsm "${path_docx}" | grep --count "title: someTitle"
 }
 
+@test "docxBox provides information which steps are done" {
+  unzipped="docxBox Info - Unzipped DOCX:"
+  saved="docxBox Info - Saved DOCX:"
+
+  "${docxbox}" mm "${path_docx}" title "someTitle" | grep --count "${unzipped}"
+  "${docxbox}" mm "${path_docx}" title "someTitle" | grep --count "${saved}"
+}
+
 creator="the meta attribute creator can be changed"
 @test "With \"${base_command} creator {argument}\" ${creator}" {
-  run "${docxbox}" mm "${path_docx}" creator "someOne"
+  run "${docxbox}" mm "${path_docx}" creator "John Doe"
   [ "$status" -eq 0 ]
-  "${docxbox}" lsm "${path_docx}" | grep --count "creator: someOne"
+  "${docxbox}" lsm "${path_docx}" | grep --count "creator: John Doe"
 }
 
 last_modified_by="the meta attribute lastModifiedBy can be changed"
 @test "With \"${base_command} lastModifiedBy {argument}\" ${last_modified_by}" {
-  pattern="lastModifiedBy: someOneElse"
+  pattern="lastModifiedBy: John Doe"
 
-  run "${docxbox}" mm "${path_docx}" lastModifiedBy "someOneElse"
+  run "${docxbox}" mm "${path_docx}" lastModifiedBy "John Doe"
   [ "$status" -eq 0 ]
   "${docxbox}" lsm "${path_docx}" | grep --count "${pattern}"
 }

@@ -7,7 +7,7 @@ load _helper
 
 base_command="\"docxbox lsd"
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 path_docx="test/functional/tmp/cp_mergefields.docx"
 
 merge_field="MERGEFIELD"

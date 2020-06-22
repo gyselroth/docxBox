@@ -186,6 +186,14 @@ else
     ((AMOUNT_ERRORS=AMOUNT_ERRORS+1))
   fi
 
+  # Batch processing
+  printf "\n\033[4mTest processing multiple docxBox commands (batch)\033[0m\n"
+  bats ./test/functional/batch.bats.sh
+  if [ $? -ne 0 ]; then
+    IS_ERROR=true
+    ((AMOUNT_ERRORS=AMOUNT_ERRORS+1))
+  fi
+
   # Extract and create DOCX:
   printf "\n\033[4mTest unziping files from DOCX (uz)\033[0m\n"
   bats ./test/functional/uz.bats.sh

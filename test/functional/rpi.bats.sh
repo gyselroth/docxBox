@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 path_extracted_image="test/functional/tmp/unziped/word/media/image2.jpeg"
 path_jpeg="test/assets/images/2100x400.jpeg"

@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 
 base_command="docxbox lsm filename.docx"
@@ -30,7 +30,7 @@ base_command="docxbox lsm filename.docx"
 title="Output of \"${base_command}\" "
 title+="contains information about the creation time and date"
 @test "${title}" {
-  created="created: 2020-05-25T16:32:27Z"
+  created="created: 2020-06-18T10:30:11Z"
 
   "${docxbox}" lsm "${path_docx}" | grep --count "${created}"
 }

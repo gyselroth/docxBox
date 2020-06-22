@@ -5,7 +5,7 @@
 
 load _helper
 
-docxbox=""$BATS_TEST_DIRNAME"/docxbox"
+docxbox="$BATS_TEST_DIRNAME/docxbox"
 path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
 error="is an error message"
 display_file="word/document.xml"
@@ -174,11 +174,27 @@ image_replacement="the given string is replaced by an image"
   run "${docxbox}" rpt "${path_docx}" Officia ${table}
   [ "$status" -eq 0 ]
 
-  "${docxbox}" lsl "${path_docx}" "header_one" | grep --count -q "${display_file}"
-  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count -q "header_one"
-
   "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count "${pattern}"
   "${docxbox}" lsl "${path_docx}" "<w:tbl>" | grep --count "${display_file}"
+}
+
+@test "With \"${base_command} table_as_JSON\" the given string is replaced by a table with header" {
+  header="\"header\":[\"header_one\",\"B\",\"C\"]"
+  first_column="[\"a1\",\"a2\",\"a3\"]"
+  second_column="[\"b1\",\"b2\",\"b3\"]"
+  third_column="[\"c1\",\"c2\",\"c3\"]"
+  content="\"content\":[${first_column},${second_column},${third_column}]"
+  table="{\"table\":{${header},${content}}}"
+
+  pattern="<w:tblStyle w:val=\"TableGrid\"/>"
+
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --invert-match "${pattern}"
+
+  run "${docxbox}" rpt "${path_docx}" Officia ${table}
+  [ "$status" -eq 0 ]
+
+  "${docxbox}" lsl "${path_docx}" "header_one" | grep --count -q "${display_file}"
+  "${docxbox}" cat "${path_docx}" "${display_file}" | grep --count -q "header_one"
 }
 
 @test "Output of \"docxbox rpt ${arguments} nonexistent.docx\" is an error message" {
