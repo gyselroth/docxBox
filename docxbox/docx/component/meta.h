@@ -46,6 +46,35 @@ class meta {
     Attr_Unknown
   };
 
+  // Tag names possible in docProps/core.xml
+  /*static const char *const kTagNameCpLastModifiedBy = "cp:lastModifiedBy";
+  static const char *const kTagNameCpLastPrinted = "cp:lastPrinted";
+  static const char *const kTagNameCpRevision = "cp:revision";
+
+  static const char *const kTagNameDcCreator = "dc:creator";
+  static const char *const kTagNameDcDescription = "dc:description";
+  static const char *const kTagNameDcKeywords = "dc:keywords";
+  static const char *const kTagNameDcLanguage = "dc:language";
+  static const char *const kTagNameDcSubject = "dc:subject";
+  static const char *const kTagNameDcTitle = "dc:title";
+
+  static const char *const kTagNameDcTermsCreated = "dcterms:created";
+  static const char *const kTagNameDcTermsModified = "dcterms:modified";*/
+
+  static const char TAG_RHS_CORE_PROPERTIES[];
+
+  static const char ATTR_CORE_CREATED[];
+  static const char ATTR_CORE_CREATOR[];
+  static const char ATTR_CORE_DESCRIPTION[];
+  static const char ATTR_CORE_KEYWORDS[];
+  static const char ATTR_CORE_LANGUAGE[];
+  static const char ATTR_CORE_LAST_MODIFIED_BY[];
+  static const char ATTR_CORE_LAST_PRINTED[];
+  static const char ATTR_CORE_MODIFIED[];
+  static const char ATTR_CORE_REVISION[];
+  static const char ATTR_CORE_SUBJECT[];
+  static const char ATTR_CORE_TITLE[];
+
   meta(int argc, const std::vector<std::string>& argv);
 
   Attribute GetAttribute() const;
@@ -72,23 +101,19 @@ class meta {
 
   static bool IsDateAttribute(Attribute);
 
-  std::string FetchAttributeFromAppXml(
-      const char* tag_name,
-      const std::string &label = "");
+  std::string FetchAttributeFromAppXml(const char* tag_name,
+                                       const std::string &label = "");
 
-  std::string FetchAttributeFromAppXml(
-      const char* lhs_of_value,
-      const char* rhs_of_value,
-      const std::string &label);
+  std::string FetchAttributeFromAppXml(const char* lhs_of_value,
+                                       const char *rhs_of_value,
+                                       const std::string &label);
 
-  std::string FetchAttributeFromCoreXml(
-      const char* tag_name,
-      const std::string &label);
+  std::string FetchAttributeFromCoreXml(const char* tag_name,
+                                        const std::string &label);
 
-  std::string FetchAttributeFromCoreXml(
-      const char* lhs_of_value,
-      const char* rhs_of_value,
-      const std::string &label);
+  std::string FetchAttributeFromCoreXml(const char* lhs_of_value,
+                                        const char *rhs_of_value,
+                                        const std::string &label);
 
   // Explicit meta modification CLI call:
   // Validate CLI arguments and initialize rel. properties

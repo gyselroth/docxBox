@@ -31,7 +31,9 @@
 
 class docx_archive {
  public:
-  docx_archive(int argc, const std::vector<std::string>& argv, bool is_batch_mode);
+  docx_archive(int argc,
+               const std::vector<std::string> &argv,
+               bool is_batch_mode);
 
   virtual ~docx_archive();
 

@@ -10,8 +10,9 @@
 
 #include <vendor/tinyxml2/tinyxml2.h>
 
-#include <string>
 #include <iostream>
+#include <string>
+#include <vector>
 
 class docx_xml {
  public:

@@ -1,7 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#include <docxbox/app/app.h>  // note: must be here for forward-declaration
+#include <docxbox/app/app.h>  // forward-declaration
+
 #include <docxbox/docx/docx_batch.h>
 
 class docx_archive_replace;
@@ -26,7 +27,7 @@ bool docx_batch::InitFromJson() {
       commands_.push_back(it.key());
 
       // NOTE: Dumped JSON string has associations alphabetically sorted,
-      //       and not necessarily in same order as originally given
+      //       not necessarily same order as originally given
       arguments_json_.push_back(it.value().dump());
     }
   }
@@ -77,15 +78,15 @@ bool docx_batch::ProcessStep(int index) {
   int argc = app_cli_arguments.size();
 
   // Convert from std::vector<std::string> to char**
-  //char **argv = new char*[argc + 1];
-  //
-  //for (size_t i = 0; i < argc; ++i)
-  //  argv[i] = strdup(app_cli_arguments[i].c_str());
-  //
-  //argv[argc] = nullptr;
+//  char **argv = new char*[argc + 1];
+//
+//  for (size_t i = 0; i < argc; ++i)
+//    argv[i] = strdup(app_cli_arguments[i].c_str());
+//
+//  argv[argc] = nullptr;
 
   // Init process
-  //auto app = new docxbox::App(argc, argv, true);
+//  auto app = new docxbox::App(argc, argv, true);
   auto app = new docxbox::App(argc, app_cli_arguments, true);
 
   app->SetPathDocxIn(archive_->GetPathDocxIn());

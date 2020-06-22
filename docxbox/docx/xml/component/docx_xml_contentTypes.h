@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
+#include <vector>
 
 class docx_xml_contentTypes: docx_xml {
  public:

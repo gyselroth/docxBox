@@ -19,18 +19,4 @@ static const char *const kTagNameDcTitle = "dc:title";
 static const char *const kTagNameDcTermsCreated = "dcterms:created";
 static const char *const kTagNameDcTermsModified = "dcterms:modified";
 
-static const char *const kWordMlCorePropertiesRhs = "</cp:coreProperties>";
-
-static const char *const kAttrCoreCreated = "created";
-static const char *const kAttrCoreCreator = "creator";
-static const char *const kAttrCoreDescription = "description";
-static const char *const kAttrCoreKeywords = "keywords";
-static const char *const kAttrCoreLanguage = "language";
-static const char *const kAttrCoreLastModifiedBy = "lastModifiedBy";
-static const char *const kAttrCoreLastPrinted = "lastPrinted";
-static const char *const kAttrCoreModified = "modified";
-static const char *const kAttrCoreRevision = "revision";
-static const char *const kAttrCoreSubject = "subject";
-static const char *const kAttrCoreTitle = "title";
-
 #endif  // DOCXBOX_DOCX_COMPONENT_META_CORE_H_

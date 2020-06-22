@@ -26,13 +26,13 @@ bool String::EndsWith(std::string const &str, std::string const &ending) {
           && std::equal(ending.rbegin(), ending.rend(), str.rbegin()));
 }
 
-bool String::EndsWithCaseInsensitive(
-    const char *str, const std::string &ending) {
+bool String::EndsWithCaseInsensitive(const char *str,
+                                     const std::string &ending) {
   return EndsWith(ToLower(str), ending);
 }
 
-bool String::EndsWithCaseInsensitive(
-    std::string str, const std::string &ending) {
+bool String::EndsWithCaseInsensitive(std::string str,
+                                     const std::string &ending) {
   return EndsWith(ToLower(std::move(str)), ending);
 }
 
@@ -83,10 +83,9 @@ bool String::Replace(
   return true;
 }
 
-int String::ReplaceAll(
-    std::string &haystack,
-    const std::string &needle,
-    const std::string &replacement) {
+int String::ReplaceAll(std::string &haystack,
+                       const std::string &needle,
+                       const std::string &replacement) {
   // Get first occurrence
   size_t pos = haystack.find(needle);
 
@@ -108,11 +107,10 @@ int String::ReplaceAll(
 
 // Get sub string between given surrounding left- and right-hand-side delimiters
 // return std::string  The enclosed sub-string or an empty string
-std::string String::GetSubStrBetween(
-    const std::string &str,
-    const char *lhs,
-    const char *rhs,
-    u_int32_t &offset) {
+std::string String::GetSubStrBetween(const std::string &str,
+                                     const char *lhs,
+                                     const char *rhs,
+                                     u_int32_t &offset) {
   size_t offsetStart = str.find(lhs, offset);
 
   if (std::string::npos == offsetStart) return "";
@@ -129,10 +127,9 @@ std::string String::GetSubStrBetween(
   return str.substr(offsetStart, offsetEnd - offsetStart);
 }
 
-std::string String::GetSubStrBetween(
-    const std::string &str,
-    const char *lhs,
-    const char *rhs) {
+std::string String::GetSubStrBetween(const std::string &str,
+                                     const char *lhs,
+                                     const char *rhs) {
     u_int32_t offset = 0;
 
   return GetSubStrBetween(str, lhs, rhs, offset);

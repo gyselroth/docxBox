@@ -21,10 +21,9 @@ class docx_xml_field: docx_xml {
 
   void CollectFields(const std::string& path_xml);
 
-  bool SetFieldText(
-      const std::string& path_xml,
-      const std::string &field_identifier,
-      const std::string &text);
+  bool SetFieldText(const std::string& path_xml,
+                    const std::string &field_identifier,
+                    const std::string &text);
 
   void Output(bool as_json);
 

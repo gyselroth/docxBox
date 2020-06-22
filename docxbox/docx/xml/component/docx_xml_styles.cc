@@ -8,9 +8,9 @@
 #include <utility>
 
 docx_xml_styles::docx_xml_styles(
-    std::string path_extract, int argc, const std::vector<std::string>& argv) : docx_xml(
-    argc,
-    argv) {
+    std::string path_extract,
+    int argc,
+    const std::vector<std::string> &argv): docx_xml(argc, argv) {
   path_xml_file_ = path_extract + "/word/styles.xml";
   path_extract_ = std::move(path_extract);
   xml_ = helper::File::GetFileContents(path_xml_file_);

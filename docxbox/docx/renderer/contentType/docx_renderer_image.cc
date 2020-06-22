@@ -6,8 +6,8 @@
 #include <iostream>
 
 // Constructor
-docx_renderer_image::docx_renderer_image(
-    std::string path_extract, const std::string &json) {
+docx_renderer_image::docx_renderer_image(std::string path_extract,
+                                         const std::string &json) {
   path_extract_ = std::move(path_extract);
 
   json_ = json;

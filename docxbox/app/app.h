@@ -13,9 +13,10 @@
 #include <docxbox/docx/archive/docx_archive_replace.h>
 #include <docxbox/helper/helper_dateTime.h>
 
-#include <string>
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace docxbox {
 

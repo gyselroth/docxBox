@@ -36,10 +36,9 @@ class docx_xml_remove:docx_xml {
 
   int amount_removed_ = 0;
 
-  void LocateNodesBetweenText(
-      tinyxml2::XMLElement *node,
-      const std::string &lhs,
-      const std::string &rhs);
+  void LocateNodesBetweenText(tinyxml2::XMLElement *node,
+                              const std::string &lhs,
+                              const std::string &rhs);
 };
 
 #endif  // DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_REMOVE_H_

@@ -111,11 +111,10 @@ void docx_archive::RemoveTemporaryFiles() {
   paths_temporary_.clear();
 }
 
-std::string docx_archive::UnzipDocx(
-    const std::string &path_docx,
-    const std::string &path_extract_appendix,
-    const std::string &path_extract_prefix,
-    bool is_temporary) {
+std::string docx_archive::UnzipDocx(const std::string &path_docx,
+                                    const std::string &path_extract_appendix,
+                                    const std::string &path_extract_prefix,
+                                    bool is_temporary) {
   if (!IsZipArchive(path_docx)) return "";
 
   auto path_extract = InitExtractionPath(
@@ -211,8 +210,8 @@ bool docx_archive::UnzipMedia() {
   return true;
 }
 
-bool docx_archive::CreateDocxFromExtract(
-    const std::string &path_docx_out, bool overwrite_source_docx) {
+bool docx_archive::CreateDocxFromExtract(const std::string &path_docx_out,
+                                         bool overwrite_source_docx) {
   if (!Zip(false, path_extract_, path_docx_out + "tmp"))
     return docxbox::AppLog::NotifyError("DOCX creation failed.");
 

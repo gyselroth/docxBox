@@ -3,6 +3,20 @@
 
 #include <docxbox/docx/component/meta.h>
 
+const char meta::TAG_RHS_CORE_PROPERTIES[] = "</cp:coreProperties>";
+
+const char meta::ATTR_CORE_CREATED[] = "created";
+const char meta::ATTR_CORE_CREATOR[] = "creator";
+const char meta::ATTR_CORE_DESCRIPTION[] = "description";
+const char meta::ATTR_CORE_KEYWORDS[] = "keywords";
+const char meta::ATTR_CORE_LANGUAGE[] = "language";
+const char meta::ATTR_CORE_LAST_MODIFIED_BY[] = "lastModifiedBy";
+const char meta::ATTR_CORE_LAST_PRINTED[] = "lastPrinted";
+const char meta::ATTR_CORE_MODIFIED[] = "modified";
+const char meta::ATTR_CORE_REVISION[] = "revision";
+const char meta::ATTR_CORE_SUBJECT[] = "subject";
+const char meta::ATTR_CORE_TITLE[] = "title";
+
 meta::meta(int argc, const std::vector<std::string>& argv) {
     argc_ = argc;
     argv_ = argv;
@@ -43,17 +57,17 @@ meta::Attribute meta::ResolveAttribute(const std::string &attribute) {
 
   is_app_attribute_ = false;
 
-  if (attribute == kAttrCoreCreated) return Attr_Core_Created;
-  if (attribute == kAttrCoreCreator) return Attr_Core_Creator;
-  if (attribute == kAttrCoreDescription) return Attr_Core_Description;
-  if (attribute == kAttrCoreKeywords) return Attr_Core_Keywords;
-  if (attribute == kAttrCoreLanguage) return Attr_Core_Language;
-  if (attribute == kAttrCoreLastModifiedBy) return Attr_Core_LastModifiedBy;
-  if (attribute == kAttrCoreLastPrinted) return Attr_Core_LastPrinted;
-  if (attribute == kAttrCoreModified) return Attr_Core_Modified;
-  if (attribute == kAttrCoreRevision) return Attr_Core_Revision;
-  if (attribute == kAttrCoreSubject) return Attr_Core_Subject;
-  if (attribute == kAttrCoreTitle) return Attr_Core_Title;
+  if (attribute == ATTR_CORE_CREATED) return Attr_Core_Created;
+  if (attribute == ATTR_CORE_CREATOR) return Attr_Core_Creator;
+  if (attribute == ATTR_CORE_DESCRIPTION) return Attr_Core_Description;
+  if (attribute == ATTR_CORE_KEYWORDS) return Attr_Core_Keywords;
+  if (attribute == ATTR_CORE_LANGUAGE) return Attr_Core_Language;
+  if (attribute == ATTR_CORE_LAST_MODIFIED_BY) return Attr_Core_LastModifiedBy;
+  if (attribute == ATTR_CORE_LAST_PRINTED) return Attr_Core_LastPrinted;
+  if (attribute == ATTR_CORE_MODIFIED) return Attr_Core_Modified;
+  if (attribute == ATTR_CORE_REVISION) return Attr_Core_Revision;
+  if (attribute == ATTR_CORE_SUBJECT) return Attr_Core_Subject;
+  if (attribute == ATTR_CORE_TITLE) return Attr_Core_Title;
 
   return Attr_Unknown;
 }
@@ -76,10 +90,8 @@ bool meta::IsDateAttribute(Attribute attribute) {
  * @param label     Optional, if empty: same as tag_name
  * @return Fetched value of given attribute
  */
-std::string meta::FetchAttributeFromAppXml(
-    const char *tag_name,
-    const std::string &label) {
-
+std::string meta::FetchAttributeFromAppXml(const char *tag_name,
+                                           const std::string &label) {
   return FetchAttributeFromAppXml(
       GetLhsTagByTagName(tag_name).c_str(),
       GetRhsTagByTagName(tag_name).c_str(),
@@ -152,10 +164,9 @@ std::string meta::GetRhsTagByAttribute(const meta::Attribute &attribute) {
   }
 }
 
-std::string meta::FetchAttributeFromAppXml(
-    const char* lhs_of_value,
-    const char* rhs_of_value,
-    const std::string &label) {
+std::string meta::FetchAttributeFromAppXml(const char* lhs_of_value,
+                                           const char *rhs_of_value,
+                                           const std::string &label) {
   if (!helper::String::Contains(app_xml_, lhs_of_value)) return "";
 
   std::string value =
@@ -166,19 +177,17 @@ std::string meta::FetchAttributeFromAppXml(
   return value;
 }
 
-std::string meta::FetchAttributeFromCoreXml(
-    const char* tag_name,
-    const std::string &label) {
+std::string meta::FetchAttributeFromCoreXml(const char* tag_name,
+                                            const std::string &label) {
   return FetchAttributeFromCoreXml(
       GetLhsTagByTagName(tag_name).c_str(),
       GetRhsTagByTagName(tag_name).c_str(),
       label);
 }
 
-std::string meta::FetchAttributeFromCoreXml(
-    const char* lhs_of_value,
-    const char* rhs_of_value,
-    const std::string &label) {
+std::string meta::FetchAttributeFromCoreXml(const char* lhs_of_value,
+                                            const char *rhs_of_value,
+                                            const std::string &label) {
   if (!helper::String::Contains(core_xml_, lhs_of_value)) return "";
 
   std::string value = helper::String::GetSubStrBetween(
@@ -322,8 +331,8 @@ bool meta::InsertAppAttribute(Attribute attribute, const std::string& value) {
 
   helper::String::Replace(
       app_xml_,
-      kWordMlCorePropertiesRhs,
-      (kLhsTag + value + kRhs).c_str());
+      meta::TAG_RHS_CORE_PROPERTIES,
+      (kLhsTag + value + kRhs + meta::TAG_RHS_CORE_PROPERTIES).c_str());
 
   return true;
 }
@@ -338,8 +347,8 @@ bool meta::InsertCoreAttribute(Attribute attribute, const std::string& value) {
 
   helper::String::Replace(
       core_xml_,
-      kWordMlCorePropertiesRhs,
-      (kLhsTag + value + kRhs + kWordMlCorePropertiesRhs).c_str());
+      meta::TAG_RHS_CORE_PROPERTIES,
+      (kLhsTag + value + kRhs + meta::TAG_RHS_CORE_PROPERTIES).c_str());
 
   return true;
 }
@@ -464,20 +473,20 @@ void meta::CollectFromCoreXml(std::string path_core_xml_current) {
 
   path_core_xml_ = std::move(path_core_xml_current);
 
-  FetchAttributeFromCoreXml(kTagNameDcTermsCreated, kAttrCoreCreated);
-  FetchAttributeFromCoreXml(kTagNameDcCreator, kAttrCoreCreator);
-  FetchAttributeFromCoreXml(kTagNameDcDescription, kAttrCoreDescription);
-  FetchAttributeFromCoreXml(kTagNameDcKeywords, kAttrCoreKeywords);
-  FetchAttributeFromCoreXml(kTagNameDcLanguage, kAttrCoreLanguage);
+  FetchAttributeFromCoreXml(kTagNameDcTermsCreated, ATTR_CORE_CREATED);
+  FetchAttributeFromCoreXml(kTagNameDcCreator, ATTR_CORE_CREATOR);
+  FetchAttributeFromCoreXml(kTagNameDcDescription, ATTR_CORE_DESCRIPTION);
+  FetchAttributeFromCoreXml(kTagNameDcKeywords, ATTR_CORE_KEYWORDS);
+  FetchAttributeFromCoreXml(kTagNameDcLanguage, ATTR_CORE_LANGUAGE);
 
   FetchAttributeFromCoreXml(
-      kTagNameCpLastModifiedBy, kAttrCoreLastModifiedBy);
+      kTagNameCpLastModifiedBy, ATTR_CORE_LAST_MODIFIED_BY);
 
-  FetchAttributeFromCoreXml(kTagNameCpLastPrinted, kAttrCoreLastPrinted);
-  FetchAttributeFromCoreXml(kTagNameDcTermsModified, kAttrCoreModified);
-  FetchAttributeFromCoreXml(kTagNameCpRevision, kAttrCoreRevision);
-  FetchAttributeFromCoreXml(kTagNameDcSubject, kAttrCoreSubject);
-  FetchAttributeFromCoreXml(kTagNameDcTitle, kAttrCoreTitle);
+  FetchAttributeFromCoreXml(kTagNameCpLastPrinted, ATTR_CORE_LAST_PRINTED);
+  FetchAttributeFromCoreXml(kTagNameDcTermsModified, ATTR_CORE_MODIFIED);
+  FetchAttributeFromCoreXml(kTagNameCpRevision, ATTR_CORE_REVISION);
+  FetchAttributeFromCoreXml(kTagNameDcSubject, ATTR_CORE_SUBJECT);
+  FetchAttributeFromCoreXml(kTagNameDcTitle, ATTR_CORE_TITLE);
 
   has_collected_from_core_xml_ = true;
 

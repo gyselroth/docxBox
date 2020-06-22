@@ -53,7 +53,7 @@ class AppLog {
   static bool IsSilent();
 
  private:
-  static const std::string FORMAT_TIMESTAMP;
+  static const char FORMAT_TIMESTAMP[];
 
   // Singleton instance pointer
   static AppLog* m_pThis_;

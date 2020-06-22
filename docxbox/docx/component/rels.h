@@ -16,17 +16,16 @@ class rels {
     RelationType_None
   };
 
-  static const std::string URL_SCHEMA_WORD_2010;
-  static const std::string URL_SCHEMA_OFFICE_2006;
-  static const std::string URL_SCHEMA_RELS_IMAGE;
-  static const std::string URL_SCHEMA_RELS_HYPERLINK;
-  static const std::string URL_SCHEMA_RELS_NUMBERING;
+  static const char URL_SCHEMA_WORD_2010[];
+  static const char URL_SCHEMA_OFFICE_2006[];
+  static const char URL_SCHEMA_RELS_IMAGE[];
+  static const char URL_SCHEMA_RELS_HYPERLINK[];
+  static const char URL_SCHEMA_RELS_NUMBERING[];
 
   // Get relationship id, insert if not existing yet
-  static std::string GetRelationshipId(
-      std::string path_extract_absolute,
-      const std::string &target,
-      RelationType relation_type);
+  static std::string GetRelationshipId(std::string path_extract_absolute,
+                                       const std::string &target,
+                                       RelationType relation_type);
 };
 
 #endif  // DOCXBOX_DOCX_COMPONENT_RELS_H_

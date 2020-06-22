@@ -76,7 +76,7 @@ class docx_compare {
   static int ExtractFileSizeFromLine(const std::string &line);
 
   void ColorizeFileSize(
-      const char *color,
+      std::string color,
       const std::string &style_on,
       std::string &line) const;
 };

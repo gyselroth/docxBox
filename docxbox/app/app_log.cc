@@ -7,7 +7,7 @@ namespace docxbox {
 
 AppLog* AppLog::m_pThis_ = nullptr;
 
-const std::string AppLog::FORMAT_TIMESTAMP = "%Y-%m-%d %H:%M:%S";
+const char AppLog::FORMAT_TIMESTAMP[] = "%Y-%m-%d %H:%M:%S";
 
 AppLog::AppLog() {
   InitMode();

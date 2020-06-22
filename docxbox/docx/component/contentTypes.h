@@ -11,16 +11,16 @@
 
 class contentTypes {
  public:
-  static const std::string MIME_CONTENT_TYPE_APP;
-  static const std::string MIME_CONTENT_TYPE_BIN;
-  static const std::string MIME_CONTENT_TYPE_CORE;
-  static const std::string MIME_CONTENT_TYPE_DOCUMENT;
-  static const std::string MIME_CONTENT_TYPE_FONT_TABLE;
-  static const std::string MIME_CONTENT_TYPE_NUMBERING;
-  static const std::string MIME_CONTENT_TYPE_SETTINGS;
-  static const std::string MIME_CONTENT_TYPE_STYLES;
-  static const std::string MIME_CONTENT_TYPE_STYLES_WITH_EFFECTS;
-  static const std::string MIME_CONTENT_TYPE_WEB_SETTINGS;
+  static const char MIME_CONTENT_TYPE_APP[];
+  static const char MIME_CONTENT_TYPE_BIN[];
+  static const char MIME_CONTENT_TYPE_CORE[];
+  static const char MIME_CONTENT_TYPE_DOCUMENT[];
+  static const char MIME_CONTENT_TYPE_FONT_TABLE[];
+  static const char MIME_CONTENT_TYPE_NUMBERING[];
+  static const char MIME_CONTENT_TYPE_SETTINGS[];
+  static const char MIME_CONTENT_TYPE_STYLES[];
+  static const char MIME_CONTENT_TYPE_STYLES_WITH_EFFECTS[];
+  static const char MIME_CONTENT_TYPE_WEB_SETTINGS[];
 
   enum ContentType {
     ContentType_Hyperlink,

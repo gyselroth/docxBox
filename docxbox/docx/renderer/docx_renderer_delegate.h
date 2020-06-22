@@ -35,14 +35,16 @@ class docx_renderer_delegate {
 
   std::string RenderMarkupFromJson(const std::string& json);
 
-  std::string &RenderHeading(
-      int level, const std::string &json, std::string &markup);
+  std::string &RenderHeading(int level,
+                             const std::string &json,
+                             std::string &markup);
 
   std::string &RenderHyperlink(const std::string &json, std::string &markup);
   std::string &RenderImage(const std::string &json, std::string &markup);
 
-  std::string &RenderList(
-      bool is_ordered, const std::string &json, std::string &markup);
+  std::string &RenderList(bool is_ordered,
+                          const std::string &json,
+                          std::string &markup);
 
   std::string &RenderParagraph(const std::string &json, std::string &markup);
   std::string &RenderTable(const std::string &json, std::string &markup);

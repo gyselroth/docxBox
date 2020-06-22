@@ -4,8 +4,9 @@
 #include <docxbox/docx/archive/docx_archive_list.h>
 
 docx_archive_list::docx_archive_list(
-    int argc, const std::vector<std::string>& argv, bool is_batch_mode) : docx_archive(
-        argc, argv, is_batch_mode) {}
+    int argc,
+    const std::vector<std::string> &argv,
+    bool is_batch_mode) : docx_archive(argc, argv, is_batch_mode) {}
 
 // List files inside DOCX archive and their attributes
 bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {

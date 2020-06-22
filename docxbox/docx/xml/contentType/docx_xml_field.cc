@@ -4,7 +4,9 @@
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
 #include <docxbox/app/app_log.h>
 
-docx_xml_field::docx_xml_field(int argc, const std::vector<std::string>& argv) : docx_xml(argc, argv) {
+docx_xml_field::docx_xml_field(
+    int argc,
+    const std::vector<std::string> &argv) : docx_xml(argc, argv) {
 }
 
 void docx_xml_field::CollectFields(const std::string& path_xml) {
@@ -41,10 +43,9 @@ void docx_xml_field::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 
-bool docx_xml_field::SetFieldText(
-    const std::string& path_xml,
-    const std::string &field_identifier,
-    const std::string &text) {
+bool docx_xml_field::SetFieldText(const std::string& path_xml,
+                                  const std::string &field_identifier,
+                                  const std::string &text) {
   tinyxml2::XMLDocument doc;
   doc.LoadFile(path_xml.c_str());
 
@@ -66,10 +67,9 @@ bool docx_xml_field::SetFieldText(
 }
 
 // Set field text within children of given node
-void docx_xml_field::SetFieldTextInNodes(
-    tinyxml2::XMLElement *node,
-    const std::string &field_identifier,
-    const std::string &field_value) {
+void docx_xml_field::SetFieldTextInNodes(tinyxml2::XMLElement *node,
+                                         const std::string &field_identifier,
+                                         const std::string &field_value) {
   if (!node || node->NoChildren()) return;
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();

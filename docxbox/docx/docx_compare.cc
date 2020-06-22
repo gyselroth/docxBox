@@ -92,11 +92,15 @@ void docx_compare::Output() {
       auto file_size_right = ExtractFileSizeFromLine(line_right);
 
       if (file_size_left > file_size_right) {
-        ColorizeFileSize(kAnsiLightGreen, style_on_left, line_left);
-        ColorizeFileSize(kAnsiLightRed, style_on_right, line_right);
+        ColorizeFileSize(
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, line_left);
+        ColorizeFileSize(
+            helper::Cli::ANSI_LIGHT_RED, style_on_right, line_right);
       } else if (file_size_left < file_size_right) {
-        ColorizeFileSize(kAnsiLightGreen, style_on_right, line_right);
-        ColorizeFileSize(kAnsiLightRed, style_on_left, line_left);
+        ColorizeFileSize(
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_right, line_right);
+        ColorizeFileSize(
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, line_left);
       }
     }
 
@@ -113,10 +117,10 @@ void docx_compare::Output() {
 }
 
 void docx_compare::ColorizeFileSize(
-    const char *const color,
+    std::string color,
     const std::string &style_on,
     std::string &line) const {
-  line = color + line.insert(9, kAnsiReset + style_on);
+  line = color + line.insert(9, helper::Cli::ANSI_RESET + style_on);
 }
 
 void docx_compare::OutputLine(uint32_t len_summary_1,
@@ -225,20 +229,20 @@ void docx_compare::UpdateColumnStyles(const std::string &line_left,
                                       std::string &style_on_left,
                                       std::string &style_on_right,
                                       std::string &style_off) {
-  style_off = kAnsiReset;
+  style_off = helper::Cli::ANSI_RESET;
 
-  style_on_left = style_on_right = kAnsiReverse;
+  style_on_left = style_on_right = helper::Cli::ANSI_REVERSE;
 
   bool is_blank_left = helper::String::IsWhiteSpace(line_left);
   bool is_blank_right = helper::String::IsWhiteSpace(line_right);
 
   if (is_blank_left) {
     if (!is_blank_right) {
-      style_on_right += kAnsiDim;
-      style_on_right += kAnsiLightGreen;
+      style_on_right += helper::Cli::ANSI_DIM;
+      style_on_right += helper::Cli::ANSI_LIGHT_GREEN;
 
-      style_on_left += kAnsiDim;
-      style_on_left += kAnsiLightRed;
+      style_on_left += helper::Cli::ANSI_DIM;
+      style_on_left += helper::Cli::ANSI_LIGHT_RED;
     } else {
       style_on_left = "";
     }
@@ -246,11 +250,11 @@ void docx_compare::UpdateColumnStyles(const std::string &line_left,
 
   if (is_blank_right) {
     if (!is_blank_left) {
-      style_on_left += kAnsiDim;
-      style_on_left += kAnsiLightGreen;
+      style_on_left += std::string(helper::Cli::ANSI_DIM)
+          + std::string(helper::Cli::ANSI_LIGHT_GREEN);
 
-      style_on_right += kAnsiDim;
-      style_on_right += kAnsiLightRed;
+      style_on_right += std::string(helper::Cli::ANSI_DIM)
+          + std::string(helper::Cli::ANSI_LIGHT_RED);
     } else {
       style_on_right = "";
     }
