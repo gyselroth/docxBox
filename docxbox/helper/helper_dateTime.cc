@@ -24,7 +24,7 @@ std::string DateTime::GetCurrentDateTimeFormatted(const std::string& format) {
 // @return dateTime in ISO 8601 format, e.g. "1994-11-05T13:15:30Z"
 // @see ISO-8601 https://www.w3.org/TR/NOTE-datetime
 std::string DateTime::GetCurrentDateTimeInIso8601() {
-  return GetCurrentDateTimeFormatted(kFormatDateTimeIso8601);
+  return GetCurrentDateTimeFormatted(FORMAT_ISO_8601);
 }
 
 // Verify given string being ISO8601 date. Ex: 2016-02-22T10:31:00Z

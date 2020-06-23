@@ -93,7 +93,7 @@ std::string docx_renderer_list::Render() {
 
   generic_root_tag_ = "w:r";
 
-  wml_ = kWRunLhs;
+  wml_ = TAG_LHS_RUN;
 
   for (std::string& item : items_) {
     wml_ +=
@@ -109,7 +109,7 @@ std::string docx_renderer_list::Render() {
         + "</w:p>";
   }
 
-  wml_ += kWRunRhs;
+  wml_ += TAG_RHS_RUN;
 
   RenderPreAndPostFixAroundWml();
 

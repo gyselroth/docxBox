@@ -84,7 +84,7 @@ std::string docx_renderer_image::Render() {
 
   generic_root_tag_ = "w:r";
 
-  wml_ = kWRunLhs;
+  wml_ = TAG_LHS_RUN;
 
   // TODO(kay): insert dimension from JSON -> a:ext...
 
@@ -140,7 +140,7 @@ std::string docx_renderer_image::Render() {
       "</wp:inline>"
     "</w:drawing>";
 
-  wml_ += kWRunRhs;
+  wml_ += TAG_RHS_RUN;
 
   RenderPreAndPostFixAroundWml();
 

@@ -10,12 +10,6 @@
 #include <string>
 #include <vector>
 
-static const char *const kWRunLhs = "<w:r>";
-static const char *const kWRunRhs = "</w:r>";
-
-static const char *const kWTableLhs = "<w:tbl>";
-static const char *const kWTableRhs = "</w:tbl>";
-
 class docx_renderer {
  public:
   enum ElementType {
@@ -31,6 +25,11 @@ class docx_renderer {
     ElementType_Text,
     ElementType_None
   };
+
+  static const char TAG_LHS_RUN[];
+  static const char TAG_RHS_RUN[];
+  static const char TAG_LHS_TABLE[];
+  static const char TAG_RHS_TABLE[];
 
   // Root tag of rendered XML
   std::string generic_root_tag_;

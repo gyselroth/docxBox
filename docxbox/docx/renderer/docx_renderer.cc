@@ -3,6 +3,11 @@
 
 #include <docxbox/docx/renderer/docx_renderer.h>
 
+const char docx_renderer::TAG_LHS_RUN[] = "<w:r>";
+const char docx_renderer::TAG_RHS_RUN[] = "</w:r>";
+const char docx_renderer::TAG_LHS_TABLE[] = "<w:tbl>";
+const char docx_renderer::TAG_RHS_TABLE[] = "</w:tbl>";
+
 docx_renderer::ElementType docx_renderer::DetectElementType(
     const std::string& json) {
   std::string identifier = helper::Json::GetFirstKey(json);

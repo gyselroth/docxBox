@@ -82,16 +82,16 @@ std::string docx_renderer_table::Render() {
 
   generic_root_tag_ = "w:r";
 
-  wml_ = std::string(kWRunLhs);
+  wml_ = std::string(TAG_LHS_RUN);
 
-  wml_ += std::string(kWTableLhs);
+  wml_ += std::string(TAG_LHS_TABLE);
   wml_ += RenderTableProperties();
   wml_ += RenderTableGrid();
   wml_ += RenderTableHeader();
   wml_ += RenderTableRowsAndCells();
-  wml_ += std::string(kWTableRhs);
+  wml_ += std::string(TAG_RHS_TABLE);
 
-  wml_ += std::string(kWRunRhs);
+  wml_ += std::string(TAG_RHS_RUN);
 
   RenderPreAndPostFixAroundWml();
 
