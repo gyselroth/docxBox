@@ -16,8 +16,8 @@
 class docx_renderer_image: public docx_renderer {
  public:
   // Constructor
-  explicit docx_renderer_image(
-      std::string path_extract, const std::string &json);
+  explicit docx_renderer_image(std::string path_extract,
+                               const std::string &json);
 
   void SetRelationshipId(const std::string &relationship_id);
 

@@ -4,8 +4,8 @@
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
 
 // Constructor
-docx_renderer_table::docx_renderer_table(
-    std::string path_extract, const std::string &json) {
+docx_renderer_table::docx_renderer_table(std::string path_extract,
+                                         const std::string &json) {
   path_extract_ = std::move(path_extract);
 
   json_ = json;
@@ -82,16 +82,16 @@ std::string docx_renderer_table::Render() {
 
   generic_root_tag_ = "w:r";
 
-  wml_ = std::string(kWRunLhs);
+  wml_ = std::string(TAG_LHS_RUN);
 
-  wml_ += std::string(kWTableLhs);
+  wml_ += std::string(TAG_LHS_TABLE);
   wml_ += RenderTableProperties();
   wml_ += RenderTableGrid();
-  // TODO(kay): add rendering of header
+  wml_ += RenderTableHeader();
   wml_ += RenderTableRowsAndCells();
-  wml_ += std::string(kWTableRhs);
+  wml_ += std::string(TAG_RHS_TABLE);
 
-  wml_ += std::string(kWRunRhs);
+  wml_ += std::string(TAG_RHS_RUN);
 
   RenderPreAndPostFixAroundWml();
 
@@ -116,6 +116,14 @@ std::string docx_renderer_table::RenderTableGrid() {
   return markup + "</w:tblGrid>";
 }
 
+std::string docx_renderer_table::RenderTableHeader() {
+  std::string markup = "<w:tblHeader><w:tr>";
+
+  for (int i = 0; i < amount_columns_; i++) markup += RenderTableCell(i, true);
+
+  return markup + "</w:tr></w:tblHeader>";
+}
+
 std::string docx_renderer_table::RenderTableRowsAndCells() {
   std::string markup;
 
@@ -136,12 +144,14 @@ std::string docx_renderer_table::RenderTableRowsAndCells() {
   return markup;
 }
 
-std::string docx_renderer_table::RenderTableCell(int index_cell) {
+std::string docx_renderer_table::RenderTableCell(
+    int index_cell, bool is_header) {
   return
       "<w:tc>"
         "<w:tcPr>"
           "<w:tcW w:w=\"" + std::to_string(col_width_) + "\" w:type=\"dxa\"/>"
         "</w:tcPr>"
-        + RenderTextInRunInParagraph(cell_content_[index_cell])
-    + "</w:tc>";
+        + RenderTextInRunInParagraph(is_header
+            ? column_headers_[index_cell]
+            : cell_content_[index_cell]) + "</w:tc>";
 }

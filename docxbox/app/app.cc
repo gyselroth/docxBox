@@ -6,10 +6,12 @@
 namespace docxbox {
 
 // Constructor: init (resolve) command and arguments
-App::App(int argc, char **argv, bool is_batch_mode) {
+App::App(int argc,
+         const std::vector<std::string>& argv,
+         bool is_batch_mode) {
   is_batch_mode_ = is_batch_mode;
 
-  if (!is_batch_mode && argc == 1) {
+  if (!is_batch_mode && argv.size() == 1) {
     // No command given
     AppHelp::PrintHelp(true, AppCommands::Command::Command_Invalid);
 

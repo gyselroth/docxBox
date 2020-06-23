@@ -5,8 +5,8 @@
 #include <docxbox/docx/component/contentTypes.h>
 
 // Constructor
-docx_renderer_list::docx_renderer_list(
-    std::string path_extract, const std::string &json) {
+docx_renderer_list::docx_renderer_list(std::string path_extract,
+                                       const std::string &json) {
   path_extract_ = std::move(path_extract);
 
   json_ = json;
@@ -93,7 +93,7 @@ std::string docx_renderer_list::Render() {
 
   generic_root_tag_ = "w:r";
 
-  wml_ = kWRunLhs;
+  wml_ = TAG_LHS_RUN;
 
   for (std::string& item : items_) {
     wml_ +=
@@ -109,7 +109,7 @@ std::string docx_renderer_list::Render() {
         + "</w:p>";
   }
 
-  wml_ += kWRunRhs;
+  wml_ += TAG_RHS_RUN;
 
   RenderPreAndPostFixAroundWml();
 

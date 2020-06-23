@@ -4,8 +4,9 @@
 #include <docxbox/docx/archive/docx_archive_list.h>
 
 docx_archive_list::docx_archive_list(
-    int argc, char **argv, bool is_batch_mode) : docx_archive(
-        argc, argv, is_batch_mode) {}
+    int argc,
+    const std::vector<std::string> &argv,
+    bool is_batch_mode) : docx_archive(argc, argv, is_batch_mode) {}
 
 // List files inside DOCX archive and their attributes
 bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
@@ -130,8 +131,8 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
   return true;
 }
 
-bool docx_archive_list::InitLocateFilesContaining(
-  bool *as_json, std::string &needle) const {
+bool docx_archive_list::InitLocateFilesContaining(bool *as_json,
+                                                  std::string &needle) const {
   if (!docxbox::AppArgument::IsArgumentGiven(
       argc_,
       2, "DOCX filename")) return false;

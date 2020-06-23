@@ -65,10 +65,9 @@ u_int32_t File::GetLongestLineLength(const std::string &path_file_1,
 }
 
 // Resolve path: keep absolute or make relative from given (binary) path
-std::string File::ResolvePath(
-    const std::string &pwd,
-    std::string path,
-    bool must_exist) {
+std::string File::ResolvePath(const std::string &pwd,
+                              std::string path,
+                              bool must_exist) {
   helper::String::Trim(path);
 
   if (!helper::String::StartsWith(path.c_str(), "/"))
@@ -93,9 +92,8 @@ std::streampos File::GetFileSize(std::ifstream &file) {
   return length;
 }
 
-bool File::WriteToNewFile(
-    const std::string &path_file,
-    const std::string &content) {
+bool File::WriteToNewFile(const std::string &path_file,
+                          const std::string &content) {
   if (FileExists(path_file)) Remove(path_file.c_str());
 
   std::ofstream outfile(path_file);
@@ -107,7 +105,8 @@ bool File::WriteToNewFile(
   return FileExists(path_file);
 }
 
-int File::AppendToFile(const std::string &filename, std::string content) {
+int File::AppendToFile(const std::string &filename,
+                       const std::string &content) {
   std::ofstream out_file;
   out_file.open(filename, std::ios_base::app);
   out_file << content;
@@ -117,9 +116,8 @@ int File::AppendToFile(const std::string &filename, std::string content) {
   return 0;
 }
 
-bool File::CopyFile(
-    const std::string &path_source,
-    const std::string &path_destination) {
+bool File::CopyFile(const std::string &path_source,
+                    const std::string &path_destination) {
   if (!FileExists(path_source))
     throw "Copy file failed - file not found: " + path_source;
 

@@ -4,8 +4,8 @@
 #include <docxbox/docx/renderer/contentType/docx_renderer_paragraph.h>
 
 // Constructor
-docx_renderer_paragraph::docx_renderer_paragraph(
-    std::string path_extract, const std::string &json) {
+docx_renderer_paragraph::docx_renderer_paragraph(std::string path_extract,
+                                                 const std::string &json) {
   path_extract_ = std::move(path_extract);
 
   json_ = json;

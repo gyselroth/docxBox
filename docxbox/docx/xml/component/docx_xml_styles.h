@@ -15,12 +15,14 @@
 #include <iostream>
 #include <string>
 #include <utility>
-
+#include <vector>
 
 class docx_xml_styles: docx_xml {
  public:
   explicit docx_xml_styles(
-      std::string path_extract, int argc = 0, char **argv = nullptr);
+      std::string path_extract,
+      int argc = 0,
+      const std::vector<std::string>& argv = {});
 
   // Get (insert if not exists) style ID
   std::string GetStyleId(

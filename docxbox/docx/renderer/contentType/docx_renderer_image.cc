@@ -6,8 +6,8 @@
 #include <iostream>
 
 // Constructor
-docx_renderer_image::docx_renderer_image(
-    std::string path_extract, const std::string &json) {
+docx_renderer_image::docx_renderer_image(std::string path_extract,
+                                         const std::string &json) {
   path_extract_ = std::move(path_extract);
 
   json_ = json;
@@ -84,7 +84,7 @@ std::string docx_renderer_image::Render() {
 
   generic_root_tag_ = "w:r";
 
-  wml_ = kWRunLhs;
+  wml_ = TAG_LHS_RUN;
 
   // TODO(kay): insert dimension from JSON -> a:ext...
 
@@ -140,7 +140,7 @@ std::string docx_renderer_image::Render() {
       "</wp:inline>"
     "</w:drawing>";
 
-  wml_ += kWRunRhs;
+  wml_ += TAG_RHS_RUN;
 
   RenderPreAndPostFixAroundWml();
 

@@ -7,8 +7,8 @@
 #include <utility>
 
 // Constructor
-docx_renderer_text::docx_renderer_text(
-    std::string path_extract, const std::string &json) {
+docx_renderer_text::docx_renderer_text(std::string path_extract,
+                                       const std::string &json) {
   path_extract_ = std::move(path_extract);
 
   json_ = json;

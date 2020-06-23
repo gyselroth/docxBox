@@ -6,8 +6,8 @@
 #include <iostream>
 
 // Constructor
-docx_renderer_link::docx_renderer_link(
-    std::string path_extract, const std::string &json) {
+docx_renderer_link::docx_renderer_link(std::string path_extract,
+                                       const std::string &json) {
   path_extract_ = std::move(path_extract);
 
   json_ = json;
@@ -38,8 +38,7 @@ bool docx_renderer_link::InitFromJson() {
   return !text_.empty() && !url_.empty();
 }
 
-void docx_renderer_link::SetRelationshipId(
-    const std::string &relationship_id) {
+void docx_renderer_link::SetRelationshipId(const std::string &relationship_id) {
   relationship_id_ = relationship_id;
 }
 

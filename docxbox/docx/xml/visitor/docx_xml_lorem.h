@@ -17,14 +17,14 @@
 
 class docx_xml_lorem:docx_xml {
  public:
-  docx_xml_lorem(int argc, char **argv);
+  docx_xml_lorem(int argc, const std::vector<std::string>& argv);
 
   bool RandomizeAllTextInXml(const std::string& path_xml);
 
  private:
   bool has_xml_changed_;
 
-  char const* lorem_ipsum_[69] = {
+  std::vector<std::string> lorem_ipsum_ = {
       "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing",
       "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore",
       "et", "dolore", "magna", "aliqua", "ut", "enim", "ad", "minim",

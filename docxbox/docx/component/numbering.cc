@@ -184,10 +184,10 @@ std::string numbering::RenderXml(bool unordered) {
 
 std::string numbering::RenderXmlNamespaceTag() {
   const std::basic_string<char>
-      &urlSchemaWord10 = std::string(kUrlSchemaMsOfficeWord2010);
+      &urlSchemaWord10 = std::string(rels::URL_SCHEMA_WORD_2010);
 
   const std::basic_string<char>
-      &urlSchemaOffice06 = std::string(kUrlSchemaOffice2006);
+      &urlSchemaOffice06 = std::string(rels::URL_SCHEMA_OFFICE_2006);
 
   return
       "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>"

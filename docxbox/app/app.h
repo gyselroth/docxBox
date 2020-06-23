@@ -13,9 +13,10 @@
 #include <docxbox/docx/archive/docx_archive_replace.h>
 #include <docxbox/helper/helper_dateTime.h>
 
-#include <string>
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace docxbox {
 
@@ -26,7 +27,9 @@ class App {
   static const std::string kAppExecutableName;
 
   // Constructor: init (resolve) command and arguments
-  App(int argc, char **argv, bool is_batch_mode = false);
+  App(int argc,
+      const std::vector<std::string>& argv,
+      bool is_batch_mode = false);
 
   void SetPathDocxIn(const std::string &path_docx_in);
   void SetPathDocxOut(const std::string &path_docx_out);
@@ -39,7 +42,7 @@ class App {
 
  private:
   int argc_;
-  char **argv_;
+  std::vector<std::string> argv_;
 
   bool is_batch_mode_ = false;
 

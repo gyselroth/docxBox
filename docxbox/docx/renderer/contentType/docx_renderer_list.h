@@ -18,8 +18,8 @@
 class docx_renderer_list: public docx_renderer {
  public:
   // Constructor
-  explicit docx_renderer_list(
-      std::string path_extract, const std::string &json);
+  explicit docx_renderer_list(std::string path_extract,
+                              const std::string &json);
 
   void SetIsOrdered(bool is_ordered = true);
 

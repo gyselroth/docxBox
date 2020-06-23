@@ -3,7 +3,8 @@
 
 #include <docxbox/docx/xml/visitor/docx_xml_to_plaintext.h>
 
-docx_xml_to_plaintext::docx_xml_to_plaintext(int argc, char **argv) : docx_xml(
+docx_xml_to_plaintext::docx_xml_to_plaintext(
+    int argc, const std::vector<std::string>& argv) : docx_xml(
     argc, argv) {
 }
 
@@ -23,9 +24,8 @@ std::string docx_xml_to_plaintext::GetTextFromXmlFile(
   return document_text_;
 }
 
-void docx_xml_to_plaintext::GetChildNodesText(
-    tinyxml2::XMLElement *node,
-    bool newline_at_segments) {
+void docx_xml_to_plaintext::GetChildNodesText(tinyxml2::XMLElement *node,
+                                              bool newline_at_segments) {
   if (!node || node->NoChildren()) return;
 
   if (0 == strcmp(node->Value(), "w:p")) document_text_ += "\n";

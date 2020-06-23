@@ -18,7 +18,7 @@
 
 class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
  public:
-  docx_xml_replace(int argc, char **argv);
+  docx_xml_replace(int argc, const std::vector<std::string>& argv);
 
   bool ReplaceInXml(
       const std::string& path_xml,

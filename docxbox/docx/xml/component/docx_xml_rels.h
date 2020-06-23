@@ -15,17 +15,19 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 #include <utility>
 
 class docx_xml_rels: docx_xml {
  public:
   explicit docx_xml_rels(
-      std::string path_extract, int argc = 0, char **argv = nullptr);
+      std::string path_extract,
+      int argc = 0,
+      const std::vector<std::string>& argv = {});
 
   // Get (insert if not exists) relationship id of given image target
-  std::string GetRelationShipIdByTarget(
-      const std::string &target,
-      rels::RelationType relation_type);
+  std::string GetRelationShipIdByTarget(const std::string &target,
+                                        rels::RelationType relation_type);
 
  private:
   std::string path_extract_;

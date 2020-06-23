@@ -29,10 +29,9 @@ extern bool IsDirectory(const std::string& path);
 extern bool FileExists(const std::string &path_file);
 
 // Resolve path: keep absolute or make relative from given (binary) path
-extern std::string ResolvePath(
-    const std::string &pwd,
-    std::string path,
-    bool must_exist = false);
+extern std::string ResolvePath(const std::string &pwd,
+                               std::string path,
+                               bool must_exist = false);
 
 extern std::streampos GetFileSize(std::ifstream &file);
 
@@ -46,11 +45,11 @@ extern u_int32_t GetLongestLineLength(const std::string &path_file_1,
 extern bool WriteToNewFile(const std::string &path_file,
                            const std::string &content);
 
-extern int AppendToFile(const std::string &filename, std::string content);
+extern int AppendToFile(const std::string &filename,
+                        const std::string &content);
 
-extern bool CopyFile(
-    const std::string &path_source,
-    const std::string &path_destination);
+extern bool CopyFile(const std::string &path_source,
+                     const std::string &path_destination);
 
 extern bool Remove(const char *path);
 extern bool RemoveRecursive(const char *file_path);

@@ -15,8 +15,8 @@
 class docx_renderer_heading: public docx_renderer {
  public:
   // Constructor
-  explicit docx_renderer_heading(
-      std::string path_extract, const std::string &json);
+  explicit docx_renderer_heading(std::string path_extract,
+                                 const std::string &json);
 
   void SetLevel(int level);
 

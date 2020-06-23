@@ -7,9 +7,9 @@
 #include <utility>
 
 docx_xml_contentTypes::docx_xml_contentTypes(
-    std::string path_extract, int argc, char **argv) : docx_xml(
-    argc,
-    argv) {
+    std::string path_extract,
+    int argc,
+    const std::vector<std::string>& argv) : docx_xml(argc, argv) {
   path_xml_file_ = path_extract + "/[Content_Types].xml";
   path_extract_ = std::move(path_extract);
 
@@ -27,7 +27,7 @@ bool docx_xml_contentTypes::OverrideNumbering() {
       "</Types>",
 
       (std::string(R"(<Override PartName="/word/numbering.xml" ContentType=")")
-      + kMimeContentTypeNumbering + "\"/></Types>").c_str());
+      + contentTypes::MIME_CONTENT_TYPE_NUMBERING + "\"/></Types>").c_str());
 
   return SaveXml(false);
 }

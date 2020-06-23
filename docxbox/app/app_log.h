@@ -13,8 +13,6 @@
 
 namespace docxbox {
 
-static const char *const kFormatDateTimeLog = "%Y-%m-%d %H:%M:%S";
-
 class AppLog {
  public:
   enum LogMode {
@@ -46,7 +44,7 @@ class AppLog {
   static bool NotifyInfo(const std::string &message, bool file_only = false);
 
   // Log docxBox execution arguments to log file
-  static void LogStartUp(int argc, char *const *argv);
+  static void LogStartUp(const std::vector<std::string>& arguments);
 
   static void Output(bool delete_instance = true);
   void OutputToStdOut();
@@ -55,6 +53,8 @@ class AppLog {
   static bool IsSilent();
 
  private:
+  static const char FORMAT_TIMESTAMP[];
+
   // Singleton instance pointer
   static AppLog* m_pThis_;
 

@@ -10,18 +10,19 @@
 
 #include <vendor/tinyxml2/tinyxml2.h>
 
-#include <string>
 #include <iostream>
+#include <string>
+#include <vector>
 
 class docx_xml {
  public:
-  docx_xml(int argc, char **argv);
+  docx_xml(int argc, const std::vector<std::string>& argv);
 
   static bool IsXmlFileContainingText(const std::string &filename);
 
  protected:
   int argc_;
-  char **argv_;
+  std::vector<std::string> argv_;
 
   std::string document_text_;
   std::string path_xml_file_;

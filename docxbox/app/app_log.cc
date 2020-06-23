@@ -7,6 +7,8 @@ namespace docxbox {
 
 AppLog* AppLog::m_pThis_ = nullptr;
 
+const char AppLog::FORMAT_TIMESTAMP[] = "%Y-%m-%d %H:%M:%S";
+
 AppLog::AppLog() {
   InitMode();
 
@@ -102,13 +104,10 @@ bool AppLog::NotifyInfo(const std::string& message, bool file_only) {
 }
 
 // Log docxBox execution arguments to log file
-void AppLog::LogStartUp(int argc, char *const *argv) {
+void AppLog::LogStartUp(const std::vector<std::string>& arguments) {
   std::string arg_values;
 
-  for (int index = 0; index < argc; ++index) {
-    arg_values += argv[index];
-    arg_values += " ";
-  }
+  for (const auto& argument : arguments) arg_values += argument + " ";
 
   NotifyInfo("docxBox executing w/ arguments: " + arg_values, true);
 }
@@ -116,7 +115,7 @@ void AppLog::LogStartUp(int argc, char *const *argv) {
 // Remember current dateTime (notification occurred)
 void AppLog::PushBackTime() {
   timestamps_.push_back(
-      helper::DateTime::GetCurrentDateTimeFormatted(kFormatDateTimeLog));
+      helper::DateTime::GetCurrentDateTimeFormatted(FORMAT_TIMESTAMP));
 }
 
 void AppLog::Output(bool delete_instance) {

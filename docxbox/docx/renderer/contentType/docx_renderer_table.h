@@ -17,8 +17,8 @@
 class docx_renderer_table: public docx_renderer {
  public:
   // Constructor
-  explicit docx_renderer_table(
-      std::string path_extract, const std::string &json);
+  explicit docx_renderer_table(std::string path_extract,
+                               const std::string &json);
 
   std::string Render() override;
 
@@ -40,7 +40,8 @@ class docx_renderer_table: public docx_renderer {
 
   std::string RenderTableProperties();
   std::string RenderTableGrid();
-  std::string RenderTableCell(int index_cell);
+  std::string RenderTableHeader();
+  std::string RenderTableCell(int index_cell, bool is_header = false);
   std::string RenderTableRowsAndCells();
 };
 

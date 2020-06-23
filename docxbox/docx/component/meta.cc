@@ -3,7 +3,47 @@
 
 #include <docxbox/docx/component/meta.h>
 
-meta::meta(int argc, char **argv) {
+// Meta attribute tag names possible in docProps/app.xml
+const char meta::TAG_APP_APPLICATION[] = "Application";
+const char meta::TAG_APP_APP_VERSION[] = "AppVersion";
+const char meta::TAG_APP_COMPANY[] = "Company";
+const char meta::TAG_APP_TEMPLATE[] = "Template";
+const char meta::TAG_APP_XML_SCHEMA[] = "xmlSchema";
+
+// Meta attribute tag names possible in docProps/core.xml
+const char meta::TAG_CORE_CP_LAST_MODIFIED_BY[] = "cp:lastModifiedBy";
+const char meta::TAG_CORE_CP_LAST_PRINTED[] = "cp:lastPrinted";
+const char meta::TAG_CORE_CP_REVISION[] = "cp:revision";
+
+const char meta::TAG_CORE_DC_CREATOR[] = "dc:creator";
+const char meta::TAG_CORE_DC_DESCRIPTION[] = "dc:description";
+const char meta::TAG_CORE_DC_KEYWORDS[] = "dc:keywords";
+const char meta::TAG_CORE_DC_LANGUAGE[] = "dc:language";
+const char meta::TAG_CORE_DC_SUBJECT[] = "dc:subject";
+const char meta::TAG_CORE_DC_TITLE[] = "dc:title";
+const char meta::TAG_CORE_DC_CREATED[] = "dcterms:created";
+const char meta::TAG_CORE_DC_MODIFIED[] = "dcterms:modified";
+
+const char meta::TAG_RHS_CORE_PROPERTIES[] = "</cp:coreProperties>";
+
+const char meta::ATTR_CORE_CREATED[] = "created";
+const char meta::ATTR_CORE_CREATOR[] = "creator";
+const char meta::ATTR_CORE_DESCRIPTION[] = "description";
+const char meta::ATTR_CORE_KEYWORDS[] = "keywords";
+const char meta::ATTR_CORE_LANGUAGE[] = "language";
+const char meta::ATTR_CORE_LAST_MODIFIED_BY[] = "lastModifiedBy";
+const char meta::ATTR_CORE_LAST_PRINTED[] = "lastPrinted";
+const char meta::ATTR_CORE_MODIFIED[] = "modified";
+const char meta::ATTR_CORE_REVISION[] = "revision";
+const char meta::ATTR_CORE_SUBJECT[] = "subject";
+const char meta::ATTR_CORE_TITLE[] = "title";
+
+const char meta::ATTR_DC_XSI[] = " xsi:type=\"dcterms:W3CDTF\"";
+
+const char meta::TAG_LHS_XML_SCHEME[] = "<Properties xmlns=\"";
+const char meta::TAG_RHS_XML_SCHEME[] = "\" ";
+
+meta::meta(int argc, const std::vector<std::string>& argv) {
     argc_ = argc;
     argv_ = argv;
 }
@@ -43,17 +83,17 @@ meta::Attribute meta::ResolveAttribute(const std::string &attribute) {
 
   is_app_attribute_ = false;
 
-  if (attribute == kAttrCoreCreated) return Attr_Core_Created;
-  if (attribute == kAttrCoreCreator) return Attr_Core_Creator;
-  if (attribute == kAttrCoreDescription) return Attr_Core_Description;
-  if (attribute == kAttrCoreKeywords) return Attr_Core_Keywords;
-  if (attribute == kAttrCoreLanguage) return Attr_Core_Language;
-  if (attribute == kAttrCoreLastModifiedBy) return Attr_Core_LastModifiedBy;
-  if (attribute == kAttrCoreLastPrinted) return Attr_Core_LastPrinted;
-  if (attribute == kAttrCoreModified) return Attr_Core_Modified;
-  if (attribute == kAttrCoreRevision) return Attr_Core_Revision;
-  if (attribute == kAttrCoreSubject) return Attr_Core_Subject;
-  if (attribute == kAttrCoreTitle) return Attr_Core_Title;
+  if (attribute == ATTR_CORE_CREATED) return Attr_Core_Created;
+  if (attribute == ATTR_CORE_CREATOR) return Attr_Core_Creator;
+  if (attribute == ATTR_CORE_DESCRIPTION) return Attr_Core_Description;
+  if (attribute == ATTR_CORE_KEYWORDS) return Attr_Core_Keywords;
+  if (attribute == ATTR_CORE_LANGUAGE) return Attr_Core_Language;
+  if (attribute == ATTR_CORE_LAST_MODIFIED_BY) return Attr_Core_LastModifiedBy;
+  if (attribute == ATTR_CORE_LAST_PRINTED) return Attr_Core_LastPrinted;
+  if (attribute == ATTR_CORE_MODIFIED) return Attr_Core_Modified;
+  if (attribute == ATTR_CORE_REVISION) return Attr_Core_Revision;
+  if (attribute == ATTR_CORE_SUBJECT) return Attr_Core_Subject;
+  if (attribute == ATTR_CORE_TITLE) return Attr_Core_Title;
 
   return Attr_Unknown;
 }
@@ -76,25 +116,23 @@ bool meta::IsDateAttribute(Attribute attribute) {
  * @param label     Optional, if empty: same as tag_name
  * @return Fetched value of given attribute
  */
-std::string meta::FetchAttributeFromAppXml(
-    const char *tag_name,
-    const std::string &label) {
-
+std::string meta::FetchAttributeFromAppXml(const char tag_name[],
+                                           const std::string &label) {
   return FetchAttributeFromAppXml(
       GetLhsTagByTagName(tag_name).c_str(),
       GetRhsTagByTagName(tag_name).c_str(),
       label.empty() ? tag_name : label);
 }
 
-std::string meta::GetRhsTagByTagName(const char *tag_name) {
+std::string meta::GetRhsTagByTagName(const char tag_name[]) {
   return std::string("</") + tag_name + ">";
 }
 
-std::string meta::GetLhsTagByTagName(const char *tag_name) {
+std::string meta::GetLhsTagByTagName(const char tag_name[]) {
   std::string attributes;
 
   if (helper::String::StartsWith(tag_name, "dcterms:"))
-    attributes = kWmlAttributeDcTermsXsi;
+    attributes = ATTR_DC_XSI;
 
   return std::string("<") + tag_name + attributes + ">";
 }
@@ -102,22 +140,24 @@ std::string meta::GetLhsTagByTagName(const char *tag_name) {
 // TODO(kay): merge GetLhsTagByAttribute + GetRhsTagByAttribute methods
 std::string meta::GetLhsTagByAttribute(const meta::Attribute &attribute) {
   switch (attribute) {
-    case Attr_App_Application:return GetLhsTagByTagName(kTagNameApplication);
-    case Attr_App_AppVersion:return GetLhsTagByTagName(kTagNameAppVersion);
-    case Attr_Core_Created:return GetLhsTagByTagName(kTagNameDcTermsCreated);
-    case Attr_Core_Creator:return GetLhsTagByTagName(kTagNameDcCreator);
-    case Attr_App_Company:return GetLhsTagByTagName(kTagNameCompany);
-    case Attr_Core_Description:return GetLhsTagByTagName(kTagNameDcDescription);
-    case Attr_Core_Title:return GetLhsTagByTagName(kTagNameDcTitle);
-    case Attr_Core_Language:return GetLhsTagByTagName(kTagNameDcLanguage);
-    case Attr_Core_Revision:return GetLhsTagByTagName(kTagNameCpRevision);
+    case Attr_App_Application:return GetLhsTagByTagName(TAG_APP_APPLICATION);
+    case Attr_App_AppVersion:return GetLhsTagByTagName(TAG_APP_APP_VERSION);
+    case Attr_Core_Created:return GetLhsTagByTagName(TAG_CORE_DC_CREATED);
+    case Attr_Core_Creator:return GetLhsTagByTagName(TAG_CORE_DC_CREATOR);
+    case Attr_App_Company:return GetLhsTagByTagName(TAG_APP_COMPANY);
+    case Attr_Core_Description:
+      return GetLhsTagByTagName(TAG_CORE_DC_DESCRIPTION);
+    case Attr_Core_Title:return GetLhsTagByTagName(TAG_CORE_DC_TITLE);
+    case Attr_Core_Language:return GetLhsTagByTagName(TAG_CORE_DC_LANGUAGE);
+    case Attr_Core_Revision:return GetLhsTagByTagName(TAG_CORE_CP_REVISION);
     case Attr_Core_LastModifiedBy:
-      return GetLhsTagByTagName(kTagNameCpLastModifiedBy);
-    case Attr_Core_Modified:return GetLhsTagByTagName(kTagNameDcTermsModified);
-    case Attr_Core_LastPrinted:return GetLhsTagByTagName(kTagNameCpLastPrinted);
-    case Attr_Core_Subject:return GetLhsTagByTagName(kTagNameDcSubject);
-    case Attr_App_Template:return GetLhsTagByTagName(kTagNameTemplate);
-    case Attr_App_XmlSchema:return GetLhsTagByTagName(kTagNameXmlSchema);
+      return GetLhsTagByTagName(TAG_CORE_CP_LAST_MODIFIED_BY);
+    case Attr_Core_Modified:return GetLhsTagByTagName(TAG_CORE_DC_MODIFIED);
+    case Attr_Core_LastPrinted:
+      return GetLhsTagByTagName(TAG_CORE_CP_LAST_PRINTED);
+    case Attr_Core_Subject:return GetLhsTagByTagName(TAG_CORE_DC_SUBJECT);
+    case Attr_App_Template:return GetLhsTagByTagName(TAG_APP_TEMPLATE);
+    case Attr_App_XmlSchema:return GetLhsTagByTagName(TAG_APP_XML_SCHEMA);
     default:
       docxbox::AppLog::NotifyError(
           "Failed render opening tag. Unknown attribute: " + attribute);
@@ -128,22 +168,24 @@ std::string meta::GetLhsTagByAttribute(const meta::Attribute &attribute) {
 
 std::string meta::GetRhsTagByAttribute(const meta::Attribute &attribute) {
   switch (attribute) {
-    case Attr_App_Application:return GetRhsTagByTagName(kTagNameApplication);
-    case Attr_App_AppVersion:return GetRhsTagByTagName(kTagNameAppVersion);
-    case Attr_Core_Created:return GetRhsTagByTagName(kTagNameDcTermsCreated);
-    case Attr_Core_Creator:return GetRhsTagByTagName(kTagNameDcCreator);
-    case Attr_App_Company:return GetRhsTagByTagName(kTagNameCompany);
-    case Attr_Core_Description:return GetRhsTagByTagName(kTagNameDcDescription);
-    case Attr_Core_Title:return GetRhsTagByTagName(kTagNameDcTitle);
-    case Attr_Core_Language:return GetRhsTagByTagName(kTagNameDcLanguage);
-    case Attr_Core_Revision:return GetRhsTagByTagName(kTagNameCpRevision);
+    case Attr_App_Application:return GetRhsTagByTagName(TAG_APP_APPLICATION);
+    case Attr_App_AppVersion:return GetRhsTagByTagName(TAG_APP_APP_VERSION);
+    case Attr_Core_Created:return GetRhsTagByTagName(TAG_CORE_DC_CREATED);
+    case Attr_Core_Creator:return GetRhsTagByTagName(TAG_CORE_DC_CREATOR);
+    case Attr_App_Company:return GetRhsTagByTagName(TAG_APP_COMPANY);
+    case Attr_Core_Description:
+      return GetRhsTagByTagName(TAG_CORE_DC_DESCRIPTION);
+    case Attr_Core_Title:return GetRhsTagByTagName(TAG_CORE_DC_TITLE);
+    case Attr_Core_Language:return GetRhsTagByTagName(TAG_CORE_DC_LANGUAGE);
+    case Attr_Core_Revision:return GetRhsTagByTagName(TAG_CORE_CP_REVISION);
     case Attr_Core_LastModifiedBy:
-      return GetRhsTagByTagName(kTagNameCpLastModifiedBy);
-    case Attr_Core_Modified:return GetRhsTagByTagName(kTagNameDcTermsModified);
-    case Attr_Core_LastPrinted:return GetRhsTagByTagName(kTagNameCpLastPrinted);
-    case Attr_Core_Subject:return GetRhsTagByTagName(kTagNameDcSubject);
-    case Attr_App_Template:return GetRhsTagByTagName(kTagNameTemplate);
-    case Attr_App_XmlSchema:return GetRhsTagByTagName(kTagNameXmlSchema);
+      return GetRhsTagByTagName(TAG_CORE_CP_LAST_MODIFIED_BY);
+    case Attr_Core_Modified:return GetRhsTagByTagName(TAG_CORE_DC_MODIFIED);
+    case Attr_Core_LastPrinted:
+      return GetRhsTagByTagName(TAG_CORE_CP_LAST_PRINTED);
+    case Attr_Core_Subject:return GetRhsTagByTagName(TAG_CORE_DC_LANGUAGE);
+    case Attr_App_Template:return GetRhsTagByTagName(TAG_APP_TEMPLATE);
+    case Attr_App_XmlSchema:return GetRhsTagByTagName(TAG_APP_XML_SCHEMA);
     default:
       docxbox::AppLog::NotifyError(
           "Failed render closing tag. Unknown attribute: " + attribute);
@@ -152,10 +194,9 @@ std::string meta::GetRhsTagByAttribute(const meta::Attribute &attribute) {
   }
 }
 
-std::string meta::FetchAttributeFromAppXml(
-    const char* lhs_of_value,
-    const char* rhs_of_value,
-    const std::string &label) {
+std::string meta::FetchAttributeFromAppXml(const char* lhs_of_value,
+                                           const char *rhs_of_value,
+                                           const std::string &label) {
   if (!helper::String::Contains(app_xml_, lhs_of_value)) return "";
 
   std::string value =
@@ -166,19 +207,17 @@ std::string meta::FetchAttributeFromAppXml(
   return value;
 }
 
-std::string meta::FetchAttributeFromCoreXml(
-    const char* tag_name,
-    const std::string &label) {
+std::string meta::FetchAttributeFromCoreXml(const char tag_name[],
+                                            const std::string &label) {
   return FetchAttributeFromCoreXml(
       GetLhsTagByTagName(tag_name).c_str(),
       GetRhsTagByTagName(tag_name).c_str(),
       label);
 }
 
-std::string meta::FetchAttributeFromCoreXml(
-    const char* lhs_of_value,
-    const char* rhs_of_value,
-    const std::string &label) {
+std::string meta::FetchAttributeFromCoreXml(const char lhs_of_value[],
+                                            const char rhs_of_value[],
+                                            const std::string &label) {
   if (!helper::String::Contains(core_xml_, lhs_of_value)) return "";
 
   std::string value = helper::String::GetSubStrBetween(
@@ -322,8 +361,8 @@ bool meta::InsertAppAttribute(Attribute attribute, const std::string& value) {
 
   helper::String::Replace(
       app_xml_,
-      kWordMlCorePropertiesRhs,
-      (kLhsTag + value + kRhs).c_str());
+      meta::TAG_RHS_CORE_PROPERTIES,
+      (kLhsTag + value + kRhs + meta::TAG_RHS_CORE_PROPERTIES).c_str());
 
   return true;
 }
@@ -338,8 +377,8 @@ bool meta::InsertCoreAttribute(Attribute attribute, const std::string& value) {
 
   helper::String::Replace(
       core_xml_,
-      kWordMlCorePropertiesRhs,
-      (kLhsTag + value + kRhs + kWordMlCorePropertiesRhs).c_str());
+      meta::TAG_RHS_CORE_PROPERTIES,
+      (kLhsTag + value + kRhs + meta::TAG_RHS_CORE_PROPERTIES).c_str());
 
   return true;
 }
@@ -420,15 +459,15 @@ void meta::CollectFromAppXml(std::string path_app_xml_current,
 
   app_xml_ = app_xml;
 
-  FetchAttributeFromAppXml(kTagNameApplication);
-  FetchAttributeFromAppXml(kTagNameAppVersion);
-  FetchAttributeFromAppXml(kTagNameCompany);
+  FetchAttributeFromAppXml(TAG_APP_APPLICATION);
+  FetchAttributeFromAppXml(TAG_APP_APP_VERSION);
+  FetchAttributeFromAppXml(TAG_APP_COMPANY);
 
   attributes_.emplace_back("xmlSchema", ExtractXmlSchemaFromAppXml(app_xml));
 
   app_xml_ = app_xml;
 
-  FetchAttributeFromAppXml(kTagNameTemplate);
+  FetchAttributeFromAppXml(TAG_APP_TEMPLATE);
 
   has_collected_from_app_xml_ = true;
 
@@ -439,10 +478,7 @@ std::string meta::ExtractXmlSchemaFromAppXml(std::string &app_xml) const {
   u_int32_t offset = 0;
 
   std::string xml_schema = helper::String::GetSubStrBetween(
-      app_xml,
-      kWordMlXmlSchemeLhs,
-      kWordMlXmlSchemeRhs,
-      offset);
+      app_xml, TAG_LHS_XML_SCHEME, TAG_RHS_XML_SCHEME, offset);
 
   // Remove last segment from schema,
   // leaving:  http://schemas.openxmlformats.org/officeDocument/<year>
@@ -464,20 +500,20 @@ void meta::CollectFromCoreXml(std::string path_core_xml_current) {
 
   path_core_xml_ = std::move(path_core_xml_current);
 
-  FetchAttributeFromCoreXml(kTagNameDcTermsCreated, kAttrCoreCreated);
-  FetchAttributeFromCoreXml(kTagNameDcCreator, kAttrCoreCreator);
-  FetchAttributeFromCoreXml(kTagNameDcDescription, kAttrCoreDescription);
-  FetchAttributeFromCoreXml(kTagNameDcKeywords, kAttrCoreKeywords);
-  FetchAttributeFromCoreXml(kTagNameDcLanguage, kAttrCoreLanguage);
+  FetchAttributeFromCoreXml(TAG_CORE_DC_CREATED, ATTR_CORE_CREATED);
+  FetchAttributeFromCoreXml(TAG_CORE_DC_CREATOR, ATTR_CORE_CREATOR);
+  FetchAttributeFromCoreXml(TAG_CORE_DC_DESCRIPTION, ATTR_CORE_DESCRIPTION);
+  FetchAttributeFromCoreXml(TAG_CORE_DC_KEYWORDS, ATTR_CORE_KEYWORDS);
+  FetchAttributeFromCoreXml(TAG_CORE_DC_LANGUAGE, ATTR_CORE_LANGUAGE);
 
   FetchAttributeFromCoreXml(
-      kTagNameCpLastModifiedBy, kAttrCoreLastModifiedBy);
+      TAG_CORE_CP_LAST_MODIFIED_BY, ATTR_CORE_LAST_MODIFIED_BY);
 
-  FetchAttributeFromCoreXml(kTagNameCpLastPrinted, kAttrCoreLastPrinted);
-  FetchAttributeFromCoreXml(kTagNameDcTermsModified, kAttrCoreModified);
-  FetchAttributeFromCoreXml(kTagNameCpRevision, kAttrCoreRevision);
-  FetchAttributeFromCoreXml(kTagNameDcSubject, kAttrCoreSubject);
-  FetchAttributeFromCoreXml(kTagNameDcTitle, kAttrCoreTitle);
+  FetchAttributeFromCoreXml(TAG_CORE_CP_LAST_PRINTED, ATTR_CORE_LAST_PRINTED);
+  FetchAttributeFromCoreXml(TAG_CORE_DC_MODIFIED, ATTR_CORE_MODIFIED);
+  FetchAttributeFromCoreXml(TAG_CORE_CP_REVISION, ATTR_CORE_REVISION);
+  FetchAttributeFromCoreXml(TAG_CORE_DC_SUBJECT, ATTR_CORE_SUBJECT);
+  FetchAttributeFromCoreXml(TAG_CORE_DC_TITLE, ATTR_CORE_TITLE);
 
   has_collected_from_core_xml_ = true;
 

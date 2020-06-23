@@ -4,13 +4,11 @@
 #include <docxbox/docx/xml/visitor/docx_xml_remove.h>
 
 docx_xml_remove::docx_xml_remove(
-    int argc,
-    char **argv) : docx_xml(argc, argv) {}
+    int argc, const std::vector<std::string>& argv) : docx_xml(argc, argv) {}
 
-bool docx_xml_remove::RemoveBetweenStringsInXml(
-    const std::string& path_xml,
-    const std::string& lhs,
-    const std::string& rhs) {
+bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
+                                                const std::string &lhs,
+                                                const std::string &rhs) {
   tinyxml2::XMLDocument doc;
 
   std::string xml = helper::File::GetFileContents(path_xml);
@@ -40,10 +38,9 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(
   return true;
 }
 
-void docx_xml_remove::LocateNodesBetweenText(
-    tinyxml2::XMLElement *node,
-    const std::string& lhs,
-    const std::string& rhs) {
+void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
+                                             const std::string &lhs,
+                                             const std::string &rhs) {
   if (!node || node->NoChildren()) return;
 
   if (found_lhs_ && !found_rhs_) nodes_to_be_removed_.push_back(node);

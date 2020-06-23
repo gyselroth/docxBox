@@ -15,8 +15,8 @@
 class docx_renderer_text: public docx_renderer {
  public:
   // Constructor
-  explicit docx_renderer_text(
-      std::string path_extract, const std::string &json);
+  explicit docx_renderer_text(std::string path_extract,
+                              const std::string &json);
 
   std::string Render() override;
 

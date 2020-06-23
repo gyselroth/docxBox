@@ -29,7 +29,9 @@
 
 class docx_archive_list : public docx_archive {
  public:
-  docx_archive_list(int argc, char **argv, bool is_batch_mode);
+  docx_archive_list(int argc,
+                    const std::vector<std::string> &argv,
+                    bool is_batch_mode);
 
   bool LocateFilesContainingString(bool as_json = false);
 

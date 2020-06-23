@@ -4,7 +4,7 @@
 #include <docxbox/docx/xml/visitor/docx_xml_replace.h>
 
 docx_xml_replace::docx_xml_replace(
-    int argc, char **argv) : docx_xml(argc, argv) {
+    int argc, const std::vector<std::string>& argv) : docx_xml(argc, argv) {
 }
 
 void docx_xml_replace::SetReplacementXmlFirstChildTag(
@@ -30,11 +30,10 @@ int docx_xml_replace::GetAmountReplaced() {
 // 2. A string containing JSON: will be interpreted for rendering word markup,
 //   which will than replace the <w:r> that contained the <w:t> node,
 //   which contained the search-string
-bool docx_xml_replace::ReplaceInXml(
-    const std::string& path_xml,
-    const std::string& search,
-    const std::string& replacement,
-    bool replace_segmented) {
+bool docx_xml_replace::ReplaceInXml(const std::string& path_xml,
+                                    const std::string &search,
+                                    const std::string &replacement,
+                                    bool replace_segmented) {
   replace_segmented_ = replace_segmented;
 
   if (replace_segmented) {

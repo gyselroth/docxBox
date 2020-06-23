@@ -4,8 +4,8 @@
 #include <docxbox/docx/docx_diff.h>
 
 void docx_diff::OutputSideBySide(const std::string &path_extract_left,
-                                        const std::string &path_extract_right,
-                                        const std::string &file) {
+                                 const std::string &path_extract_right,
+                                 const std::string &file) {
   auto path_left = path_extract_left;
   helper::String::Replace(path_left, "-extracted", "");
 
@@ -14,9 +14,10 @@ void docx_diff::OutputSideBySide(const std::string &path_extract_left,
 
   std::cout
     << file << " of "
-    << kAnsiUnderline << path_left << kAnsiReset
+    << helper::Cli::ANSI_UNDERLINE << path_left << helper::Cli::ANSI_RESET
     << " (left) vs. "
-    << kAnsiUnderline << path_right << kAnsiReset << "\n\n";
+    << helper::Cli::ANSI_UNDERLINE << path_right << helper::Cli::ANSI_RESET
+    << "\n\n";
 
   int width = helper::File::GetLongestLineLength(
   path_extract_left + "/" + file,
@@ -33,8 +34,8 @@ void docx_diff::OutputSideBySide(const std::string &path_extract_left,
 }
 
 void docx_diff::OutputUnified(const std::string &path_extract_left,
-                                     const std::string &path_extract_right,
-                                     const std::string &file) {
+                              const std::string &path_extract_right,
+                              const std::string &file) {
   auto output = helper::Cli::GetExecutionResponse(
       std::string(
           "diff -u "
@@ -48,9 +49,13 @@ void docx_diff::OutputUnified(const std::string &path_extract_left,
   auto lines = helper::String::Explode(output, '\n');
 
   for (auto line : lines) {
-    if (line[0] == '-') (line += kAnsiReset).insert(0, kAnsiLightRed);
-    else if (line[0] == '+') (line += kAnsiReset).insert(0, kAnsiLightGreen);
-    else if (line[0] == '@') (line += kAnsiReset).insert(0, kAnsiBold);
+    if (line[0] == '-')
+      (line += helper::Cli::ANSI_RESET).insert(0, helper::Cli::ANSI_LIGHT_RED);
+    else if (line[0] == '+')
+      (line += helper::Cli::ANSI_RESET)
+      .insert(0, helper::Cli::ANSI_LIGHT_GREEN);
+    else if (line[0] == '@')
+      (line += helper::Cli::ANSI_RESET).insert(0, helper::Cli::ANSI_BOLD);
 
     output_colored += line + "\n";
   }

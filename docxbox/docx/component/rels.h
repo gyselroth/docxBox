@@ -4,23 +4,6 @@
 #ifndef DOCXBOX_DOCX_COMPONENT_RELS_H_
 #define DOCXBOX_DOCX_COMPONENT_RELS_H_
 
-static const char *const kUrlSchemaMsOfficeWord2010 =
-    "http://schemas.microsoft.com/office/word/2010/";
-
-static const char *const kUrlSchemaOffice2006 =
-    "http://schemas.openxmlformats.org/officeDocument/2006/";
-
-static const char *const kUrlRelationshipSchemaImage =
-    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
-
-static const char *const kUrlRelationshipSchemaHyperlink =
-    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/"
-    "hyperlink";
-
-static const char *const kUrlRelationshipSchemaNumbering =
-    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/"
-    "numbering";
-
 #include <string>
 #include <utility>
 
@@ -33,11 +16,16 @@ class rels {
     RelationType_None
   };
 
+  static const char URL_SCHEMA_WORD_2010[];
+  static const char URL_SCHEMA_OFFICE_2006[];
+  static const char URL_SCHEMA_RELS_IMAGE[];
+  static const char URL_SCHEMA_RELS_HYPERLINK[];
+  static const char URL_SCHEMA_RELS_NUMBERING[];
+
   // Get relationship id, insert if not existing yet
-  static std::string GetRelationshipId(
-      std::string path_extract_absolute,
-      const std::string &target,
-      RelationType relation_type);
+  static std::string GetRelationshipId(std::string path_extract_absolute,
+                                       const std::string &target,
+                                       RelationType relation_type);
 };
 
 #endif  // DOCXBOX_DOCX_COMPONENT_RELS_H_
