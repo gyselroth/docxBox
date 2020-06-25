@@ -412,14 +412,12 @@ bool docx_archive::ViewFilesDiff() {
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
-  std::string path_in_left = path_docx_in_;
   std::string path_extract_left = path_extract_;
 
   argv_[2] = argv_[3];
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
-  std::string path_in_right = path_docx_in_;
   std::string path_extract_right = path_extract_;
 
   std::string file = argv_[4];

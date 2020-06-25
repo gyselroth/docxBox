@@ -125,7 +125,8 @@ int File::AppendToFile(const std::string &filename,
 bool File::CopyFile(const std::string &path_source,
                     const std::string &path_destination) {
   if (!FileExists(path_source))
-    throw "Copy file failed - file not found: " + path_source;
+    return docxbox::AppLog::NotifyError(
+        "Copy file failed - file not found: " + path_source);
 
   int source = open(path_source.c_str(), O_RDONLY, 0);
   int dest = open(path_destination.c_str(), O_WRONLY | O_CREAT, 0644);

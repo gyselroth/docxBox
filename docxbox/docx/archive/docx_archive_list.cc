@@ -206,9 +206,6 @@ bool docx_archive_list::ListMetaFromXmls(bool as_json) {
 
   if (as_json) meta_component->SetOutputAsJson(true);
 
-  int index_app = 0;
-  int index_core = 0;
-
   for (const auto &file_in_zip : file_list) {
     const char *path_file_within_docx = file_in_zip.filename.c_str();
 
@@ -230,13 +227,9 @@ bool docx_archive_list::ListMetaFromXmls(bool as_json) {
 
       meta_component
           ->CollectFromAppXml(file_in_zip.filename, app_xml_contents);
-
-      ++index_app;
     } else if (helper::String::EndsWith(file_in_zip.filename, "core.xml")) {
       meta_component->LoadCoreXml(path_file_absolute);
       meta_component->CollectFromCoreXml(file_in_zip.filename);
-
-      ++index_core;
     }
   }
 

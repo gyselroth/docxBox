@@ -225,8 +225,6 @@ std::string docx_archive_replace::AddImageFileAndRelation(
   if (!relations->AddImageFile(path_image)) {
     delete relations;
 
-    std::string message = std::string("Failed adding image file ") + argv_[5];
-
     docxbox::AppLog::NotifyError("Failed adding image file " + argv_[5]);
 
     added_image_file_ = false;
@@ -341,7 +339,6 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 
   delete parser;
 
-  std::string path_docx_out;
   bool overwrite_source_docx;
 
   // Create resulting DOCX from files during non-batch mode
