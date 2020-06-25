@@ -184,7 +184,7 @@ class meta {
   static std::string GetLhsTagByAttribute(const Attribute &attribute);
   static std::string GetRhsTagByAttribute(const Attribute &attribute);
 
-  std::string ExtractXmlSchemaFromAppXml(std::string &app_xml) const;
+  std::string ExtractXmlSchemaFromAppXml(const std::string &app_xml) const;
 };
 
 #endif  // DOCXBOX_DOCX_COMPONENT_META_H_

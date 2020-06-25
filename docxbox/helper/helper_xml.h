@@ -13,7 +13,7 @@ namespace Xml {
 
 extern bool IndentXmlFile(const std::string& path_xml);
 
-extern bool CompressXml(std::string &xml);
+extern bool CompressXml(std::string *xml);
 
 }  // namespace Xml
 }  // namespace helper

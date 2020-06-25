@@ -44,31 +44,31 @@ class docx_compare {
   int index_left_ = 0;
   int index_right_ = 0;
 
-  static std::vector<std::string> SplitIntoSortedLines(std::string &file_list);
+  static std::vector<std::string> SplitIntoSortedLines(
+      const std::string &file_list);
 
   static bool IsFileItemLine(const std::string &line);
 
   static std::string RenderMargin(int len_str, int len_max);
 
-  bool AreFilesInLinesDifferent(
-      const std::string &line_1, const std::basic_string<char> &line_2);
+  bool AreFilesInLinesDifferent(std::string *line_1, std::string *line_2);
 
   static void UpdateColumnStyles(const std::string &line_left,
                                  const std::string &line_right,
-                                 std::string &style_on_left,
-                                 std::string &style_on_right,
-                                 std::string &style_off);
+                                 std::string *style_on_left,
+                                 std::string *style_on_right,
+                                 std::string *style_off);
 
   void AdvanceToAlphabeticalNextItem(const std::string &filename_left,
                                             const std::string &filename_right,
-                                            std::string &line_left,
-                                            std::string &line_right);
+                                            std::string *line_left,
+                                            std::string *line_right);
 
   void GetCurrentLineAndFilename(int index,
-                                 const std::vector<std::string> &lines_left,
-                                 uint16_t amount_lines_left,
-                                 std::string &line_left,
-                                 std::string &filename_left) const;
+                                 const std::vector<std::string> &lines,
+                                 uint16_t amount_lines,
+                                 std::string *line,
+                                 std::string *filename) const;
 
   void OutputHeadline(uint32_t len_path_left, u_int32_t len_line_max) const;
   void OutputLine(uint32_t len_summary_1, u_int32_t len_line_max) const;
@@ -78,7 +78,7 @@ class docx_compare {
   void ColorizeFileSize(
       const std::string& color,
       const std::string &style_on,
-      std::string &line) const;
+      std::string *line) const;
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_COMPARE_H_

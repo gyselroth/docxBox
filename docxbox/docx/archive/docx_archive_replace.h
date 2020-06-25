@@ -50,7 +50,7 @@ class docx_archive_replace : public docx_archive {
   std::string AddHyperlinkRelation(const std::string &markup_json);
 
   void InitPathDocxOutForReplaceText(
-      std::string &path_docx_out, bool &overwrite_source_docx) const;
+      std::string *path_docx_out, bool *overwrite_source_docx) const;
 };
 
 #endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_REPLACE_H_

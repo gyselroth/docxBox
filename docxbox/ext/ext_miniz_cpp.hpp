@@ -90,7 +90,7 @@ class miniz_cpp_ext {
   }
 
   std::string PrintDir(
-      miniz_cpp::zip_file &docx_file,
+      miniz_cpp::zip_file *docx_file,
       bool as_json = false,
       bool images_only = false,
       const std::string& filter_pattern = "",
@@ -117,7 +117,7 @@ class miniz_cpp_ext {
     auto filter_by_regex = !filter_pattern.empty();
     auto filter_by_filenames = !filter_filenames.empty();
 
-    for (auto &member : docx_file.infolist()) {
+    for (auto &member : (*docx_file).infolist()) {
       if (!output_directories && helper::String::EndsWith(member.filename, "/"))
         continue;
 

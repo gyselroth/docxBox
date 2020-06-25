@@ -12,12 +12,13 @@ void docx_xml_replace::SetReplacementXmlFirstChildTag(
   replacement_xml_root_tag_ = replacement_xml_first_child_tag;
 }
 
-void docx_xml_replace::SetImageRelationshipId(std::string &relationship_id) {
+void docx_xml_replace::SetImageRelationshipId(
+    const std::string &relationship_id) {
   image_relationship_id_ = relationship_id;
 }
 
 void docx_xml_replace::SetHyperlinkRelationshipId(
-    std::string &relationship_id) {
+    const std::string &relationship_id) {
   hyperlink_relationship_id_ = relationship_id;
 }
 
@@ -68,7 +69,7 @@ bool docx_xml_replace::ReplaceInXml(const std::string& path_xml,
     // Insert temporarily before body, will later be moved into correct place
     // TODO(kay): use resp. different root element instead of w:body,
     //            when not within document.xml
-    helper::String::ReplaceAll(doc_xml, "<w:body>", kMarkup + "<w:body>");
+    helper::String::ReplaceAll(&doc_xml, "<w:body>", kMarkup + "<w:body>");
   }
 
   doc.Parse(doc_xml.c_str());
@@ -138,7 +139,7 @@ void docx_xml_replace::ReplaceOrLocateStringInXml(
             runs_to_be_replaced_.push_back(current_run_);
           } else {
             amount_replaced_ +=
-                helper::String::ReplaceAll(text, search, replacement);
+                helper::String::ReplaceAll(&text, search, replacement);
 
             sub_node->SetText(text.c_str());
           }
@@ -222,7 +223,7 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
         if (!text.empty()
             && helper::String::Contains(text, search.c_str())) {
           amount_replaced_ +=
-              helper::String::ReplaceAll(text, search, replacement);
+              helper::String::ReplaceAll(&text, search, replacement);
 
           sub_node->SetText(text.c_str());
         }

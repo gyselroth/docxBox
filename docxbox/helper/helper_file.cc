@@ -68,7 +68,7 @@ u_int32_t File::GetLongestLineLength(const std::string &path_file_1,
 std::string File::ResolvePath(const std::string &pwd,
                               std::string path,
                               bool must_exist) {
-  helper::String::Trim(path);
+  helper::String::Trim(&path);
 
   if (!helper::String::StartsWith(path.c_str(), "/"))
     path = helper::String::EndsWith(pwd, "/")
@@ -268,7 +268,7 @@ std::vector<std::string> File::ScanDirRecursive(
               remove_prefix);
         } else {
           if (do_remove_prefix)
-            helper::String::Replace(path_file, remove_prefix.c_str(), "");
+            helper::String::Replace(&path_file, remove_prefix.c_str(), "");
 
           files.push_back(path_file);
         }
@@ -285,22 +285,26 @@ std::vector<std::string> File::ScanDirRecursive(
   return files;
 }
 
-void File::GlobPatternToRegEx(std::string &pattern) {
-  if (pattern.empty() || pattern == "*") return;
+std::string File::GlobPatternToRegEx(const std::string &pattern) {
+  if (pattern.empty() || pattern == "*") return std::string(pattern);
+
+  std::string reg_ex = pattern;
 
   // Escape reg-ex control characters that aren't globbing control characters
-  helper::String::ReplaceAll(pattern, "\\", "\\\\");
-  helper::String::ReplaceAll(pattern, ".", "\\.");
-  helper::String::ReplaceAll(pattern, "(", "\\(");
-  helper::String::ReplaceAll(pattern, ")", "\\)");
-  helper::String::ReplaceAll(pattern, "[", "\\[");
-  helper::String::ReplaceAll(pattern, "]", "\\]");
-  helper::String::ReplaceAll(pattern, "{", "\\{");
-  helper::String::ReplaceAll(pattern, "}", "\\}");
+  helper::String::ReplaceAll(&reg_ex, "\\", "\\\\");
+  helper::String::ReplaceAll(&reg_ex, ".", "\\.");
+  helper::String::ReplaceAll(&reg_ex, "(", "\\(");
+  helper::String::ReplaceAll(&reg_ex, ")", "\\)");
+  helper::String::ReplaceAll(&reg_ex, "[", "\\[");
+  helper::String::ReplaceAll(&reg_ex, "]", "\\]");
+  helper::String::ReplaceAll(&reg_ex, "{", "\\{");
+  helper::String::ReplaceAll(&reg_ex, "}", "\\}");
 
   // Convert globbing- to regex control characters
-  helper::String::ReplaceAll(pattern, "*", ".*");
-  helper::String::ReplaceAll(pattern, "?", ".");
+  helper::String::ReplaceAll(&reg_ex, "*", ".*");
+  helper::String::ReplaceAll(&reg_ex, "?", ".");
+
+  return reg_ex;
 }
 
 std::string File::GetTmpName() {

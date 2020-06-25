@@ -19,35 +19,37 @@ bool docx_xml::IsXmlFileContainingText(const std::string &filename) {
 }
 
 tinyxml2::XMLElement *docx_xml::GetBodyByComponentPath(
-    tinyxml2::XMLDocument &doc, const std::string& path_xml) const {
+    tinyxml2::XMLDocument *doc, const std::string& path_xml) const {
 
   if (helper::String::Contains(path_xml, "word/endnotes.xml"))
-    return doc.FirstChildElement("w:endnotes")->FirstChildElement("w:endnote");
+    return (*doc).FirstChildElement("w:endnotes")
+        ->FirstChildElement("w:endnote");
 
   if (helper::String::Contains(path_xml, "word/footnotes.xml"))
-    return
-        doc.FirstChildElement("w:footnotes")->FirstChildElement("w:footnote");
+    return (*doc).FirstChildElement("w:footnotes")
+        ->FirstChildElement("w:footnote");
 
   if (helper::String::Contains(path_xml, "word/header"))
-    return doc.FirstChildElement("w:hdr");
+    return (*doc).FirstChildElement("w:hdr");
 
   if (helper::String::Contains(path_xml, "word/footer"))
-    return doc.FirstChildElement("w:ftr");
+    return (*doc).FirstChildElement("w:ftr");
 
   // Default, e.g. word/document.xml
-  return doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+  return (*doc).FirstChildElement("w:document")->FirstChildElement("w:body");
 }
 
 bool docx_xml::SaveXml(bool compress) {
-  if (compress) helper::Xml::CompressXml(xml_);
+  if (compress) helper::Xml::CompressXml(&xml_);
 
   return helper::File::WriteToNewFile(path_xml_file_, xml_);
 }
 
-void docx_xml::RemoveTmpEndingFromDocxPath(std::string &xml_filename) {
+std::string docx_xml::RemoveTmpEndingFromDocxPath(
+    const std::string &xml_filename) {
   int offset_docx_ending = xml_filename.find(".docx-");
   int offset_slash_after_docx = xml_filename.find('/', offset_docx_ending);
 
-  xml_filename = xml_filename.substr(0, offset_docx_ending) + ".docx"
+  return xml_filename.substr(0, offset_docx_ending) + ".docx"
       + xml_filename.substr(offset_slash_after_docx);
 }

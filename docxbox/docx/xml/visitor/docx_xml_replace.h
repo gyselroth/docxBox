@@ -28,8 +28,8 @@ class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
 
   int GetAmountReplaced();
 
-  void SetImageRelationshipId(std::string &relationship_id);
-  void SetHyperlinkRelationshipId(std::string &relationship_id);
+  void SetImageRelationshipId(const std::string &relationship_id);
+  void SetHyperlinkRelationshipId(const std::string &relationship_id);
 
   void SetReplacementXmlFirstChildTag(
       const std::string &replacement_xml_first_child_tag);

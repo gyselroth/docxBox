@@ -29,7 +29,8 @@ class contentTypes {
     ContentType_None
   };
 
-  static bool OverrideNumbering(std::string &path_extract_absolute);
+  static bool AddOverrideNumberingReference(
+      const std::string &path_extract_absolute);
 };
 
 #endif  // DOCXBOX_DOCX_COMPONENT_CONTENTTYPES_H_

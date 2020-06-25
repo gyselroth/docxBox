@@ -19,14 +19,14 @@ bool Xml::IndentXmlFile(const std::string& path_xml) {
          : true;
 }
 
-bool Xml::CompressXml(std::string &xml) {
+bool Xml::CompressXml(std::string *xml) {
   tinyxml2::XMLDocument doc;
 
-  doc.Parse(xml.c_str());
+  doc.Parse((*xml).c_str());
 
   tinyxml2::XMLPrinter printer;
   doc.Print(&printer);
-  xml = printer.CStr();
+  *xml = printer.CStr();
 
   return true;
 }

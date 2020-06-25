@@ -11,7 +11,7 @@ void fontTable::CollectFontsMetrics(std::string fontTable_xml) {
 
   while (offset < xml_len) {
     std::string font_xml = helper::String::GetSubStrBetween(
-        fontTable_xml, "<w:font ", "</w:font", offset);
+        fontTable_xml, "<w:font ", "</w:font", &offset);
 
     if (font_xml.empty() || font_xml == "></w:fonts>") break;
 

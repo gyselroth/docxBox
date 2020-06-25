@@ -61,14 +61,14 @@ void docx_compare::Output() {
   while (index_total_ < amount_lines_total) {
     GetCurrentLineAndFilename(
         index_left_, lines_left, amount_lines_left,
-        line_left, filename_left);
+        &line_left, &filename_left);
 
     GetCurrentLineAndFilename(
         index_right_, lines_right, amount_lines_right,
-        line_right, filename_right);
+        &line_right, &filename_right);
 
     AdvanceToAlphabeticalNextItem(
-        filename_left, filename_right, line_left, line_right);
+        filename_left, filename_right, &line_left, &line_right);
 
     auto len_left = line_left.length();
     auto len_right = line_right.length();
@@ -78,12 +78,12 @@ void docx_compare::Output() {
     style_on_left = style_on_right = "";
 
     if ((IsFileItemLine(line_left) || IsFileItemLine(line_right))
-        && AreFilesInLinesDifferent(line_left, line_right))
+        && AreFilesInLinesDifferent(&line_left, &line_right))
       UpdateColumnStyles(line_left,
                          line_right,
-                         style_on_left,
-                         style_on_right,
-                         style_off);
+                         &style_on_left,
+                         &style_on_right,
+                         &style_off);
 
     if (style_on_left == style_on_right
         && !line_left.empty() && !line_right.empty()) {
@@ -92,14 +92,14 @@ void docx_compare::Output() {
 
       if (file_size_left > file_size_right) {
         ColorizeFileSize(
-            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, line_left);
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, &line_left);
         ColorizeFileSize(
-            helper::Cli::ANSI_LIGHT_RED, style_on_right, line_right);
+            helper::Cli::ANSI_LIGHT_RED, style_on_right, &line_right);
       } else if (file_size_left < file_size_right) {
         ColorizeFileSize(
-            helper::Cli::ANSI_LIGHT_GREEN, style_on_right, line_right);
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_right, &line_right);
         ColorizeFileSize(
-            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, line_left);
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, &line_left);
       }
     }
 
@@ -117,8 +117,8 @@ void docx_compare::Output() {
 
 void docx_compare::ColorizeFileSize(const std::string& color,
                                     const std::string &style_on,
-                                    std::string &line) const {
-  line = color + line.insert(9, helper::Cli::ANSI_RESET + style_on);
+                                    std::string *line) const {
+  *line = color + (*line).insert(9, helper::Cli::ANSI_RESET + style_on);
 }
 
 void docx_compare::OutputLine(uint32_t len_summary_1,
@@ -138,14 +138,14 @@ void docx_compare::GetCurrentLineAndFilename(
     int index,
     const std::vector<std::string> &lines,
     uint16_t amount_lines,
-    std::string &line,
-    std::string &filename) const {
+    std::string *line,
+    std::string *filename) const {
   if (index < amount_lines) {
-    line = lines[index];
-    filename = helper::String::GetTrailingWord(line);
+    *line = lines[index];
+    *filename = helper::String::GetTrailingWord(line);
   } else {
-    line = "";
-    filename = "";
+    *line = "";
+    *filename = "";
   }
 }
 
@@ -168,7 +168,7 @@ void docx_compare::OutputHeadline(uint32_t len_path_left,
 }
 
 std::vector<std::string> docx_compare::SplitIntoSortedLines(
-    std::string &file_list) {
+    const std::string &file_list) {
   auto lines = helper::String::Explode(file_list, '\n');
 
   // Sort tuples alphabetic by filename (trailing item within each line)
@@ -182,8 +182,8 @@ std::vector<std::string> docx_compare::SplitIntoSortedLines(
 // Comparator method for sorting
 bool docx_compare::CompareLinesByFilenames(std::string str_1,
                                            std::string str_2) {
-  auto filename_1 = helper::String::GetTrailingWord(std::move(str_1));
-  auto filename_2 = helper::String::GetTrailingWord(std::move(str_2));
+  auto filename_1 = helper::String::GetTrailingWord(&str_1);
+  auto filename_2 = helper::String::GetTrailingWord(&str_2);
 
   return std::strcmp(filename_1.c_str(), filename_2.c_str()) < 0;
 }
@@ -197,8 +197,8 @@ bool docx_compare::IsFileItemLine(const std::string &line) {
 void docx_compare::AdvanceToAlphabeticalNextItem(
     const std::string &filename_left,
     const std::string &filename_right,
-    std::string &line_left,
-    std::string &line_right) {
+    std::string *line_left,
+    std::string *line_right) {
   // Compare to find alphabetical order
   int comparator = strcmp(filename_left.c_str(), filename_right.c_str());
 
@@ -206,7 +206,7 @@ void docx_compare::AdvanceToAlphabeticalNextItem(
 
   if (comparator < 0) {
     // left < right  -> output left, empty on right
-    line_right = "";
+    *line_right = "";
 
     ++index_left_;
   } else if (comparator == 0) {
@@ -216,7 +216,7 @@ void docx_compare::AdvanceToAlphabeticalNextItem(
     ++index_total_;
   } else {
     // left > right -> empty on left, output right
-    line_left = "";
+    *line_left = "";
 
     ++index_right_;
   }
@@ -224,52 +224,53 @@ void docx_compare::AdvanceToAlphabeticalNextItem(
 
 void docx_compare::UpdateColumnStyles(const std::string &line_left,
                                       const std::string &line_right,
-                                      std::string &style_on_left,
-                                      std::string &style_on_right,
-                                      std::string &style_off) {
-  style_off = helper::Cli::ANSI_RESET;
+                                      std::string *style_on_left,
+                                      std::string *style_on_right,
+                                      std::string *style_off) {
+  *style_off = helper::Cli::ANSI_RESET;
 
-  style_on_left = style_on_right = helper::Cli::ANSI_REVERSE;
+  *style_on_left = helper::Cli::ANSI_REVERSE;
+  *style_on_right = helper::Cli::ANSI_REVERSE;
 
   bool is_blank_left = helper::String::IsWhiteSpace(line_left);
   bool is_blank_right = helper::String::IsWhiteSpace(line_right);
 
   if (is_blank_left) {
     if (!is_blank_right) {
-      style_on_right += helper::Cli::ANSI_DIM;
-      style_on_right += helper::Cli::ANSI_LIGHT_GREEN;
+      *style_on_right += helper::Cli::ANSI_DIM;
+      *style_on_right += helper::Cli::ANSI_LIGHT_GREEN;
 
-      style_on_left += helper::Cli::ANSI_DIM;
-      style_on_left += helper::Cli::ANSI_LIGHT_RED;
+      *style_on_left += helper::Cli::ANSI_DIM;
+      *style_on_left += helper::Cli::ANSI_LIGHT_RED;
     } else {
-      style_on_left = "";
+      *style_on_left = "";
     }
   }
 
   if (is_blank_right) {
     if (!is_blank_left) {
-      style_on_left += std::string(helper::Cli::ANSI_DIM)
+      *style_on_left += std::string(helper::Cli::ANSI_DIM)
           + std::string(helper::Cli::ANSI_LIGHT_GREEN);
 
-      style_on_right += std::string(helper::Cli::ANSI_DIM)
+      *style_on_right += std::string(helper::Cli::ANSI_DIM)
           + std::string(helper::Cli::ANSI_LIGHT_RED);
     } else {
-      style_on_right = "";
+      *style_on_right = "";
     }
   }
 }
 
 int docx_compare::ExtractFileSizeFromLine(const std::string &line) {
   auto line_tmp = line;
-  helper::String::LTrim(line_tmp);
+  helper::String::LTrim(&line_tmp);
 
   auto parts = helper::String::Explode(line_tmp, ' ');
 
   if (parts.empty()) return 0;
 
-  return helper::String::IsNumeric(parts[0], false, false, false)
-  ? std::stoi(parts[0])
-  : 0;
+  return helper::String::IsNumeric(&parts[0], false, false, false)
+         ? std::stoi(parts[0])
+         : 0;
 }
 
 std::string docx_compare::RenderMargin(int len_str, int len_max) {
@@ -279,11 +280,11 @@ std::string docx_compare::RenderMargin(int len_str, int len_max) {
 }
 
 bool docx_compare::AreFilesInLinesDifferent(
-    const std::string &line_1, const std::basic_string<char> &line_2) {
+    std::string *line_1, std::string *line_2) {
   if (line_1 != line_2) return true;
 
-  bool kIs_file_left = IsFileItemLine(line_1);
-  bool kIs_file_right = IsFileItemLine(line_2);
+  bool kIs_file_left = IsFileItemLine(*line_1);
+  bool kIs_file_right = IsFileItemLine(*line_2);
 
   if (kIs_file_left != kIs_file_right
       || (!kIs_file_left && !kIs_file_right)) return true;

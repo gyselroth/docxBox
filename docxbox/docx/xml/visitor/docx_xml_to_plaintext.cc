@@ -17,7 +17,7 @@ std::string docx_xml_to_plaintext::GetTextFromXmlFile(
 
   if (doc.ErrorID() != 0) return "";
 
-  tinyxml2::XMLElement *body = GetBodyByComponentPath(doc, path_xml);
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc, path_xml);
 
   GetChildNodesText(body, newline_at_segments);
 

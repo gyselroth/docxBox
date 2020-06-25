@@ -112,18 +112,18 @@ bool docx_renderer::IsElementType(ElementType type) {
   return DetectElementType(json_) == type;
 }
 
-std::string docx_renderer::RenderTextInRun(std::string &text) {
+std::string docx_renderer::RenderTextInRun(const std::string &text) {
   return "<w:r><w:t>" + text + "</w:t></w:r>";
 }
 
-std::string docx_renderer::RenderTextInRunInParagraph(std::string &text) {
+std::string docx_renderer::RenderTextInRunInParagraph(const std::string &text) {
   return "<w:p>" + RenderTextInRun(text) + "</w:p>";
 }
 
-int docx_renderer::PixelsToEmus(std::string &str) {
+int docx_renderer::PixelsToEmus(const std::string &str) {
   std::string number = helper::String::ExtractLeadingNumber(str);
 
-  return helper::String::IsNumeric(number)
+  return helper::String::IsNumeric(&number)
     ? std::stoi(number) * 9525
     : 0;
 }

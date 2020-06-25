@@ -64,7 +64,7 @@ extern std::vector<std::string> ScanDirRecursive(
     std::vector<std::string> files,
     const std::string& remove_prefix = "");
 
-extern void GlobPatternToRegEx(std::string &pattern);
+extern std::string GlobPatternToRegEx(const std::string &pattern);
 
 extern std::string GetTmpName();
 

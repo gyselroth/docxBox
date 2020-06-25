@@ -70,34 +70,34 @@ bool String::IsWhiteSpace(const std::string &str) {
 }
 
 bool String::Replace(
-    std::string &haystack, const char *needle, const char *replacement) {
+    std::string *haystack, const char *needle, const char *replacement) {
   size_t needle_len = strlen(needle);
 
   size_t index = 0;
-  index = haystack.find(needle, index);
+  index = (*haystack).find(needle, index);
 
   if (std::string::npos == index) return false;
 
-  haystack.replace(index, needle_len, replacement);
+  (*haystack).replace(index, needle_len, replacement);
 
   return true;
 }
 
-int String::ReplaceAll(std::string &haystack,
+int String::ReplaceAll(std::string *haystack,
                        const std::string &needle,
                        const std::string &replacement) {
   // Get first occurrence
-  size_t pos = haystack.find(needle);
+  size_t pos = (*haystack).find(needle);
 
   int amount_replaced = 0;
 
   // Repeat till end is reached
   while (pos != std::string::npos) {
     // Replace this occurrence of Sub String
-    haystack.replace(pos, needle.size(), replacement);
+    (*haystack).replace(pos, needle.size(), replacement);
 
     // Get the next occurrence from the current position
-    pos = haystack.find(needle, pos + replacement.size());
+    pos = (*haystack).find(needle, pos + replacement.size());
 
     amount_replaced++;
   }
@@ -110,8 +110,8 @@ int String::ReplaceAll(std::string &haystack,
 std::string String::GetSubStrBetween(const std::string &str,
                                      const char *lhs,
                                      const char *rhs,
-                                     u_int32_t &offset) {
-  size_t offsetStart = str.find(lhs, offset);
+                                     u_int32_t *offset) {
+  size_t offsetStart = str.find(lhs, *offset);
 
   if (std::string::npos == offsetStart) return "";
 
@@ -122,7 +122,7 @@ std::string String::GetSubStrBetween(const std::string &str,
   // Exclude LHS
   offsetStart += strlen(lhs);
 
-  offset = offsetStart;
+  *offset = offsetStart;
 
   return str.substr(offsetStart, offsetEnd - offsetStart);
 }
@@ -132,7 +132,7 @@ std::string String::GetSubStrBetween(const std::string &str,
                                      const char *rhs) {
     u_int32_t offset = 0;
 
-  return GetSubStrBetween(str, lhs, rhs, offset);
+  return GetSubStrBetween(str, lhs, rhs, &offset);
 }
 
 int String::OffsetChar(const std::string &str, char c, int offset) {
@@ -163,14 +163,14 @@ std::vector<std::string> String::Explode(std::string const &str,
   return result;
 }
 
-std::string String::GetTrailingWord(std::string str) {
-  if (str.empty() || !Contains(str, " ")) return str;
+std::string String::GetTrailingWord(std::string *str) {
+  if ((*str).empty() || !Contains(*str, " ")) return *str;
 
   Trim(str);
 
-  while (Contains(str, "  ")) ReplaceAll(str, "  ", " ");
+  while (Contains(*str, "  ")) ReplaceAll(str, "  ", " ");
 
-  auto words = Explode(str, ' ');
+  auto words = Explode(*str, ' ');
 
   return words[words.size() - 1];
 }
@@ -263,44 +263,44 @@ std::string String::RenderTwoColumns(
 }
 
 // Trim from start (in place)
-void String::LTrim(std::string &s) {
-  s.erase(
-      s.begin(),
+void String::LTrim(std::string *s) {
+  (*s).erase(
+      (*s).begin(),
       std::find_if(
-          s.begin(),
-          s.end(),
+          (*s).begin(),
+          (*s).end(),
           std::not1(std::ptr_fun<int, int>(std::isspace))));
 }
 
 // Trim from end (in place)
-void String::RTrim(std::string &s) {
-  s.erase(
+void String::RTrim(std::string *s) {
+  (*s).erase(
       std::find_if(
-          s.rbegin(),
-          s.rend(),
+          (*s).rbegin(),
+          (*s).rend(),
           std::not1(std::ptr_fun<int, int>(std::isspace)))
           .base(),
-      s.end());
+      (*s).end());
 }
 
 // Trim from both ends (in place)
-void String::Trim(std::string &s) {
+void String::Trim(std::string *s) {
   LTrim(s);
   RTrim(s);
 }
 
 extern bool String::IsNumeric(
-    std::string str,
+    std::string *str,
     bool trim,
     bool can_contain_punctuation,
     bool can_contain_spaces) {
-  if (str.empty()) return false;
+  if ((*str).empty()) return false;
 
   if (trim) Trim(str);
 
-  if (str.empty() && !can_contain_spaces) return false;
+  if ((*str).empty() && !can_contain_spaces) return false;
 
-  for (char i : str) {
+  for (char i : *str) {
     if ((can_contain_spaces && i == ' ')
         || (can_contain_punctuation && ispunct(i))) continue;
 

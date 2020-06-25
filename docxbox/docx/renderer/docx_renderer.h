@@ -59,10 +59,10 @@ class docx_renderer {
   void ExtractPreOrPostfix(const nlohmann::json::iterator& it);
   void RenderPreAndPostFixAroundWml();
 
-  static std::string RenderTextInRun(std::string &text);
-  static std::string RenderTextInRunInParagraph(std::string &text);
+  static std::string RenderTextInRun(const std::string &text);
+  static std::string RenderTextInRunInParagraph(const std::string &text);
 
-  static int PixelsToEmus(std::string &str);
+  static int PixelsToEmus(const std::string &str);
 
  private:
   virtual bool InitFromJson() = 0;

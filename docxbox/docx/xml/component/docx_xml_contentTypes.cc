@@ -16,14 +16,14 @@ docx_xml_contentTypes::docx_xml_contentTypes(
   xml_ = helper::File::GetFileContents(path_xml_file_);
 }
 
-bool docx_xml_contentTypes::OverrideNumbering() {
+bool docx_xml_contentTypes::AddOverrideNumberingReference() {
   if (helper::String::Contains(
       xml_,
       "<Override PartName=\"/word/numbering.xml\""
       )) return true;
 
   helper::String::Replace(
-      xml_,
+      &xml_,
       "</Types>",
 
       (std::string(R"(<Override PartName="/word/numbering.xml" ContentType=")")

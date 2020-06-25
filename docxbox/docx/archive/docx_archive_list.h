@@ -45,9 +45,7 @@ class docx_archive_list : public docx_archive {
   bool ListMetaFromXmls(bool as_json);
 
  private:
-  bool InitLocateFilesContaining(
-      bool *as_json,
-      std::string &needle) const;
+  bool InitLocateFilesContaining(bool *as_json, std::string *needle) const;
 
   // Output two DOCX file lists side-by-side
   void ListFilesInDocxCompare(bool as_json,

@@ -18,7 +18,7 @@ void docx_xml_field::CollectFields(const std::string& path_xml) {
 
   if (doc.ErrorID() != 0) return;
 
-  tinyxml2::XMLElement *body = GetBodyByComponentPath(doc, path_xml);
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc, path_xml);
 
   CollectFieldsFromNodes(body);
 
@@ -51,7 +51,7 @@ bool docx_xml_field::SetFieldText(const std::string& path_xml,
 
   if (doc.ErrorID() != 0) return false;
 
-  tinyxml2::XMLElement *body = GetBodyByComponentPath(doc, path_xml);
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc, path_xml);
 
   is_inside_searched_field_ = false;
 
@@ -82,7 +82,7 @@ void docx_xml_field::SetFieldTextInNodes(tinyxml2::XMLElement *node,
     if (value) {
       if (0 == strcmp(value, "w:instrText")) {
         std::string iterated_field_identifier = sub_node->GetText();
-        helper::String::Trim(iterated_field_identifier);
+        helper::String::Trim(&iterated_field_identifier);
 
         if (helper::String::StartsWith(
             iterated_field_identifier.c_str(),
@@ -130,7 +130,7 @@ void docx_xml_field::TransformMergeFieldToTextInNodes(
         }
       } else if (0 == strcmp(value, "w:instrText")) {
         std::string iterated_field_identifier = sub_node->GetText();
-        helper::String::Trim(iterated_field_identifier);
+        helper::String::Trim(&iterated_field_identifier);
 
         if (helper::String::StartsWith(
             iterated_field_identifier.c_str(),
