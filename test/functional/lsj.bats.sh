@@ -5,9 +5,9 @@
 
 load _helper
 
-docxbox="$BATS_TEST_DIRNAME/docxbox"
+DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 
-path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
 longhand_command="docxbox ls filename.docx"
 description="contains files' and directories' attributes"
@@ -21,21 +21,21 @@ attributes=(
 @test "Output of \"docxbox lsj filename.docx\" ${description}" {
   for i in "${attributes[@]}"
   do
-    "${docxbox}" lsj "${path_docx}" | grep --count "${i}"
+    "${DOCXBOX_BINARY}" lsj "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} --json\" ${description}" {
   for i in "${attributes[@]}"
   do
-    "${docxbox}" ls "${path_docx}" --json | grep --count "${i}"
+    "${DOCXBOX_BINARY}" ls "${path_docx}" --json | grep --count "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} -j\" ${description}" {
   for i in "${attributes[@]}"
   do
-    "${docxbox}" ls "${path_docx}" -j | grep --count "${i}"
+    "${DOCXBOX_BINARY}" ls "${path_docx}" -j | grep --count "${i}"
   done
 }
 
@@ -58,23 +58,23 @@ search_values=(
 
   for i in "${search_values[@]}"
   do
-    "${docxbox}" lsj "${path_docx}" | grep --count "${i}"
+    "${DOCXBOX_BINARY}" lsj "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
-  "${docxbox}" lsj "${path_docx}" | grep --count "6/18/2020"
-  "${docxbox}" lsj "${path_docx}" | grep --count "10:30"
+  "${DOCXBOX_BINARY}" lsj "${path_docx}" | grep --count "6/18/2020"
+  "${DOCXBOX_BINARY}" lsj "${path_docx}" | grep --count "10:30"
 }
 
 @test "Output of \"docxbox lsj {missing argument}\" is an error message" {
-  run "${docxbox}" lsj
+  run "${DOCXBOX_BINARY}" lsj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox lsj nonexistent.docx\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
 
   run "$BATS_TEST_DIRNAME"/docxbox lsj nonexistent.docx
   [ "$status" -ne 0 ]
@@ -84,11 +84,11 @@ search_values=(
 }
 
 @test "Output of \"docxbox lsj wrong_file_type\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
   wrong_file_types=(
-  "test/functional/tmp/cp_lorem_ipsum.pdf"
-  "test/functional/tmp/cp_mock_csv.csv"
-  "test/functional/tmp/cp_mock_excel.xls")
+  "test/tmp/cp_lorem_ipsum.pdf"
+  "test/tmp/cp_mock_csv.csv"
+  "test/tmp/cp_mock_excel.xls")
 
   for i in "${wrong_file_types[@]}"
   do

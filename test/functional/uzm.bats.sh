@@ -5,8 +5,8 @@
 
 load _helper
 
-docxbox="$BATS_TEST_DIRNAME/docxbox"
-path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
+DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
 description="only media files are extracted"
 unzipped_docx="cp_table_unordered_list_images.docx-media-extracted"
@@ -14,38 +14,38 @@ unzipped_docx="cp_table_unordered_list_images.docx-media-extracted"
 @test "Output of \"docxbox uzm {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run "${docxbox}" uzm
+  run "${DOCXBOX_BINARY}" uzm
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
 
 @test "Output of \"docxbox uzm nonexistent.docx\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
 
-  run "${docxbox}" uzm nonexistent.docx
+  run "${DOCXBOX_BINARY}" uzm nonexistent.docx
   [ "$status" -ne 0 ]
 
-  "${docxbox}" uzm nonexistent.docx 2>&1 | tee "${err_log}"
+  "${DOCXBOX_BINARY}" uzm nonexistent.docx 2>&1 | tee "${err_log}"
   cat "${err_log}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox uzm wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
   wrong_file_types=(
-  "test/functional/tmp/cp_lorem_ipsum.pdf"
-  "test/functional/tmp/cp_mock_csv.csv"
-  "test/functional/tmp/cp_mock_excel.xls")
+  "test/tmp/cp_lorem_ipsum.pdf"
+  "test/tmp/cp_mock_csv.csv"
+  "test/tmp/cp_mock_excel.xls")
 
   for i in "${wrong_file_types[@]}"
   do
-    "${docxbox}" uzm "${i}" 2>&1 | tee "${err_log}"
+    "${DOCXBOX_BINARY}" uzm "${i}" 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "${pattern}"
   done
 }
 
 @test "With \"docxbox uzm filename.docx\" ${description}" {
-  run "${docxbox}" uzm "${path_docx}"
+  run "${DOCXBOX_BINARY}" uzm "${path_docx}"
 }
 
 @test "Unzipped files are located in project root" {
@@ -57,7 +57,7 @@ unzipped_docx="cp_table_unordered_list_images.docx-media-extracted"
 }
 
 @test "With \"docxbox uz filename.docx --media\" ${description}" {
-  run "${docxbox}" uz "${path_docx}" --media
+  run "${DOCXBOX_BINARY}" uz "${path_docx}" --media
 }
 
 @test "Unzipped files are located in project root after running uz --media " {
@@ -69,7 +69,7 @@ unzipped_docx="cp_table_unordered_list_images.docx-media-extracted"
 }
 
 @test "With \"docxbox uz filename.docx -m\" ${description}" {
-  run "${docxbox}" uz "${path_docx}" -m
+  run "${DOCXBOX_BINARY}" uz "${path_docx}" -m
 }
 
 @test "Unzipped files are located in project root after running uz -m" {

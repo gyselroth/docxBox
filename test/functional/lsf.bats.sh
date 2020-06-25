@@ -5,39 +5,39 @@
 
 load _helper
 
-docxbox="$BATS_TEST_DIRNAME/docxbox"
-path_docx="test/functional/tmp/cp_mergefields.docx"
+DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+path_docx="test/tmp/cp_mergefields.docx"
 
 base_command="docxbox lsf filename.docx"
 longhand_command="docxbox ls filename.docx"
 
 @test "Exit code of \"${base_command}\" is zero" {
-  run "${docxbox}" lsf "${path_docx}"
+  run "${DOCXBOX_BINARY}" lsf "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox lsf {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run "${docxbox}" lsf
+  run "${DOCXBOX_BINARY}" lsf
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
 
 @test "Output of \"${base_command}\" contains ground informations" {
-  run "${docxbox}" lsf "${path_docx}"
+  run "${DOCXBOX_BINARY}" lsf "${path_docx}"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
 
 @test "Output of \"${longhand_command} --fonts\" contains ground informations" {
-  run "${docxbox}" ls "${path_docx}" --fonts
+  run "${DOCXBOX_BINARY}" ls "${path_docx}" --fonts
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
 
 @test "Output of \"${longhand_command} -f\" contains ground informations" {
-  run "${docxbox}" ls "${path_docx}" -f
+  run "${DOCXBOX_BINARY}" ls "${path_docx}" -f
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
@@ -52,16 +52,16 @@ longhand_command="docxbox ls filename.docx"
 
   for i in "${attributes[@]}"
   do
-    "${docxbox}" lsf "${path_docx}" | grep --count "${i}"
+    "${DOCXBOX_BINARY}" lsf "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" contains fontfile-filename" {
-  "${docxbox}" lsf "${path_docx}" | grep --count "fontTable.xml"
+  "${DOCXBOX_BINARY}" lsf "${path_docx}" | grep --count "fontTable.xml"
 }
 
 @test "Output of \"${base_command}\" contains amount fonts" {
-  "${docxbox}" lsf "${path_docx}" | grep --count "10 fonts"
+  "${DOCXBOX_BINARY}" lsf "${path_docx}" | grep --count "10 fonts"
 }
 
 @test "Output of \"${base_command}\" contains font names" {
@@ -77,16 +77,16 @@ longhand_command="docxbox ls filename.docx"
 
   for i in "${font_names[@]}"
   do
-    "${docxbox}" lsf "${path_docx}" | grep --count "${i}"
+    "${DOCXBOX_BINARY}" lsf "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" can contain alternative font names" {
-  "${docxbox}" lsf "${path_docx}" | grep --count "宋体"
+  "${DOCXBOX_BINARY}" lsf "${path_docx}" | grep --count "宋体"
 }
 
 @test "Output of \"${base_command}\" contains font-charSets" {
-  "${docxbox}" lsf "${path_docx}" | grep --count "00"
+  "${DOCXBOX_BINARY}" lsf "${path_docx}" | grep --count "00"
 }
 
 @test "Output of \"${base_command}\" contains font-family" {
@@ -97,16 +97,16 @@ longhand_command="docxbox ls filename.docx"
 
   for i in "${font_family[@]}"
   do
-    "${docxbox}" lsf "${path_docx}" | grep --count "${i}"
+    "${DOCXBOX_BINARY}" lsf "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" contains font-pitch" {
-  "${docxbox}" lsf "${path_docx}" | grep --count "variable"
+  "${DOCXBOX_BINARY}" lsf "${path_docx}" | grep --count "variable"
 }
 
 @test "Output of \"docxbox lsf nonexistent.docx\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
 
   run "$BATS_TEST_DIRNAME"/docxbox lsf nonexistent.docx
   [ "$status" -ne 0 ]
@@ -116,15 +116,15 @@ longhand_command="docxbox ls filename.docx"
 }
 
 @test "Output of \"docxbox lsf wrong_file_type\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
   wrong_file_types=(
-  "test/functional/tmp/cp_lorem_ipsum.pdf"
-  "test/functional/tmp/cp_mock_csv.csv"
-  "test/functional/tmp/cp_mock_excel.xls")
+  "test/tmp/cp_lorem_ipsum.pdf"
+  "test/tmp/cp_mock_csv.csv"
+  "test/tmp/cp_mock_excel.xls")
 
   for i in "${wrong_file_types[@]}"
   do
-    "${docxbox}" lsf "${i}" 2>&1 | tee "${err_log}"
+    "${DOCXBOX_BINARY}" lsf "${i}" 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
