@@ -197,7 +197,9 @@ void docx_xml_field::Output(bool as_json) {
 
   int i = 0;
 
-  for (const auto& xml_filename : field_xml_files_) {
+  for (auto& xml_filename : field_xml_files_) {
+    RemoveTmpEndingFromDocxPath(xml_filename);
+
     std::cout
         << xml_filename << ":\n"
         << helper::String::Repeat("-", xml_filename.length() + 1) << "\n";

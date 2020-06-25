@@ -32,6 +32,8 @@ class docx_xml {
       tinyxml2::XMLDocument &doc, const std::string& path_xml) const;
 
   bool SaveXml(bool compress);
+
+  static void RemoveTmpEndingFromDocxPath(std::string &xml_filename);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_H_
