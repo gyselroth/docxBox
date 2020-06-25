@@ -313,7 +313,11 @@ std::string File::GetTmpName() {
   buffer = reinterpret_cast<char *>(malloc(max_len + 1));
   snprintf(buffer, max_len+1, "%d", timestamp);
 
-  return std::string(buffer);
+  auto tmp_name = std::string(buffer);
+
+  free(buffer);
+
+  return tmp_name;
 }
 
 bool File::IsWordCompatibleImage(const std::string &filename) {

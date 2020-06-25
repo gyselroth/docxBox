@@ -24,6 +24,10 @@ App::App(int argc,
   command_ = new AppCommands(argc > 0 ? argv[1] : "");
 }
 
+App::~App() {
+  delete command_;
+}
+
 void App::SetPathDocxIn(const std::string &path_docx_in) {
   path_docx_in_ = path_docx_in;
 }
