@@ -23,7 +23,7 @@ bool docx_xml_contentTypes::AddOverrideNumberingReference() {
       )) return true;
 
   helper::String::Replace(
-      xml_,
+      &xml_,
       "</Types>",
 
       (std::string(R"(<Override PartName="/word/numbering.xml" ContentType=")")

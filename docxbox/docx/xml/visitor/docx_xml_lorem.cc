@@ -99,7 +99,7 @@ std::vector<std::string> docx_xml_lorem::SplitIntoSpaceSeparatedSegments(
   helper::String::Trim(&sentence);
 
   while (helper::String::Contains(sentence, "  "))
-    helper::String::ReplaceAll(sentence, "  ", " ");
+    helper::String::ReplaceAll(&sentence, "  ", " ");
 
   return helper::String::Explode(sentence, ' ');
 }

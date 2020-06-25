@@ -68,7 +68,7 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
       relation_type,
       relationship_id) + "</Relationships>";
 
-  helper::String::Replace(xml_, "</Relationships>", kRelationshipTag.c_str());
+  helper::String::Replace(&xml_, "</Relationships>", kRelationshipTag.c_str());
 
   if (!SaveXml(true)) throw "Failed save word/_rels/document.xml.rels\n";
 

@@ -70,34 +70,34 @@ bool String::IsWhiteSpace(const std::string &str) {
 }
 
 bool String::Replace(
-    std::string &haystack, const char *needle, const char *replacement) {
+    std::string *haystack, const char *needle, const char *replacement) {
   size_t needle_len = strlen(needle);
 
   size_t index = 0;
-  index = haystack.find(needle, index);
+  index = (*haystack).find(needle, index);
 
   if (std::string::npos == index) return false;
 
-  haystack.replace(index, needle_len, replacement);
+  (*haystack).replace(index, needle_len, replacement);
 
   return true;
 }
 
-int String::ReplaceAll(std::string &haystack,
+int String::ReplaceAll(std::string *haystack,
                        const std::string &needle,
                        const std::string &replacement) {
   // Get first occurrence
-  size_t pos = haystack.find(needle);
+  size_t pos = (*haystack).find(needle);
 
   int amount_replaced = 0;
 
   // Repeat till end is reached
   while (pos != std::string::npos) {
     // Replace this occurrence of Sub String
-    haystack.replace(pos, needle.size(), replacement);
+    (*haystack).replace(pos, needle.size(), replacement);
 
     // Get the next occurrence from the current position
-    pos = haystack.find(needle, pos + replacement.size());
+    pos = (*haystack).find(needle, pos + replacement.size());
 
     amount_replaced++;
   }
@@ -110,8 +110,8 @@ int String::ReplaceAll(std::string &haystack,
 std::string String::GetSubStrBetween(const std::string &str,
                                      const char *lhs,
                                      const char *rhs,
-                                     u_int32_t &offset) {
-  size_t offsetStart = str.find(lhs, offset);
+                                     u_int32_t *offset) {
+  size_t offsetStart = str.find(lhs, *offset);
 
   if (std::string::npos == offsetStart) return "";
 
@@ -122,7 +122,7 @@ std::string String::GetSubStrBetween(const std::string &str,
   // Exclude LHS
   offsetStart += strlen(lhs);
 
-  offset = offsetStart;
+  *offset = offsetStart;
 
   return str.substr(offsetStart, offsetEnd - offsetStart);
 }
@@ -132,7 +132,7 @@ std::string String::GetSubStrBetween(const std::string &str,
                                      const char *rhs) {
     u_int32_t offset = 0;
 
-  return GetSubStrBetween(str, lhs, rhs, offset);
+  return GetSubStrBetween(str, lhs, rhs, &offset);
 }
 
 int String::OffsetChar(const std::string &str, char c, int offset) {
@@ -168,7 +168,7 @@ std::string String::GetTrailingWord(std::string *str) {
 
   Trim(str);
 
-  while (Contains(*str, "  ")) ReplaceAll(*str, "  ", " ");
+  while (Contains(*str, "  ")) ReplaceAll(str, "  ", " ");
 
   auto words = Explode(*str, ' ');
 

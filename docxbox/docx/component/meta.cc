@@ -320,7 +320,7 @@ bool meta::UpdateAppAttribute(Attribute attribute, const std::string& value) {
   if (lhs_of_value.empty() || rhs_of_value.empty()) return false;
 
   helper::String::Replace(
-      app_xml_,
+      &app_xml_,
       (std::string(lhs_of_value)
           + FetchAttributeFromAppXml(
               lhs_of_value.c_str(), rhs_of_value.c_str(), "")).c_str(),
@@ -340,7 +340,7 @@ bool meta::UpdateCoreAttribute(
   if (lhs_of_value.empty() || rhs_of_value.empty()) return false;
 
   helper::String::Replace(
-      core_xml_,
+      &core_xml_,
       (std::string(lhs_of_value)
           + FetchAttributeFromCoreXml(
               lhs_of_value.c_str(),
@@ -360,7 +360,7 @@ bool meta::InsertAppAttribute(Attribute attribute, const std::string& value) {
   if (kLhsTag.empty() || kRhs.empty()) return false;
 
   helper::String::Replace(
-      app_xml_,
+      &app_xml_,
       meta::TAG_RHS_CORE_PROPERTIES,
       (kLhsTag + value + kRhs + meta::TAG_RHS_CORE_PROPERTIES).c_str());
 
@@ -376,7 +376,7 @@ bool meta::InsertCoreAttribute(Attribute attribute, const std::string& value) {
   if (kLhsTag.empty() || kRhs.empty()) return false;
 
   helper::String::Replace(
-      core_xml_,
+      &core_xml_,
       meta::TAG_RHS_CORE_PROPERTIES,
       (kLhsTag + value + kRhs + meta::TAG_RHS_CORE_PROPERTIES).c_str());
 
@@ -478,14 +478,14 @@ std::string meta::ExtractXmlSchemaFromAppXml(const std::string &app_xml) const {
   u_int32_t offset = 0;
 
   std::string xml_schema = helper::String::GetSubStrBetween(
-      app_xml, TAG_LHS_XML_SCHEME, TAG_RHS_XML_SCHEME, offset);
+      app_xml, TAG_LHS_XML_SCHEME, TAG_RHS_XML_SCHEME, &offset);
 
   // Remove last segment from schema,
   // leaving:  http://schemas.openxmlformats.org/officeDocument/<year>
   std::vector<std::string> segments = helper::String::Explode(xml_schema, '/');
 
   helper::String::Replace(
-      xml_schema,
+      &xml_schema,
       (std::string("/") + segments[ segments.size() - 1]).c_str(),
       "");
 

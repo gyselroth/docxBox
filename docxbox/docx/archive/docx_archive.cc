@@ -315,7 +315,7 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
 
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
-  helper::String::ReplaceAll(command, "*DOCX*", path_extract_);
+  helper::String::ReplaceAll(&command, "*DOCX*", path_extract_);
 
   helper::Cli::Execute(command.c_str());
 

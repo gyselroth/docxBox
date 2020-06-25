@@ -7,10 +7,10 @@ void docx_diff::OutputSideBySide(const std::string &path_extract_left,
                                  const std::string &path_extract_right,
                                  const std::string &file) {
   auto path_left = path_extract_left;
-  helper::String::Replace(path_left, "-extracted", "");
+  helper::String::Replace(&path_left, "-extracted", "");
 
   auto path_right = path_extract_right;
-  helper::String::Replace(path_right, "-extracted", "");
+  helper::String::Replace(&path_right, "-extracted", "");
 
   std::cout
     << file << " of "
@@ -42,7 +42,7 @@ void docx_diff::OutputUnified(const std::string &path_extract_left,
           + path_extract_left + "/" + file + " "
           + path_extract_right + "/" + file).c_str());
 
-  helper::String::Replace(output, "-extracted/", "");
+  helper::String::Replace(&output, "-extracted/", "");
 
   std::string output_colored;
 

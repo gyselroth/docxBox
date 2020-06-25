@@ -43,10 +43,10 @@ extern bool Contains(const std::string &haystack, const char *needle);
 extern bool IsWhiteSpace(const std::string &str);
 
 extern bool Replace(
-    std::string &haystack, const char *needle, const char *replacement);
+    std::string *haystack, const char *needle, const char *replacement);
 
 extern int ReplaceAll(
-    std::string &haystack,
+    std::string *haystack,
     const std::string& needle,
     const std::string& replacement);
 
@@ -54,7 +54,7 @@ extern int ReplaceAll(
 extern std::string GetSubStrBetween(const std::string &str,
                                     const char *lhs,
                                     const char *rhs,
-                                    u_int32_t &offset);
+                                    u_int32_t *offset);
 
 extern std::string GetSubStrBetween(const std::string &str,
                                     const char *lhs,

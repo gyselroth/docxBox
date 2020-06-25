@@ -113,7 +113,7 @@ bool docx_archive_list::LocateFilesContainingString(bool as_json) {
   std::string grep = "grep -iRl \"" + needle + "\" " + path_extract_;
 
   auto files_located = helper::Cli::GetExecutionResponse(grep.c_str());
-  helper::String::ReplaceAll(files_located, path_extract_ + "/", "");
+  helper::String::ReplaceAll(&files_located, path_extract_ + "/", "");
 
   auto filenames = helper::String::Explode(files_located, '\n');
 

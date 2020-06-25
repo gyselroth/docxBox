@@ -268,7 +268,7 @@ std::vector<std::string> File::ScanDirRecursive(
               remove_prefix);
         } else {
           if (do_remove_prefix)
-            helper::String::Replace(path_file, remove_prefix.c_str(), "");
+            helper::String::Replace(&path_file, remove_prefix.c_str(), "");
 
           files.push_back(path_file);
         }
@@ -291,18 +291,18 @@ std::string File::GlobPatternToRegEx(const std::string &pattern) {
   std::string reg_ex = pattern;
 
   // Escape reg-ex control characters that aren't globbing control characters
-  helper::String::ReplaceAll(reg_ex, "\\", "\\\\");
-  helper::String::ReplaceAll(reg_ex, ".", "\\.");
-  helper::String::ReplaceAll(reg_ex, "(", "\\(");
-  helper::String::ReplaceAll(reg_ex, ")", "\\)");
-  helper::String::ReplaceAll(reg_ex, "[", "\\[");
-  helper::String::ReplaceAll(reg_ex, "]", "\\]");
-  helper::String::ReplaceAll(reg_ex, "{", "\\{");
-  helper::String::ReplaceAll(reg_ex, "}", "\\}");
+  helper::String::ReplaceAll(&reg_ex, "\\", "\\\\");
+  helper::String::ReplaceAll(&reg_ex, ".", "\\.");
+  helper::String::ReplaceAll(&reg_ex, "(", "\\(");
+  helper::String::ReplaceAll(&reg_ex, ")", "\\)");
+  helper::String::ReplaceAll(&reg_ex, "[", "\\[");
+  helper::String::ReplaceAll(&reg_ex, "]", "\\]");
+  helper::String::ReplaceAll(&reg_ex, "{", "\\{");
+  helper::String::ReplaceAll(&reg_ex, "}", "\\}");
 
   // Convert globbing- to regex control characters
-  helper::String::ReplaceAll(reg_ex, "*", ".*");
-  helper::String::ReplaceAll(reg_ex, "?", ".");
+  helper::String::ReplaceAll(&reg_ex, "*", ".*");
+  helper::String::ReplaceAll(&reg_ex, "?", ".");
 
   return reg_ex;
 }

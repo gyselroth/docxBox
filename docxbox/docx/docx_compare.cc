@@ -61,14 +61,14 @@ void docx_compare::Output() {
   while (index_total_ < amount_lines_total) {
     GetCurrentLineAndFilename(
         index_left_, lines_left, amount_lines_left,
-        line_left, &filename_left);
+        &line_left, &filename_left);
 
     GetCurrentLineAndFilename(
         index_right_, lines_right, amount_lines_right,
-        line_right, &filename_right);
+        &line_right, &filename_right);
 
     AdvanceToAlphabeticalNextItem(
-        filename_left, filename_right, line_left, line_right);
+        filename_left, filename_right, &line_left, &line_right);
 
     auto len_left = line_left.length();
     auto len_right = line_right.length();
@@ -81,9 +81,9 @@ void docx_compare::Output() {
         && AreFilesInLinesDifferent(&line_left, &line_right))
       UpdateColumnStyles(line_left,
                          line_right,
-                         style_on_left,
-                         style_on_right,
-                         style_off);
+                         &style_on_left,
+                         &style_on_right,
+                         &style_off);
 
     if (style_on_left == style_on_right
         && !line_left.empty() && !line_right.empty()) {
@@ -138,13 +138,13 @@ void docx_compare::GetCurrentLineAndFilename(
     int index,
     const std::vector<std::string> &lines,
     uint16_t amount_lines,
-    std::string &line,
+    std::string *line,
     std::string *filename) const {
   if (index < amount_lines) {
-    line = lines[index];
-    *filename = helper::String::GetTrailingWord(&line);
+    *line = lines[index];
+    *filename = helper::String::GetTrailingWord(line);
   } else {
-    line = "";
+    *line = "";
     *filename = "";
   }
 }
@@ -168,7 +168,7 @@ void docx_compare::OutputHeadline(uint32_t len_path_left,
 }
 
 std::vector<std::string> docx_compare::SplitIntoSortedLines(
-    std::string &file_list) {
+    const std::string &file_list) {
   auto lines = helper::String::Explode(file_list, '\n');
 
   // Sort tuples alphabetic by filename (trailing item within each line)
@@ -197,8 +197,8 @@ bool docx_compare::IsFileItemLine(const std::string &line) {
 void docx_compare::AdvanceToAlphabeticalNextItem(
     const std::string &filename_left,
     const std::string &filename_right,
-    std::string &line_left,
-    std::string &line_right) {
+    std::string *line_left,
+    std::string *line_right) {
   // Compare to find alphabetical order
   int comparator = strcmp(filename_left.c_str(), filename_right.c_str());
 
@@ -206,7 +206,7 @@ void docx_compare::AdvanceToAlphabeticalNextItem(
 
   if (comparator < 0) {
     // left < right  -> output left, empty on right
-    line_right = "";
+    *line_right = "";
 
     ++index_left_;
   } else if (comparator == 0) {
@@ -216,7 +216,7 @@ void docx_compare::AdvanceToAlphabeticalNextItem(
     ++index_total_;
   } else {
     // left > right -> empty on left, output right
-    line_left = "";
+    *line_left = "";
 
     ++index_right_;
   }
@@ -224,37 +224,38 @@ void docx_compare::AdvanceToAlphabeticalNextItem(
 
 void docx_compare::UpdateColumnStyles(const std::string &line_left,
                                       const std::string &line_right,
-                                      std::string &style_on_left,
-                                      std::string &style_on_right,
-                                      std::string &style_off) {
-  style_off = helper::Cli::ANSI_RESET;
+                                      std::string *style_on_left,
+                                      std::string *style_on_right,
+                                      std::string *style_off) {
+  *style_off = helper::Cli::ANSI_RESET;
 
-  style_on_left = style_on_right = helper::Cli::ANSI_REVERSE;
+  *style_on_left = helper::Cli::ANSI_REVERSE;
+  *style_on_right = helper::Cli::ANSI_REVERSE;
 
   bool is_blank_left = helper::String::IsWhiteSpace(line_left);
   bool is_blank_right = helper::String::IsWhiteSpace(line_right);
 
   if (is_blank_left) {
     if (!is_blank_right) {
-      style_on_right += helper::Cli::ANSI_DIM;
-      style_on_right += helper::Cli::ANSI_LIGHT_GREEN;
+      *style_on_right += helper::Cli::ANSI_DIM;
+      *style_on_right += helper::Cli::ANSI_LIGHT_GREEN;
 
-      style_on_left += helper::Cli::ANSI_DIM;
-      style_on_left += helper::Cli::ANSI_LIGHT_RED;
+      *style_on_left += helper::Cli::ANSI_DIM;
+      *style_on_left += helper::Cli::ANSI_LIGHT_RED;
     } else {
-      style_on_left = "";
+      *style_on_left = "";
     }
   }
 
   if (is_blank_right) {
     if (!is_blank_left) {
-      style_on_left += std::string(helper::Cli::ANSI_DIM)
+      *style_on_left += std::string(helper::Cli::ANSI_DIM)
           + std::string(helper::Cli::ANSI_LIGHT_GREEN);
 
-      style_on_right += std::string(helper::Cli::ANSI_DIM)
+      *style_on_right += std::string(helper::Cli::ANSI_DIM)
           + std::string(helper::Cli::ANSI_LIGHT_RED);
     } else {
-      style_on_right = "";
+      *style_on_right = "";
     }
   }
 }
