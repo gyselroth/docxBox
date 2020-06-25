@@ -69,10 +69,7 @@ class docx_archive {
       bool compress_xml = false,
       std::string path_directory = "",
       std::string path_docx_result = "",
-      bool set_date_modified_to_now = false,
-      bool set_date_created_to_now = false,
-      const std::string& date_created = "",
-      const std::string& date_modified = "");
+      bool set_date_modified_to_now = false);
 
   bool GetText(bool newline_at_segments);
 

@@ -230,10 +230,7 @@ bool docx_archive::CreateDocxFromExtract(const std::string &path_docx_out,
 bool docx_archive::Zip(bool compress_xml,
                        std::string path_directory,
                        std::string path_docx_result,
-                       bool set_date_modified_to_now,
-                       bool set_date_created_to_now,
-                       const std::string &date_created,
-                       const std::string &date_modified) {
+                       bool set_date_modified_to_now) {
   if (path_directory.empty()) {
     if (!docxbox::AppArgument::AreArgumentsGiven(
         argc_,
@@ -256,24 +253,8 @@ bool docx_archive::Zip(bool compress_xml,
     // Overwrite source DOCX
     path_docx_result = path_docx_in_;
 
-  if (!date_created.empty()) {
-    if (!UpdateCoreXmlDate(
-        meta::Attribute::Attr_Core_Created, date_created)) return false;
-
-  } else {
-    if (set_date_created_to_now)
-      if (!UpdateCoreXmlDate(
-          meta::Attribute::Attr_Core_Created)) return false;
-  }
-
-  if (!date_modified.empty()) {
-    if (!UpdateCoreXmlDate(
-        meta::Attribute::Attr_Core_Modified, date_modified)) return false;
-  } else {
-    if (set_date_modified_to_now)
-      if (!UpdateCoreXmlDate(
-          meta::Attribute::Attr_Core_Modified)) return false;
-  }
+  if (set_date_modified_to_now
+      && !UpdateCoreXmlDate(meta::Attribute::Attr_Core_Modified)) return false;
 
 // ZipUsingMinizCpp(compress_xml, path_directory, path_docx_result);
 
@@ -322,7 +303,7 @@ bool docx_archive::ExecuteUserCommand(std::string command) {
 
   helper::Cli::Execute(command.c_str());
 
-  Zip(true, path_extract_, "", true, true);
+  Zip(true, path_extract_, "");
 
   if (!docxbox::AppLog::IsSilent()) std::cout << "\n";
 
@@ -354,11 +335,8 @@ bool docx_archive::Batch() {
     path_docx_out = path_docx_in_;
   }
 
-  if (!Zip(false,
-           path_extract_,
-           path_docx_out + "tmp",
-           true,
-           false)) {
+  if (!Zip(false, path_extract_, path_docx_out + "tmp")) {
+    // TODO(kay): improve date modified handling during batch processing
     delete batch;
 
     return docxbox::AppLog::NotifyError("DOCX creation failed.");
@@ -505,8 +483,7 @@ bool docx_archive::ModifyMeta() {
     if (!Zip(false,
              path_extract_,
              path_docx_out_ + "tmp",
-             attribute != meta::Attr_Core_Modified,
-             attribute != meta::Attr_Core_Created)) {
+             attribute != meta::Attr_Core_Modified)) {
       delete meta_component;
 
       return docxbox::AppLog::NotifyError("DOCX creation failed.");

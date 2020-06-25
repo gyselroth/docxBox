@@ -3,6 +3,8 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
+* Meta dates: Do not update ``created`` when not explicitly invoked
+* Meta dates: Set ``modified`` always to current timestamp, unless different argument given 
 * Improve ``lsd`` output: Display original instead of irrelevant temp-path
 * Fix memory leaks
 * Add optional ``verbose`` mode 
