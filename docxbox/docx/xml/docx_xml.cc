@@ -43,3 +43,11 @@ bool docx_xml::SaveXml(bool compress) {
 
   return helper::File::WriteToNewFile(path_xml_file_, xml_);
 }
+
+void docx_xml::RemoveTmpEndingFromDocxPath(std::string &xml_filename) {
+  int offset_docx_ending = xml_filename.find(".docx-");
+  int offset_slash_after_docx = xml_filename.find('/', offset_docx_ending);
+
+  xml_filename = xml_filename.substr(0, offset_docx_ending) + ".docx"
+      + xml_filename.substr(offset_slash_after_docx);
+}

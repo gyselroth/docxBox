@@ -3,6 +3,8 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
+* Improve ``lsd`` output: Display original instead of irrelevant temp-path
+* Fix memory leaks
 * Add optional ``verbose`` mode 
 * Log execution startup w/ arguments, errors, and return signal
 * Notify/log more manipulation details
