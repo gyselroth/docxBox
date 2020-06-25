@@ -76,7 +76,7 @@ extern std::string Implode(
     std::vector<std::string> strings, const char* delimiter = ", ");
 
 extern std::string RenderTwoColumns(
-    std::string col_1, std::string col_2, int amount_gap = 4);
+    const std::string& col_1, const std::string& col_2, int amount_gap = 4);
 
 extern void LTrim(std::string &s);
 extern void RTrim(std::string &s);

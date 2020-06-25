@@ -152,9 +152,8 @@ int String::OffsetChar(const std::string &str, char c, int offset) {
 }
 
 // Split given string by given character delimiter into vector of strings
-std::vector<std::string> String::Explode(
-    std::string const &str,
-    char delimiter) {
+std::vector<std::string> String::Explode(std::string const &str,
+                                         char delimiter) {
   std::vector<std::string> result;
   std::istringstream iss(str);
 
@@ -228,9 +227,9 @@ std::string String::Implode(
 }
 
 std::string String::RenderTwoColumns(
-    std::string col_1, std::string col_2, int amount_gap) {
-  auto lines_1 = Explode(col_1, '\n');
-  auto lines_2 = Explode(col_2, '\n');
+    const std::string& col_1, const std::string& col_2, int amount_gap) {
+  std::vector<std::string> lines_1 = Explode(col_1, '\n');
+  std::vector<std::string> lines_2 = Explode(col_2, '\n');
 
   std::string gap = Repeat(" ", amount_gap);
 
@@ -252,7 +251,8 @@ std::string String::RenderTwoColumns(
 
     out += gap;
 
-    if (amount_lines_2 >= index) out += lines_2[index];
+    if (index < amount_lines_2
+        && !lines_2[index].empty()) out.append(lines_2[index]);
 
     out += "\n";
 
