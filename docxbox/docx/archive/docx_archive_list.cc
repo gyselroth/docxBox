@@ -219,9 +219,17 @@ bool docx_archive_list::ListMetaFromXmls(bool as_json) {
     // data is output when both are collected
     // or another of the same kind is found (e.g. merged documents)
     if (helper::String::EndsWith(file_in_zip.filename, "app.xml")) {
-      meta_component->CollectFromAppXml(
-          file_in_zip.filename,
-          helper::File::GetFileContents(path_file_absolute));
+      std::string app_xml_contents;
+
+      if (!helper::File::GetFileContents(
+          path_file_absolute, &app_xml_contents)) {
+        delete meta_component;
+
+        return false;
+      }
+
+      meta_component
+          ->CollectFromAppXml(file_in_zip.filename, app_xml_contents);
 
       ++index_app;
     } else if (helper::String::EndsWith(file_in_zip.filename, "core.xml")) {
@@ -261,8 +269,10 @@ bool docx_archive_list::ListReferencedFonts(bool as_json) {
       std::string path_file_absolute =
           path_extract_ + "/" + path_file_within_docx;
 
-      fontTable_component->CollectFontsMetrics(
-          helper::File::GetFileContents(path_file_absolute));
+      std::string file_contents;
+      helper::File::GetFileContents(path_file_absolute, &file_contents);
+
+      fontTable_component->CollectFontsMetrics(file_contents);
 
       if (as_json) {
         if (index_font > 0) std::cout << ",";

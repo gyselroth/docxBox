@@ -15,7 +15,8 @@ docx_xml_rels::docx_xml_rels(
     argv) {
   path_xml_file_ = path_extract + "/word/_rels/document.xml.rels";
   path_extract_ = std::move(path_extract);
-  xml_ = helper::File::GetFileContents(path_xml_file_);
+
+  helper::File::GetFileContents(path_xml_file_, &xml_);
 }
 
 // Get (insert if not exists) relationship id of given image target
@@ -26,7 +27,9 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
   doc.Parse(xml_.c_str());
 
   if (doc.ErrorID() != 0) {
-    throw "Failed parse word/_rels/document.xml.rels\n";
+    docxbox::AppLog::NotifyError("Failed parse word/_rels/document.xml.rels");
+
+    return "";
   }
 
   tinyxml2::XMLElement *relationships = doc.FirstChildElement("Relationships");
@@ -72,9 +75,11 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
 
   helper::String::Replace(&xml_, "</Relationships>", kRelationshipTag.c_str());
 
-  if (!SaveXml(true)) throw "Failed save word/_rels/document.xml.rels\n";
+  if (SaveXml(true)) return relationship_id;
 
-  return relationship_id;
+  docxbox::AppLog::NotifyError("Failed save word/_rels/document.xml.rels");
+
+  return "";
 }
 
 void docx_xml_rels::GetRelationshipId(

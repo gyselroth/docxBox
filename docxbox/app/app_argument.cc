@@ -22,7 +22,8 @@ std::string AppArgument::ResolvePathFromArgument(
   std::string path;
 
   if (argc >= index_argument) {
-    path = helper::File::ResolvePath(pwd, argv[index_argument - 1]);
+    path = argv[index_argument - 1];
+    helper::File::ResolvePath(pwd, &path);
   } else {
     AppLog::NotifyError("Missing file argument");
   }

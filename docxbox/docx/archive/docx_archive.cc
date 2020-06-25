@@ -174,11 +174,12 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
 // Ensure given file is a ZIP archive (must begin w/ "PK^C^D^T")
 bool docx_archive::IsZipArchive(const std::string& path_file) {
-  if (!helper::File::FileExists(path_file)) return false;
+  std::string file_contents;
 
-  return helper::String::StartsWith(
-      helper::File::GetFileContents(path_file).c_str(),
-      "PK\003\004\024")
+  if (!helper::File::GetFileContents(path_file, &file_contents))
+    return false;
+
+  return helper::String::StartsWith(file_contents.c_str(), "PK\003\004\024")
          ? true
          : docxbox::AppLog::NotifyError("File is no ZIP archive: " + path_file);
 }
@@ -239,11 +240,13 @@ bool docx_archive::Zip(bool compress_xml,
         2, "Path of directory to be zipped",
         3, "Filename of docx to be created")) return false;
 
-    path_directory =
-        helper::File::ResolvePath(path_working_directory_, argv_[2]);
+    path_directory = argv_[2];
+    helper::File::ResolvePath(path_working_directory_, &path_directory);
 
-    path_docx_result =
-        helper::File::ResolvePath(path_working_directory_, argv_[3], false);
+    path_docx_result = argv_[3];
+    helper::File::ResolvePath(path_working_directory_,
+                              &path_docx_result,
+                              false);
   } else {
     if (!helper::File::IsDirectory(path_directory))
       return docxbox::AppLog::NotifyError("Not a directory: " + path_directory);
@@ -340,11 +343,16 @@ bool docx_archive::Batch() {
     return false;
   }
 
-  std::string path_docx_out = argc_ >= 4
+  std::string path_docx_out;
+
+  if (argc_ >= 4) {
     // Result filename is given as argument
-    ? helper::File::ResolvePath(path_working_directory_, argv_[4])
+    path_docx_out = argv_[4];
+    helper::File::ResolvePath(path_working_directory_, &path_docx_out);
+  } else {
     // Overwrite original DOCX
-    : path_docx_in_;
+    path_docx_out = path_docx_in_;
+  }
 
   if (!Zip(false,
            path_extract_,
@@ -386,12 +394,12 @@ bool docx_archive::CatFile() {
     path_file_relative = path_file_relative.substr(1);
 
   std::string path_file = path_extract_ + "/" + path_file_relative;
+  std::string file_contents;
 
-  if (!helper::File::FileExists(path_file))
-    return docxbox::AppLog::NotifyError(
-        std::string("File not found: ") + argv_[3]);
+  if (!helper::File::GetFileContents(path_file, &file_contents))
+    return false;
 
-  std::cout << helper::File::GetFileContents(path_file) << "\n";
+  std::cout << file_contents << "\n";
 
   return true;
 }
@@ -469,12 +477,14 @@ bool docx_archive::ModifyMeta() {
       return true;
     }
   } else {
-    path_docx_out_ = argc_ >= 6
-                    // Result filename is given as argument
-                    ? helper::File::ResolvePath(path_working_directory_,
-                                                argv_[5])
-                    // Overwrite original DOCX
-                    : path_docx_in_;
+    if (argc_ >= 6) {
+      // Result filename is given as argument
+      path_docx_out_ = argv_[5];
+      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+    } else {
+      // Overwrite original DOCX
+      path_docx_out_ = path_docx_in_;
+    }
   }
 
   auto attribute = meta_component->GetAttribute();
@@ -581,7 +591,8 @@ void docx_archive::ZipUsingMinizCpp(bool compress_xml,
     std::string path_file_absolute =
         std::string(path_directory + "/").append(file_in_zip);
 
-    std::string xml = helper::File::GetFileContents(path_file_absolute);
+    std::string xml;
+    helper::File::GetFileContents(path_file_absolute, &xml);
 
     if (compress_xml) helper::Xml::CompressXml(&xml);
 
@@ -603,7 +614,8 @@ void docx_archive::CompressXmlFiles(const std::string &path_directory) const {
     std::string path_file_absolute =
         std::string(path_directory + "/").append(file_in_zip);
 
-    std::string xml = helper::File::GetFileContents(path_file_absolute);
+    std::string xml;
+    helper::File::GetFileContents(path_file_absolute, &xml);
 
     helper::Xml::CompressXml(&xml);
 

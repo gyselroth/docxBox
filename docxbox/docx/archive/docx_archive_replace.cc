@@ -42,8 +42,9 @@ bool docx_archive_replace::ReplaceImage() {
 
       // TODO(kay): add adaptation for batch process-
       //            needs use of dynamic offset instead argv_[4] than
-      std::string path_image_replacement =
-          helper::File::ResolvePath(path_working_directory_, argv_[4]);
+      std::string path_image_replacement = argv_[4];
+      helper::File::ResolvePath(
+          path_working_directory_, &path_image_replacement);
 
       helper::File::CopyFile(path_image_replacement, path_image_original);
 
@@ -69,10 +70,14 @@ bool docx_archive_replace::ReplaceImage() {
     } else {
       overwrite_source_docx = argc_ < 6;
 
-      path_docx_out_ = overwrite_source_docx
-          ? path_docx_in_
-          // Result filename is given as argument
-          : helper::File::ResolvePath(path_working_directory_, argv_[5]);
+      if (overwrite_source_docx) {
+        // Overwrite original DOCX
+        path_docx_out_ = path_docx_in_;
+      } else {
+        // Result filename is given as argument
+        path_docx_out_ = argv_[5];
+        helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+      }
     }
 
     if (!Zip(false, path_extract_, path_docx_out_ + "tmp"))
@@ -181,15 +186,15 @@ void docx_archive_replace::InitPathDocxOutForReplaceText(
 
   if (added_image_file_) {
     if (argc_ >= 7) {
-      *path_docx_out =
-          helper::File::ResolvePath(path_working_directory_, argv_[6]);
+      *path_docx_out = argv_[6];
+      helper::File::ResolvePath(path_working_directory_, path_docx_out);
 
       *overwrite_source_docx = false;
     }
   } else {
     if (argc_ >= 6) {
-      *path_docx_out =
-          helper::File::ResolvePath(path_working_directory_, argv_[5]);
+      *path_docx_out = argv_[5];
+      helper::File::ResolvePath(path_working_directory_, path_docx_out);
 
       *overwrite_source_docx = false;
     }
@@ -206,16 +211,18 @@ std::string docx_archive_replace::AddImageFileAndRelation(
     // No media file given: successfully done (nothing)
     return "";
 
-  std::string path_extract_absolute =
-      helper::File::ResolvePath(path_working_directory_, path_extract_);
+  std::string path_extract_absolute = path_extract_;
+  helper::File::ResolvePath(path_working_directory_, &path_extract_absolute);
 
   auto relations = new media(path_extract_absolute);
 
   added_image_file_ = true;
 
   // 1. Copy image file to word/media/image<number>.<extension>
-  if (!relations->AddImageFile(
-      helper::File::ResolvePath(path_working_directory_, argv_[5]))) {
+  std::string path_image = argv_[5];
+  helper::File::ResolvePath(path_working_directory_, &path_image);
+
+  if (!relations->AddImageFile(path_image)) {
     delete relations;
 
     std::string message = std::string("Failed adding image file ") + argv_[5];
@@ -240,8 +247,8 @@ std::string docx_archive_replace::AddImageFileAndRelation(
 
 std::string docx_archive_replace::AddHyperlinkRelation(
     const std::string &markup_json) {
-  std::string path_extract_absolute =
-      helper::File::ResolvePath(path_working_directory_, path_extract_);
+  std::string path_extract_absolute = path_extract_;
+  helper::File::ResolvePath(path_working_directory_, &path_extract_absolute);
 
   auto url = helper::Json::GetFirstValueOfKey(markup_json, "url");
 
@@ -295,14 +302,14 @@ bool docx_archive_replace::RemoveBetweenText() {
   if (is_batch_mode_) {
     if (!is_final_batch_step_) return true;
   } else {
-    path_docx_out_ =
-        argc_ >= 7
-        // Result filename is given as argument
-        ? helper::File::ResolvePath(
-            path_working_directory_,
-            argv_[6])
-        // Overwrite original DOCX
-        : path_docx_in_;
+    if (argc_ >= 7) {
+      // Result filename is given as argument
+      path_docx_out_ = argv_[6];
+      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+    } else {
+      // Overwrite original DOCX
+      path_docx_out_ = path_docx_in_;
+    }
   }
 
   return CreateDocxFromExtract(path_docx_out_,
@@ -346,12 +353,13 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
   } else {
     overwrite_source_docx = argc_ < 4;
 
-    path_docx_out_ = overwrite_source_docx
-                    // Overwrite original DOCX
-                    ? path_docx_in_
-                    // Result filename is given as argument
-                    : helper::File::ResolvePath(path_working_directory_,
-                                                argv_[3]);
+    if (overwrite_source_docx) {
+      path_docx_out_ = path_docx_in_;
+    } else {
+      // Result filename is given as argument
+      path_docx_out_ = argv_[3];
+      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+    }
   }
 
   return CreateDocxFromExtract(path_docx_out_, overwrite_source_docx);
@@ -393,12 +401,14 @@ bool docx_archive_replace::SetFieldValue() {
   if (is_batch_mode_) {
     if (!is_final_batch_step_) return true;
   } else {
-    path_docx_out_ =
-        argc_ >= 6
-        // Result filename is given as argument
-        ? helper::File::ResolvePath(path_working_directory_, argv_[5])
-        // Overwrite original DOCX
-        : path_docx_in_;
+    if (argc_ >= 6) {
+      // Result filename is given as argument
+      path_docx_out_ = argv_[5];
+      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+    } else {
+      // Overwrite original DOCX
+      path_docx_out_ = path_docx_in_;
+    }
   }
 
   std::string path_docx_out_tmp = path_docx_out_ + "tmp";

@@ -4,6 +4,8 @@
 #ifndef DOCXBOX_HELPER_HELPER_FILE_H_
 #define DOCXBOX_HELPER_HELPER_FILE_H_
 
+#include <docxbox/app/app_log.h>
+
 #include <dirent.h>
 #include <sys/stat.h>
 
@@ -29,13 +31,15 @@ extern bool IsDirectory(const std::string& path);
 extern bool FileExists(const std::string &path_file);
 
 // Resolve path: keep absolute or make relative from given (binary) path
-extern std::string ResolvePath(const std::string &pwd,
-                               std::string path,
-                               bool must_exist = false);
+extern bool ResolvePath(const std::string &pwd,
+                        std::string *path,
+                        bool must_exist = false);
 
 extern std::streampos GetFileSize(std::ifstream &file);
 
-extern std::string GetFileContents(const std::string &path_file);
+extern bool GetFileContents(
+    const std::string &path_file, std::string *contents);
+
 extern std::string GetFileContents(std::ifstream &file);
 
 extern u_int32_t GetLongestLineLength(const std::string &path_file_1,
