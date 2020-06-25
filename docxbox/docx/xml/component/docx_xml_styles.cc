@@ -69,7 +69,8 @@ std::string docx_xml_styles::GetStyleId(
 //
 //  helper::String::Replace(xml_, "</w:styles>", kRelationshipTag.c_str());
 //
-//  if (!SaveXml(true)) throw "Failed save word/styles.xml\n";
+//  if (!SaveXml(true))
+//    docxbox::AppLog::NotifyError("Failed save word/styles.xml");
 
   return style_id;
 }

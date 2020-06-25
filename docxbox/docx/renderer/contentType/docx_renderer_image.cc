@@ -3,8 +3,6 @@
 
 #include <docxbox/docx/renderer/contentType/docx_renderer_image.h>
 
-#include <iostream>
-
 // Constructor
 docx_renderer_image::docx_renderer_image(std::string path_extract,
                                          const std::string &json) {
@@ -80,7 +78,11 @@ std::string docx_renderer_image::Render(
 
 // @see http://officeopenxml.com/drwPic.php
 std::string docx_renderer_image::Render() {
-  if (!is_json_valid_) throw "Failed render image markup.\n";
+  if (!is_json_valid_) {
+    docxbox::AppLog::NotifyError("Failed render image markup");
+
+    return "";
+  }
 
   generic_root_tag_ = "w:r";
 

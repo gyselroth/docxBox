@@ -109,21 +109,22 @@ bool docx_archive_replace::ReplaceText() {
 
   const char *kReplacement = replacement.c_str();
 
-  try {
-    // TODO(kay): single-out render-type detection
-    if (helper::String::StartsWith(kReplacement, "{\"image\":{")
-        || helper::String::StartsWith(kReplacement, "{\"img\":{")) {
-      image_relationship_id = AddImageFileAndRelation(replacement);
-    } else if (helper::String::StartsWith(kReplacement, "{\"link\":{")) {
-      hyperlink_relationship_id = AddHyperlinkRelation(replacement);
-      // TODO(kay): ensure presence of hyperlink-style
-    } else if (helper::String::StartsWith(kReplacement, "{\"ol\":{")) {
-      std::string path_extract_absolute =
-          path_working_directory_ + "/" + path_extract_;
-      contentTypes::AddOverrideNumberingReference(path_extract_absolute);
-    }
-  } catch (std::string &message) {
-    return docxbox::AppLog::NotifyError(message);
+  // TODO(kay): single-out render-type detection
+  if (helper::String::StartsWith(kReplacement, "{\"image\":{")
+      || helper::String::StartsWith(kReplacement, "{\"img\":{")) {
+    image_relationship_id = AddImageFileAndRelation(replacement);
+
+    if (image_relationship_id.empty()) return false;
+  } else if (helper::String::StartsWith(kReplacement, "{\"link\":{")) {
+    hyperlink_relationship_id = AddHyperlinkRelation(replacement);
+
+    if (hyperlink_relationship_id.empty()) return false;
+  } else if (helper::String::StartsWith(kReplacement, "{\"ol\":{")) {
+    std::string path_extract_absolute =
+        path_working_directory_ + "/" + path_extract_;
+
+    if (!contentTypes::AddOverrideNumberingReference(path_extract_absolute))
+      return false;
   }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -210,6 +211,8 @@ std::string docx_archive_replace::AddImageFileAndRelation(
 
   auto relations = new media(path_extract_absolute);
 
+  added_image_file_ = true;
+
   // 1. Copy image file to word/media/image<number>.<extension>
   if (!relations->AddImageFile(
       helper::File::ResolvePath(path_working_directory_, argv_[5]))) {
@@ -217,14 +220,18 @@ std::string docx_archive_replace::AddImageFileAndRelation(
 
     std::string message = std::string("Failed adding image file ") + argv_[5];
 
-    throw message;
+    docxbox::AppLog::NotifyError("Failed adding image file " + argv_[5]);
+
+    added_image_file_ = false;
   }
 
-  added_image_file_ = true;
+  std::string relationship_id;
 
-  // 2. Create media relation in _rels/document.xml.rels
-  auto relationship_id = relations->GetImageRelationshipId(
-      relations->GetMediaPathNewImage());
+  if (added_image_file_) {
+    // 2. Create media relation in _rels/document.xml.rels
+    relationship_id = relations->GetImageRelationshipId(
+        relations->GetMediaPathNewImage());
+  }
 
   delete relations;
 

@@ -2,6 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/renderer/contentType/docx_renderer_paragraph.h>
+#include <docxbox/app/app_log.h>
 
 // Constructor
 docx_renderer_paragraph::docx_renderer_paragraph(std::string path_extract,
@@ -36,7 +37,11 @@ bool docx_renderer_paragraph::InitFromJson() {
 }
 
 std::string docx_renderer_paragraph::Render() {
-  if (!is_json_valid_) throw "Failed render text markup.\n";
+  if (!is_json_valid_) {
+    docxbox::AppLog::NotifyError("Failed render text markup");
+
+    return "";
+  }
 
   generic_root_tag_ = "w:p";
 

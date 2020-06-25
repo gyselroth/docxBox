@@ -25,7 +25,9 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
 
   doc.Parse(xml_.c_str());
 
-  if (doc.ErrorID() != 0) throw "Failed parse word/_rels/document.xml.rels\n";
+  if (doc.ErrorID() != 0) {
+    throw "Failed parse word/_rels/document.xml.rels\n";
+  }
 
   tinyxml2::XMLElement *relationships = doc.FirstChildElement("Relationships");
 
