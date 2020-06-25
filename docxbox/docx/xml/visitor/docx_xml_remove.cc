@@ -29,7 +29,7 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
   if (!nodes_to_be_removed_.empty()
       && found_lhs_
       && found_rhs_) {
-    RemoveNodes(nodes_to_be_removed_);
+    RemoveNodes(&nodes_to_be_removed_);
 
     return tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
            ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
@@ -86,10 +86,10 @@ void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
 
 // TODO(kay): add removal based on segmented texts
 
-bool docx_xml_remove::RemoveNodes(std::vector<tinyxml2::XMLElement*> &nodes) {
+bool docx_xml_remove::RemoveNodes(std::vector<tinyxml2::XMLElement*> *nodes) {
   amount_removed_ = 0;
 
-  for (auto node : nodes) {
+  for (auto node : *nodes) {
     if (nullptr == node) continue;
 
     tinyxml2::XMLNode *kParent = node->Parent();
