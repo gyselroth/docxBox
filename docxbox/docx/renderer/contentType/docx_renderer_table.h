@@ -4,8 +4,8 @@
 #ifndef DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_TABLE_H_
 #define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_TABLE_H_
 
-#include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/app/app_log.h>
+#include <docxbox/docx/renderer/docx_renderer.h>
 
 #include <iostream>
 #include <string>

@@ -3,9 +3,6 @@
 
 #include <docxbox/docx/renderer/contentType/docx_renderer_text.h>
 
-#include <iostream>
-#include <utility>
-
 // Constructor
 docx_renderer_text::docx_renderer_text(std::string path_extract,
                                        const std::string &json) {
@@ -39,7 +36,11 @@ bool docx_renderer_text::InitFromJson() {
 }
 
 std::string docx_renderer_text::Render() {
-  if (!is_json_valid_) throw "Failed render text markup.\n";
+  if (!is_json_valid_) {
+    docxbox::AppLog::NotifyError("Failed render text markup");
+
+    return "";
+  }
 
   generic_root_tag_ = "w:r";
 

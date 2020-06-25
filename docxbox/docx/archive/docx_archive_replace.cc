@@ -42,8 +42,9 @@ bool docx_archive_replace::ReplaceImage() {
 
       // TODO(kay): add adaptation for batch process-
       //            needs use of dynamic offset instead argv_[4] than
-      std::string path_image_replacement =
-          helper::File::ResolvePath(path_working_directory_, argv_[4]);
+      std::string path_image_replacement = argv_[4];
+      helper::File::ResolvePath(
+          path_working_directory_, &path_image_replacement);
 
       helper::File::CopyFile(path_image_replacement, path_image_original);
 
@@ -69,10 +70,14 @@ bool docx_archive_replace::ReplaceImage() {
     } else {
       overwrite_source_docx = argc_ < 6;
 
-      path_docx_out_ = overwrite_source_docx
-          ? path_docx_in_
-          // Result filename is given as argument
-          : helper::File::ResolvePath(path_working_directory_, argv_[5]);
+      if (overwrite_source_docx) {
+        // Overwrite original DOCX
+        path_docx_out_ = path_docx_in_;
+      } else {
+        // Result filename is given as argument
+        path_docx_out_ = argv_[5];
+        helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+      }
     }
 
     if (!Zip(false, path_extract_, path_docx_out_ + "tmp"))
@@ -109,21 +114,22 @@ bool docx_archive_replace::ReplaceText() {
 
   const char *kReplacement = replacement.c_str();
 
-  try {
-    // TODO(kay): single-out render-type detection
-    if (helper::String::StartsWith(kReplacement, "{\"image\":{")
-        || helper::String::StartsWith(kReplacement, "{\"img\":{")) {
-      image_relationship_id = AddImageFileAndRelation(replacement);
-    } else if (helper::String::StartsWith(kReplacement, "{\"link\":{")) {
-      hyperlink_relationship_id = AddHyperlinkRelation(replacement);
-      // TODO(kay): ensure presence of hyperlink-style
-    } else if (helper::String::StartsWith(kReplacement, "{\"ol\":{")) {
-      std::string path_extract_absolute =
-          path_working_directory_ + "/" + path_extract_;
-      contentTypes::AddOverrideNumberingReference(path_extract_absolute);
-    }
-  } catch (std::string &message) {
-    return docxbox::AppLog::NotifyError(message);
+  // TODO(kay): single-out render-type detection
+  if (helper::String::StartsWith(kReplacement, "{\"image\":{")
+      || helper::String::StartsWith(kReplacement, "{\"img\":{")) {
+    image_relationship_id = AddImageFileAndRelation(replacement);
+
+    if (image_relationship_id.empty()) return false;
+  } else if (helper::String::StartsWith(kReplacement, "{\"link\":{")) {
+    hyperlink_relationship_id = AddHyperlinkRelation(replacement);
+
+    if (hyperlink_relationship_id.empty()) return false;
+  } else if (helper::String::StartsWith(kReplacement, "{\"ol\":{")) {
+    std::string path_extract_absolute =
+        path_working_directory_ + "/" + path_extract_;
+
+    if (!contentTypes::AddOverrideNumberingReference(path_extract_absolute))
+      return false;
   }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
@@ -180,15 +186,15 @@ void docx_archive_replace::InitPathDocxOutForReplaceText(
 
   if (added_image_file_) {
     if (argc_ >= 7) {
-      *path_docx_out =
-          helper::File::ResolvePath(path_working_directory_, argv_[6]);
+      *path_docx_out = argv_[6];
+      helper::File::ResolvePath(path_working_directory_, path_docx_out);
 
       *overwrite_source_docx = false;
     }
   } else {
     if (argc_ >= 6) {
-      *path_docx_out =
-          helper::File::ResolvePath(path_working_directory_, argv_[5]);
+      *path_docx_out = argv_[5];
+      helper::File::ResolvePath(path_working_directory_, path_docx_out);
 
       *overwrite_source_docx = false;
     }
@@ -205,26 +211,32 @@ std::string docx_archive_replace::AddImageFileAndRelation(
     // No media file given: successfully done (nothing)
     return "";
 
-  std::string path_extract_absolute =
-      helper::File::ResolvePath(path_working_directory_, path_extract_);
+  std::string path_extract_absolute = path_extract_;
+  helper::File::ResolvePath(path_working_directory_, &path_extract_absolute);
 
   auto relations = new media(path_extract_absolute);
 
-  // 1. Copy image file to word/media/image<number>.<extension>
-  if (!relations->AddImageFile(
-      helper::File::ResolvePath(path_working_directory_, argv_[5]))) {
-    delete relations;
-
-    std::string message = std::string("Failed adding image file ") + argv_[5];
-
-    throw message;
-  }
-
   added_image_file_ = true;
 
-  // 2. Create media relation in _rels/document.xml.rels
-  auto relationship_id = relations->GetImageRelationshipId(
-      relations->GetMediaPathNewImage());
+  // 1. Copy image file to word/media/image<number>.<extension>
+  std::string path_image = argv_[5];
+  helper::File::ResolvePath(path_working_directory_, &path_image);
+
+  if (!relations->AddImageFile(path_image)) {
+    delete relations;
+
+    docxbox::AppLog::NotifyError("Failed adding image file " + argv_[5]);
+
+    added_image_file_ = false;
+  }
+
+  std::string relationship_id;
+
+  if (added_image_file_) {
+    // 2. Create media relation in _rels/document.xml.rels
+    relationship_id = relations->GetImageRelationshipId(
+        relations->GetMediaPathNewImage());
+  }
 
   delete relations;
 
@@ -233,8 +245,8 @@ std::string docx_archive_replace::AddImageFileAndRelation(
 
 std::string docx_archive_replace::AddHyperlinkRelation(
     const std::string &markup_json) {
-  std::string path_extract_absolute =
-      helper::File::ResolvePath(path_working_directory_, path_extract_);
+  std::string path_extract_absolute = path_extract_;
+  helper::File::ResolvePath(path_working_directory_, &path_extract_absolute);
 
   auto url = helper::Json::GetFirstValueOfKey(markup_json, "url");
 
@@ -288,14 +300,14 @@ bool docx_archive_replace::RemoveBetweenText() {
   if (is_batch_mode_) {
     if (!is_final_batch_step_) return true;
   } else {
-    path_docx_out_ =
-        argc_ >= 7
-        // Result filename is given as argument
-        ? helper::File::ResolvePath(
-            path_working_directory_,
-            argv_[6])
-        // Overwrite original DOCX
-        : path_docx_in_;
+    if (argc_ >= 7) {
+      // Result filename is given as argument
+      path_docx_out_ = argv_[6];
+      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+    } else {
+      // Overwrite original DOCX
+      path_docx_out_ = path_docx_in_;
+    }
   }
 
   return CreateDocxFromExtract(path_docx_out_,
@@ -327,7 +339,6 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
 
   delete parser;
 
-  std::string path_docx_out;
   bool overwrite_source_docx;
 
   // Create resulting DOCX from files during non-batch mode
@@ -339,12 +350,13 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
   } else {
     overwrite_source_docx = argc_ < 4;
 
-    path_docx_out_ = overwrite_source_docx
-                    // Overwrite original DOCX
-                    ? path_docx_in_
-                    // Result filename is given as argument
-                    : helper::File::ResolvePath(path_working_directory_,
-                                                argv_[3]);
+    if (overwrite_source_docx) {
+      path_docx_out_ = path_docx_in_;
+    } else {
+      // Result filename is given as argument
+      path_docx_out_ = argv_[3];
+      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+    }
   }
 
   return CreateDocxFromExtract(path_docx_out_, overwrite_source_docx);
@@ -386,12 +398,14 @@ bool docx_archive_replace::SetFieldValue() {
   if (is_batch_mode_) {
     if (!is_final_batch_step_) return true;
   } else {
-    path_docx_out_ =
-        argc_ >= 6
-        // Result filename is given as argument
-        ? helper::File::ResolvePath(path_working_directory_, argv_[5])
-        // Overwrite original DOCX
-        : path_docx_in_;
+    if (argc_ >= 6) {
+      // Result filename is given as argument
+      path_docx_out_ = argv_[5];
+      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+    } else {
+      // Overwrite original DOCX
+      path_docx_out_ = path_docx_in_;
+    }
   }
 
   std::string path_docx_out_tmp = path_docx_out_ + "tmp";

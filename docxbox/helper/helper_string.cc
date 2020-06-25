@@ -136,14 +136,10 @@ std::string String::GetSubStrBetween(const std::string &str,
 }
 
 int String::OffsetChar(const std::string &str, char c, int offset) {
-  char ch;
-
   int16_t len = str.length();
 
   do {
-    ch = str[offset];
-
-    if (ch == c) return offset;
+    if (str[offset] == c) return offset;
 
     ++offset;
   } while (offset < len);

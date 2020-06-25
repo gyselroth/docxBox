@@ -26,15 +26,19 @@ matrix:
       script:
         # build docxBox
         - cmake CMakeLists.txt && make
+
         # lint c++ source w/ cppcheck
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all --language=c++ ./docxbox/*; fi
+
         # lint c++ source for google styleguide breaches
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cpplint --recursive --recursive --extensions=cc,h docxbox; fi
       after_success:
         # ensure docxbox can run on linux
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./bin/linux/docxbox ; fi
+
         # run functional tests
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
+
 #        - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/docxbox ; fi
 
 #    - language: shell    

@@ -13,7 +13,8 @@ docx_xml_styles::docx_xml_styles(
     const std::vector<std::string> &argv): docx_xml(argc, argv) {
   path_xml_file_ = path_extract + "/word/styles.xml";
   path_extract_ = std::move(path_extract);
-  xml_ = helper::File::GetFileContents(path_xml_file_);
+
+  helper::File::GetFileContents(path_xml_file_, &xml_);
 }
 
 // Get (insert if not exists) style ID
@@ -25,7 +26,11 @@ std::string docx_xml_styles::GetStyleId(
 
   doc.Parse(xml_.c_str());
 
-  if (doc.ErrorID() != 0) throw "Failed parse word/styles.xml";
+  if (doc.ErrorID() != 0) {
+    docxbox::AppLog::NotifyError("Failed parse word/styles.xml");
+
+    return "";
+  }
 
   tinyxml2::XMLElement *styles = doc.FirstChildElement("w:styles");
 
@@ -69,7 +74,8 @@ std::string docx_xml_styles::GetStyleId(
 //
 //  helper::String::Replace(xml_, "</w:styles>", kRelationshipTag.c_str());
 //
-//  if (!SaveXml(true)) throw "Failed save word/styles.xml\n";
+//  if (!SaveXml(true))
+//    docxbox::AppLog::NotifyError("Failed save word/styles.xml");
 
   return style_id;
 }

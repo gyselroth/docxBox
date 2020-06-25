@@ -78,7 +78,11 @@ bool docx_renderer_table::InitFromJson() {
 
 // @see http://officeopenxml.com/WPtable.php
 std::string docx_renderer_table::Render() {
-  if (!is_json_valid_) throw "Failed render table markup.\n";
+  if (!is_json_valid_) {
+    docxbox::AppLog::NotifyError("Failed render table markup");
+
+    return "";
+  }
 
   generic_root_tag_ = "w:r";
 

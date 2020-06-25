@@ -304,8 +304,14 @@ bool docx_compare::AreFilesInLinesDifferent(
       || !helper::File::FileExists(path_file_left)
       || !helper::File::FileExists(path_file_right)) return false;
 
-    auto content_left = helper::File::GetFileContents(path_file_left);
-    auto content_right = helper::File::GetFileContents(path_file_right);
+  std::string content_left;
 
-    return content_left != content_right;
+  if (!helper::File::GetFileContents(path_file_left, &content_left))
+    return false;
+
+  std::string content_right;
+
+  return helper::File::GetFileContents(path_file_right, &content_right)
+    ? content_left != content_right
+    : false;
 }

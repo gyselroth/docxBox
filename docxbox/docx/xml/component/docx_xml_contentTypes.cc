@@ -13,7 +13,7 @@ docx_xml_contentTypes::docx_xml_contentTypes(
   path_xml_file_ = path_extract + "/[Content_Types].xml";
   path_extract_ = std::move(path_extract);
 
-  xml_ = helper::File::GetFileContents(path_xml_file_);
+  helper::File::GetFileContents(path_xml_file_, &xml_);
 }
 
 bool docx_xml_contentTypes::AddOverrideNumberingReference() {

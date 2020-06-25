@@ -3,9 +3,6 @@
 
 #include <docxbox/docx/renderer/contentType/docx_renderer_heading.h>
 
-#include <iostream>
-#include <utility>
-
 // Constructor
 docx_renderer_heading::docx_renderer_heading(std::string path_extract,
                                              const std::string &json) {
@@ -51,7 +48,11 @@ std::string docx_renderer_heading::Render() {
 }
 
 std::string docx_renderer_heading::Render(int level) {
-  if (!is_json_valid_) throw "Failed render heading markup.\n";
+  if (!is_json_valid_) {
+    docxbox::AppLog::NotifyError("Failed render heading markup");
+
+    return "";
+  }
 
   if (level > 0) SetLevel(level);
 
