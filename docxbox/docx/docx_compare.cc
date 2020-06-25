@@ -61,11 +61,11 @@ void docx_compare::Output() {
   while (index_total_ < amount_lines_total) {
     GetCurrentLineAndFilename(
         index_left_, lines_left, amount_lines_left,
-        line_left, filename_left);
+        line_left, &filename_left);
 
     GetCurrentLineAndFilename(
         index_right_, lines_right, amount_lines_right,
-        line_right, filename_right);
+        line_right, &filename_right);
 
     AdvanceToAlphabeticalNextItem(
         filename_left, filename_right, line_left, line_right);
@@ -78,7 +78,7 @@ void docx_compare::Output() {
     style_on_left = style_on_right = "";
 
     if ((IsFileItemLine(line_left) || IsFileItemLine(line_right))
-        && AreFilesInLinesDifferent(line_left, line_right))
+        && AreFilesInLinesDifferent(&line_left, &line_right))
       UpdateColumnStyles(line_left,
                          line_right,
                          style_on_left,
@@ -92,14 +92,14 @@ void docx_compare::Output() {
 
       if (file_size_left > file_size_right) {
         ColorizeFileSize(
-            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, line_left);
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, &line_left);
         ColorizeFileSize(
-            helper::Cli::ANSI_LIGHT_RED, style_on_right, line_right);
+            helper::Cli::ANSI_LIGHT_RED, style_on_right, &line_right);
       } else if (file_size_left < file_size_right) {
         ColorizeFileSize(
-            helper::Cli::ANSI_LIGHT_GREEN, style_on_right, line_right);
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_right, &line_right);
         ColorizeFileSize(
-            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, line_left);
+            helper::Cli::ANSI_LIGHT_GREEN, style_on_left, &line_left);
       }
     }
 
@@ -117,8 +117,8 @@ void docx_compare::Output() {
 
 void docx_compare::ColorizeFileSize(const std::string& color,
                                     const std::string &style_on,
-                                    std::string &line) const {
-  line = color + line.insert(9, helper::Cli::ANSI_RESET + style_on);
+                                    std::string *line) const {
+  *line = color + (*line).insert(9, helper::Cli::ANSI_RESET + style_on);
 }
 
 void docx_compare::OutputLine(uint32_t len_summary_1,
@@ -139,13 +139,13 @@ void docx_compare::GetCurrentLineAndFilename(
     const std::vector<std::string> &lines,
     uint16_t amount_lines,
     std::string &line,
-    std::string &filename) const {
+    std::string *filename) const {
   if (index < amount_lines) {
     line = lines[index];
-    filename = helper::String::GetTrailingWord(line);
+    *filename = helper::String::GetTrailingWord(&line);
   } else {
     line = "";
-    filename = "";
+    *filename = "";
   }
 }
 
@@ -182,8 +182,8 @@ std::vector<std::string> docx_compare::SplitIntoSortedLines(
 // Comparator method for sorting
 bool docx_compare::CompareLinesByFilenames(std::string str_1,
                                            std::string str_2) {
-  auto filename_1 = helper::String::GetTrailingWord(std::move(str_1));
-  auto filename_2 = helper::String::GetTrailingWord(std::move(str_2));
+  auto filename_1 = helper::String::GetTrailingWord(&str_1);
+  auto filename_2 = helper::String::GetTrailingWord(&str_2);
 
   return std::strcmp(filename_1.c_str(), filename_2.c_str()) < 0;
 }
@@ -261,15 +261,15 @@ void docx_compare::UpdateColumnStyles(const std::string &line_left,
 
 int docx_compare::ExtractFileSizeFromLine(const std::string &line) {
   auto line_tmp = line;
-  helper::String::LTrim(line_tmp);
+  helper::String::LTrim(&line_tmp);
 
   auto parts = helper::String::Explode(line_tmp, ' ');
 
   if (parts.empty()) return 0;
 
-  return helper::String::IsNumeric(parts[0], false, false, false)
-  ? std::stoi(parts[0])
-  : 0;
+  return helper::String::IsNumeric(&parts[0], false, false, false)
+         ? std::stoi(parts[0])
+         : 0;
 }
 
 std::string docx_compare::RenderMargin(int len_str, int len_max) {
@@ -279,11 +279,11 @@ std::string docx_compare::RenderMargin(int len_str, int len_max) {
 }
 
 bool docx_compare::AreFilesInLinesDifferent(
-    const std::string &line_1, const std::basic_string<char> &line_2) {
+    std::string *line_1, std::string *line_2) {
   if (line_1 != line_2) return true;
 
-  bool kIs_file_left = IsFileItemLine(line_1);
-  bool kIs_file_right = IsFileItemLine(line_2);
+  bool kIs_file_left = IsFileItemLine(*line_1);
+  bool kIs_file_right = IsFileItemLine(*line_2);
 
   if (kIs_file_left != kIs_file_right
       || (!kIs_file_left && !kIs_file_right)) return true;

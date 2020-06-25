@@ -120,7 +120,7 @@ bool docx_archive_replace::ReplaceText() {
     } else if (helper::String::StartsWith(kReplacement, "{\"ol\":{")) {
       std::string path_extract_absolute =
           path_working_directory_ + "/" + path_extract_;
-      contentTypes::OverrideNumbering(path_extract_absolute);
+      contentTypes::AddOverrideNumberingReference(path_extract_absolute);
     }
   } catch (std::string &message) {
     return docxbox::AppLog::NotifyError(message);
@@ -167,31 +167,30 @@ bool docx_archive_replace::ReplaceText() {
 
     overwrite_source_docx = path_docx_in_ == path_docx_out_;
   } else {
-    InitPathDocxOutForReplaceText(path_docx_out_, overwrite_source_docx);
+    InitPathDocxOutForReplaceText(&path_docx_out_, &overwrite_source_docx);
   }
 
   return CreateDocxFromExtract(path_docx_out_, overwrite_source_docx);
 }
 
 void docx_archive_replace::InitPathDocxOutForReplaceText(
-    std::string &path_docx_out, bool &overwrite_source_docx) const {
-  path_docx_out = path_docx_in_;
-  overwrite_source_docx = true;
+    std::string *path_docx_out, bool *overwrite_source_docx) const {
+  *path_docx_out = path_docx_in_;
+  *overwrite_source_docx = true;
 
   if (added_image_file_) {
     if (argc_ >= 7) {
-      path_docx_out =
+      *path_docx_out =
           helper::File::ResolvePath(path_working_directory_, argv_[6]);
 
-      overwrite_source_docx = false;
+      *overwrite_source_docx = false;
     }
   } else {
     if (argc_ >= 6) {
-      path_docx_out =
+      *path_docx_out =
           helper::File::ResolvePath(path_working_directory_, argv_[5]);
 
-
-      overwrite_source_docx = false;
+      *overwrite_source_docx = false;
     }
   }
 }

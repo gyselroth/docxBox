@@ -163,14 +163,14 @@ std::vector<std::string> String::Explode(std::string const &str,
   return result;
 }
 
-std::string String::GetTrailingWord(std::string str) {
-  if (str.empty() || !Contains(str, " ")) return str;
+std::string String::GetTrailingWord(std::string *str) {
+  if ((*str).empty() || !Contains(*str, " ")) return *str;
 
   Trim(str);
 
-  while (Contains(str, "  ")) ReplaceAll(str, "  ", " ");
+  while (Contains(*str, "  ")) ReplaceAll(*str, "  ", " ");
 
-  auto words = Explode(str, ' ');
+  auto words = Explode(*str, ' ');
 
   return words[words.size() - 1];
 }
@@ -263,44 +263,44 @@ std::string String::RenderTwoColumns(
 }
 
 // Trim from start (in place)
-void String::LTrim(std::string &s) {
-  s.erase(
-      s.begin(),
+void String::LTrim(std::string *s) {
+  (*s).erase(
+      (*s).begin(),
       std::find_if(
-          s.begin(),
-          s.end(),
+          (*s).begin(),
+          (*s).end(),
           std::not1(std::ptr_fun<int, int>(std::isspace))));
 }
 
 // Trim from end (in place)
-void String::RTrim(std::string &s) {
-  s.erase(
+void String::RTrim(std::string *s) {
+  (*s).erase(
       std::find_if(
-          s.rbegin(),
-          s.rend(),
+          (*s).rbegin(),
+          (*s).rend(),
           std::not1(std::ptr_fun<int, int>(std::isspace)))
           .base(),
-      s.end());
+      (*s).end());
 }
 
 // Trim from both ends (in place)
-void String::Trim(std::string &s) {
+void String::Trim(std::string *s) {
   LTrim(s);
   RTrim(s);
 }
 
 extern bool String::IsNumeric(
-    std::string str,
+    std::string *str,
     bool trim,
     bool can_contain_punctuation,
     bool can_contain_spaces) {
-  if (str.empty()) return false;
+  if ((*str).empty()) return false;
 
   if (trim) Trim(str);
 
-  if (str.empty() && !can_contain_spaces) return false;
+  if ((*str).empty() && !can_contain_spaces) return false;
 
-  for (char i : str) {
+  for (char i : *str) {
     if ((can_contain_spaces && i == ' ')
         || (can_contain_punctuation && ispunct(i))) continue;
 

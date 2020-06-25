@@ -96,7 +96,7 @@ void docx_xml_lorem::RandomizeInTextNodes(tinyxml2::XMLElement *node) {
 std::vector<std::string> docx_xml_lorem::SplitIntoSpaceSeparatedSegments(
     std::string sentence) {
 
-  helper::String::Trim(sentence);
+  helper::String::Trim(&sentence);
 
   while (helper::String::Contains(sentence, "  "))
     helper::String::ReplaceAll(sentence, "  ", " ");
@@ -123,7 +123,7 @@ std::string docx_xml_lorem::RandomizeText(std::string str_in) {
 
     char lead_char_in = segment_in[0];
 
-    if (helper::String::IsNumeric(segment_in, false, true, true)) {
+    if (helper::String::IsNumeric(&segment_in, false, true, true)) {
       // Maintain e.g. phone numbers numeric
       word = helper::String::GetRandomNumericString(
           i == 0 && str_in[0] == ' '

@@ -12,12 +12,13 @@ void docx_xml_replace::SetReplacementXmlFirstChildTag(
   replacement_xml_root_tag_ = replacement_xml_first_child_tag;
 }
 
-void docx_xml_replace::SetImageRelationshipId(std::string &relationship_id) {
+void docx_xml_replace::SetImageRelationshipId(
+    const std::string &relationship_id) {
   image_relationship_id_ = relationship_id;
 }
 
 void docx_xml_replace::SetHyperlinkRelationshipId(
-    std::string &relationship_id) {
+    const std::string &relationship_id) {
   hyperlink_relationship_id_ = relationship_id;
 }
 

@@ -16,7 +16,7 @@ docx_xml_contentTypes::docx_xml_contentTypes(
   xml_ = helper::File::GetFileContents(path_xml_file_);
 }
 
-bool docx_xml_contentTypes::OverrideNumbering() {
+bool docx_xml_contentTypes::AddOverrideNumberingReference() {
   if (helper::String::Contains(
       xml_,
       "<Override PartName=\"/word/numbering.xml\""

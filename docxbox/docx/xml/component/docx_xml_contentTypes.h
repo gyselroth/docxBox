@@ -22,7 +22,7 @@ class docx_xml_contentTypes: docx_xml {
       int argc = 0,
       const std::vector<std::string>& argv = {});
 
-  bool OverrideNumbering();
+  bool AddOverrideNumberingReference();
 
  private:
   std::string path_extract_;

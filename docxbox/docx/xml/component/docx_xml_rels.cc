@@ -43,7 +43,7 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
 
     std::string target_value = attr_target->Value();
 
-    GetRelationshipId(relationship, relationship_id);
+    GetRelationshipId(relationship, &relationship_id);
 
     if (target_value == target) {
       target_exists = true;
@@ -77,8 +77,7 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
 
 void docx_xml_rels::GetRelationshipId(
     const tinyxml2::XMLElement *relationship,
-    std::string &relationship_id) const {
+    std::string *relationship_id) const {
   const char* id_key = "Id";
-  auto id = relationship->FindAttribute(id_key);
-  relationship_id = id->Value();
+  *relationship_id = relationship->FindAttribute(id_key)->Value();
 }

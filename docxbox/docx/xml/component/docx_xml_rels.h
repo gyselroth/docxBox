@@ -33,7 +33,7 @@ class docx_xml_rels: docx_xml {
   std::string path_extract_;
 
   void GetRelationshipId(const tinyxml2::XMLElement *relationship,
-                         std::string &relationship_id) const;
+                         std::string *relationship_id) const;
 };
 
 #endif  // DOCXBOX_DOCX_XML_COMPONENT_DOCX_XML_RELS_H_

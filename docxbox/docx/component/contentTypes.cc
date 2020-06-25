@@ -39,10 +39,10 @@ const char contentTypes::MIME_CONTENT_TYPE_WEB_SETTINGS[] =
     "application/vnd.openxmlformats-officedocument.wordprocessingml."
     "webSettings+xml";
 
-bool contentTypes::OverrideNumbering(std::string &path_extract_absolute) {
+bool contentTypes::AddOverrideNumberingReference(
+    const std::string &path_extract_absolute) {
   auto component = new docx_xml_contentTypes(path_extract_absolute);
-
-  auto result = component->OverrideNumbering();
+  auto result = component->AddOverrideNumberingReference();
 
   delete component;
 

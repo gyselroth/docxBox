@@ -29,11 +29,13 @@ class docx_xml {
   std::string xml_;
 
   tinyxml2::XMLElement *GetBodyByComponentPath(
-      tinyxml2::XMLDocument &doc, const std::string& path_xml) const;
+      tinyxml2::XMLDocument *doc,
+      const std::string& path_xml) const;
 
   bool SaveXml(bool compress);
 
-  static void RemoveTmpEndingFromDocxPath(std::string &xml_filename);
+  static std::string RemoveTmpEndingFromDocxPath(
+      const std::string &xml_filename);
 };
 
 #endif  // DOCXBOX_DOCX_XML_DOCX_XML_H_

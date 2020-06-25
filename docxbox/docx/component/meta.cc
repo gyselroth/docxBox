@@ -474,7 +474,7 @@ void meta::CollectFromAppXml(std::string path_app_xml_current,
   if (has_collected_from_app_xml_ && has_collected_from_core_xml_) Output();
 }
 
-std::string meta::ExtractXmlSchemaFromAppXml(std::string &app_xml) const {
+std::string meta::ExtractXmlSchemaFromAppXml(const std::string &app_xml) const {
   u_int32_t offset = 0;
 
   std::string xml_schema = helper::String::GetSubStrBetween(
