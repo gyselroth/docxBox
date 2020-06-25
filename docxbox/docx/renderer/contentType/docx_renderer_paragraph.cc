@@ -2,7 +2,6 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/renderer/contentType/docx_renderer_paragraph.h>
-#include <docxbox/app/app_log.h>
 
 // Constructor
 docx_renderer_paragraph::docx_renderer_paragraph(std::string path_extract,

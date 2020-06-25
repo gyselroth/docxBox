@@ -4,10 +4,10 @@
 #ifndef DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LINK_H_
 #define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_LINK_H_
 
+#include <docxbox/app/app_log.h>
 #include <docxbox/docx/component/numbering.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/helper/helper_string.h>
-#include <docxbox/app/app_log.h>
 
 #include <iostream>
 #include <string>
