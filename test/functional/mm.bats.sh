@@ -72,15 +72,6 @@ language="the meta attribute \"language\" can be modified"
   "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep --count "language: de-CH"
 }
 
-modified="the meta attribute modified can be changed"
-@test "With \"${base_command} modified {argument}\" ${modified}" {
-  pattern="modified: 2020-10-20T10:20:00Z"
-
-  run "${DOCXBOX_BINARY}" mm "${path_docx}" modified "2020-10-20T10:20:00Z"
-  [ "$status" -eq 0 ]
-  "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep --count "${pattern}"
-}
-
 created="the meta attribute created can be changed"
 created="the meta attribute \"created\" can be modified"
 @test "With \"${base_command} created {argument}\" ${created}" {
@@ -95,16 +86,18 @@ modified="the meta attribute \"modified\" can be modified"
 @test "With \"${base_command} modified {argument}\" ${modified}" {
   pattern="modified: 2020-10-20T10:20:00Z"
 
-  run "${docxbox}" mm "${path_docx}" modified "2020-10-20T10:20:00Z"
+  run "${DOCXBOX_BINARY}" mm "${path_docx}" modified "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
-  "${docxbox}" lsm "${path_docx}" | grep --count "${pattern}"
+  "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep --count "${pattern}"
 }
 
-#TODO(lucas): implement
-#modified="Modifying the meta attribute \"modified\" does not change the meta attribute \"created\""
+@test "Modifying the meta attribute \"created\" does not change the meta attribute \"modified\"" {
+  created=$("${DOCXBOX_BINARY}" lsm "${path_docx}" | grep "created")
 
-#TODO(lucas): implement
-#modified="Modifying the meta attribute \"created\" does not change the meta attribute \"modified\""
+  run "${DOCXBOX_BINARY}" mm "${path_docx}" modified "2020-10-20T10:20:00Z"
+
+  "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep "${created}"
+}
 
 revision="the meta attribute \"revision\" can be changed"
 @test "With \"${base_command} revision {argument}\" ${revision}" {
@@ -113,13 +106,6 @@ revision="the meta attribute \"revision\" can be changed"
   "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep "revision: 25"
 }
 
-@test "Changing the attribute modified doesn't modify attribute created" {
-  created=$("${DOCXBOX_BINARY}" lsm "${path_docx}" | grep "created")
-
-  run "${DOCXBOX_BINARY}" mm "${path_docx}" modified "2020-10-20T10:20:00Z"
-
-  "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep "${created}"
-}
 
 @test "Output of \"docxbox mm nonexistent.docx\" is an error message" {
   err_log="test/tmp/err.log"
