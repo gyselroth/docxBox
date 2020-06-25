@@ -3,6 +3,6 @@
 # Copyright (c) 2020 gyselroth GmbH
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-if [ -d test/functional/tmp ]; then
-    rm -r test/functional/tmp;
+if [ -d test/tmp ]; then
+    rm -r test/tmp;
 fi

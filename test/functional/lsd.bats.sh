@@ -7,8 +7,8 @@ load _helper
 
 base_command="\"docxbox lsd"
 
-docxbox="$BATS_TEST_DIRNAME/docxbox"
-path_docx="test/functional/tmp/cp_mergefields.docx"
+DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+path_docx="test/tmp/cp_mergefields.docx"
 
 merge_field="MERGEFIELD"
 merge_format="\* MERGEFORMAT"
@@ -25,32 +25,32 @@ merge_format="\* MERGEFORMAT"
 }
 
 @test "With ${base_command} filename.docx\" the fields in the docx are listed" {
-  "${docxbox}" lsd "${path_docx}" | grep --count "${merge_field}"
-  "${docxbox}" lsd "${path_docx}" | grep --count "${merge_format}"
+  "${DOCXBOX_BINARY}" lsd "${path_docx}" | grep --count "${merge_field}"
+  "${DOCXBOX_BINARY}" lsd "${path_docx}" | grep --count "${merge_format}"
 }
 
 @test "With ${base_command} filename.docx\" the fields in the header are listed" {
-  "${docxbox}" lsd "${path_docx}" | grep --count "MERGEFIELD  Mergefield_Header"
+  "${DOCXBOX_BINARY}" lsd "${path_docx}" | grep --count "MERGEFIELD  Mergefield_Header"
 }
 
 @test "With ${base_command} filename.docx\" the fields in the footer are listed" {
-  "${docxbox}" lsd "${path_docx}" | grep --count "MERGEFIELD  Mergefield_Footer"
+  "${DOCXBOX_BINARY}" lsd "${path_docx}" | grep --count "MERGEFIELD  Mergefield_Footer"
 }
 
 title="With \"docxbox ls filename.docx --fields\" "
 title+="the fields in the docx are listed"
 @test "$title" {
-  "${docxbox}" lsd "${path_docx}" | grep --count "${merge_field}"
-  "${docxbox}" lsd "${path_docx}" | grep --count "${merge_format}"
+  "${DOCXBOX_BINARY}" lsd "${path_docx}" | grep --count "${merge_field}"
+  "${DOCXBOX_BINARY}" lsd "${path_docx}" | grep --count "${merge_format}"
 }
 
 @test "With \"docxbox ls filename.docx -d\" the fields in the docx are listed" {
-  "${docxbox}" ls "${path_docx}" -d | grep --count "${merge_field}"
-  "${docxbox}" ls "${path_docx}" -d | grep --count "${merge_format}"
+  "${DOCXBOX_BINARY}" ls "${path_docx}" -d | grep --count "${merge_field}"
+  "${DOCXBOX_BINARY}" ls "${path_docx}" -d | grep --count "${merge_format}"
 }
 
 @test "Output of \"docxbox lsd nonexistent.docx\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
 
   run "$BATS_TEST_DIRNAME"/docxbox lsd nonexistent.docx
   [ "$status" -ne 0 ]
@@ -60,11 +60,11 @@ title+="the fields in the docx are listed"
 }
 
 @test "Output of ${base_command} wrong_file_type\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
   wrong_file_types=(
-  "test/functional/tmp/cp_lorem_ipsum.pdf"
-  "test/functional/tmp/cp_mock_csv.csv"
-  "test/functional/tmp/cp_mock_excel.xls")
+  "test/tmp/cp_lorem_ipsum.pdf"
+  "test/tmp/cp_mock_csv.csv"
+  "test/tmp/cp_mock_excel.xls")
 
   for i in "${wrong_file_types[@]}"
   do
