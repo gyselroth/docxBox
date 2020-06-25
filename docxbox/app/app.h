@@ -31,6 +31,8 @@ class App {
       const std::vector<std::string>& argv,
       bool is_batch_mode = false);
 
+  virtual ~App();
+
   void SetPathDocxIn(const std::string &path_docx_in);
   void SetPathDocxOut(const std::string &path_docx_out);
   void SetPathExtract(const std::string &path_extract);
