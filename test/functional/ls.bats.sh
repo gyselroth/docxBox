@@ -5,19 +5,19 @@
 
 load _helper
 
-docxbox="$BATS_TEST_DIRNAME/docxbox"
+DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 
 base_command="\"docxbox ls filename.docx"
-path_docx="test/functional/tmp/cp_table_unordered_list_images.docx"
-path_new_docx="test/functional/tmp/changedFile.docx"
+path_docx="test/tmp/cp_table_unordered_list_images.docx"
+path_new_docx="test/tmp/changedFile.docx"
 
 @test "Exit code of ${base_command}\" is zero" {
-  run "${docxbox}" ls "${path_docx}"
+  run "${DOCXBOX_BINARY}" ls "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox ls {missing argument}\" is an error message" {
-  run "${docxbox}" ls
+  run "${DOCXBOX_BINARY}" ls
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
@@ -31,7 +31,7 @@ path_new_docx="test/functional/tmp/changedFile.docx"
 
   for i in "${attributs[@]}"
   do
-    "${docxbox}" ls "${path_docx}" | grep --count "${i}"
+    "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "${i}"
   done
 }
 
@@ -54,36 +54,36 @@ search_values=(
 
   for i in "${search_values[@]}"
   do
-    "${docxbox}" ls "${path_docx}" | grep --count "${i}"
+    "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of ${base_command}\" contains amount of contained files" {
-  "${docxbox}" ls "${path_docx}" | grep --count '14 files'
+  "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count '14 files'
 }
 
 @test "Output of ${base_command}\" contains files' date and time" {
-  "${docxbox}" ls "${path_docx}" | grep --count "6/18/2020"
-  "${docxbox}" ls "${path_docx}" | grep --count "10:30"
+  "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "6/18/2020"
+  "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "10:30"
 }
 
 long_description="contains files with the given file ending"
 @test "Output of ${base_command} *.file-ending\" ${long_description}" {
-  "${docxbox}" ls "${path_docx}" *.jpeg | grep --count "image2.jpeg"
-  "${docxbox}" ls "${path_docx}" *.xml | grep --count "10 files"
+  "${DOCXBOX_BINARY}" ls "${path_docx}" *.jpeg | grep --count "image2.jpeg"
+  "${DOCXBOX_BINARY}" ls "${path_docx}" *.xml | grep --count "10 files"
 }
 
 @test "With \"${base_command} changedFile.docx\" a side-by-side comparison is displayed" {
-  run "${docxbox}" lorem "${path_docx}" "${path_new_docx}"
+  run "${DOCXBOX_BINARY}" lorem "${path_docx}" "${path_new_docx}"
 
-  amount_chars_base=$("${docxbox}" ls "${path_docx}" | wc --bytes)
-  amount_chars_diff=$("${docxbox}" ls "${path_docx}" "${path_new_docx}" | wc --bytes)
+  amount_chars_base=$("${DOCXBOX_BINARY}" ls "${path_docx}" | wc --bytes)
+  amount_chars_diff=$("${DOCXBOX_BINARY}" ls "${path_docx}" "${path_new_docx}" | wc --bytes)
 
-  "${docxbox}" ls "${path_docx}" "${path_new_docx}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
+  "${DOCXBOX_BINARY}" ls "${path_docx}" "${path_new_docx}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
 }
 
 @test "Output of ${base_command} nonexistent.docx\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
 
   run "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx
   [ "$status" -ne 0 ]
@@ -93,11 +93,11 @@ long_description="contains files with the given file ending"
 }
 
 @test "Output of ${base_command} wrong_file_type\" is an error message" {
-  err_log="test/functional/tmp/err.log"
+  err_log="test/tmp/err.log"
   wrong_file_types=(
-  "test/functional/tmp/cp_lorem_ipsum.pdf"
-  "test/functional/tmp/cp_mock_csv.csv"
-  "test/functional/tmp/cp_mock_excel.xls")
+  "test/tmp/cp_lorem_ipsum.pdf"
+  "test/tmp/cp_mock_csv.csv"
+  "test/tmp/cp_mock_excel.xls")
 
   for i in "${wrong_file_types[@]}"
   do

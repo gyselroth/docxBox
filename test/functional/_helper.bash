@@ -12,17 +12,19 @@ case "$OSTYPE" in
 esac
 
 setup() {
-  if [ "$OS" == "osx" ]; then
-    cp "$BATS_TEST_DIRNAME"/../../bin/mac/docxbox "$BATS_TEST_DIRNAME"/docxbox
-  elif [ "$OS" == "linux" ]; then
-    cp "$BATS_TEST_DIRNAME"/../../bin/linux/docxbox "$BATS_TEST_DIRNAME"/docxbox
+  if [ ! -d test/tmp ]; then
+    mkdir "test/tmp"
   fi
+
+  if [ "$OS" == "osx" ]; then
+    cp "$BATS_TEST_DIRNAME"/../../bin/mac/docxbox "$BATS_TEST_DIRNAME"/../tmp/docxbox
+  elif [ "$OS" == "linux" ]; then
+    cp "$BATS_TEST_DIRNAME"/../../bin/linux/docxbox "$BATS_TEST_DIRNAME"/../tmp/docxbox
+  fi
+
   bash ./test/functional/_copy_mockfiles.sh
 }
 
 teardown() {
-  if [ -f "$BATS_TEST_DIRNAME"/docxbox ] ; then
-    rm "$BATS_TEST_DIRNAME"/docxbox;
-  fi
   bash ./test/functional/_delete_copied_mockfiles.sh
 }
