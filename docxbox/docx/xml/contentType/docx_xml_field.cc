@@ -2,7 +2,6 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
-#include <docxbox/app/app_log.h>
 
 docx_xml_field::docx_xml_field(
     int argc,

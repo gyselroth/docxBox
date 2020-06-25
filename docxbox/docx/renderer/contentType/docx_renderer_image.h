@@ -4,9 +4,11 @@
 #ifndef DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_IMAGE_H_
 #define DOCXBOX_DOCX_RENDERER_CONTENTTYPE_DOCX_RENDERER_IMAGE_H_
 
+#include <docxbox/app/app_log.h>
 #include <docxbox/docx/renderer/docx_renderer.h>
 #include <docxbox/helper/helper_string.h>
 
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>

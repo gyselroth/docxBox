@@ -24,7 +24,7 @@ base_command="docxbox mm filename.docx"
   [ "${pattern}" = "${lines[0]}" ]
 }
 
-title="the meta attribute title can be changed"
+title="the meta attribute \"title\" can be modified"
 @test "With \"${base_command} title {argument}\" ${title}" {
   run "${DOCXBOX_BINARY}" mm "${path_docx}" title "someTitle"
   [ "$status" -eq 0 ]
@@ -39,14 +39,14 @@ title="the meta attribute title can be changed"
   "${DOCXBOX_BINARY}" mm "${path_docx}" title "someTitle" | grep --count "${saved}"
 }
 
-creator="the meta attribute creator can be changed"
+creator="the meta attribute \"creator\" can be modified"
 @test "With \"${base_command} creator {argument}\" ${creator}" {
   run "${DOCXBOX_BINARY}" mm "${path_docx}" creator "John Doe"
   [ "$status" -eq 0 ]
   "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep --count "creator: John Doe"
 }
 
-last_modified_by="the meta attribute lastModifiedBy can be changed"
+last_modified_by="the meta attribute \"lastModifiedBy\" can be modified"
 @test "With \"${base_command} lastModifiedBy {argument}\" ${last_modified_by}" {
   pattern="lastModifiedBy: John Doe"
 
@@ -55,7 +55,7 @@ last_modified_by="the meta attribute lastModifiedBy can be changed"
   "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep --count "${pattern}"
 }
 
-last_printed="the meta attribute lastPrinted can be changed"
+last_printed="the meta attribute \"lastPrinted\" can be modified"
 @test "With \"${base_command} lastPrinted {argument}\" ${last_printed}" {
   print_date="2020-02-20T10:31:00Z"
   pattern="lastPrinted: 2020-02-20T10:31:00Z"
@@ -65,7 +65,7 @@ last_printed="the meta attribute lastPrinted can be changed"
   "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep --count "${pattern}"
 }
 
-language="the meta attribute language can be changed"
+language="the meta attribute \"language\" can be modified"
 @test "With \"${base_command} language {argument}\" ${language}" {
   run "${DOCXBOX_BINARY}" mm "${path_docx}" language "de-CH"
   [ "$status" -eq 0 ]
@@ -82,6 +82,7 @@ modified="the meta attribute modified can be changed"
 }
 
 created="the meta attribute created can be changed"
+created="the meta attribute \"created\" can be modified"
 @test "With \"${base_command} created {argument}\" ${created}" {
   pattern="created: 2020-10-20T10:20:00Z"
 
@@ -90,7 +91,22 @@ created="the meta attribute created can be changed"
   "${DOCXBOX_BINARY}" lsm "${path_docx}" | grep --count "${pattern}"
 }
 
-revision="the meta attribute revision can be changed"
+modified="the meta attribute \"modified\" can be modified"
+@test "With \"${base_command} modified {argument}\" ${modified}" {
+  pattern="modified: 2020-10-20T10:20:00Z"
+
+  run "${docxbox}" mm "${path_docx}" modified "2020-10-20T10:20:00Z"
+  [ "$status" -eq 0 ]
+  "${docxbox}" lsm "${path_docx}" | grep --count "${pattern}"
+}
+
+#TODO(lucas): implement
+#modified="Modifying the meta attribute \"modified\" does not change the meta attribute \"created\""
+
+#TODO(lucas): implement
+#modified="Modifying the meta attribute \"created\" does not change the meta attribute \"modified\""
+
+revision="the meta attribute \"revision\" can be changed"
 @test "With \"${base_command} revision {argument}\" ${revision}" {
   run "${DOCXBOX_BINARY}" mm "${path_docx}" revision "25"
   [ "$status" -eq 0 ]

@@ -4,6 +4,7 @@
 #ifndef DOCXBOX_DOCX_XML_CONTENTTYPE_DOCX_XML_FIELD_H_
 #define DOCXBOX_DOCX_XML_CONTENTTYPE_DOCX_XML_FIELD_H_
 
+#include <docxbox/app/app_log.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/docx/xml/visitor/docx_xml_remove.h>
 #include <docxbox/helper/helper_file.h>

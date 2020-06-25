@@ -11,7 +11,8 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
                                                 const std::string &rhs) {
   tinyxml2::XMLDocument doc;
 
-  std::string xml = helper::File::GetFileContents(path_xml);
+  std::string xml;
+  helper::File::GetFileContents(path_xml, &xml);
 
   if (!helper::String::Contains(xml, "w:document")
       || !helper::String::Contains(xml, "w:body")) return true;

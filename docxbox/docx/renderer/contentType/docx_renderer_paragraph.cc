@@ -36,7 +36,11 @@ bool docx_renderer_paragraph::InitFromJson() {
 }
 
 std::string docx_renderer_paragraph::Render() {
-  if (!is_json_valid_) throw "Failed render text markup.\n";
+  if (!is_json_valid_) {
+    docxbox::AppLog::NotifyError("Failed render text markup");
+
+    return "";
+  }
 
   generic_root_tag_ = "w:p";
 

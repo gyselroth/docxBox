@@ -3,8 +3,6 @@
 
 #include <docxbox/docx/renderer/contentType/docx_renderer_link.h>
 
-#include <iostream>
-
 // Constructor
 docx_renderer_link::docx_renderer_link(std::string path_extract,
                                        const std::string &json) {
@@ -49,7 +47,11 @@ std::string docx_renderer_link::Render(const std::string &relationship_id) {
 }
 
 std::string docx_renderer_link::Render() {
-  if (!is_json_valid_) throw "Failed render list markup.\n";
+  if (!is_json_valid_) {
+    docxbox::AppLog::NotifyError("Failed render list markup");
+
+    return "";
+  }
 
   generic_root_tag_ = "w:p";
 

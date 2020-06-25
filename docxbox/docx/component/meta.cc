@@ -408,23 +408,25 @@ bool meta::AttributeExistsInCoreXml(Attribute attribute) {
 void meta::EnsureIsLoadedAppXml() {
   if (app_xml_.empty()) {
     path_app_xml_ = path_extract_ + "/docProps/app.xml";
-    app_xml_ = helper::File::GetFileContents(path_app_xml_);
+
+    helper::File::GetFileContents(path_app_xml_, &app_xml_);
   }
 }
 
 void meta::EnsureIsLoadedCoreXml() {
   if (core_xml_.empty()) {
     path_core_xml_ = path_extract_ + "/docProps/core.xml";
-    core_xml_ = helper::File::GetFileContents(path_core_xml_);
+
+    helper::File::GetFileContents(path_core_xml_, &core_xml_);
   }
 }
 
 void meta::LoadAppXml(const std::string& path) {
-  app_xml_ = helper::File::GetFileContents(path);
+  helper::File::GetFileContents(path, &app_xml_);
 }
 
 void meta::LoadCoreXml(const std::string& path) {
-  core_xml_ = helper::File::GetFileContents(path);
+  helper::File::GetFileContents(path, &core_xml_);
 }
 
 bool meta::SaveAppXml() {

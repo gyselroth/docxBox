@@ -26,7 +26,8 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
 
   if (!is_document_xml && !is_header_xml) return true;
 
-  std::string xml = helper::File::GetFileContents(path_xml);
+  std::string xml;
+  helper::File::GetFileContents(path_xml, &xml);
 
   if (is_document_xml) {
     if (!helper::String::Contains(xml, "w:document")
