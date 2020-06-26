@@ -19,8 +19,9 @@ IS_VALGRIND_TEST=false
 
 export DOCXBOX_BINARY
 
-function run_single_case() {
+run_single_case() {
   START_TIME=$SECONDS
+  export IS_VALGRIND_TEST=false
 
   bats ${PATH_TESTS_FUNCTIONAL}/"$1".bats.sh
 
@@ -30,7 +31,7 @@ function run_single_case() {
   fi
 }
 
-function run_all_cases() {
+run_all_cases() {
   export IS_VALGRIND_TEST=$IS_VALGRIND_TEST
 
   START_TIME=$SECONDS
@@ -245,23 +246,10 @@ function run_all_cases() {
   fi
 }
 
-function init_valgrind() {
-  IS_VALGRIND_TEST=true
-  export IS_VALGRIND_TEST
-
-  if [ ! -d $PATH_TESTS_VALGRIND ]; then
-    mkdir $PATH_TESTS_VALGRIND
-    cp $PATH_TESTS_FUNCTIONAL/* $PATH_TESTS_VALGRIND -r
-  fi
-
-  PATH_TESTS_FUNCTIONAL=$PATH_TESTS_VALGRIND
+init_valgrind() {
+  export IS_VALGRIND_TEST=true
 }
 
-function cleanup_valgrind() {
-  if [ PATH_TESTS_FUNCTIONAL == PATH_TESTS_VALGRIND ]; then
-    rm -rf $PATH_TESTS_VALGRIND
-  fi
-}
 
 if [ "$1" != "" ]; then
   if [ "$1" == "valgrind" ]; then
@@ -276,8 +264,6 @@ fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
 printf "\nDone. Bats tests ran for $ELAPSED_TIME seconds.\n\n"
-
-cleanup_valgrind
 
 if $IS_ERROR;
 then
