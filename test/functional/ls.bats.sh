@@ -15,12 +15,14 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-base_command="\"docxbox ls filename.docx"
-path_docx="test/tmp/cp_table_unordered_list_images.docx"
-path_new_docx="test/tmp/changedFile.docx"
+BASE_COMMAND="\"docxbox ls filename.docx"
+PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+PATH_NEW_DOCX="test/tmp/changedFile.docx"
 
-@test "Exit code of ${base_command}\" is zero" {
-  run ${DOCXBOX_BINARY} ls "${path_docx}"
+ERR_LOG="test/tmp/err.log"
+
+@test "Exit code of ${BASE_COMMAND}\" is zero" {
+  run ${DOCXBOX_BINARY} ls "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 }
 
@@ -30,7 +32,7 @@ path_new_docx="test/tmp/changedFile.docx"
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
 
-@test "Output of ${base_command}\" contains files' and directories' attributes" {
+@test "Output of ${BASE_COMMAND}\" contains files' and directories' attributes" {
   attributes=(
   "Length"
   "Date"
@@ -39,11 +41,11 @@ path_new_docx="test/tmp/changedFile.docx"
 
   for i in "${attributs[@]}"
   do
-    ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "${i}"
   done
 }
 
-@test "Output of ${base_command}\" is contained files" {
+@test "Output of ${BASE_COMMAND}\" is contained files" {
 search_values=(
 "[Content_Types].xml"
 "_rels/.rels"
@@ -62,46 +64,43 @@ search_values=(
 
   for i in "${search_values[@]}"
   do
-    ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "${i}"
   done
 }
 
-@test "Output of ${base_command}\" contains amount of contained files" {
-  ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count '14 files'
+@test "Output of ${BASE_COMMAND}\" contains amount of contained files" {
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count '14 files'
 }
 
-@test "Output of ${base_command}\" contains files' date and time" {
-  ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "6/18/2020"
-  ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "10:30"
+@test "Output of ${BASE_COMMAND}\" contains files' date and time" {
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "6/18/2020"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "10:30"
 }
 
 long_description="contains files with the given file ending"
-@test "Output of ${base_command} *.file-ending\" ${long_description}" {
-  ${DOCXBOX_BINARY} ls "${path_docx}" *.jpeg | grep --count "image2.jpeg"
-  ${DOCXBOX_BINARY} ls "${path_docx}" *.xml | grep --count "10 files"
+@test "Output of ${BASE_COMMAND} *.file-ending\" ${long_description}" {
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.jpeg | grep --count "image2.jpeg"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.xml | grep --count "10 files"
 }
 
-@test "With \"${base_command} changedFile.docx\" a side-by-side comparison is displayed" {
-  run ${DOCXBOX_BINARY} lorem "${path_docx}" "${path_new_docx}"
+@test "With \"${BASE_COMMAND} changedFile.docx\" a side-by-side comparison is displayed" {
+  run ${DOCXBOX_BINARY} lorem "${PATH_DOCX}" "${PATH_NEW_DOCX}"
 
-  amount_chars_base=$(${DOCXBOX_BINARY} ls "${path_docx}" | wc --bytes)
-  amount_chars_diff=$(${DOCXBOX_BINARY} ls "${path_docx}" "${path_new_docx}" | wc --bytes)
+  amount_chars_base=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" | wc --bytes)
+  amount_chars_diff=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | wc --bytes)
 
-  ${DOCXBOX_BINARY} ls "${path_docx}" "${path_new_docx}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
 }
 
-@test "Output of ${base_command} nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
+@test "Output of ${BASE_COMMAND} nonexistent.docx\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} ls nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} ls nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of ${base_command} wrong_file_type\" is an error message" {
-  err_log="test/tmp/err.log"
+@test "Output of ${BASE_COMMAND} wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -109,7 +108,7 @@ long_description="contains files with the given file ending"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} ls "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
+    ${DOCXBOX_BINARY} ls "${i}" 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

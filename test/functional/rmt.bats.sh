@@ -15,7 +15,8 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-path_docx="test/tmp/cp_table_unordered_list_images.docx"
+PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+ERR_LOG="test/tmp/err.log"
 
 @test "Output of \"docxbox rmt {missing filename}\" is an error message" {
   run ${DOCXBOX_BINARY} rmt
@@ -29,7 +30,7 @@ title+="is an error message"
   pattern="docxBox Error - Missing argument: \
 String left-hand-side of part to be removed"
 
-  run ${DOCXBOX_BINARY} rmt "${path_docx}"
+  run ${DOCXBOX_BINARY} rmt "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
@@ -38,7 +39,7 @@ String left-hand-side of part to be removed"
   pattern="docxBox Error - Missing argument: \
 String right-hand-side of part to be removed"
 
-  run ${DOCXBOX_BINARY} rmt "${path_docx}" "FooBar"
+  run ${DOCXBOX_BINARY} rmt "${PATH_DOCX}" "FooBar"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
@@ -46,27 +47,24 @@ String right-hand-side of part to be removed"
 @test "With \"docxbox rmt filename.docx leftHandString rightHandString\" removes text between and including given strings" {
   pattern="Fugiat excepteursed in qui sit velit duis veniam."
 
-  ${DOCXBOX_BINARY} lsl "${path_docx}" ${pattern} | grep --count "word/document.xml"
+  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" ${pattern} | grep --count "word/document.xml"
 
-  run ${DOCXBOX_BINARY} rmt "${path_docx}" "Fugiat" "."
+  run ${DOCXBOX_BINARY} rmt "${PATH_DOCX}" "Fugiat" "."
   [ "$status" -eq 0 ]
 
-  ${DOCXBOX_BINARY} txt "${path_docx}" | grep --count --invert-match "${pattern}"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count --invert-match "${pattern}"
 }
 
 @test "Output of \"docxbox rmt nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run ${DOCXBOX_BINARY} rmt nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} rmt nonexistent.docx Dolore incididunt 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} rmt nonexistent.docx Dolore incididunt 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox rmt wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -74,7 +72,7 @@ String right-hand-side of part to be removed"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} rmt "${i}" Dolore incididunt 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "${pattern}"
+    ${DOCXBOX_BINARY} rmt "${i}" Dolore incididunt 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }

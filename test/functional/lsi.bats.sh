@@ -15,12 +15,13 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-path_docx="test/tmp/cp_table_unordered_list_images.docx"
+PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+ERR_LOG="test/tmp/err.log"
 
-base_command="docxbox lsi filename.docx"
+BASE_COMMAND="docxbox lsi filename.docx"
 
-@test "Exit code of \"${base_command}\" is zero" {
-  run ${DOCXBOX_BINARY} lsi "${path_docx}"
+@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+  run ${DOCXBOX_BINARY} lsi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 }
 
@@ -32,7 +33,7 @@ base_command="docxbox lsi filename.docx"
   [ "${pattern}" = "${lines[0]}" ]
 }
 
-@test "Output of \"${base_command}\" contains files' and directories' attributes" {
+@test "Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
   attributes=(
   "Length"
   "Date"
@@ -41,36 +42,33 @@ base_command="docxbox lsi filename.docx"
 
   for i in "${attributes[@]}"
   do
-    ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "${i}"
   done
 }
 
-@test "Output of \"${base_command}\" is contained images" {
-  run ${DOCXBOX_BINARY} lsi "${path_docx}"
+@test "Output of \"${BASE_COMMAND}\" is contained images" {
+  run ${DOCXBOX_BINARY} lsi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
-  ${DOCXBOX_BINARY} lsi "${path_docx}" | grep --count "image2.jpeg"
+  ${DOCXBOX_BINARY} lsi "${PATH_DOCX}" | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox ls filename.docx -i\" is contained images" {
-  ${DOCXBOX_BINARY} ls "${path_docx}" -i | grep --count "image2.jpeg"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -i | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox ls filename.docx --images\" is contained images" {
-  ${DOCXBOX_BINARY} ls "${path_docx}" --images | grep --count "image2.jpeg"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --images | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox lsi nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run "$BATS_TEST_DIRNAME"/docxbox lsi nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} lsi nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} lsi nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox lsi wrong_file_type\" is an error message" {
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -78,7 +76,7 @@ base_command="docxbox lsi filename.docx"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} lsi "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
+    ${DOCXBOX_BINARY} lsi "${i}" 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

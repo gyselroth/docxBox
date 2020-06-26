@@ -15,9 +15,11 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-path_docx="test/tmp/cp_table_unordered_list_images.docx"
+PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+ERR_LOG="test/tmp/err.log"
 
-base_command="docxbox txt filename.docx"
+BASE_COMMAND="docxbox txt filename.docx"
+APPENDIX="is the segmented plain text from given file"
 
 @test "Output of \"docxbox txt {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} txt
@@ -25,38 +27,34 @@ base_command="docxbox txt filename.docx"
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 }
 
-@test "Output of \"${base_command}\" is the the plain text from given file" {
-  ${DOCXBOX_BINARY} txt "${path_docx}" | grep --count "Officia"
+@test "Output of \"${BASE_COMMAND}\" is the the plain text from given file" {
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Officia"
 }
 
-appendix="is the segmented plain text from given file"
-@test "Output of \"${base_command} -s \" ${appendix}" {
-  segmented=$(${DOCXBOX_BINARY} txt "${path_docx}" -s | wc --lines)
-  non_segmented=$(${DOCXBOX_BINARY} txt "${path_docx}" | wc --lines)
+@test "Output of \"${BASE_COMMAND} -s \" ${APPENDIX}" {
+  segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" -s | wc --lines)
+  non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
   (( ${segmented} > ${non_segmented} ))
 }
 
-@test "Output of \"${base_command} --segments \" ${appendix}" {
-  segmented=$(${DOCXBOX_BINARY} txt "${path_docx}" --segments | wc --lines)
-  non_segmented=$(${DOCXBOX_BINARY} txt "${path_docx}" | wc --lines)
+@test "Output of \"${BASE_COMMAND} --segments \" ${APPENDIX}" {
+  segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" --segments | wc --lines)
+  non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
   (( ${segmented} > ${non_segmented} ))
 }
 
 @test "Output of \"docxbox txt nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run ${DOCXBOX_BINARY} txt nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} txt nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} txt nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox txt wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -64,7 +62,7 @@ appendix="is the segmented plain text from given file"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} txt "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "${pattern}"
+    ${DOCXBOX_BINARY} txt "${i}" 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
