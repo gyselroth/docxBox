@@ -734,11 +734,11 @@ In order to run functional tests,
 
 **Run specific test suite:**  
 `./test.sh <suite>`  
-E.g.: `./test.sh ls` - Filenames in `test/functional/` correspond to test suite names 
+E.g.: `./test.sh ls` - Filenames in `test/functional/` correspond to test suite names.
 
-**Check all tests for memory-leaks via valgrind:**  
+**Check all tests for memory-leaks via Valgrind:**  
 `./test.sh valgrind`  
-When checking for memory-leaks, [Valgrind](https://valgrind.org/) must be 
+In order to check for memory-leaks, [Valgrind](https://valgrind.org/) must be 
 installed on your computer. 
 
 
