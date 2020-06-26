@@ -7,6 +7,7 @@
 #include <docxbox/app/app_argument.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_dateTime.h>
+#include <docxbox/helper/helper_json.h>
 #include <docxbox/helper/helper_string.h>
 
 #include <iostream>

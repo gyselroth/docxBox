@@ -2,7 +2,6 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/component/meta.h>
-#include <docxbox/helper/helper_json.h>
 
 // Meta attribute tag names possible in docProps/app.xml
 const char meta::TAG_APP_APPLICATION[] = "Application";
@@ -312,7 +311,8 @@ bool meta::InitFromJson() {
         continue;
       }
 
-      attributes_from_json_.emplace_back(attribute_type, it.value());
+      attributes_from_json_.emplace_back(
+          std::make_tuple(attribute_type, it.value()));
     }
   }
 
