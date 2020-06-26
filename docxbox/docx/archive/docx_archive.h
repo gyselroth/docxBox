@@ -141,9 +141,8 @@ class docx_archive {
 
  private:
   // Update given meta date attribute and immediately save updated core.xml
-  bool UpdateCoreXmlDate(
-      meta::Attribute attribute,
-      const std::string& value = "");
+  bool UpdateCoreXmlDate(meta::AttributeType attribute,
+                         const std::string& value = "");
 
   // TODO(kay): unused for now, ms word refuses to open the file.
   //  check: needs to use other compression algorithm (zip base64)?

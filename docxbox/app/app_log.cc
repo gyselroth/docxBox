@@ -80,9 +80,14 @@ void AppLog::Notify(const std::string& message,
 
   if (mode_ == LogTo_File || mode_ == LogTo_FileAndStdOut) PushBackTime();
 
-  std::string type_str = type == NotificationType::Notification_Error
-      ? "Error"
-      : "Info";
+  std::string type_str;
+
+  if (type == NotificationType::Notification_Error)
+    type_str = "Error";
+  else
+    type_str = type == NotificationType::Notification_Warning
+               ? "Warning"
+               : "Info";
 
   messages_.push_back("docxBox " + type_str + " - " + message);
 }
@@ -93,6 +98,14 @@ bool AppLog::NotifyError(const std::string& message, bool file_only) {
       message, NotificationType::Notification_Error, file_only);
 
   return false;
+}
+
+// Warning (= non fatal error, output also non-verbosely)
+bool AppLog::NotifyWarning(const std::string& message, bool file_only) {
+  GetInstance()->Notify(
+      message, NotificationType::Notification_Warning, file_only);
+
+  return true;
 }
 
 // Store given informational message for later output to stdout / logout
@@ -145,13 +158,17 @@ void AppLog::OutputToStdOut() {
     if (message == prev_message
         || file_only_messages_.at(index)) continue;
 
-    if (helper::String::StartsWith(message.c_str(), "docxBox E"))
+    if (verbose_ || MessageTypeExtortsOutput(message)) {
       std::cerr << message + "\n";
-    else
-      std::cout << message + "\n";
 
-    prev_message = message;
+      prev_message = message;
+    }
   }
+}
+
+bool AppLog::MessageTypeExtortsOutput(const std::string &message) {
+  // [E]rror and [W]arning: Output to stdout
+  return message[8] == 'E' || message[8] == 'W';
 }
 
 void AppLog::OutputToLogFile() {

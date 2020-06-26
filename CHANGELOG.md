@@ -3,6 +3,8 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
+* Modify multiple attributes via JSON argument of ``mm`` command
+* Improve notifications output/logging, add notification type warning (=non fatal errors)
 * Meta dates: Do not update ``created`` when not explicitly invoked
 * Meta dates: Set ``modified`` always to current timestamp, unless different argument given 
 * Improve ``lsd`` output: Display original instead of irrelevant temp-path
