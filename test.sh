@@ -148,7 +148,7 @@ run_all_cases() {
   fi
 
   # Convert and compare DOCX:
-  printf "\n\033[4mTest output XML document\033[0m\n"
+  printf "\n\033[4mTest output XML document (cat)\033[0m\n"
   bats ./test/functional/cat.bats.sh
 
   if [ $? -ne 0 ]; then
