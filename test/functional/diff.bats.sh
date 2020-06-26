@@ -55,7 +55,7 @@ description="side by side view is displayed"
   result_original=$(${DOCXBOX_BINARY} cat "${PATH_DOCX_1}" word/document.xml | wc --bytes)
   result_changed=$(${DOCXBOX_BINARY} diff "${PATH_DOCX_1}" "${path_changed_docx}" word/document.xml | wc --bytes )
   
-  ${DOCXBOX_BINARY} diff "${PATH_DOCX_1}" "${path_changed_docx}" word/document.xml | (( ${result_original} < ${result_changed} ))
+  (( ${result_original} < ${result_changed} ))
 }
 
 @test "With \"${base_command} changedFilename.docx -u\" a unified ${description}" {
@@ -66,7 +66,7 @@ description="side by side view is displayed"
   result_original=$(${DOCXBOX_BINARY} cat "${PATH_DOCX_1}" word/document.xml | wc --bytes)
   result_changed=$(${DOCXBOX_BINARY} diff "${PATH_DOCX_1}" "${path_changed_docx}" word/document.xml -u | wc --bytes )
 
-  ${DOCXBOX_BINARY} diff "${PATH_DOCX_1}" "${path_changed_docx}" word/document.xml -u | (( ${result_original} > ${result_changed} ))
+  (( ${result_original} > ${result_changed} ))
 }
 
 @test "Output of \"docxbox diff nonexistent.docx\" is an error message" {

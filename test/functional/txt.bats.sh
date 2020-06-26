@@ -31,13 +31,17 @@ base_command="docxbox txt filename.docx"
 
 appendix="is the segmented plain text from given file"
 @test "Output of \"${base_command} -s \" ${appendix}" {
-  ${DOCXBOX_BINARY} txt "${path_docx}" -s | wc --lines | grep --count "582"
-  ${DOCXBOX_BINARY} txt "${path_docx}" | wc --lines | grep --count "27"
+  segmented=$(${DOCXBOX_BINARY} txt "${path_docx}" -s | wc --lines)
+  non_segmented=$(${DOCXBOX_BINARY} txt "${path_docx}" | wc --lines)
+
+  (( ${segmented} > ${non_segmented} ))
 }
 
 @test "Output of \"${base_command} --segments \" ${appendix}" {
-  ${DOCXBOX_BINARY} txt "${path_docx}" --segments | wc --lines | grep --count "582"
-  ${DOCXBOX_BINARY} txt "${path_docx}" | wc --lines | grep --count "27"
+  segmented=$(${DOCXBOX_BINARY} txt "${path_docx}" --segments | wc --lines)
+  non_segmented=$(${DOCXBOX_BINARY} txt "${path_docx}" | wc --lines)
+
+  (( ${segmented} > ${non_segmented} ))
 }
 
 @test "Output of \"docxbox txt nonexistent.docx\" is an error message" {
