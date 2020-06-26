@@ -35,14 +35,14 @@ missing_arguments="filename.docx {missing argument}"
 @test "Output of \"${base_command} ${missing_arguments}\" is an error message" {
   run ${DOCXBOX_BINARY} sfv "${path_docx}"
   [ "$status" -ne 0 ]
-  [ "docxBox Error - Missing argument: Field identifier" = "${lines[1]}" ]
+  [ "docxBox Error - Missing argument: Field identifier" = "${lines[0]}" ]
 }
 
 missing_value="filename.docx fieldIdentifier {missing argument}"
 @test "Output of \"${base_command} ${missing_value}\" is an error message" {
   run ${DOCXBOX_BINARY} sfv "${path_docx}" "${mergefield}"
   [ "$status" -ne 0 ]
-  [ "docxBox Error - Missing argument: Value to be set" = "${lines[1]}" ]
+  [ "docxBox Error - Missing argument: Value to be set" = "${lines[0]}" ]
 }
 
 arguments="filename.docx fieldIdentifier fieldValue"
