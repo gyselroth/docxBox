@@ -5,7 +5,16 @@
 
 load _helper
 
-DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+VALGRIND="valgrind -v --leak-check=full\
+ --log-file=test/assets/documents/other/mem-leak.log"
+
+if $IS_VALGRIND_TEST;
+then
+  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
+else
+  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+fi
+
 path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
 base_command="docxbox lsl filename.docx searchString"
@@ -24,12 +33,12 @@ search_results=(
 regex_result="docProps/core.xml"
 
 @test "Exit code of \"${base_command}\" is zero" {
-  run "${DOCXBOX_BINARY}" lsl "${path_docx}" fonts
+  run ${DOCXBOX_BINARY} lsl "${path_docx}" fonts
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox lsl {missing argument}\" is an error message" {
-  run "${DOCXBOX_BINARY}" lsl
+  run ${DOCXBOX_BINARY} lsl
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
@@ -40,7 +49,7 @@ title+="is an error message"
   pattern="docxBox Error - Missing argument: "
   pattern+="String or regular expression to be located"
 
-  run "${DOCXBOX_BINARY}" lsl "${path_docx}"
+  run ${DOCXBOX_BINARY} lsl "${path_docx}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
@@ -48,43 +57,43 @@ title+="is an error message"
 @test "\"${base_command}\" ${description}" {
   for i in "${search_results[@]}"
   do
-    "${DOCXBOX_BINARY}" lsl "${path_docx}" fonts | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsl "${path_docx}" fonts | grep --count "${i}"
   done 
 }
 
 @test "\"docxbox ls filename.docx -l searchString\" ${description}" {
   for i in "${search_results[@]}"
   do
-    "${DOCXBOX_BINARY}" ls "${path_docx}" -l fonts | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${path_docx}" -l fonts | grep --count "${i}"
   done
 }
 
 @test "\"docxbox ls filename.docx --locate searchString\" ${description}" {
   for i in "${search_results[@]}"
   do
-    "${DOCXBOX_BINARY}" lsl "${path_docx}" --locate fonts | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsl "${path_docx}" --locate fonts | grep --count "${i}"
   done
 }
 
 @test "With \"docxbox lsl filename.docx regex\" ${regex_description}" {
-  "${DOCXBOX_BINARY}" lsl "${path_docx}" "${regex}" | grep --count ${regex_result}
+  ${DOCXBOX_BINARY} lsl "${path_docx}" "${regex}" | grep --count ${regex_result}
 }
 
 @test "With \"docxbox ls filename.docx -l regex\" ${regex_description}" {
-  "${DOCXBOX_BINARY}" ls "${path_docx}" -l "${regex}" | grep --count ${regex_result}
+  ${DOCXBOX_BINARY} ls "${path_docx}" -l "${regex}" | grep --count ${regex_result}
 }
 
 @test "With \"docxbox ls filename.docx --locate regex\" ${regex_description}" {
-  "${DOCXBOX_BINARY}" ls "${path_docx}" --locate "${regex}" | grep --count ${regex_result}
+  ${DOCXBOX_BINARY} ls "${path_docx}" --locate "${regex}" | grep --count ${regex_result}
 }
 
 @test "Output of \"docxbox lsl nonexistent.docx searchString\" is an error message" {
   err_log="test/tmp/err.log"
 
-  run "${DOCXBOX_BINARY}" lsl nonexistent.docx fonts
+  run ${DOCXBOX_BINARY} lsl nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
-  "${DOCXBOX_BINARY}" lsl nonexistent.docx fonts 2>&1 | tee "${err_log}"
+  ${DOCXBOX_BINARY} lsl nonexistent.docx fonts 2>&1 | tee "${err_log}"
   cat "${err_log}" | grep --count "docxBox Error - File not found:"
 }
 
@@ -97,7 +106,7 @@ title+="is an error message"
 
   for i in "${wrong_file_types[@]}"
   do
-    "${DOCXBOX_BINARY}" lsl "${i}" fonts 2>&1 | tee "${err_log}"
+    ${DOCXBOX_BINARY} lsl "${i}" fonts 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
