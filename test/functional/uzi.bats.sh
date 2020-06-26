@@ -5,7 +5,16 @@
 
 load _helper
 
-DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+VALGRIND="valgrind -v --leak-check=full\
+ --log-file=test/assets/documents/other/mem-leak.log"
+
+if $IS_VALGRIND_TEST;
+then
+  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
+else
+  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+fi
+
 path_docx="test/tmp/cp_bio_assay.docx"
 
 unzipped_folder="cp_bio_assay.docx-extracted"
@@ -13,7 +22,7 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 @test "Output of \"docxbox uzi {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run "${DOCXBOX_BINARY}" uzi
+  run ${DOCXBOX_BINARY} uzi
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
@@ -21,10 +30,10 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 @test "Output of \"docxbox uzi nonexistent.docx\" is an error message" {
   err_log="test/tmp/err.log"
 
-  run "${DOCXBOX_BINARY}" uzi nonexistent.docx
+  run ${DOCXBOX_BINARY} uzi nonexistent.docx
   [ "$status" -ne 0 ]
 
-  "${DOCXBOX_BINARY}" uzi nonexistent.docx 2>&1 | tee "${err_log}"
+  ${DOCXBOX_BINARY} uzi nonexistent.docx 2>&1 | tee "${err_log}"
   cat "${err_log}" | grep --count "docxBox Error - File not found:"
 }
 
@@ -38,13 +47,13 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 
   for i in "${wrong_file_types[@]}"
   do
-    "${DOCXBOX_BINARY}" uzi "${i}" 2>&1 | tee "${err_log}"
+    ${DOCXBOX_BINARY} uzi "${i}" 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "${pattern}"
   done
 }
 
 @test "With of \"docxbox uzi filename.docx\" all files are unzipped" {
-  run "${DOCXBOX_BINARY}" uzi "${path_docx}"
+  run ${DOCXBOX_BINARY} uzi "${path_docx}"
   [ "$status" -eq 0 ]
 
   cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
@@ -59,7 +68,7 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 }
 
 @test "With of \"docxbox uz filename.docx -i\" all files are unzipped" {
-  run "${DOCXBOX_BINARY}" uz "${path_docx}" -i
+  run ${DOCXBOX_BINARY} uz "${path_docx}" -i
   [ "$status" -eq 0 ]
 
   cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
@@ -74,7 +83,7 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 }
 
 @test "With of \"docxbox uz filename.docx --indent\" all files are unzipped" {
-  run "${DOCXBOX_BINARY}" uz "${path_docx}" --indent
+  run ${DOCXBOX_BINARY} uz "${path_docx}" --indent
   [ "$status" -eq 0 ]
 
   cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"

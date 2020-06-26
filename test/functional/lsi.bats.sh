@@ -5,20 +5,29 @@
 
 load _helper
 
-DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+VALGRIND="valgrind -v --leak-check=full\
+ --log-file=test/assets/documents/other/mem-leak.log"
+
+if $IS_VALGRIND_TEST;
+then
+  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
+else
+  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+fi
+
 path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
 base_command="docxbox lsi filename.docx"
 
 @test "Exit code of \"${base_command}\" is zero" {
-  run "${DOCXBOX_BINARY}" lsi "${path_docx}"
+  run ${DOCXBOX_BINARY} lsi "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox lsi {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run "${DOCXBOX_BINARY}" lsi
+  run ${DOCXBOX_BINARY} lsi
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
@@ -32,22 +41,22 @@ base_command="docxbox lsi filename.docx"
 
   for i in "${attributes[@]}"
   do
-    "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${base_command}\" is contained images" {
-  run "${DOCXBOX_BINARY}" lsi "${path_docx}"
+  run ${DOCXBOX_BINARY} lsi "${path_docx}"
   [ "$status" -eq 0 ]
-  "${DOCXBOX_BINARY}" lsi "${path_docx}" | grep --count "image2.jpeg"
+  ${DOCXBOX_BINARY} lsi "${path_docx}" | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox ls filename.docx -i\" is contained images" {
-  "${DOCXBOX_BINARY}" ls "${path_docx}" -i | grep --count "image2.jpeg"
+  ${DOCXBOX_BINARY} ls "${path_docx}" -i | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox ls filename.docx --images\" is contained images" {
-  "${DOCXBOX_BINARY}" ls "${path_docx}" --images | grep --count "image2.jpeg"
+  ${DOCXBOX_BINARY} ls "${path_docx}" --images | grep --count "image2.jpeg"
 }
 
 @test "Output of \"docxbox lsi nonexistent.docx\" is an error message" {
@@ -56,7 +65,7 @@ base_command="docxbox lsi filename.docx"
   run "$BATS_TEST_DIRNAME"/docxbox lsi nonexistent.docx
   [ "$status" -ne 0 ]
 
-  "${DOCXBOX_BINARY}" lsi nonexistent.docx 2>&1 | tee "${err_log}"
+  ${DOCXBOX_BINARY} lsi nonexistent.docx 2>&1 | tee "${err_log}"
   cat "${err_log}" | grep --count "docxBox Error - File not found:"
 }
 
@@ -69,7 +78,7 @@ base_command="docxbox lsi filename.docx"
 
   for i in "${wrong_file_types[@]}"
   do
-    "${DOCXBOX_BINARY}" lsi "${i}" 2>&1 | tee "${err_log}"
+    ${DOCXBOX_BINARY} lsi "${i}" 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

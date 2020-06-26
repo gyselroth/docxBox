@@ -5,19 +5,27 @@
 
 load _helper
 
-DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+VALGRIND="valgrind -v --leak-check=full\
+ --log-file=test/assets/documents/other/mem-leak.log"
+
+if $IS_VALGRIND_TEST;
+then
+  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
+else
+  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+fi
 
 base_command="\"docxbox ls filename.docx"
 path_docx="test/tmp/cp_table_unordered_list_images.docx"
 path_new_docx="test/tmp/changedFile.docx"
 
 @test "Exit code of ${base_command}\" is zero" {
-  run "${DOCXBOX_BINARY}" ls "${path_docx}"
+  run ${DOCXBOX_BINARY} ls "${path_docx}"
   [ "$status" -eq 0 ]
 }
 
 @test "Output of \"docxbox ls {missing argument}\" is an error message" {
-  run "${DOCXBOX_BINARY}" ls
+  run ${DOCXBOX_BINARY} ls
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
@@ -31,7 +39,7 @@ path_new_docx="test/tmp/changedFile.docx"
 
   for i in "${attributs[@]}"
   do
-    "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "${i}"
   done
 }
 
@@ -54,32 +62,32 @@ search_values=(
 
   for i in "${search_values[@]}"
   do
-    "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of ${base_command}\" contains amount of contained files" {
-  "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count '14 files'
+  ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count '14 files'
 }
 
 @test "Output of ${base_command}\" contains files' date and time" {
-  "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "6/18/2020"
-  "${DOCXBOX_BINARY}" ls "${path_docx}" | grep --count "10:30"
+  ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "6/18/2020"
+  ${DOCXBOX_BINARY} ls "${path_docx}" | grep --count "10:30"
 }
 
 long_description="contains files with the given file ending"
 @test "Output of ${base_command} *.file-ending\" ${long_description}" {
-  "${DOCXBOX_BINARY}" ls "${path_docx}" *.jpeg | grep --count "image2.jpeg"
-  "${DOCXBOX_BINARY}" ls "${path_docx}" *.xml | grep --count "10 files"
+  ${DOCXBOX_BINARY} ls "${path_docx}" *.jpeg | grep --count "image2.jpeg"
+  ${DOCXBOX_BINARY} ls "${path_docx}" *.xml | grep --count "10 files"
 }
 
 @test "With \"${base_command} changedFile.docx\" a side-by-side comparison is displayed" {
-  run "${DOCXBOX_BINARY}" lorem "${path_docx}" "${path_new_docx}"
+  run ${DOCXBOX_BINARY} lorem "${path_docx}" "${path_new_docx}"
 
-  amount_chars_base=$("${DOCXBOX_BINARY}" ls "${path_docx}" | wc --bytes)
-  amount_chars_diff=$("${DOCXBOX_BINARY}" ls "${path_docx}" "${path_new_docx}" | wc --bytes)
+  amount_chars_base=$(${DOCXBOX_BINARY} ls "${path_docx}" | wc --bytes)
+  amount_chars_diff=$(${DOCXBOX_BINARY} ls "${path_docx}" "${path_new_docx}" | wc --bytes)
 
-  "${DOCXBOX_BINARY}" ls "${path_docx}" "${path_new_docx}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
+  ${DOCXBOX_BINARY} ls "${path_docx}" "${path_new_docx}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
 }
 
 @test "Output of ${base_command} nonexistent.docx\" is an error message" {
@@ -88,7 +96,7 @@ long_description="contains files with the given file ending"
   run "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx
   [ "$status" -ne 0 ]
 
-  "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx 2>&1 | tee "${err_log}"
+  ${DOCXBOX_BINARY} ls nonexistent.docx 2>&1 | tee "${err_log}"
   cat "${err_log}" | grep --count "docxBox Error - File not found:"
 }
 
@@ -101,7 +109,7 @@ long_description="contains files with the given file ending"
 
   for i in "${wrong_file_types[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox ls "${i}" 2>&1 | tee "${err_log}"
+    ${DOCXBOX_BINARY} ls "${i}" 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
