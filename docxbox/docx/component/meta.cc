@@ -2,6 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/component/meta.h>
+#include <docxbox/helper/helper_json.h>
 
 // Meta attribute tag names possible in docProps/app.xml
 const char meta::TAG_APP_APPLICATION[] = "Application";
@@ -48,20 +49,20 @@ meta::meta(int argc, const std::vector<std::string>& argv) {
     argv_ = argv;
 }
 
-meta::Attribute meta::GetAttribute() const {
-  return attribute_;
+meta::AttributeType meta::GetAttribute() const {
+  return attribute_type_;
 }
 
 const std::string &meta::GetValue() const {
-  return value_;
+  return attribute_value_;
 }
 
-void meta::SetAttribute(meta::Attribute attribute) {
-  attribute_ = attribute;
+void meta::SetAttribute(meta::AttributeType attribute) {
+  attribute_type_ = attribute;
 }
 
 void meta::SetValue(const std::string &value) {
-  value_ = value;
+  attribute_value_ = value;
 }
 
 void meta::SetPathExtract(const std::string &path) {
@@ -72,7 +73,7 @@ void meta::SetOutputAsJson(bool output_as_json) {
   output_as_json_ = output_as_json;
 }
 
-meta::Attribute meta::ResolveAttribute(const std::string &attribute) {
+meta::AttributeType meta::ResolveAttribute(const std::string &attribute) {
   is_app_attribute_ = true;
 
   if (attribute == "Application") return Attr_App_Application;
@@ -98,17 +99,29 @@ meta::Attribute meta::ResolveAttribute(const std::string &attribute) {
   return Attr_Unknown;
 }
 
+bool meta::IsAttributeFromAppXml(const AttributeType &attribute) {
+  return attribute == Attr_App_Application
+      || attribute == Attr_App_AppVersion
+      || attribute == Attr_App_Company
+      || attribute == Attr_App_Template
+      || attribute == Attr_App_XmlSchema;
+}
+
 // Known attribute is declared in app.xml? (or core.xml)
 // Set within ResolveAttributeByName()
 bool meta::IsAppAttribute() {
   return is_app_attribute_;
 }
 
-bool meta::IsDateAttribute(Attribute attribute) {
+bool meta::IsDateAttribute(AttributeType attribute) {
   return
       attribute == Attr_Core_LastPrinted
           || attribute == Attr_Core_Created
           || attribute == Attr_Core_Modified;
+}
+
+bool meta::HasModifiedModificationDate() {
+  return has_modified_modification_date_;
 }
 
 /**
@@ -138,7 +151,7 @@ std::string meta::GetLhsTagByTagName(const char tag_name[]) {
 }
 
 // TODO(kay): merge GetLhsTagByAttribute + GetRhsTagByAttribute methods
-std::string meta::GetLhsTagByAttribute(const meta::Attribute &attribute) {
+std::string meta::GetLhsTagByAttribute(const meta::AttributeType &attribute) {
   switch (attribute) {
     case Attr_App_Application:return GetLhsTagByTagName(TAG_APP_APPLICATION);
     case Attr_App_AppVersion:return GetLhsTagByTagName(TAG_APP_APP_VERSION);
@@ -160,13 +173,13 @@ std::string meta::GetLhsTagByAttribute(const meta::Attribute &attribute) {
     case Attr_App_XmlSchema:return GetLhsTagByTagName(TAG_APP_XML_SCHEMA);
     default:
       docxbox::AppLog::NotifyError(
-          "Failed render opening tag. Unknown attribute: " + attribute);
+          "Failed render opening tag. Unknown attribute.");
 
       return "";
   }
 }
 
-std::string meta::GetRhsTagByAttribute(const meta::Attribute &attribute) {
+std::string meta::GetRhsTagByAttribute(const meta::AttributeType &attribute) {
   switch (attribute) {
     case Attr_App_Application:return GetRhsTagByTagName(TAG_APP_APPLICATION);
     case Attr_App_AppVersion:return GetRhsTagByTagName(TAG_APP_APP_VERSION);
@@ -236,9 +249,16 @@ bool meta::InitModificationArguments() {
       2, "DOCX filename",
       3, "Meta attribute to be set")) return false;
 
-  attribute_ = ResolveAttribute(argv_[3]);
+  if (helper::Json::IsJson(argv_[3])) {
+    is_json_ = true;
+    json_ = argv_[3];
 
-  if (attribute_ == Attribute::Attr_Unknown)
+    return InitFromJson();
+  }
+
+  attribute_type_ = ResolveAttribute(argv_[3]);
+
+  if (attribute_type_ == AttributeType::Attr_Unknown)
     return docxbox::AppLog::NotifyError(
         std::string(
             "Invalid argument: Unknown or unsupported attribute: ") + argv_[3]);
@@ -246,35 +266,78 @@ bool meta::InitModificationArguments() {
   if (!docxbox::AppArgument::IsArgumentGiven(
       argc_, 4, "Value to set attribute to")) return false;
 
-  value_ = argv_[4];
+  attribute_value_ = argv_[4];
 
   return true;
 }
 
 bool meta::UpsertAttribute(bool saveXml) {
+  if (is_json_) return UpsertAttributesFromJson();
+
     return IsAppAttribute()
       ? UpsertAttributeInAppXml(saveXml)
       : UpsertAttributeInCoreXml(saveXml);
 }
 
-bool meta::UpsertAttributeInCoreXml(bool saveXml) {
-  path_core_xml_ = path_extract_ + "/docProps/core.xml";
+bool meta::UpsertAttributesFromJson() {
+  for (std::tuple<AttributeType, std::string>
+        attribute_tuple : attributes_from_json_) {
+    attribute_type_ = std::get<0>(attribute_tuple);
+    attribute_value_ = std::get<1>(attribute_tuple);
 
-  LoadCoreXml(path_core_xml_);
+    if (IsAttributeFromAppXml(attribute_type_))
+      UpsertAttributeInAppXml();
+    else if (UpsertAttributeInCoreXml()
+        && attribute_type_ == Attr_Core_Modified)
+        // When having explicitly updated the modification date,
+        // Upon re-zipping the result, the mod-date is not updated again
+        has_modified_modification_date_ = true;
+  }
+
+  return SaveXml();
+}
+
+bool meta::InitFromJson() {
+  auto json_outer = nlohmann::json::parse(json_);
+
+  for (auto &json_inner : json_outer) {
+    for (nlohmann::json::iterator it = json_inner.begin();
+         it != json_inner.end();
+         ++it) {
+      AttributeType attribute_type = ResolveAttribute(it.key());
+
+      if (AttributeType::Attr_Unknown == attribute_type) {
+        docxbox::AppLog::NotifyWarning(
+            "Invalid argument - failed parse attributes from JSON");
+        continue;
+      }
+
+      attributes_from_json_.emplace_back(attribute_type, it.value());
+    }
+  }
+
+  return attributes_from_json_.empty()
+         ? docxbox::AppLog::NotifyError(
+             "Invalid argument - failed parse attributes from JSON")
+         : true;
+}
+
+bool meta::UpsertAttributeInCoreXml(bool saveXml) {
+  EnsureIsLoadedCoreXml();
 
   bool result;
 
   try {
-    if (IsDateAttribute(attribute_)
-        && !helper::DateTime::IsIso8601Date(value_))
+    if (IsDateAttribute(attribute_type_)
+        && !helper::DateTime::IsIso8601Date(attribute_value_))
       return docxbox::AppLog::NotifyError(
-          "Invalid date (must be given as ISO 8601): " + value_);
+          "Invalid date (must be given as ISO 8601): " + attribute_value_);
 
-    bool attribute_exists = AttributeExistsInCoreXml(attribute_);
+    bool attribute_exists = AttributeExistsInCoreXml(attribute_type_);
 
     result = attribute_exists
-           ? UpdateCoreAttribute(attribute_, value_)
-           : InsertCoreAttribute(attribute_, value_);
+           ? UpdateCoreAttribute(attribute_type_, attribute_value_)
+           : InsertCoreAttribute(attribute_type_, attribute_value_);
   } catch (std::string &message) {
     return docxbox::AppLog::NotifyError(message);
   }
@@ -285,23 +348,21 @@ bool meta::UpsertAttributeInCoreXml(bool saveXml) {
 }
 
 bool meta::UpsertAttributeInAppXml(bool saveXml) {
-  path_app_xml_ = path_extract_ + "/docProps/app.xml";
-
-  LoadAppXml(path_app_xml_);
+  EnsureIsLoadedAppXml();
 
   bool result;
 
   try {
-    if (IsDateAttribute(attribute_)
-        && !helper::DateTime::IsIso8601Date(value_))
+    if (IsDateAttribute(attribute_type_)
+        && !helper::DateTime::IsIso8601Date(attribute_value_))
       return docxbox::AppLog::NotifyError(
-          "Invalid date (must be given as ISO 8601): " + value_);
+          "Invalid date (must be given as ISO 8601): " + attribute_value_);
 
-    bool attribute_exists = AttributeExistsInAppXml(attribute_);
+    bool attribute_exists = AttributeExistsInAppXml(attribute_type_);
 
     result = attribute_exists
-           ? UpdateAppAttribute(attribute_, value_)
-           : InsertAppAttribute(attribute_, value_);
+           ? UpdateAppAttribute(attribute_type_, attribute_value_)
+           : InsertAppAttribute(attribute_type_, attribute_value_);
   } catch (std::string &message) {
     return docxbox::AppLog::NotifyError(message);
   }
@@ -311,7 +372,8 @@ bool meta::UpsertAttributeInAppXml(bool saveXml) {
     : result;
 }
 
-bool meta::UpdateAppAttribute(Attribute attribute, const std::string& value) {
+bool meta::UpdateAppAttribute(AttributeType attribute,
+                              const std::string& value) {
   EnsureIsLoadedAppXml();
 
   std::string lhs_of_value = GetLhsTagByAttribute(attribute);
@@ -330,7 +392,7 @@ bool meta::UpdateAppAttribute(Attribute attribute, const std::string& value) {
 }
 
 bool meta::UpdateCoreAttribute(
-    Attribute attribute,
+    AttributeType attribute,
     const std::string& value) {
   EnsureIsLoadedCoreXml();
 
@@ -351,7 +413,8 @@ bool meta::UpdateCoreAttribute(
   return true;
 }
 
-bool meta::InsertAppAttribute(Attribute attribute, const std::string& value) {
+bool meta::InsertAppAttribute(AttributeType attribute,
+                              const std::string& value) {
   EnsureIsLoadedAppXml();
 
   const std::string &kLhsTag = GetLhsTagByAttribute(attribute);
@@ -367,7 +430,8 @@ bool meta::InsertAppAttribute(Attribute attribute, const std::string& value) {
   return true;
 }
 
-bool meta::InsertCoreAttribute(Attribute attribute, const std::string& value) {
+bool meta::InsertCoreAttribute(AttributeType attribute,
+                               const std::string& value) {
   EnsureIsLoadedCoreXml();
 
   const std::string &kLhsTag = GetLhsTagByAttribute(attribute);
@@ -384,7 +448,7 @@ bool meta::InsertCoreAttribute(Attribute attribute, const std::string& value) {
 }
 
 // Check whether core.xml of current DOCX contains given attribute
-bool meta::AttributeExistsInAppXml(Attribute attribute) {
+bool meta::AttributeExistsInAppXml(AttributeType attribute) {
   EnsureIsLoadedAppXml();
 
   std::string lhs_of_tag = GetLhsTagByAttribute(attribute);
@@ -395,7 +459,7 @@ bool meta::AttributeExistsInAppXml(Attribute attribute) {
 }
 
 // Check whether core.xml of current DOCX contains given attribute
-bool meta::AttributeExistsInCoreXml(Attribute attribute) {
+bool meta::AttributeExistsInCoreXml(AttributeType attribute) {
   EnsureIsLoadedCoreXml();
 
   std::string lhs_of_tag = GetLhsTagByAttribute(attribute);
@@ -451,7 +515,7 @@ bool meta::SaveCoreXml() {
 }
 
 void meta::CollectFromAppXml(std::string path_app_xml_current,
-                             std::string app_xml) {
+                             const std::string& app_xml) {
   // Attempt output after collecting meta data from app.xml and core.xml,
   // but when parsing the 2nd app.xml w/o having parsed a rel. core.xml:
   // output prematurely

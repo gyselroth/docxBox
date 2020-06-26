@@ -24,6 +24,7 @@ class AppLog {
 
   enum NotificationType {
     Notification_Error,
+    Notification_Warning,
     Notification_Info
   };
 
@@ -41,6 +42,7 @@ class AppLog {
               bool file_only = false);
 
   static bool NotifyError(const std::string &message, bool file_only = false);
+  static bool NotifyWarning(const std::string &message, bool file_only = false);
   static bool NotifyInfo(const std::string &message, bool file_only = false);
 
   // Log docxBox execution arguments to log file
@@ -79,6 +81,8 @@ class AppLog {
 
   void InitMode();
   void InitLogFile();
+
+  static bool MessageTypeExtortsOutput(const std::string &message);
 
   // Remember current dateTime (notification occurred)
   void PushBackTime();

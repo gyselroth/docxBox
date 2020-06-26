@@ -26,6 +26,7 @@ class docx_renderer_table: public docx_renderer {
   // Table specs from JSON
   int amount_columns_ = 0;
   int amount_rows_ = 0;
+
   std::vector<std::string> column_headers_;
   std::vector<std::string> cell_content_;
 
