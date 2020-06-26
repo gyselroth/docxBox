@@ -13,7 +13,6 @@
 IS_ERROR=false
 AMOUNT_ERRORS=0
 
-PATH_TESTS_FUNCTIONAL="./test/functional"
 IS_VALGRIND_TEST=false
 
 export DOCXBOX_BINARY
