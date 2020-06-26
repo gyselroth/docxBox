@@ -5,7 +5,15 @@
 
 load _helper
 
-DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+VALGRIND="valgrind -v --leak-check=full\
+ --log-file=test/assets/documents/other/mem-leak.log"
+
+if $IS_VALGRIND_TEST;
+then
+  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
+else
+  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
+fi
 
 path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
@@ -21,21 +29,21 @@ attributes=(
 @test "Output of \"docxbox lsj filename.docx\" ${description}" {
   for i in "${attributes[@]}"
   do
-    "${DOCXBOX_BINARY}" lsj "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsj "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} --json\" ${description}" {
   for i in "${attributes[@]}"
   do
-    "${DOCXBOX_BINARY}" ls "${path_docx}" --json | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${path_docx}" --json | grep --count "${i}"
   done
 }
 
 @test "Output of \"${longhand_command} -j\" ${description}" {
   for i in "${attributes[@]}"
   do
-    "${DOCXBOX_BINARY}" ls "${path_docx}" -j | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${path_docx}" -j | grep --count "${i}"
   done
 }
 
@@ -58,17 +66,17 @@ search_values=(
 
   for i in "${search_values[@]}"
   do
-    "${DOCXBOX_BINARY}" lsj "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsj "${path_docx}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
-  "${DOCXBOX_BINARY}" lsj "${path_docx}" | grep --count "6/18/2020"
-  "${DOCXBOX_BINARY}" lsj "${path_docx}" | grep --count "10:30"
+  ${DOCXBOX_BINARY} lsj "${path_docx}" | grep --count "6/18/2020"
+  ${DOCXBOX_BINARY} lsj "${path_docx}" | grep --count "10:30"
 }
 
 @test "Output of \"docxbox lsj {missing argument}\" is an error message" {
-  run "${DOCXBOX_BINARY}" lsj
+  run ${DOCXBOX_BINARY} lsj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 }
@@ -76,10 +84,10 @@ search_values=(
 @test "Output of \"docxbox lsj nonexistent.docx\" is an error message" {
   err_log="test/tmp/err.log"
 
-  run "$BATS_TEST_DIRNAME"/docxbox lsj nonexistent.docx
+  run ${DOCXBOX_BINARY} lsj nonexistent.docx
   [ "$status" -ne 0 ]
 
-  "$BATS_TEST_DIRNAME"/docxbox lsj nonexistent.docx 2>&1 | tee "${err_log}"
+  ${DOCXBOX_BINARY} lsj nonexistent.docx 2>&1 | tee "${err_log}"
   cat "${err_log}" | grep --count "docxBox Error - File not found:"
 }
 
@@ -92,7 +100,7 @@ search_values=(
 
   for i in "${wrong_file_types[@]}"
   do
-    "$BATS_TEST_DIRNAME"/docxbox lsj "${i}" 2>&1 | tee "${err_log}"
+    ${DOCXBOX_BINARY} lsj "${i}" 2>&1 | tee "${err_log}"
     cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
