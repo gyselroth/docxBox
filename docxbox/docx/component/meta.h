@@ -7,6 +7,7 @@
 #include <docxbox/app/app_argument.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_dateTime.h>
+#include <docxbox/helper/helper_json.h>
 #include <docxbox/helper/helper_string.h>
 
 #include <iostream>
@@ -18,7 +19,7 @@
 class meta {
  public:
   // Known (supported for modification) attributes
-  enum Attribute {
+  enum AttributeType {
     Attr_App_Application,
     Attr_App_AppVersion,
     Attr_App_Company,
@@ -80,12 +81,14 @@ class meta {
 
   meta(int argc, const std::vector<std::string>& argv);
 
-  Attribute GetAttribute() const;
+  AttributeType GetAttribute() const;
 
   const std::string &GetValue() const;
 
-  void SetAttribute(Attribute attribute);
+  void SetAttribute(AttributeType attribute);
   void SetValue(const std::string &value);
+
+  bool HasModifiedModificationDate();
 
   void SetPathExtract(const std::string &path_extract);
   void SetOutputAsJson(bool output_as_json);
@@ -102,7 +105,7 @@ class meta {
   // Set within ResolveAttributeByName()
   bool IsAppAttribute();
 
-  static bool IsDateAttribute(Attribute);
+  static bool IsDateAttribute(AttributeType);
 
   std::string FetchAttributeFromAppXml(const char tag_name[],
                                        const std::string &label = "");
@@ -126,7 +129,10 @@ class meta {
   bool UpsertAttributeInCoreXml(bool saveXml = false);
   bool UpsertAttributeInAppXml(bool saveXml = false);
 
-  void CollectFromAppXml(std::string path_app_xml, std::string app_xml);
+  bool UpsertAttributesFromJson();
+  bool InitFromJson();
+
+  void CollectFromAppXml(std::string path_app_xml, const std::string& app_xml);
   void CollectFromCoreXml(std::string path_core_xml_current);
 
   void Output();
@@ -142,19 +148,28 @@ class meta {
   bool has_collected_from_app_xml_ = false;
   bool has_collected_from_core_xml_ = false;
 
+  // Flag for when multiple attributes, modified via JSON, did/not contain
+  // the modification date
+  bool has_modified_modification_date_ = false;
+
   std::string path_app_xml_;
   std::string path_core_xml_;
 
   std::string app_xml_;
   std::string core_xml_;
 
+  // Argument is JSON of multiple attributes to be modified
+  bool is_json_ = false;
+  std::string json_;
+  std::vector<std::tuple<AttributeType, std::string>> attributes_from_json_;
+
   // Attribute + value for single modification
-  Attribute attribute_ = Attribute::Attr_Unknown;
+  AttributeType attribute_type_ = AttributeType::Attr_Unknown;
 
   // For known attributes: Is declared in app.xml (otherwise: core.xml)
   bool is_app_attribute_ = false;
 
-  std::string value_;
+  std::string attribute_value_;
 
   // Extracted meta values, string if contained / nullptr if not contained
   std::vector<std::tuple<std::string, std::string>> attributes_;
@@ -164,16 +179,18 @@ class meta {
 
   void Clear();
 
-  meta::Attribute ResolveAttribute(const std::string &attribute);
+  meta::AttributeType ResolveAttribute(const std::string &attribute);
 
-  bool AttributeExistsInAppXml(Attribute attribute);
-  bool AttributeExistsInCoreXml(Attribute attribute);
+  bool IsAttributeFromAppXml(const AttributeType &attribute);
+  bool AttributeExistsInAppXml(AttributeType attribute);
+
+  bool AttributeExistsInCoreXml(AttributeType attribute);
 
   // TODO(kay): extract duplications from app.xml / core.xml - related methods
-  bool UpdateAppAttribute(Attribute attribute, const std::string& value);
-  bool UpdateCoreAttribute(Attribute attribute, const std::string& value);
-  bool InsertAppAttribute(Attribute attribute, const std::string& value);
-  bool InsertCoreAttribute(Attribute attribute, const std::string& value);
+  bool UpdateAppAttribute(AttributeType attribute, const std::string& value);
+  bool UpdateCoreAttribute(AttributeType attribute, const std::string& value);
+  bool InsertAppAttribute(AttributeType attribute, const std::string& value);
+  bool InsertCoreAttribute(AttributeType attribute, const std::string& value);
 
   void EnsureIsLoadedAppXml();
   void EnsureIsLoadedCoreXml();
@@ -181,8 +198,8 @@ class meta {
   static std::string GetLhsTagByTagName(const char tag_name[]);
   static std::string GetRhsTagByTagName(const char tag_name[]);
 
-  static std::string GetLhsTagByAttribute(const Attribute &attribute);
-  static std::string GetRhsTagByAttribute(const Attribute &attribute);
+  static std::string GetLhsTagByAttribute(const AttributeType &attribute);
+  static std::string GetRhsTagByAttribute(const AttributeType &attribute);
 
   std::string ExtractXmlSchemaFromAppXml(const std::string &app_xml) const;
 };

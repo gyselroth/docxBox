@@ -288,13 +288,24 @@ docxBox allows to modify existing attributes, or adds attributes if not present.
 * Set **subject** attribute:        ````docxbox mm foo.docx subject "Foo bar"````
 * Set **title** attribute:          ````docxbox mm foo.docx title "Foo bar, baz"````
 
-**Note:** Altering meta data does NOT automatically update preview texts of
-generic fields, which display respective meta data.  
-For updating field values, use the [``sfv``](#set-field-value-merge-fields-generic-fields) 
-command.
+**Notes:** 
+
+1. Altering meta data does NOT automatically update preview texts of
+   generic fields, which display respective meta data.  
+   For updating field values, use the 
+   [``sfv``](#set-field-value-merge-fields-generic-fields) command.
+2. All modifications automatically update the ``modification-date`` attribute
+   to the current timestamp, unless explicitly setting a different one.
+3. During [Batch Templating](#batch-templating) the ``modification-date`` is
+   not updated automatically.
+    
 
 To alter/insert an attribute and save the modified document to a new file:  
 ````docxbox mm foo.docx <attribute> <value> new.docx````
+
+To update multiple meta attributes with one ``mm`` command, tuples of 
+attribute-keys and -values can be given as JSON:
+````docxbox mm foo.docx "{\"<attribute>\":\"<value>\",\"<attribute>\":\"<value>\", ...}" new.docx````
 
 
 #### Replace image
@@ -719,7 +730,16 @@ Running tests
 In order to run functional tests, 
 [Bats](https://github.com/sstephenson/bats) must be installed.
 
-Run all tests: `./test.sh`
+**Run all tests:** `./test.sh`
+
+**Run specific test suite:**  
+`./test.sh <suite>`  
+E.g.: `./test.sh ls` - Filenames in `test/functional/` correspond to test suite names.
+
+**Check all tests for memory-leaks via Valgrind:**  
+`./test.sh valgrind`  
+In order to check for memory-leaks, [Valgrind](https://valgrind.org/) must be 
+installed on your computer. 
 
 
 Code Convention

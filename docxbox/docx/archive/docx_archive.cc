@@ -254,7 +254,8 @@ bool docx_archive::Zip(bool compress_xml,
     path_docx_result = path_docx_in_;
 
   if (set_date_modified_to_now
-      && !UpdateCoreXmlDate(meta::Attribute::Attr_Core_Modified)) return false;
+      && !UpdateCoreXmlDate(meta::AttributeType::Attr_Core_Modified))
+    return false;
 
 // ZipUsingMinizCpp(compress_xml, path_directory, path_docx_result);
 
@@ -465,30 +466,16 @@ bool docx_archive::ModifyMeta() {
 
   auto attribute = meta_component->GetAttribute();
 
-  /*if (attribute == docx_meta::Attr_Core_LastPrinted) {
-    std::string date = meta->GetValue();
+  if (!Zip(false,
+           path_extract_,
+           path_docx_out_ + "tmp",
+           (attribute != meta::Attr_Core_Modified
+               && !is_batch_mode_
+               && !meta_component->HasModifiedModificationDate()))) {
+    delete meta_component;
 
-    if (!Zip(false, path_extract_, path_docx_out_ + "tmp",
-             false,
-             false,
-             date,
-             date)) {
-      docxbox::AppLog::NotifyError("DOCX creation failed.");
-
-      delete meta;
-
-      return false;
-    }
-  } else {*/
-    if (!Zip(false,
-             path_extract_,
-             path_docx_out_ + "tmp",
-             attribute != meta::Attr_Core_Modified)) {
-      delete meta_component;
-
-      return docxbox::AppLog::NotifyError("DOCX creation failed.");
-    }
-  /*}*/
+    return docxbox::AppLog::NotifyError("DOCX creation failed.");
+  }
 
   delete meta_component;
 
@@ -504,9 +491,7 @@ bool docx_archive::ModifyMeta() {
 }
 
 // Update given meta date attribute and immediately save updated core.xml
-// TODO(kay): add multi-attributes variation of method
-//  to load/save only once than
-bool docx_archive::UpdateCoreXmlDate(meta::Attribute attribute,
+bool docx_archive::UpdateCoreXmlDate(meta::AttributeType attribute,
                                      const std::string &value) {
   auto meta_component = new meta(argc_, argv_);
 
