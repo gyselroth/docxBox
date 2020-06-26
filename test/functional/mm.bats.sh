@@ -40,14 +40,6 @@ title="the meta attribute \"title\" can be modified"
   ${DOCXBOX_BINARY} lsm "${path_docx}" | grep --count "title: someTitle"
 }
 
-@test "docxBox provides information which steps are done" {
-  unzipped="docxBox Info - Unzipped DOCX:"
-  saved="docxBox Info - Saved DOCX:"
-
-  ${DOCXBOX_BINARY} mm "${path_docx}" title "someTitle" | grep --count "${unzipped}"
-  ${DOCXBOX_BINARY} mm "${path_docx}" title "someTitle" | grep --count "${saved}"
-}
-
 creator="the meta attribute \"creator\" can be modified"
 @test "With \"${base_command} creator {argument}\" ${creator}" {
   run ${DOCXBOX_BINARY} mm "${path_docx}" creator "John Doe"
