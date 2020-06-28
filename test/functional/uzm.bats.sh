@@ -15,10 +15,11 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-path_docx="test/tmp/cp_table_unordered_list_images.docx"
+PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+ERR_LOG="test/tmp/err.log"
 
-description="only media files are extracted"
-unzipped_docx="cp_table_unordered_list_images.docx-media-extracted"
+DESCRIPTION="only media files are extracted"
+UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 
 @test "Output of \"docxbox uzm {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
@@ -29,18 +30,15 @@ unzipped_docx="cp_table_unordered_list_images.docx-media-extracted"
 }
 
 @test "Output of \"docxbox uzm nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run ${DOCXBOX_BINARY} uzm nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} uzm nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} uzm nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox uzm wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -48,43 +46,43 @@ unzipped_docx="cp_table_unordered_list_images.docx-media-extracted"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} uzm "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "${pattern}"
+    ${DOCXBOX_BINARY} uzm "${i}" 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
 
-@test "With \"docxbox uzm filename.docx\" ${description}" {
-  run ${DOCXBOX_BINARY} uzm "${path_docx}"
+@test "With \"docxbox uzm filename.docx\" ${DESCRIPTION}" {
+  run ${DOCXBOX_BINARY} uzm "${PATH_DOCX}"
 }
 
 @test "Unzipped files are located in project root" {
-  ls | grep --count "${unzipped_docx}"
+  ls | grep --count "${UNZIPPED_DOCX}"
 
-  if [ -d "${unzipped_docx}" ]; then
-    rm --recursive "${unzipped_docx}";
+  if [ -d "${UNZIPPED_DOCX}" ]; then
+    rm --recursive "${UNZIPPED_DOCX}";
   fi
 }
 
-@test "With \"docxbox uz filename.docx --media\" ${description}" {
-  run ${DOCXBOX_BINARY} uz "${path_docx}" --media
+@test "With \"docxbox uz filename.docx --media\" ${DESCRIPTION}" {
+  run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" --media
 }
 
 @test "Unzipped files are located in project root after running uz --media " {
-  ls | grep --count "${unzipped_docx}"
+  ls | grep --count "${UNZIPPED_DOCX}"
 
-  if [ -d "${unzipped_docx}" ]; then
-    rm --recursive "${unzipped_docx}";
+  if [ -d "${UNZIPPED_DOCX}" ]; then
+    rm --recursive "${UNZIPPED_DOCX}";
   fi
 }
 
-@test "With \"docxbox uz filename.docx -m\" ${description}" {
-  run ${DOCXBOX_BINARY} uz "${path_docx}" -m
+@test "With \"docxbox uz filename.docx -m\" ${DESCRIPTION}" {
+  run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" -m
 }
 
 @test "Unzipped files are located in project root after running uz -m" {
-  ls | grep --count "${unzipped_docx}"
+  ls | grep --count "${UNZIPPED_DOCX}"
 
-  if [ -d "${unzipped_docx}" ]; then
-    rm --recursive "${unzipped_docx}";
+  if [ -d "${UNZIPPED_DOCX}" ]; then
+    rm --recursive "${UNZIPPED_DOCX}";
   fi
 }

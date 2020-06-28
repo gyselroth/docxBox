@@ -15,9 +15,11 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-base_command="docxbox lorem filename.docx"
+BASE_COMMAND="docxbox lorem filename.docx"
 
-@test "Exit code of \"${base_command}\" is zero" {
+ERR_LOG="test/tmp/err.log"
+
+@test "Exit code of \"${BASE_COMMAND}\" is zero" {
   path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
   run ${DOCXBOX_BINARY} lorem "${path_docx}"
@@ -32,7 +34,7 @@ base_command="docxbox lorem filename.docx"
   [ "${pattern}" = "${lines[0]}" ]
 }
 
-@test "With \"${base_command}\" text gets replaced by dummy text" {
+@test "With \"${BASE_COMMAND}\" text gets replaced by dummy text" {
   path_docx="test/tmp/cp_table_unordered_list_images.docx"
   pattern="Culpa ad eiusmod"
 
@@ -42,7 +44,7 @@ base_command="docxbox lorem filename.docx"
   ${DOCXBOX_BINARY} txt "${path_docx}" | grep --invert-match --count "${pattern}"
 }
 
-title="With \"${base_command} newFilename.docx\" "
+title="With \"${BASE_COMMAND} newFilename.docx\" "
 title+="text gets replaced by dummy text and is saved to new file"
 @test "${title}" {
   path_docx_1="test/tmp/cp_table_unordered_list_images.docx"
@@ -53,18 +55,15 @@ title+="text gets replaced by dummy text and is saved to new file"
 }
 
 @test "Output of \"docxbox lorem nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run ${DOCXBOX_BINARY} lorem nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} lorem nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} lorem nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox lorem wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -72,7 +71,7 @@ title+="text gets replaced by dummy text and is saved to new file"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} lorem "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "${pattern}"
+    ${DOCXBOX_BINARY} lorem "${i}" 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }

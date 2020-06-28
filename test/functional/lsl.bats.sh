@@ -15,25 +15,26 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-path_docx="test/tmp/cp_table_unordered_list_images.docx"
+PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+ERR_LOG="test/tmp/err.log"
 
-base_command="docxbox lsl filename.docx searchString"
+BASE_COMMAND="docxbox lsl filename.docx searchString"
 
-description="lists all files containing given searchString"
-regex_description="lists all files containing given regular expression"
+DESCRIPTION="lists all files containing given searchString"
+REGEX_DESCRIPTION="lists all files containing given regular expression"
 
-regex="/[0-9A-Z]\{8\}/"
+REGEX="/[0-9A-Z]\{8\}/"
 
-search_results=(
+SEARCH_RESULTS=(
 "word/document.xml"
 "word/fontTable.xml"
 "word/numbering.xml"
 "word/styles.xml")
 
-regex_result="docProps/core.xml"
+REGEX_RESULT="docProps/core.xml"
 
-@test "Exit code of \"${base_command}\" is zero" {
-  run ${DOCXBOX_BINARY} lsl "${path_docx}" fonts
+@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+  run ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" fonts
   [ "$status" -eq 0 ]
 }
 
@@ -49,56 +50,53 @@ title+="is an error message"
   pattern="docxBox Error - Missing argument: "
   pattern+="String or regular expression to be located"
 
-  run ${DOCXBOX_BINARY} lsl "${path_docx}"
+  run ${DOCXBOX_BINARY} lsl "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
 
-@test "\"${base_command}\" ${description}" {
-  for i in "${search_results[@]}"
+@test "\"${BASE_COMMAND}\" ${DESCRIPTION}" {
+  for i in "${SEARCH_RESULTS[@]}"
   do
-    ${DOCXBOX_BINARY} lsl "${path_docx}" fonts | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" fonts | grep --count "${i}"
   done 
 }
 
-@test "\"docxbox ls filename.docx -l searchString\" ${description}" {
-  for i in "${search_results[@]}"
+@test "\"docxbox ls filename.docx -l searchString\" ${DESCRIPTION}" {
+  for i in "${SEARCH_RESULTS[@]}"
   do
-    ${DOCXBOX_BINARY} ls "${path_docx}" -l fonts | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -l fonts | grep --count "${i}"
   done
 }
 
-@test "\"docxbox ls filename.docx --locate searchString\" ${description}" {
-  for i in "${search_results[@]}"
+@test "\"docxbox ls filename.docx --locate searchString\" ${DESCRIPTION}" {
+  for i in "${SEARCH_RESULTS[@]}"
   do
-    ${DOCXBOX_BINARY} lsl "${path_docx}" --locate fonts | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" --locate fonts | grep --count "${i}"
   done
 }
 
-@test "With \"docxbox lsl filename.docx regex\" ${regex_description}" {
-  ${DOCXBOX_BINARY} lsl "${path_docx}" "${regex}" | grep --count ${regex_result}
+@test "With \"docxbox lsl filename.docx REGEX\" ${REGEX_DESCRIPTION}" {
+  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "${REGEX}" | grep --count ${REGEX_RESULT}
 }
 
-@test "With \"docxbox ls filename.docx -l regex\" ${regex_description}" {
-  ${DOCXBOX_BINARY} ls "${path_docx}" -l "${regex}" | grep --count ${regex_result}
+@test "With \"docxbox ls filename.docx -l REGEX\" ${REGEX_DESCRIPTION}" {
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -l "${REGEX}" | grep --count ${REGEX_RESULT}
 }
 
-@test "With \"docxbox ls filename.docx --locate regex\" ${regex_description}" {
-  ${DOCXBOX_BINARY} ls "${path_docx}" --locate "${regex}" | grep --count ${regex_result}
+@test "With \"docxbox ls filename.docx --locate REGEX\" ${REGEX_DESCRIPTION}" {
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate "${REGEX}" | grep --count ${REGEX_RESULT}
 }
 
 @test "Output of \"docxbox lsl nonexistent.docx searchString\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run ${DOCXBOX_BINARY} lsl nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} lsl nonexistent.docx fonts 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} lsl nonexistent.docx fonts 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox lsl wrong_file_type\" is an error message" {
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -106,7 +104,7 @@ title+="is an error message"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} lsl "${i}" fonts 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
+    ${DOCXBOX_BINARY} lsl "${i}" fonts 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
