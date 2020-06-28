@@ -15,7 +15,7 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-unzipped_docx_directory="test/tmp/unzipped"
+UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
 
 @test "Output of \"docxbox zp {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Path of directory to be zipped"
@@ -28,7 +28,7 @@ unzipped_docx_directory="test/tmp/unzipped"
 @test "Output of \"docxbox zp directory {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of docx to be created"
 
-  run ${DOCXBOX_BINARY} zp "${unzipped_docx_directory}"
+  run ${DOCXBOX_BINARY} zp "${UNZIPPED_DOCX_DIRECTORY}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 }
@@ -36,15 +36,15 @@ unzipped_docx_directory="test/tmp/unzipped"
 title="With \"docxbox zp directory /path-to-file/filename.docx\" "
 title+="a directory can be zipped into a docx"
 @test "$title" {
-  if [ ! -d "${unzipped_docx_directory}" ]; then
-    mkdir "${unzipped_docx_directory}";
+  if [ ! -d "${UNZIPPED_DOCX_DIRECTORY}" ]; then
+    mkdir "${UNZIPPED_DOCX_DIRECTORY}";
     path_docx="test/tmp/cp_table_unordered_list_images.docx"
-    unzip $path_docx -d "${unzipped_docx_directory}";
+    unzip $path_docx -d "${UNZIPPED_DOCX_DIRECTORY}";
   fi
 
   path_new_docx="test/tmp/zp_table_unordered_list_images.docx"
 
-  run ${DOCXBOX_BINARY} zp "${unzipped_docx_directory}" "${path_new_docx}"
+  run ${DOCXBOX_BINARY} zp "${UNZIPPED_DOCX_DIRECTORY}" "${path_new_docx}"
   [ "$status" -eq 0 ]
 
   ls test/tmp | grep -c zp_table_unordered_list_images.docx

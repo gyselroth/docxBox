@@ -15,9 +15,10 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-path_docx="test/tmp/cp_bio_assay.docx"
+PATH_DOCX="test/tmp/cp_bio_assay.docx"
+ERR_LOG="test/tmp/err.log"
 
-unzipped_folder="cp_bio_assay.docx-extracted"
+UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 
 @test "Output of \"docxbox uzi {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
@@ -28,18 +29,15 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 }
 
 @test "Output of \"docxbox uzi nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run ${DOCXBOX_BINARY} uzi nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} uzi nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} uzi nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox uzi wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -47,52 +45,52 @@ unzipped_folder="cp_bio_assay.docx-extracted"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} uzi "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "${pattern}"
+    ${DOCXBOX_BINARY} uzi "${i}" 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
 
 @test "With of \"docxbox uzi filename.docx\" all files are unzipped" {
-  run ${DOCXBOX_BINARY} uzi "${path_docx}"
+  run ${DOCXBOX_BINARY} uzi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
-  cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
+  cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
 @test "Unzipped files are located in project root" {
-  ls | grep --count "${unzipped_folder}"
+  ls | grep --count "${UNZIPPED_FOLDER}"
 
-  if [ -d "${unzipped_folder}" ]; then
-    rm --recursive "${unzipped_folder}";
+  if [ -d "${UNZIPPED_FOLDER}" ]; then
+    rm --recursive "${UNZIPPED_FOLDER}";
   fi
 }
 
 @test "With of \"docxbox uz filename.docx -i\" all files are unzipped" {
-  run ${DOCXBOX_BINARY} uz "${path_docx}" -i
+  run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" -i
   [ "$status" -eq 0 ]
 
-  cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
+  cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
 @test "Unzipped files are located in project root after running uz -i" {
-  ls | grep --count "${unzipped_folder}"
+  ls | grep --count "${UNZIPPED_FOLDER}"
 
-  if [ -d "${unzipped_folder}" ]; then
-    rm --recursive "${unzipped_folder}";
+  if [ -d "${UNZIPPED_FOLDER}" ]; then
+    rm --recursive "${UNZIPPED_FOLDER}";
   fi
 }
 
 @test "With of \"docxbox uz filename.docx --indent\" all files are unzipped" {
-  run ${DOCXBOX_BINARY} uz "${path_docx}" --indent
+  run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" --indent
   [ "$status" -eq 0 ]
 
-  cat "${unzipped_folder}/word/document.xml" | grep "^[[:space:]]\{4\}"
+  cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
 @test "Unzipped files are located in project root after running uz --indent" {
-  ls | grep --count "${unzipped_folder}"
+  ls | grep --count "${UNZIPPED_FOLDER}"
 
-  if [ -d "${unzipped_folder}" ]; then
-    rm --recursive "${unzipped_folder}";
+  if [ -d "${UNZIPPED_FOLDER}" ]; then
+    rm --recursive "${UNZIPPED_FOLDER}";
   fi
 }

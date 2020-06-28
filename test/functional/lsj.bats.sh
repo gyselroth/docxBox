@@ -15,35 +15,36 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-path_docx="test/tmp/cp_table_unordered_list_images.docx"
+PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+ERR_LOG="test/tmp/err.log"
 
-longhand_command="docxbox ls filename.docx"
-description="contains files' and directories' attributes"
+LONGHAND_COMMAND="docxbox ls filename.docx"
+DESCRIPTION="contains files' and directories' attributes"
 
-attributes=(
+ATTRIBUTES=(
   "length"
   "date"
   "time"
   "file")
 
-@test "Output of \"docxbox lsj filename.docx\" ${description}" {
-  for i in "${attributes[@]}"
+@test "Output of \"docxbox lsj filename.docx\" ${DESCRIPTION}" {
+  for i in "${ATTRIBUTES[@]}"
   do
-    ${DOCXBOX_BINARY} lsj "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "${i}"
   done
 }
 
-@test "Output of \"${longhand_command} --json\" ${description}" {
-  for i in "${attributes[@]}"
+@test "Output of \"${LONGHAND_COMMAND} --json\" ${DESCRIPTION}" {
+  for i in "${ATTRIBUTES[@]}"
   do
-    ${DOCXBOX_BINARY} ls "${path_docx}" --json | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --json | grep --count "${i}"
   done
 }
 
-@test "Output of \"${longhand_command} -j\" ${description}" {
-  for i in "${attributes[@]}"
+@test "Output of \"${LONGHAND_COMMAND} -j\" ${DESCRIPTION}" {
+  for i in "${ATTRIBUTES[@]}"
   do
-    ${DOCXBOX_BINARY} ls "${path_docx}" -j | grep --count "${i}"
+    ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -j | grep --count "${i}"
   done
 }
 
@@ -66,13 +67,13 @@ search_values=(
 
   for i in "${search_values[@]}"
   do
-    ${DOCXBOX_BINARY} lsj "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "${i}"
   done
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
-  ${DOCXBOX_BINARY} lsj "${path_docx}" | grep --count "6/18/2020"
-  ${DOCXBOX_BINARY} lsj "${path_docx}" | grep --count "10:30"
+  ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "6/18/2020"
+  ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "10:30"
 }
 
 @test "Output of \"docxbox lsj {missing argument}\" is an error message" {
@@ -82,17 +83,14 @@ search_values=(
 }
 
 @test "Output of \"docxbox lsj nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run ${DOCXBOX_BINARY} lsj nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} lsj nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} lsj nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox lsj wrong_file_type\" is an error message" {
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -100,7 +98,7 @@ search_values=(
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} lsj "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
+    ${DOCXBOX_BINARY} lsj "${i}" 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

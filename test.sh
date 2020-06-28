@@ -13,7 +13,6 @@
 IS_ERROR=false
 AMOUNT_ERRORS=0
 
-PATH_TESTS_FUNCTIONAL="./test/functional"
 IS_VALGRIND_TEST=false
 
 export DOCXBOX_BINARY
@@ -149,7 +148,7 @@ run_all_cases() {
   fi
 
   # Convert and compare DOCX:
-  printf "\n\033[4mTest output XML document\033[0m\n"
+  printf "\n\033[4mTest output XML document (cat)\033[0m\n"
   bats ./test/functional/cat.bats.sh
 
   if [ $? -ne 0 ]; then
@@ -294,8 +293,8 @@ printf "\nDone. Bats tests ran for $ELAPSED_TIME seconds.\n\n"
 
 if $IS_ERROR;
 then
-    printf "\n${AMOUNT_ERRORS} error(s) while executing tests\n\n"
-    exit 1
+  printf "\n${AMOUNT_ERRORS} error(s) while executing tests\n\n"
+  exit 1
 else
   exit 0
 fi

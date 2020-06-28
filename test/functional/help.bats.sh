@@ -15,14 +15,15 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
+REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
+
 # Meta commands
 @test "Running w/o any command displays help" {
   ${DOCXBOX_BINARY} | grep "Usage: docxbox <command> \[args\]"
 }
 
-regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 @test "Running w/o any command displays version" {
-  ${DOCXBOX_BINARY} | grep --perl-regexp --only-matching "${regex_version_check}"
+  ${DOCXBOX_BINARY} | grep --perl-regexp --only-matching "${REGEX_VERSION_CHECK}"
 }
 
 @test "\"docxbox h\" displays help" {
@@ -30,7 +31,7 @@ regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox h\" displays version" {
-  ${DOCXBOX_BINARY} h | grep --perl-regexp --only-matching "${regex_version_check}"
+  ${DOCXBOX_BINARY} h | grep --perl-regexp --only-matching "${REGEX_VERSION_CHECK}"
 }
 
 @test "\"docxbox ?\" displays help" {
@@ -38,7 +39,7 @@ regex_version_check="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 }
 
 @test "\"docxbox ?\" displays version" {
-  ${DOCXBOX_BINARY} ? | grep --perl-regexp --only-matching "${regex_version_check}"
+  ${DOCXBOX_BINARY} ? | grep --perl-regexp --only-matching "${REGEX_VERSION_CHECK}"
 }
 
 # List DOCX contents:

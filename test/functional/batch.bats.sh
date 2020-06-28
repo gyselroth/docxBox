@@ -30,22 +30,22 @@ BASE_COMMAND="docxbox batch filename.docx"
   [ "docxBox Error - Missing argument: Batch commands JSON" = "${lines[0]}" ]
 }
 
-appendix="a batch sequence can be executed"
-@test "With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${appendix} and the title gets changed" {
+APPENDIX="a batch sequence can be executed"
+@test "With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${APPENDIX} and the title gets changed" {
   batch="{\"1\":{\"mm\":[\"title\",\"foo\"]},\"2\":{\"rpt\":[\"bar\",\"baz\"]},\"3\":{\"rpt\":[\"qux\",{\"h1\":{\"text\":\"Quux\"}}]}}"
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}" "${batch}"
 
   ${DOCXBOX_BINARY} lsm ${PATH_DOCX} | grep --count "title: foo"
 }
 
-@test "With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${appendix} and a string can be replaced" {
+@test "With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${APPENDIX} and a string can be replaced" {
   batch="{\"1\":{\"mm\":[\"title\",\"foo\"]},\"2\":{\"rpt\":[\"bar\",\"baz\"]},\"3\":{\"rpt\":[\"qux\",{\"h1\":{\"text\":\"Quux\"}}]}}"
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}" "${batch}"
 
   ${DOCXBOX_BINARY} txt ${PATH_DOCX} | grep --count "baz"
 }
 
-@test "With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${appendix} and a string can be replaced by a h1" {
+@test "With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${APPENDIX} and a string can be replaced by a h1" {
   batch="{\"1\":{\"mm\":[\"title\",\"foo\"]},\"2\":{\"rpt\":[\"Officia\",\"baz\"]},\"3\":{\"rpt\":[\"Lorem\",{\"h1\":{\"text\":\"Quux\"}}]}}"
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}" "${batch}"
 

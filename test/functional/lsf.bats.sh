@@ -15,13 +15,14 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-path_docx="test/tmp/cp_mergefields.docx"
+PATH_DOCX="test/tmp/cp_mergefields.docx"
+ERR_LOG="test/tmp/err.log"
 
-base_command="docxbox lsf filename.docx"
-longhand_command="docxbox ls filename.docx"
+BASE_COMMAND="docxbox lsf filename.docx"
+LONGHAND_COMMAND="docxbox ls filename.docx"
 
-@test "Exit code of \"${base_command}\" is zero" {
-  run ${DOCXBOX_BINARY} lsf "${path_docx}"
+@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+  run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 }
 
@@ -33,25 +34,25 @@ longhand_command="docxbox ls filename.docx"
   [ "${pattern}" = "${lines[0]}" ]
 }
 
-@test "Output of \"${base_command}\" contains ground informations" {
-  run ${DOCXBOX_BINARY} lsf "${path_docx}"
+@test "Output of \"${BASE_COMMAND}\" contains ground informations" {
+  run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
 
-@test "Output of \"${longhand_command} --fonts\" contains ground informations" {
-  run ${DOCXBOX_BINARY} ls "${path_docx}" --fonts
+@test "Output of \"${LONGHAND_COMMAND} --fonts\" contains ground informations" {
+  run ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --fonts
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
 
-@test "Output of \"${longhand_command} -f\" contains ground informations" {
-  run ${DOCXBOX_BINARY} ls "${path_docx}" -f
+@test "Output of \"${LONGHAND_COMMAND} -f\" contains ground informations" {
+  run ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -f
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 }
 
-@test "Output of \"${base_command}\" contains files' and directories' attributes" {
+@test "Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
   attributes=(
   "Font"
   "AltName"
@@ -61,19 +62,19 @@ longhand_command="docxbox ls filename.docx"
 
   for i in "${attributes[@]}"
   do
-    ${DOCXBOX_BINARY} lsf "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
   done
 }
 
-@test "Output of \"${base_command}\" contains fontfile-filename" {
-  ${DOCXBOX_BINARY} lsf "${path_docx}" | grep --count "fontTable.xml"
+@test "Output of \"${BASE_COMMAND}\" contains fontfile-filename" {
+  ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "fontTable.xml"
 }
 
-@test "Output of \"${base_command}\" contains amount fonts" {
-  ${DOCXBOX_BINARY} lsf "${path_docx}" | grep --count "10 fonts"
+@test "Output of \"${BASE_COMMAND}\" contains amount fonts" {
+  ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "10 fonts"
 }
 
-@test "Output of \"${base_command}\" contains font names" {
+@test "Output of \"${BASE_COMMAND}\" contains font names" {
   font_names=(
     "Calibri
     Times New Roman
@@ -86,19 +87,19 @@ longhand_command="docxbox ls filename.docx"
 
   for i in "${font_names[@]}"
   do
-    ${DOCXBOX_BINARY} lsf "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
   done
 }
 
-@test "Output of \"${base_command}\" can contain alternative font names" {
-  ${DOCXBOX_BINARY} lsf "${path_docx}" | grep --count "宋体"
+@test "Output of \"${BASE_COMMAND}\" can contain alternative font names" {
+  ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "宋体"
 }
 
-@test "Output of \"${base_command}\" contains font-charSets" {
-  ${DOCXBOX_BINARY} lsf "${path_docx}" | grep --count "00"
+@test "Output of \"${BASE_COMMAND}\" contains font-charSets" {
+  ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "00"
 }
 
-@test "Output of \"${base_command}\" contains font-family" {
+@test "Output of \"${BASE_COMMAND}\" contains font-family" {
   font_family=(
   "roman"
   "swiss"
@@ -106,26 +107,23 @@ longhand_command="docxbox ls filename.docx"
 
   for i in "${font_family[@]}"
   do
-    ${DOCXBOX_BINARY} lsf "${path_docx}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
   done
 }
 
-@test "Output of \"${base_command}\" contains font-pitch" {
-  ${DOCXBOX_BINARY} lsf "${path_docx}" | grep --count "variable"
+@test "Output of \"${BASE_COMMAND}\" contains font-pitch" {
+  ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "variable"
 }
 
 @test "Output of \"docxbox lsf nonexistent.docx\" is an error message" {
-  err_log="test/tmp/err.log"
-
   run ${DOCXBOX_BINARY} lsf nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} lsf nonexistent.docx 2>&1 | tee "${err_log}"
-  cat "${err_log}" | grep --count "docxBox Error - File not found:"
+  ${DOCXBOX_BINARY} lsf nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
 @test "Output of \"docxbox lsf wrong_file_type\" is an error message" {
-  err_log="test/tmp/err.log"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -133,7 +131,7 @@ longhand_command="docxbox ls filename.docx"
 
   for i in "${wrong_file_types[@]}"
   do
-    ${DOCXBOX_BINARY} lsf "${i}" 2>&1 | tee "${err_log}"
-    cat "${err_log}" | grep --count "docxBox Error - File is no ZIP archive:"
+    ${DOCXBOX_BINARY} lsf "${i}" 2>&1 | tee "${ERR_LOG}"
+    cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
