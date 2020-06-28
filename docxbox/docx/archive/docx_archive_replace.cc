@@ -2,7 +2,6 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/archive/docx_archive_replace.h>
-#include <docxbox/docx/component/contentTypes.h>
 
 docx_archive_replace::docx_archive_replace(
     int argc,
@@ -135,6 +134,9 @@ bool docx_archive_replace::ReplaceText() {
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto file_list = docx_file.infolist();
+
+  //TODO add preprocessor
+  //auto preprocessor = new docx_xml_dissect(0, {});
 
   auto parser = new docx_xml_replace(argc_, argv_);
   parser->SetPathExtract(path_extract_);
@@ -273,6 +275,8 @@ bool docx_archive_replace::RemoveBetweenText() {
 
   auto file_list = docx_file.infolist();
 
+  auto preprocessor = new docx_xml_dissect(0, {});
+
   auto parser = new docx_xml_remove(argc_, argv_);
 
   for (const auto &file_in_zip : file_list) {
@@ -280,7 +284,18 @@ bool docx_archive_replace::RemoveBetweenText() {
 
     std::string path_file_abs = path_extract_ + "/" + file_in_zip.filename;
 
+    // Ensure left/right-hand strings are contained reclusive in nodes
+    // (= if initially there is more text within the same nodes,
+    // split them into multiple nodes)
+    if (preprocessor->LoadXml(path_file_abs)) {
+        bool has_dissected_lhs = preprocessor->DissectXmlNodesContaining(lhs);
+        bool has_dissected_rhs = preprocessor->DissectXmlNodesContaining(rhs);
+
+        if (has_dissected_lhs || has_dissected_rhs) preprocessor->SaveXml();
+    }
+
     if (!parser->RemoveBetweenStringsInXml(path_file_abs, lhs, rhs)) {
+      delete preprocessor;
       delete parser;
 
       return docxbox::AppLog::NotifyError(
@@ -293,6 +308,7 @@ bool docx_archive_replace::RemoveBetweenText() {
         true);
   }
 
+  delete preprocessor;
   delete parser;
 
   // Create resulting DOCX from files during non-batch mode

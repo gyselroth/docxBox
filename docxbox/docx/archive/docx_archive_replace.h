@@ -6,10 +6,12 @@
 
 #include <docxbox/app/app_argument.h>
 #include <docxbox/docx/archive/docx_archive.h>
+#include <docxbox/docx/component/contentTypes.h>
 #include <docxbox/docx/component/fontTable.h>
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
+#include <docxbox/docx/xml/visitor/docx_xml_dissect.h>
 #include <docxbox/docx/xml/visitor/docx_xml_lorem.h>
 #include <docxbox/docx/xml/visitor/docx_xml_remove.h>
 #include <docxbox/docx/xml/visitor/docx_xml_replace.h>
