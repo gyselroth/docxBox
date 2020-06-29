@@ -3,9 +3,10 @@
 
 #include <docxbox/docx/xml/docx_xml.h>
 
-docx_xml::docx_xml(int argc, const std::vector<std::string>& argv) {
-  argc_ = argc;
-  argv_ = argv;
+#include <utility>
+
+docx_xml::docx_xml(int argc, std::vector<std::string> argv)
+    : argc_(argc), argv_(std::move(argv)) {
 }
 
 bool docx_xml::IsXmlFileContainingText(const std::string &filename) {

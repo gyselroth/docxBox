@@ -28,7 +28,7 @@ matrix:
         - cmake CMakeLists.txt && make
 
         # lint c++ source w/ cppcheck
-        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all --language=c++ ./docxbox/*; fi
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cppcheck --enable=all --force --language=c++ -U_MSC_VER -U__PGI -U__SUNPRO_CC -U_MSC_VER_MSC_VER -U__GNUC__ -U__IBMCPP__ ./docxbox/*; fi
 
         # lint c++ source for google styleguide breaches
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cpplint --recursive --recursive --extensions=cc,h docxbox; fi

@@ -22,7 +22,7 @@ class docx_xml_lorem:docx_xml {
   bool RandomizeAllTextInXml(const std::string& path_xml);
 
  private:
-  bool has_xml_changed_;
+  bool has_xml_changed_ = false;
 
   std::vector<std::string> lorem_ipsum_ = {
       "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing",

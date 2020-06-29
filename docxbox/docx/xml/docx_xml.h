@@ -16,7 +16,7 @@
 
 class docx_xml {
  public:
-  docx_xml(int argc, const std::vector<std::string>& argv);
+  docx_xml(int argc, std::vector<std::string>  argv);
 
   static bool IsXmlFileContainingText(const std::string &filename);
 

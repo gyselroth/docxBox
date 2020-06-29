@@ -116,8 +116,8 @@ std::string docx_xml_dissect::RenderSplitBefore(
       + str;
 }
 
-std::string docx_xml_dissect::RenderSplitAround(const char *str,
-                                                const std::string &node_text) const {
+std::string docx_xml_dissect::RenderSplitAround(
+    const char *str, const std::string &node_text) const {
   int offset_str = node_text.find(str);
 
   return node_text.substr(0, offset_str)

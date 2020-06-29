@@ -135,8 +135,8 @@ bool docx_archive_replace::ReplaceText() {
 
   auto file_list = docx_file.infolist();
 
-  //TODO add preprocessor
-  //auto preprocessor = new docx_xml_dissect(0, {});
+  // TODO(kay): add preprocessor
+// auto preprocessor = new docx_xml_dissect(0, {});
 
   auto parser = new docx_xml_replace(argc_, argv_);
   parser->SetPathExtract(path_extract_);

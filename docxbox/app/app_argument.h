@@ -16,7 +16,7 @@ namespace docxbox {
 
 class AppArgument {
  public:
-  AppArgument(int argc, const std::vector<std::string>& argv);
+  AppArgument(int argc, std::vector<std::string>  argv);
 
   static std::string ResolvePathFromArgument(
       const std::string &pwd,

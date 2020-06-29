@@ -3,8 +3,10 @@
 
 #include <docxbox/docx/component/numbering.h>
 
-numbering::numbering(std::string path_extract) {
-  path_extract_ = std::move(path_extract);
+#include <utility>
+
+numbering::numbering(
+    std::string path_extract):path_extract_(std::move(path_extract)) {
 }
 
 bool numbering::AddNumberingXml(bool unordered) {
