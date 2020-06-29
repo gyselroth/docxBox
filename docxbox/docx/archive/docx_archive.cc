@@ -10,7 +10,7 @@ docx_archive::docx_archive(int argc,
   argv_ = argv;
   is_batch_mode_ = is_batch_mode;
 
-  path_working_directory_ = std::getenv("PWD");
+  path_working_dir_ = std::getenv("PWD");
 }
 
 docx_archive::~docx_archive() {
@@ -53,7 +53,7 @@ const std::string &docx_archive::GetPathExtract() const {
 // absolute or relative from execution path, from given argument
 bool docx_archive::InitPathDocxByArgV(int index_path_argument) {
   path_docx_in_ = docxbox::AppArgument::ResolvePathFromArgument(
-      path_working_directory_,
+      path_working_dir_,
       argc_,
       argv_,
       index_path_argument);
@@ -102,7 +102,7 @@ void docx_archive::RemoveTemporaryFiles() {
   if (paths_temporary_.empty()) return;
 
   for (const auto& path : paths_temporary_) {
-    if (helper::File::IsDirectory(path))
+    if (helper::File::IsDir(path))
       helper::File::RemoveRecursive(path.c_str());
   }
 
@@ -123,17 +123,17 @@ std::string docx_archive::UnzipDocx(const std::string &path_docx,
   auto file_list = docx_file.infolist();
 
   mkdir(path_extract.c_str(), 0777);
-  miniz_cpp_ext::CreateSubDirectories(path_extract, file_list);
+  miniz_cpp_ext::CreateSubDirs(path_extract, file_list);
 
-  std::string path_working_directory = getenv("PWD");
-  docx_file.extractall(path_working_directory + "/" + path_extract);
+  std::string path_working_dir = getenv("PWD");
+  docx_file.extractall(path_working_dir + "/" + path_extract);
 
   return path_extract;
 }
 
 // Unzip all files of DOCX file w/ file argument taken from argv_
 bool docx_archive::UnzipDocxByArgv(bool is_temporary,
-                                   const std::string &directory_appendix,
+                                   const std::string &dir_appendix,
                                    bool ensure_is_docx,
                                    bool format_xml_files) {
   if (!docxbox::AppArgument::IsArgumentGiven(
@@ -148,16 +148,16 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
   if (!IsZipArchive(path_docx_in_)) return false;
 
   path_extract_ =
-      InitExtractionPath(path_docx_in_, directory_appendix, is_temporary);
+      InitExtractionPath(path_docx_in_, dir_appendix, is_temporary);
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto file_list = docx_file.infolist();
 
   mkdir(path_extract_.c_str(), 0777);
-  miniz_cpp_ext::CreateSubDirectories(path_extract_, file_list);
+  miniz_cpp_ext::CreateSubDirs(path_extract_, file_list);
 
-  docx_file.extractall(path_working_directory_ + "/" + path_extract_);
+  docx_file.extractall(path_working_dir_ + "/" + path_extract_);
 
   if (ensure_is_docx && !IsUnzippedDocx())
     return docxbox::AppLog::NotifyError(
@@ -165,7 +165,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
 
   docxbox::AppLog::NotifyInfo(
       "Unzipped DOCX: " + path_docx_in_
-          + " to: " + path_working_directory_ + "/" + path_extract_);
+          + " to: " + path_working_dir_ + "/" + path_extract_);
 
   return format_xml_files
          ? miniz_cpp_ext::IndentXmlFiles(path_extract_, file_list)
@@ -187,8 +187,8 @@ bool docx_archive::IsZipArchive(const std::string& path_file) {
 // Check formal structure of DOCX archive - mandatory files given?
 bool docx_archive::IsUnzippedDocx() {
   return
-      helper::File::IsDirectory(path_extract_ + "/docProps")
-          && helper::File::IsDirectory(path_extract_ + "/word")
+      helper::File::IsDir(path_extract_ + "/docProps")
+          && helper::File::IsDir(path_extract_ + "/word")
           && helper::File::FileExists(path_extract_ + "/[Content_Types].xml")
           && helper::File::FileExists(path_extract_ + "/_rels/.rels")
           && helper::File::FileExists(path_extract_ + "/docProps/app.xml")
@@ -228,25 +228,25 @@ bool docx_archive::CreateDocxFromExtract(const std::string &path_docx_out,
 // Optionally update "creation" and "modified" meta attributes (core.xml)
 // to current date-time value
 bool docx_archive::Zip(bool compress_xml,
-                       std::string path_directory,
+                       std::string path_dir,
                        std::string path_docx_result,
                        bool set_date_modified_to_now) {
-  if (path_directory.empty()) {
+  if (path_dir.empty()) {
     if (!docxbox::AppArgument::AreArgumentsGiven(
         argc_,
         2, "Path of directory to be zipped",
         3, "Filename of docx to be created")) return false;
 
-    path_directory = argv_[2];
-    helper::File::ResolvePath(path_working_directory_, &path_directory);
+    path_dir = argv_[2];
+    helper::File::ResolvePath(path_working_dir_, &path_dir);
 
     path_docx_result = argv_[3];
-    helper::File::ResolvePath(path_working_directory_,
+    helper::File::ResolvePath(path_working_dir_,
                               &path_docx_result,
                               false);
   } else {
-    if (!helper::File::IsDirectory(path_directory))
-      return docxbox::AppLog::NotifyError("Not a directory: " + path_directory);
+    if (!helper::File::IsDir(path_dir))
+      return docxbox::AppLog::NotifyError("Not a directory: " + path_dir);
   }
 
   if (path_docx_result.empty() && !path_docx_in_.empty())
@@ -257,9 +257,9 @@ bool docx_archive::Zip(bool compress_xml,
       && !UpdateCoreXmlDate(meta::AttributeType::Attr_Core_Modified))
     return false;
 
-// ZipUsingMinizCpp(compress_xml, path_directory, path_docx_result);
+// ZipUsingMinizCpp(compress_xml, path_dir, path_docx_result);
 
-  ZipUsingCLi(path_directory, path_docx_result, compress_xml);
+  ZipUsingCLi(path_dir, path_docx_result, compress_xml);
 
   return helper::File::FileExists(path_docx_result);
 }
@@ -330,7 +330,7 @@ bool docx_archive::Batch() {
   if (argc_ >= 4) {
     // Result filename is given as argument
     path_docx_out = argv_[4];
-    helper::File::ResolvePath(path_working_directory_, &path_docx_out);
+    helper::File::ResolvePath(path_working_dir_, &path_docx_out);
   } else {
     // Overwrite original DOCX
     path_docx_out = path_docx_in_;
@@ -457,7 +457,7 @@ bool docx_archive::ModifyMeta() {
     if (argc_ >= 6) {
       // Result filename is given as argument
       path_docx_out_ = argv_[5];
-      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+      helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
     } else {
       // Overwrite original DOCX
       path_docx_out_ = path_docx_in_;
@@ -515,14 +515,12 @@ bool docx_archive::UpdateCoreXmlDate(meta::AttributeType attribute,
   return result;
 }
 
-void docx_archive::ZipUsingCLi(const std::string &path_directory,
+void docx_archive::ZipUsingCLi(const std::string &path_dir,
                                const std::string &path_docx_result,
                                bool compress_xml) const {
-  if (compress_xml) CompressXmlFiles(path_directory);
+  if (compress_xml) CompressXmlFiles(path_dir);
 
-  std::string cmd =
-    "cd " + path_directory + ";"
-    "zip tmp.zip -rq *;";
+  std::string cmd = "cd " + path_dir + ";zip tmp.zip -rq *;";
 
   if (!path_docx_result.empty()) {
     if (helper::File::FileExists(path_docx_result))
@@ -535,21 +533,19 @@ void docx_archive::ZipUsingCLi(const std::string &path_directory,
 }
 
 void docx_archive::ZipUsingMinizCpp(bool compress_xml,
-                                    const std::string &path_directory,
+                                    const std::string &path_dir,
                                     const std::string &path_docx_result) const {
   // Get relative paths of all files to be zipped
   std::vector<std::string> files_in_zip;
 
   files_in_zip = helper::File::ScanDirRecursive(
-      path_directory.c_str(),
-      files_in_zip,
-      path_directory + "/");
+      path_dir.c_str(), files_in_zip, path_dir + "/");
 
   miniz_cpp::zip_file file;
 
   for (const auto &file_in_zip : files_in_zip) {
     std::string path_file_absolute =
-        std::string(path_directory + "/").append(file_in_zip);
+        std::string(path_dir + "/").append(file_in_zip);
 
     std::string xml;
     helper::File::GetFileContents(path_file_absolute, &xml);
@@ -562,17 +558,15 @@ void docx_archive::ZipUsingMinizCpp(bool compress_xml,
   file.save(path_docx_result);
 }
 
-void docx_archive::CompressXmlFiles(const std::string &path_directory) const {
+void docx_archive::CompressXmlFiles(const std::string &path_dir) const {
   std::vector<std::string> files;
 
   files = helper::File::ScanDirRecursive(
-      path_directory.c_str(),
-      files,
-      path_directory + "/");
+      path_dir.c_str(), files, path_dir + "/");
 
   for (const auto &file_in_zip : files) {
     std::string path_file_absolute =
-        std::string(path_directory + "/").append(file_in_zip);
+        std::string(path_dir + "/").append(file_in_zip);
 
     std::string xml;
     helper::File::GetFileContents(path_file_absolute, &xml);

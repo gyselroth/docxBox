@@ -43,7 +43,7 @@ bool docx_archive_replace::ReplaceImage() {
       //            needs use of dynamic offset instead argv_[4] than
       std::string path_image_replacement = argv_[4];
       helper::File::ResolvePath(
-          path_working_directory_, &path_image_replacement);
+          path_working_dir_, &path_image_replacement);
 
       helper::File::CopyFile(path_image_replacement, path_image_original);
 
@@ -75,7 +75,7 @@ bool docx_archive_replace::ReplaceImage() {
       } else {
         // Result filename is given as argument
         path_docx_out_ = argv_[5];
-        helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+        helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
       }
     }
 
@@ -111,32 +111,23 @@ bool docx_archive_replace::ReplaceText() {
   if (!is_batch_mode_
       && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
-  const char *kReplacement = replacement.c_str();
+  auto *kPRels = new rels(argc_, argv_, path_working_dir_, path_extract_);
 
-  // TODO(kay): single-out render-type detection
-  if (helper::String::StartsWith(kReplacement, "{\"image\":{")
-      || helper::String::StartsWith(kReplacement, "{\"img\":{")) {
-    image_relationship_id = AddImageFileAndRelation(replacement);
+  if (!kPRels->AddRelationsAndReferences(
+      replacement, &image_relationship_id, &hyperlink_relationship_id)) {
+    delete kPRels;
 
-    if (image_relationship_id.empty()) return false;
-  } else if (helper::String::StartsWith(kReplacement, "{\"link\":{")) {
-    hyperlink_relationship_id = AddHyperlinkRelation(replacement);
-
-    if (hyperlink_relationship_id.empty()) return false;
-  } else if (helper::String::StartsWith(kReplacement, "{\"ol\":{")) {
-    std::string path_extract_absolute =
-        path_working_directory_ + "/" + path_extract_;
-
-    if (!contentTypes::AddOverrideNumberingReference(path_extract_absolute))
-      return false;
+    return false;
   }
+
+  added_image_file_ = kPRels->HasAddedImageFile();
+  delete kPRels;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto file_list = docx_file.infolist();
 
-  // TODO(kay): add preprocessor
-// auto preprocessor = new docx_xml_dissect(0, {});
+  auto preprocessor = new docx_xml_dissect(0, {});
 
   auto parser = new docx_xml_replace(argc_, argv_);
   parser->SetPathExtract(path_extract_);
@@ -150,11 +141,18 @@ bool docx_archive_replace::ReplaceText() {
   for (const auto &file_in_zip : file_list) {
     if (!docx_xml::IsXmlFileContainingText(file_in_zip.filename)) continue;
 
-    std::string path_file_absolute = path_extract_ + "/" + file_in_zip.filename;
+    std::string path_file_abs = path_extract_ + "/" + file_in_zip.filename;
 
-    if (helper::File::IsDirectory(path_file_absolute)) continue;
+    if (helper::File::IsDir(path_file_abs)) continue;
 
-    if (!parser->ReplaceInXml(path_file_absolute, search, replacement))
+    // Ensure the search-string is reclusive in nodes
+    // (= if initially there is more text within the same nodes,
+    // split them into multiple nodes)
+    if (preprocessor->LoadXml(path_file_abs)
+        && preprocessor->DissectXmlNodesContaining(search))
+      preprocessor->SaveXml();
+
+    if (!parser->ReplaceInXml(path_file_abs, search, replacement))
       return docxbox::AppLog::NotifyError(
           "Failed replace string in: " + file_in_zip.filename);
 
@@ -164,6 +162,7 @@ bool docx_archive_replace::ReplaceText() {
         true);
   }
 
+  delete preprocessor;
   delete parser;
 
   bool overwrite_source_docx;
@@ -189,73 +188,18 @@ void docx_archive_replace::InitPathDocxOutForReplaceText(
   if (added_image_file_) {
     if (argc_ >= 7) {
       *path_docx_out = argv_[6];
-      helper::File::ResolvePath(path_working_directory_, path_docx_out);
+      helper::File::ResolvePath(path_working_dir_, path_docx_out);
 
       *overwrite_source_docx = false;
     }
   } else {
     if (argc_ >= 6) {
       *path_docx_out = argv_[5];
-      helper::File::ResolvePath(path_working_directory_, path_docx_out);
+      helper::File::ResolvePath(path_working_dir_, path_docx_out);
 
       *overwrite_source_docx = false;
     }
   }
-}
-
-/**
- * @param image_markup_json
- * @return relationship id, e.g. "rId7"
- */
-std::string docx_archive_replace::AddImageFileAndRelation(
-  const std::string &image_markup_json) {
-  if (!docxbox::AppArgument::isArgImageFile(argc_, argv_, 5))
-    // No media file given: successfully done (nothing)
-    return "";
-
-  std::string path_extract_absolute = path_extract_;
-  helper::File::ResolvePath(path_working_directory_, &path_extract_absolute);
-
-  auto relations = new media(path_extract_absolute);
-
-  added_image_file_ = true;
-
-  // 1. Copy image file to word/media/image<number>.<extension>
-  std::string path_image = argv_[5];
-  helper::File::ResolvePath(path_working_directory_, &path_image);
-
-  if (!relations->AddImageFile(path_image)) {
-    delete relations;
-
-    docxbox::AppLog::NotifyError("Failed adding image file " + argv_[5]);
-
-    added_image_file_ = false;
-  }
-
-  std::string relationship_id;
-
-  if (added_image_file_) {
-    // 2. Create media relation in _rels/document.xml.rels
-    relationship_id = relations->GetImageRelationshipId(
-        relations->GetMediaPathNewImage());
-  }
-
-  delete relations;
-
-  return relationship_id;
-}
-
-std::string docx_archive_replace::AddHyperlinkRelation(
-    const std::string &markup_json) {
-  std::string path_extract_absolute = path_extract_;
-  helper::File::ResolvePath(path_working_directory_, &path_extract_absolute);
-
-  auto url = helper::Json::GetFirstValueOfKey(markup_json, "url");
-
-  return rels::GetRelationshipId(
-      path_extract_absolute,
-      url,
-      rels::RelationType_Hyperlink);
 }
 
 bool docx_archive_replace::RemoveBetweenText() {
@@ -319,7 +263,7 @@ bool docx_archive_replace::RemoveBetweenText() {
     if (argc_ >= 7) {
       // Result filename is given as argument
       path_docx_out_ = argv_[6];
-      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+      helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
     } else {
       // Overwrite original DOCX
       path_docx_out_ = path_docx_in_;
@@ -371,7 +315,7 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
     } else {
       // Result filename is given as argument
       path_docx_out_ = argv_[3];
-      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+      helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
     }
   }
 
@@ -417,7 +361,7 @@ bool docx_archive_replace::SetFieldValue() {
     if (argc_ >= 6) {
       // Result filename is given as argument
       path_docx_out_ = argv_[5];
-      helper::File::ResolvePath(path_working_directory_, &path_docx_out_);
+      helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
     } else {
       // Overwrite original DOCX
       path_docx_out_ = path_docx_in_;

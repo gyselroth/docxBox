@@ -68,9 +68,8 @@ bool docx_batch::ProcessStep(int index) {
           app_cli_arguments.emplace_back(std::string(basic_json.dump()));
         } else if (basic_json.is_string()) {
           app_cli_arguments.emplace_back(it.value().dump().c_str());
-        } else {
-          // TODO(kay): test - needs handling of other types?
         }
+        // TODO(kay): test - needs handling of other types?
       }
     }
   }

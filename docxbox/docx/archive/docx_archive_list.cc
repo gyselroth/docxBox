@@ -62,7 +62,7 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
                                                std::string *summary_1) {
   const std::string &path_docx_in_2 =
       docxbox::AppArgument::ResolvePathFromArgument(
-          path_working_directory_, argc_, argv_, 4);
+          path_working_dir_, argc_, argv_, 4);
 
   miniz_cpp::zip_file docx_file_2(path_docx_in_2);
 
