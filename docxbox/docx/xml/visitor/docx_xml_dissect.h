@@ -33,18 +33,32 @@ class docx_xml_dissect:docx_xml  {
 
   std::vector<tinyxml2::XMLElement*> nodes_to_be_split_ = {};
 
+  // w:t parent run's style properties (w:rPr tag and its child-tags)
+  std::vector<std::vector<std::string>> nodes_run_properties_ = {};
+
+  bool is_within_run_properties_ = false;
+  std::vector<std::string> previous_run_properties_ = {};
+
   void LocateNodesContaining(tinyxml2::XMLElement *node,
                              const std::string &str);
 
   bool SplitNodes(const char *str);
 
   std::string RenderSplitAfter(const char *str,
-                               const std::string &node_text) const;
+                               const std::string &node_text,
+                               int index) const;
 
   std::string RenderSplitBefore(const char *str,
-                                const std::string &node_text) const;
+                                const std::string &node_text,
+                                int index) const;
+
   std::string RenderSplitAround(const char *str,
-                                const std::string &node_text) const;
+                                const std::string &node_text,
+                                int index) const;
+
+  std::string RenderRunProperties(int index) const;
+
+  void DecodeXmlEntities();
 };
 
 #endif  // DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_DISSECT_H_
