@@ -70,7 +70,7 @@ String right-hand-side of part to be removed"
 @test "Removing strings at the beginning of a file within a sentence" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "TITLE" "ALL"
 
-  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "THIS IS A CAPS"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "THIS IS A  CAPS"
 }
 
 @test "Removing strings in the middle of a file" {

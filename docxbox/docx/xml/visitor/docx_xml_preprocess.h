@@ -10,16 +10,17 @@
 
 #include <vendor/tinyxml2/tinyxml2.h>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
 
-class docx_xml_preprocess: docx_xml  {
+class docx_xml_preprocess: public docx_xml  {
  public:
   docx_xml_preprocess(int argc, const std::vector<std::string>& argv);
 
-  bool LoadXml(const std::string& path_xml);
-  bool SaveXml();
+  bool LoadXmlTidy(const std::string& path_xml);
+  bool SaveDocToXml(bool decode = true);
 
   void RemoveDispensableTags();
 
@@ -34,21 +35,28 @@ class docx_xml_preprocess: docx_xml  {
 
  private:
   std::string path_xml_;
-  tinyxml2::XMLDocument doc_;
 
-  // <w:r>s that identically repeat their previous siblings' properties
-  std::vector<tinyxml2::XMLElement*> runs_to_be_merged_ = {};
+  int run_index_ = 0;
+  bool is_within_run_properties_ = false;
+
+  // Vector to collect child-tags of current w:rPr inside
+  std::vector<std::string> previous_run_properties_ = {};
+
+  // w:t parent run's style properties (collected child-tags of w:rPr tag)
+  std::vector<std::vector<std::string>> properties_of_runs_ = {};
+
+  // Each 1st run of a section (e.g. paragraph)
+  // cannot be merged w/ a prev. sibling
+  bool is_first_run_of_section = true;
+
+  // found <w:r>s that identically repeat their previous siblings' properties
+  bool found_runs_to_be_merged_ = false;
 
   // <w:t>s that contain a marker-string preceded/followed by other text
   std::vector<tinyxml2::XMLElement*> texts_to_be_split_ = {};
 
-  // w:t parent run's style properties (w:rPr tag and its child-tags)
-  std::vector<std::vector<std::string>> nodes_run_properties_ = {};
-
-  bool is_within_run_properties_ = false;
-  std::vector<std::string> previous_run_properties_ = {};
-
-  void LocateRunsToBeMerged(tinyxml2::XMLElement *node);
+  void InitMarRunsToBeMerged();
+  void MarkRunsToBeMerged(tinyxml2::XMLElement *node);
   bool AreLastTwoRunPropertiesIdentical();
   bool MergeNodes();
 

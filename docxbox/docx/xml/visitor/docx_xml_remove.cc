@@ -9,20 +9,18 @@ docx_xml_remove::docx_xml_remove(
 bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
                                                 const std::string &lhs,
                                                 const std::string &rhs) {
-  tinyxml2::XMLDocument doc;
-
   std::string xml;
   helper::File::GetFileContents(path_xml, &xml);
 
   if (!helper::String::Contains(xml, "w:document")
       || !helper::String::Contains(xml, "w:body")) return true;
 
-  doc.LoadFile(path_xml.c_str());
+  doc_.LoadFile(path_xml.c_str());
 
-  if (doc.ErrorID() != 0) return false;
+  if (doc_.ErrorID() != 0) return false;
 
   tinyxml2::XMLElement *body =
-      doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+      doc_.FirstChildElement("w:document")->FirstChildElement("w:body");
 
   LocateNodesBetweenText(body, lhs, rhs);
 
@@ -31,7 +29,7 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
       && found_rhs_) {
     RemoveNodes(&nodes_to_be_removed_);
 
-    return tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+    return tinyxml2::XML_SUCCESS != doc_.SaveFile(path_xml.c_str(), true)
            ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
            : true;
   }

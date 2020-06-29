@@ -25,7 +25,8 @@ AppCommands::Command AppCommands::ResolveCommandByName(
   if (command == "cat") return Command_Cat;
   if (command == "cmd") return Command_ExecuteUserCommand;
   if (command == "diff") return Command_FileDiff;
-  if (command == "h" || command == "?") return Command_Help;
+  if (command == "h" || command == "help" || command == "?")
+    return Command_Help;
   if (command == "lorem") return Command_LoremIpsum;
   if (command == "ls") return Command_List;
   if (command == "lsd") return Command_ListFields;

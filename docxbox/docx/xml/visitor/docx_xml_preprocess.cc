@@ -7,7 +7,14 @@ docx_xml_preprocess::docx_xml_preprocess(
     int argc, const std::vector<std::string>& argv) : docx_xml(argc, argv) {
 }
 
-bool docx_xml_preprocess::LoadXml(const std::string& path_xml) {
+// Load and tidy XML of given file:
+// - Read into properties:
+//   - doc_: tinyxml2
+//   - xml_: std::string of compressed XML markup
+// - Remove dispensable (non textual/formatting) attributes and (empty) tags
+// - Merge textual runs (<w:r><w:t></w:t></w:r>)
+//   that repeat the same (or no) run-properties in direct succession
+bool docx_xml_preprocess::LoadXmlTidy(const std::string& path_xml) {
   helper::File::GetFileContents(path_xml, &xml_);
 
   if (!helper::String::Contains(xml_, "w:document")
@@ -20,19 +27,14 @@ bool docx_xml_preprocess::LoadXml(const std::string& path_xml) {
   RemoveDispensableTags();
 
   doc_.Parse(xml_.c_str());
-//  doc_.LoadFile(path_xml.c_str());
 
-  if (doc_.ErrorID() != 0) return false;
-
-  return DefragmentXml();
+  return doc_.ErrorID() == 0 && DefragmentXml();
 }
 
-bool docx_xml_preprocess::SaveXml() {
-  tinyxml2::XMLPrinter printer;
-  doc_.Print(&printer);
-  xml_ = printer.CStr();
+bool docx_xml_preprocess::SaveDocToXml(bool decode) {
+  SetXmlFromDoc();
 
-  DecodeXmlEntities();
+  if (decode) DecodeXmlEntities();
 
   return helper::File::WriteToNewFile(path_xml_, xml_);
 }
@@ -44,13 +46,14 @@ void docx_xml_preprocess::DecodeXmlEntities() {
 
 void docx_xml_preprocess::RemoveDispensableTags() {
   if (helper::String::Contains(xml_, "<w:rFonts "))
-    helper::String::Remove(&xml_, std::regex(R"(<w:rFonts w:hint="\w+"\/>)"));
+    helper::String::Remove(&xml_, std::regex(R"(<w:rFonts w:hint="\w+"/>)"));
 
   helper::String::RemoveAll(&xml_, "<w:lang/>");
 
-  if (helper::String::Contains(xml_, "<w:lang"))
+  if (helper::String::Contains(xml_, "<w:lang "))
     helper::String::Remove(
-        &xml_, std::regex(R"(<w:lang w:val="[a-z|-]{2,5}"\/>)"));
+        // e.g. <w:lang w:val="en-US"/>
+        &xml_, std::regex(R"(<w:lang w:val="[a-zA-Z|-]{2,5}"/>)"));
 
   helper::String::RemoveAll(&xml_, "<w:noProof/>");
   helper::String::RemoveAll(&xml_, "<w:noProof w:val=\"true\"/>");
@@ -60,24 +63,102 @@ void docx_xml_preprocess::RemoveDispensableTags() {
 
   if (helper::String::Contains(xml_, "<w:proofErr "))
     helper::String::Remove(
-        &xml_, std::regex(R"(<w:proofErr w:type="\w+"\/>)"));
+        &xml_, std::regex(R"(<w:proofErr w:type="\w+"/>)"));
 
   // TODO(kay): re-insert into all w:t and w:instrText nodes before saving
   helper::String::ReplaceAll(&xml_, "xml:space=\"preserve\"", "");
 
   // Remove empty tags
-  helper::String::Remove(&xml_, std::regex(R"(<w:([a-z]+)><\/w:([a-z]+)>)"));
+  helper::String::Remove(&xml_, std::regex(R"(<w:([a-zA-Z]+)></w:([a-zA-Z]+)>)"));
+  helper::String::RemoveAll(&xml_, "<w:rPr></w:rPr>");
+  helper::String::RemoveAll(&xml_, "<w:rPr/>");
 }
 
 bool docx_xml_preprocess::DefragmentXml() {
   tinyxml2::XMLElement *body =
       doc_.FirstChildElement("w:document")->FirstChildElement("w:body");
 
-//  LocateRunsToBeMerged(body);
+  InitMarRunsToBeMerged();
+  MarkRunsToBeMerged(body);
 
-  if (runs_to_be_merged_.empty()) return true;
+  if (!found_runs_to_be_merged_) return true;
 
   return MergeNodes();
+}
+
+void docx_xml_preprocess::InitMarRunsToBeMerged() {
+  run_index_ = 0;
+  is_within_run_properties_ = false;
+  previous_run_properties_ = {};
+  properties_of_runs_ = {};
+  is_first_run_of_section = true;
+}
+
+void docx_xml_preprocess::MarkRunsToBeMerged(tinyxml2::XMLElement *node) {
+  if (!node || node->NoChildren()) return;
+
+  tinyxml2::XMLElement *sub_node = node->FirstChildElement();
+
+  if (sub_node == nullptr) return;
+
+  do {
+    ++run_index_;
+    const char *tag = sub_node->Value();
+
+    if (tag) {
+      bool is_run_properties = false;
+
+      if (0 == strcmp(tag, "w:p")) {
+        is_within_run_properties_ = false;
+
+        // 1st run of new section has no prev. sibling to merge w/
+        is_first_run_of_section = true;
+      } else if (0 == strcmp(tag, "w:r")) {
+        is_within_run_properties_ = false;
+      } else if (0 == strcmp(tag, "w:rPr")) {
+        is_run_properties = true;
+        is_within_run_properties_ = true;
+        previous_run_properties_.clear();
+      } else if (0 == strcmp(tag, "w:t") && sub_node->FirstChild() != nullptr) {
+        properties_of_runs_.push_back(previous_run_properties_);
+
+        if (is_first_run_of_section) {
+          is_first_run_of_section = false;
+        } else if (AreLastTwoRunPropertiesIdentical()) {
+          std::string text = sub_node->GetText();
+
+          std::string kText = "_MeRgE_Me_" + text;
+          sub_node->SetText(kText.c_str());
+
+          found_runs_to_be_merged_ = true;
+        }
+      }
+
+      if (is_within_run_properties_ && !is_run_properties) {
+        // Collect run's properties (tags inside <w:rPr>...</w:rPr>)
+        // for when the tag needs to be split into multiple
+        previous_run_properties_.emplace_back(tag);
+      }
+    }
+
+    MarkRunsToBeMerged(sub_node);
+  } while ((sub_node = sub_node->NextSiblingElement()));
+}
+
+bool docx_xml_preprocess::AreLastTwoRunPropertiesIdentical() {
+  auto amount = properties_of_runs_.size();
+
+  if (amount <= 1) return false;
+
+  std::sort(properties_of_runs_.at(amount - 1).begin(),
+            properties_of_runs_.at(amount - 1).end());
+
+  std::sort(properties_of_runs_.at(amount - 2).begin(),
+            properties_of_runs_.at(amount - 2).end());
+
+  return
+      helper::String::Implode(properties_of_runs_.at(amount - 1), "-")
+          == helper::String::Implode(properties_of_runs_.at(amount - 2), "-");
 }
 
 // Locate occurrences of given string within textual nodes
@@ -95,49 +176,6 @@ bool docx_xml_preprocess::DissectXmlNodesContaining(const std::string& str) {
   if (texts_to_be_split_.empty()) return false;
 
   return SplitNodes(str.c_str());
-}
-
-void docx_xml_preprocess::LocateRunsToBeMerged(tinyxml2::XMLElement *node) {
-  if (!node || node->NoChildren()) return;
-
-  tinyxml2::XMLElement *sub_node = node->FirstChildElement();
-
-  if (sub_node == nullptr) return;
-
-  do {
-    const char *tag = sub_node->Value();
-
-    if (tag) {
-      bool is_run_properties = false;
-
-      if (0 == strcmp(tag, "w:r")) {
-        is_within_run_properties_ = false;
-      } else if (0 == strcmp(tag, "w:rPr")) {
-        is_run_properties = true;
-        is_within_run_properties_ = true;
-        previous_run_properties_.clear();
-      } else if (0 == strcmp(tag, "w:t")
-          && sub_node->FirstChild() != nullptr) {
-          nodes_run_properties_.push_back(previous_run_properties_);
-
-          if (AreLastTwoRunPropertiesIdentical()) {
-            // TODO(kay): implement mark nodes to be merged
-          }
-      }
-
-      if (is_within_run_properties_ && !is_run_properties) {
-        // Collect run's properties (tags inside <w:rPr>...</w:rPr>)
-        // for when the tag needs to be split into multiple
-        previous_run_properties_.emplace_back(tag);
-      }
-    }
-
-    LocateRunsToBeMerged(sub_node);
-  } while ((sub_node = sub_node->NextSiblingElement()));
-}
-
-bool docx_xml_preprocess::AreLastTwoRunPropertiesIdentical() {
-  return false;
 }
 
 // Locate w:t nodes containing given needle,
@@ -170,7 +208,7 @@ void docx_xml_preprocess::LocateNodesContaining(tinyxml2::XMLElement *node,
 
         if (helper::String::Contains(text, str.c_str())) {
           texts_to_be_split_.push_back(sub_node);
-          nodes_run_properties_.push_back(previous_run_properties_);
+          properties_of_runs_.push_back(previous_run_properties_);
         }
       }
 
@@ -186,6 +224,19 @@ void docx_xml_preprocess::LocateNodesContaining(tinyxml2::XMLElement *node,
 }
 
 bool docx_xml_preprocess::MergeNodes() {
+  SetXmlFromDoc();
+
+  helper::String::Remove(
+      &xml_,
+      std::regex(
+          "</w:t>\\s*</w:r>\\s*<w:r>\\s*"
+          "(<w:rPr)*(/)*(>)*\\s*"
+          "(<[/a-z: \"]*>)*\\s*"
+          "(</w:rPr>)*\\s*"
+          "<w:t>_MeRgE_Me_"));
+
+  SetDocFromXml();
+
   return true;
 }
 
@@ -211,7 +262,7 @@ bool docx_xml_preprocess::SplitNodes(const char *str) {
   }
 
   texts_to_be_split_.clear();
-  nodes_run_properties_.clear();
+  properties_of_runs_.clear();
 
   return true;
 }
@@ -256,7 +307,7 @@ std::string docx_xml_preprocess::RenderSplitAround(
 }
 
 std::string docx_xml_preprocess::RenderRunProperties(int index) const {
-  auto properties = nodes_run_properties_.at(index);
+  auto properties = properties_of_runs_.at(index);
 
   if (properties.empty()) return "";
 

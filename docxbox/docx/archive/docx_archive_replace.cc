@@ -148,12 +148,14 @@ bool docx_archive_replace::ReplaceText() {
     // Ensure the search-string is reclusive in nodes
     // (= if initially there is more text within the same nodes,
     // split them into multiple nodes)
-    if (preprocessor->LoadXml(path_file_abs)) {
+    if (preprocessor->LoadXmlTidy(path_file_abs)) {
       preprocessor->DissectXmlNodesContaining(search);
-      preprocessor->SaveXml();
+      preprocessor->SaveDocToXml();
     }
 
-    if (!parser->ReplaceInXml(path_file_abs, search, replacement))
+    std::string xml = preprocessor->GetXml();
+
+    if (!parser->ReplaceInXml(&xml, path_file_abs, search, replacement))
       return docxbox::AppLog::NotifyError(
           "Failed replace string in: " + file_in_zip.filename);
 
@@ -232,11 +234,10 @@ bool docx_archive_replace::RemoveBetweenText() {
     // Ensure left/right-hand strings are contained reclusive in nodes
     // (= if initially there is more text within the same nodes,
     // split them into multiple nodes)
-    if (preprocessor->LoadXml(path_file_abs)) {
-        preprocessor->DissectXmlNodesContaining(lhs);
-        preprocessor->DissectXmlNodesContaining(rhs);
-
-        preprocessor->SaveXml();
+    if (preprocessor->LoadXmlTidy(path_file_abs)) {
+      preprocessor->DissectXmlNodesContaining(lhs);
+      preprocessor->DissectXmlNodesContaining(rhs);
+      preprocessor->SaveDocToXml();
     }
 
     if (!parser->RemoveBetweenStringsInXml(path_file_abs, lhs, rhs)) {

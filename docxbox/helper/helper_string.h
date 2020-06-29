@@ -43,13 +43,13 @@ extern bool Contains(const std::string &haystack, const char *needle);
 
 extern bool IsWhiteSpace(const std::string &str);
 
-void Remove(std::string *haystack, const std::regex &pattern);
+extern void Remove(std::string *haystack, const std::regex &pattern);
+
+extern int RemoveAll(std::string *haystack, const std::string& needle);
 
 extern bool Replace(std::string *haystack,
                     const char *needle,
                     const char *replacement);
-
-extern int RemoveAll(std::string *haystack, const std::string& needle);
 
 extern int ReplaceAll(std::string *haystack,
                       const std::string &needle,

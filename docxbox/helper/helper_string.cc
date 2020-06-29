@@ -84,7 +84,7 @@ bool String::Replace(
 }
 
 void String::Remove(std::string *haystack, const std::regex &pattern) {
-  std::regex_replace(*haystack, pattern, "");
+  *haystack = std::regex_replace(*haystack, pattern, "");
 }
 
 int String::RemoveAll(std::string *haystack,
