@@ -14,7 +14,7 @@
 
 class miniz_cpp_ext {
  public:
-  static void CreateSubDirectories(
+  static void CreateSubDirs(
       const std::string &path_extract,
       const std::vector<miniz_cpp::zip_info> &file_list) {
     for (const auto& file_in_zip : file_list) {

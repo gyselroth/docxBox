@@ -5,7 +5,7 @@
 
 namespace helper {
 
-bool File::IsDirectory(const std::string& path) {
+bool File::IsDir(const std::string& path) {
   struct stat buffer;
 
   stat(path.c_str(), &buffer);
@@ -84,7 +84,7 @@ bool File::ResolvePath(const std::string &pwd,
         : pwd + "/" + (*path);
 
   return must_exist
-             && (!helper::File::IsDirectory(*path)
+             && (!helper::File::IsDir(*path)
                  && !helper::File::FileExists(*path))
          ? docxbox::AppLog::NotifyError(std::string("File not found: ") + *path)
          : true;
@@ -148,7 +148,7 @@ bool File::Remove(const char *path) {
 }
 
 bool File::RemoveRecursive(const char *path) {
-  if (!IsDirectory(path)) return Remove(path);
+  if (!IsDir(path)) return Remove(path);
 
   DIR *d = opendir(path);
   size_t path_len = strlen(path);
@@ -268,7 +268,7 @@ std::vector<std::string> File::ScanDirRecursive(
         path_file  += "/";
         path_file  += namelist[i]->d_name;
 
-        if (IsDirectory(path_file)) {
+        if (IsDir(path_file)) {
           files = helper::File::ScanDirRecursive(
               path_file.c_str(),
               files,

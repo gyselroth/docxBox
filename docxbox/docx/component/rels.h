@@ -4,8 +4,12 @@
 #ifndef DOCXBOX_DOCX_COMPONENT_RELS_H_
 #define DOCXBOX_DOCX_COMPONENT_RELS_H_
 
+#include <docxbox/app/app_argument.h>
+#include <docxbox/docx/component/contentTypes.h>
+
 #include <string>
 #include <utility>
+#include <vector>
 
 class rels {
  public:
@@ -22,10 +26,35 @@ class rels {
   static const char URL_SCHEMA_RELS_HYPERLINK[];
   static const char URL_SCHEMA_RELS_NUMBERING[];
 
-  // Get relationship id, insert if not existing yet
+  rels(int argc,
+       std::vector<std::string> argv,
+       std::string path_working_dir,
+       std::string path_extract);
+
+  bool HasAddedImageFile() const;
+
+  // Get relationship ID, insert if not existing yet
   static std::string GetRelationshipId(std::string path_extract_absolute,
                                        const std::string &target,
                                        RelationType relation_type);
+
+  bool AddRelationsAndReferences(
+      const std::string& replacement,
+      std::string *image_relationship_id,
+      std::string *hyperlink_relationship_id);
+
+ private:
+  int argc_;
+  std::vector<std::string> argv_;
+
+  std::string path_working_dir_;
+  std::string path_extract_;
+
+  // New image file added, requires adding resp. relation
+  bool added_image_file_ = false;
+
+  std::string AddImageFileAndRelation(const std::string &image_markup_json);
+  std::string AddHyperlinkRelation(const std::string &markup_json);
 };
 
 #endif  // DOCXBOX_DOCX_COMPONENT_RELS_H_

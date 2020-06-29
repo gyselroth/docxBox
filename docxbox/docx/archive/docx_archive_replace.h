@@ -33,6 +33,7 @@ class docx_archive_replace : public docx_archive {
       int argc, const std::vector<std::string>& argv, bool is_batch_mode);
 
   bool ReplaceImage();
+
   bool ReplaceText();
 
   bool RemoveBetweenText();
@@ -42,21 +43,11 @@ class docx_archive_replace : public docx_archive {
   bool SetFieldValue();
 
  private:
+  void InitPathDocxOutForReplaceText(std::string *path_docx_out,
+                                     bool *overwrite_source_docx) const;
+
   // New image file added, requires adding resp. relation
   bool added_image_file_ = false;
-
-  // TODO(kay): move into docx_media(?)
-  std::string AddImageFileAndRelation(const std::string &image_markup_json);
-
-  // TODO(kay): TBD: move into docx_rels(?)
-  std::string AddHyperlinkRelation(const std::string &markup_json);
-
-  bool AddRelationsAndReferences(const std::string& replacement,
-                                 std::string *image_relationship_id,
-                                 std::string *hyperlink_relationship_id);
-
-  void InitPathDocxOutForReplaceText(
-      std::string *path_docx_out, bool *overwrite_source_docx) const;
 };
 
 #endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_REPLACE_H_

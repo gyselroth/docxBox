@@ -48,7 +48,7 @@ class docx_archive {
 
   // Unzip all files of DOCX file w/ file argument taken from argv_
   bool UnzipDocxByArgv(bool is_temporary = false,
-                       const std::string &directory_appendix = "",
+                       const std::string &dir_appendix = "",
                        bool ensure_is_docx = true,
                        bool format_xml_files = false);
 
@@ -67,7 +67,7 @@ class docx_archive {
   // to current date-time value
   bool Zip(
       bool compress_xml = false,
-      std::string path_directory = "",
+      std::string path_dir = "",
       std::string path_docx_result = "",
       bool set_date_modified_to_now = false);
 
@@ -109,7 +109,7 @@ class docx_archive {
   // zip modified files back into the resulting DOCX
   bool is_final_batch_step_ = false;
 
-  std::string path_working_directory_;
+  std::string path_working_dir_;
 
   // DOCX to be read or manipulated
   std::string path_docx_in_;
@@ -147,16 +147,16 @@ class docx_archive {
   // TODO(kay): unused for now, ms word refuses to open the file.
   //  check: needs to use other compression algorithm (zip base64)?
   void ZipUsingMinizCpp(bool compress_xml,
-                        const std::string &path_directory,
+                        const std::string &path_dir,
                         const std::string &path_docx_result) const;
 
   // TODO(kay): remove workaround when minizCpp-compressed DOCX is valid
   //  also according to MS word
-  void ZipUsingCLi(const std::string &path_directory,
+  void ZipUsingCLi(const std::string &path_dir,
                    const std::string &path_docx_result,
                    bool compress_xml = false) const;
 
-  void CompressXmlFiles(const std::string &path_directory) const;
+  void CompressXmlFiles(const std::string &path_dir) const;
 };
 
 #endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_H_

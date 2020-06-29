@@ -18,7 +18,7 @@ bool media::AddImageFile(const std::string& path_image) {
 
   std::string path_destination = path_media_ + "/" + filename_image;
 
-  if (!helper::File::IsDirectory(path_media_)) mkdir(path_media_.c_str(), 0777);
+  if (!helper::File::IsDir(path_media_)) mkdir(path_media_.c_str(), 0777);
 
   try {
     if (!helper::File::CopyFile(path_image, path_destination)) return false;
