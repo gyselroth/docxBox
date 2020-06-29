@@ -3,6 +3,7 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
+* Segment tags containing more text than given string-markers (``rmt``, ``rpt``) for finer granularity 
 * Modify multiple attributes via JSON argument of ``mm`` command
 * Improve notifications output/logging, add notification type warning (=non fatal errors)
 * Meta dates: Do not update ``created`` when not explicitly invoked

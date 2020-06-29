@@ -51,6 +51,10 @@ class docx_archive_replace : public docx_archive {
   // TODO(kay): TBD: move into docx_rels(?)
   std::string AddHyperlinkRelation(const std::string &markup_json);
 
+  bool AddRelationsAndReferences(const std::string& replacement,
+                                 std::string *image_relationship_id,
+                                 std::string *hyperlink_relationship_id);
+
   void InitPathDocxOutForReplaceText(
       std::string *path_docx_out, bool *overwrite_source_docx) const;
 };
