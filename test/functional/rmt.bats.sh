@@ -5,6 +5,11 @@
 
 load _helper
 
+#@todo: extend test
+# rmt at the beginning
+# rmt at the end
+# rmt within
+
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=test/assets/documents/other/mem-leak.log"
 
@@ -16,6 +21,7 @@ else
 fi
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+PATH_DOCX_NEW="test/tmp/cp_plain_text.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "Output of \"docxbox rmt {missing filename}\" is an error message" {
@@ -53,6 +59,56 @@ String right-hand-side of part to be removed"
   [ "$status" -eq 0 ]
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count --invert-match "${pattern}"
+}
+
+@test "Removing strings at the beginning of a file" {
+  ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "THIS" "TITLE"
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IN ALL CAPS"
+}
+
+@test "Removing strings at the beginning of a file within a sentence" {
+  ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "TITLE" "ALL"
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "THIS IS A CAPS"
+}
+
+@test "Removing strings in the middle of a file" {
+  pattern="Text in cursive"
+
+  ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "style" "cursive"
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count --invert-match "${pattern}"
+}
+
+@test "Removing strings in the middle of a file within a sentence" {
+  pattern="A style"
+
+  ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" " paragraph" "special"
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "${pattern}"
+}
+
+@test "Removing strings with different styles" {
+  ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "CAPS" "paragraph"
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "without special styles"
+}
+
+@test "Removing strings at the end of a file" {
+  pattern="Bold text passages are great"
+
+  ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "great"
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count --invert-match "${pattern}"
+}
+
+@test "Trying to remove strings at the end of a file with a nonexistent string" {
+  pattern="Bold text passages are great"
+
+  ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "Foo"
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "${pattern}"
 }
 
 @test "Output of \"docxbox rmt nonexistent.docx\" is an error message" {
