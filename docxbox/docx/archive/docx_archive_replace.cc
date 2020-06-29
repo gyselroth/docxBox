@@ -127,7 +127,7 @@ bool docx_archive_replace::ReplaceText() {
 
   auto file_list = docx_file.infolist();
 
-  auto preprocessor = new docx_xml_dissect(0, {});
+  auto preprocessor = new docx_xml_preprocess(0, {});
 
   auto parser = new docx_xml_replace(argc_, argv_);
   parser->SetPathExtract(path_extract_);
@@ -148,9 +148,10 @@ bool docx_archive_replace::ReplaceText() {
     // Ensure the search-string is reclusive in nodes
     // (= if initially there is more text within the same nodes,
     // split them into multiple nodes)
-    if (preprocessor->LoadXml(path_file_abs)
-        && preprocessor->DissectXmlNodesContaining(search))
+    if (preprocessor->LoadXml(path_file_abs)) {
+      preprocessor->DissectXmlNodesContaining(search);
       preprocessor->SaveXml();
+    }
 
     if (!parser->ReplaceInXml(path_file_abs, search, replacement))
       return docxbox::AppLog::NotifyError(
@@ -219,7 +220,7 @@ bool docx_archive_replace::RemoveBetweenText() {
 
   auto file_list = docx_file.infolist();
 
-  auto preprocessor = new docx_xml_dissect(0, {});
+  auto preprocessor = new docx_xml_preprocess(0, {});
 
   auto parser = new docx_xml_remove(argc_, argv_);
 
@@ -232,10 +233,10 @@ bool docx_archive_replace::RemoveBetweenText() {
     // (= if initially there is more text within the same nodes,
     // split them into multiple nodes)
     if (preprocessor->LoadXml(path_file_abs)) {
-        bool has_dissected_lhs = preprocessor->DissectXmlNodesContaining(lhs);
-        bool has_dissected_rhs = preprocessor->DissectXmlNodesContaining(rhs);
+        preprocessor->DissectXmlNodesContaining(lhs);
+        preprocessor->DissectXmlNodesContaining(rhs);
 
-        if (has_dissected_lhs || has_dissected_rhs) preprocessor->SaveXml();
+        preprocessor->SaveXml();
     }
 
     if (!parser->RemoveBetweenStringsInXml(path_file_abs, lhs, rhs)) {

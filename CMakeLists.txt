@@ -58,11 +58,11 @@ add_executable(docxbox
         docxbox/docx/renderer/contentType/docx_renderer_text.cc
 
         docxbox/docx/xml/docx_xml.cc
-        docxbox/docx/xml/contentType/docx_xml_field.cc
         docxbox/docx/xml/component/docx_xml_contentTypes.cc
         docxbox/docx/xml/component/docx_xml_rels.cc
         docxbox/docx/xml/component/docx_xml_styles.cc
-        docxbox/docx/xml/visitor/docx_xml_dissect.cc
+        docxbox/docx/xml/contentType/docx_xml_field.cc
+        docxbox/docx/xml/visitor/docx_xml_preprocess.cc
         docxbox/docx/xml/visitor/docx_xml_lorem.cc
         docxbox/docx/xml/visitor/docx_xml_to_plaintext.cc
         docxbox/docx/xml/visitor/docx_xml_remove.cc

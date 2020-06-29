@@ -83,6 +83,15 @@ bool String::Replace(
   return true;
 }
 
+void String::Remove(std::string *haystack, const std::regex &pattern) {
+  std::regex_replace(*haystack, pattern, "");
+}
+
+int String::RemoveAll(std::string *haystack,
+                       const std::string &needle) {
+  return ReplaceAll(haystack, needle, "");
+}
+
 int String::ReplaceAll(std::string *haystack,
                        const std::string &needle,
                        const std::string &replacement) {
