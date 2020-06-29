@@ -3,12 +3,14 @@
 
 #include <docxbox/app/app_argument.h>
 
+#include <utility>
+
 namespace docxbox {
 
 // Constructor
-AppArgument::AppArgument(int argc, const std::vector<std::string>& argv) {
-  argc_ = argc;
-  argv_ = argv;
+AppArgument::AppArgument(
+    int argc, std::vector<std::string>  argv)
+    : argc_(argc), argv_(std::move(argv)) {
 }
 
 // Resolve path from given argument:

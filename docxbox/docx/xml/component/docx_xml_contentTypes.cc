@@ -9,9 +9,9 @@
 docx_xml_contentTypes::docx_xml_contentTypes(
     std::string path_extract,
     int argc,
-    const std::vector<std::string>& argv) : docx_xml(argc, argv) {
+    const std::vector<std::string>& argv)
+    : docx_xml(argc, argv), path_extract_(std::move(path_extract)) {
   path_xml_file_ = path_extract + "/[Content_Types].xml";
-  path_extract_ = std::move(path_extract);
 
   helper::File::GetFileContents(path_xml_file_, &xml_);
 }
