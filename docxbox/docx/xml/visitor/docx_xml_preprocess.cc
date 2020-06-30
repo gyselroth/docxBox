@@ -206,7 +206,7 @@ void docx_xml_preprocess::LocateNodesContaining(tinyxml2::XMLElement *node,
 
         if (text.empty() || text == str) continue;
 
-        if (helper::String::Contains(text, str.c_str())) {
+        if (helper::String::Contains(text, str)) {
           texts_to_be_split_.push_back(sub_node);
           properties_of_runs_.push_back(previous_run_properties_);
         }

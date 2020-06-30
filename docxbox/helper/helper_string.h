@@ -40,6 +40,7 @@ extern bool IsAnyOf(const std::string& str, std::vector<std::string> endings);
 bool Matches(const std::string &subject, const std::string &pattern);
 
 extern bool Contains(const std::string &haystack, const char *needle);
+extern bool Contains(const std::string &haystack, const std::string& needle);
 
 extern bool IsWhiteSpace(const std::string &str);
 

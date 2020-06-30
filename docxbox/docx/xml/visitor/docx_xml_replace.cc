@@ -109,7 +109,7 @@ void docx_xml_replace::ReplaceOrLocateStringInXml(
         std::string text = sub_node->GetText();
 
         if (!text.empty()
-            && helper::String::Contains(text, search.c_str())) {
+            && helper::String::Contains(text, search)) {
           if (is_replacement_xml_) {
             runs_to_be_replaced_.push_back(current_run_);
           } else {
@@ -196,7 +196,7 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
         document_text_ += text;
 
         if (!text.empty()
-            && helper::String::Contains(text, search.c_str())) {
+            && helper::String::Contains(text, search)) {
           amount_replaced_ +=
               helper::String::ReplaceAll(&text, search, replacement);
 
