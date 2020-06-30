@@ -19,6 +19,10 @@ bool String::StartsWith(const std::string *str, const char *prefix) {
   return str->substr(0, strlen(prefix)) == prefix;
 }
 
+bool String::StartsWith(const std::string *str, const std::string *prefix) {
+  return str->find(*prefix) == 0;
+}
+
 bool String::StartsNumeric(const char *str) {
   return isdigit(str[0]);
 }

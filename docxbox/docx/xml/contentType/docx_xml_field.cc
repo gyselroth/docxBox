@@ -82,7 +82,7 @@ void docx_xml_field::SetFieldTextInNodes(tinyxml2::XMLElement *node,
 
         if (helper::String::StartsWith(
             &iterated_field_identifier,
-            field_identifier.c_str())) {
+            &field_identifier)) {
           is_inside_searched_field_ = true;
 
           continue;
@@ -130,7 +130,7 @@ void docx_xml_field::TransformMergeFieldToTextInNodes(
 
         if (helper::String::StartsWith(
             &iterated_field_identifier,
-            field_identifier.c_str())) {
+            &field_identifier)) {
           has_xml_changed_ = true;
           is_inside_searched_field_ = true;
 
