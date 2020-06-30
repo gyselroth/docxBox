@@ -168,8 +168,15 @@ bool docx_xml_preprocess::AreLastTwoRunPropertiesIdentical() {
 bool docx_xml_preprocess::DissectXmlNodesContaining(const std::string& str) {
   texts_to_be_split_.clear();
 
-  tinyxml2::XMLElement *body =
-      doc_.FirstChildElement("w:document")->FirstChildElement("w:body");
+  tinyxml2::XMLElement *kWDocument = doc_.FirstChildElement("w:document");
+
+  if (nullptr == kWDocument) {
+    return docxbox::AppLog::NotifyError(
+        "Dissect XML: Failed parsing " + RemoveTmpEndingFromDocxPath(path_xml_)
+        + ". Invalid XML?");
+  }
+
+  tinyxml2::XMLElement *body = kWDocument->FirstChildElement("w:body");
 
   LocateNodesContaining(body, str);
 
@@ -229,11 +236,14 @@ bool docx_xml_preprocess::MergeNodes() {
   helper::String::Remove(
       &xml_,
       std::regex(
-          "</w:t>\\s*</w:r>\\s*<w:r>\\s*"
+          "(<\\/w:t>|<w:t\\/>)\\s*</w:r>\\s*<w:r>\\s*"
           "(<w:rPr)*(/)*(>)*\\s*"
-          "(<[/a-z: \"]*>)*\\s*"
+          "(<[/a-z0-9: =\"]*>)*\\s*"
           "(</w:rPr>)*\\s*"
-          "<w:t>_MeRgE_Me_"));
+          "<w:t>_MeRgE_Me_",
+          std::regex_constants::icase));
+
+  helper::String::RemoveAll(&xml_, "_MeRgE_Me_");
 
   SetDocFromXml();
 
