@@ -22,7 +22,7 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
   tinyxml2::XMLElement *body =
       doc_.FirstChildElement("w:document")->FirstChildElement("w:body");
 
-  LocateNodesBetweenText(body, lhs, rhs);
+  LocateNodesBetweenText(body, lhs.c_str(), rhs.c_str());
 
   if (!nodes_to_be_removed_.empty()
       && found_lhs_
@@ -38,11 +38,11 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
 }
 
 void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
-                                             const std::string &lhs,
-                                             const std::string &rhs) {
+                                             const char *lhs,
+                                             const char *rhs) {
   if (!node || node->NoChildren()) return;
 
-  if (found_lhs_ && !found_rhs_) nodes_to_be_removed_.push_back(node);
+//  if (found_lhs_ && !found_rhs_) nodes_to_be_removed_.push_back(node);
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
 
@@ -53,9 +53,12 @@ void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
 
     const char *tag = sub_node->Value();
 
-    if (found_lhs_ && !found_rhs_) nodes_to_be_removed_.push_back(sub_node);
+//    if (found_lhs_ && !found_rhs_) nodes_to_be_removed_.push_back(sub_node);
 
     if (tag) {
+      // TODO(kay): check - need to collect for removal(?):
+      //  all w:p's between LHS and RHS w:t which don't contain neither of them
+
       if (0 == strcmp(tag, "w:t")
           && sub_node->FirstChild() != nullptr) {
         std::string text = sub_node->GetText();
@@ -63,16 +66,16 @@ void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
         if (text.empty() || (found_lhs_ && found_rhs_)) continue;
 
         if (!found_lhs_) {
-          if (helper::String::Contains(text, lhs.c_str())) {
+          if (helper::String::Contains(text, lhs)) {
             found_lhs_ = true;
 
             nodes_to_be_removed_.push_back(sub_node);
           }
-        } else {
+        } else if (!found_rhs_) {
           // Collect all runs until also right-hand-side string is found
           nodes_to_be_removed_.push_back(sub_node);
 
-          if (helper::String::Contains(text, rhs.c_str())) found_rhs_ = true;
+          if (helper::String::Contains(text, rhs)) found_rhs_ = true;
         }
       }
     }

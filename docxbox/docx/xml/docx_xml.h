@@ -20,7 +20,7 @@ class docx_xml {
 
   std::string GetXml();
 
-  void SetXmlFromDoc(bool compress = true);
+  void SetXmlFromDoc();
   void SetDocFromXml();
 
   static bool IsXmlFileContainingText(const std::string &filename);

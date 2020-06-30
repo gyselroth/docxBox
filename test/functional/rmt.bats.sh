@@ -92,7 +92,7 @@ String right-hand-side of part to be removed"
 @test "Removing strings with different styles" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "CAPS" "paragraph"
 
-  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "without special styles"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "without special style"
 }
 
 @test "Removing strings at the end of a file" {

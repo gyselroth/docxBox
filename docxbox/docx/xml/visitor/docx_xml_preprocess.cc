@@ -264,6 +264,8 @@ bool docx_xml_preprocess::SplitNodes(const char *str) {
   texts_to_be_split_.clear();
   properties_of_runs_.clear();
 
+  SetXmlFromDoc();
+
   return true;
 }
 

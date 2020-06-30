@@ -44,7 +44,7 @@ tinyxml2::XMLElement *docx_xml::GetBodyByComponentPath(
   return (*doc).FirstChildElement("w:document")->FirstChildElement("w:body");
 }
 
-void docx_xml::SetXmlFromDoc(bool compress) {
+void docx_xml::SetXmlFromDoc() {
   tinyxml2::XMLPrinter printer;
   doc_.Print(&printer);
   xml_ = printer.CStr();
