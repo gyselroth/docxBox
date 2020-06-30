@@ -9,6 +9,10 @@ docx_xml::docx_xml(int argc, std::vector<std::string> argv)
     : argc_(argc), argv_(std::move(argv)) {
 }
 
+std::string docx_xml::GetXml() {
+  return xml_;
+}
+
 bool docx_xml::IsXmlFileContainingText(const std::string &filename) {
   return !helper::String::EndsWith(filename, "/")
       && helper::String::EndsWith(filename, ".xml")
@@ -38,6 +42,16 @@ tinyxml2::XMLElement *docx_xml::GetBodyByComponentPath(
 
   // Default, e.g. word/document.xml
   return (*doc).FirstChildElement("w:document")->FirstChildElement("w:body");
+}
+
+void docx_xml::SetXmlFromDoc() {
+  tinyxml2::XMLPrinter printer;
+  doc_.Print(&printer);
+  xml_ = printer.CStr();
+}
+
+void docx_xml::SetDocFromXml() {
+  doc_.Parse(xml_.c_str());
 }
 
 bool docx_xml::SaveXml(bool compress) {

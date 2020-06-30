@@ -17,8 +17,6 @@ docx_xml_lorem::docx_xml_lorem(
 bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
   has_xml_changed_ = false;
 
-  tinyxml2::XMLDocument doc;
-
   bool is_document_xml = helper::String::EndsWith(path_xml, "document.xml");
 
   bool is_header_xml = !is_document_xml
@@ -36,20 +34,20 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
     if (!helper::String::Contains(xml, "w:hdr")) return true;
   }
 
-  doc.LoadFile(path_xml.c_str());
+  doc_.LoadFile(path_xml.c_str());
 
-  if (doc.ErrorID() != 0) return false;
+  if (doc_.ErrorID() != 0) return false;
 
   tinyxml2::XMLElement *body;
 
   body = is_document_xml
-    ? doc.FirstChildElement("w:document")->FirstChildElement("w:body")
-    : doc.FirstChildElement("w:hdr");
+    ? doc_.FirstChildElement("w:document")->FirstChildElement("w:body")
+    : doc_.FirstChildElement("w:hdr");
 
   RandomizeInTextNodes(body);
 
   return has_xml_changed_
-             && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+             && tinyxml2::XML_SUCCESS != doc_.SaveFile(path_xml.c_str(), true)
          ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
          : true;
 }

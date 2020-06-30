@@ -455,7 +455,7 @@ bool meta::AttributeExistsInAppXml(AttributeType attribute) {
 
   return lhs_of_tag.empty()
     ? false
-    : helper::String::Contains(app_xml_, lhs_of_tag.c_str());
+    : helper::String::Contains(app_xml_, lhs_of_tag);
 }
 
 // Check whether core.xml of current DOCX contains given attribute
@@ -466,7 +466,7 @@ bool meta::AttributeExistsInCoreXml(AttributeType attribute) {
 
   return lhs_of_tag.empty()
     ? false
-    : helper::String::Contains(core_xml_, lhs_of_tag.c_str());
+    : helper::String::Contains(core_xml_, lhs_of_tag);
 }
 
 void meta::EnsureIsLoadedAppXml() {

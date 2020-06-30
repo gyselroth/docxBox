@@ -11,13 +11,12 @@ docx_xml_to_plaintext::docx_xml_to_plaintext(
 std::string docx_xml_to_plaintext::GetTextFromXmlFile(
     const std::string &path_xml,
     bool newline_at_segments) {
-  tinyxml2::XMLDocument doc;
 
-  doc.LoadFile(path_xml.c_str());
+  doc_.LoadFile(path_xml.c_str());
 
-  if (doc.ErrorID() != 0) return "";
+  if (doc_.ErrorID() != 0) return "";
 
-  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc, path_xml);
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc_, path_xml);
 
   GetChildNodesText(body, newline_at_segments);
 

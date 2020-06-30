@@ -22,17 +22,15 @@ docx_xml_rels::docx_xml_rels(
 // Get (insert if not exists) relationship id of given image target
 std::string docx_xml_rels::GetRelationShipIdByTarget(
     const std::string &target, rels::RelationType relation_type) {
-  tinyxml2::XMLDocument doc;
+  doc_.Parse(xml_.c_str());
 
-  doc.Parse(xml_.c_str());
-
-  if (doc.ErrorID() != 0) {
+  if (doc_.ErrorID() != 0) {
     docxbox::AppLog::NotifyError("Failed parse word/_rels/document.xml.rels");
 
     return "";
   }
 
-  tinyxml2::XMLElement *relationships = doc.FirstChildElement("Relationships");
+  tinyxml2::XMLElement *relationships = doc_.FirstChildElement("Relationships");
 
   auto relationship = relationships->FirstChildElement();
 

@@ -63,6 +63,10 @@ bool String::Contains(const std::string &haystack, const char *needle) {
   return std::string::npos != haystack.find(needle);
 }
 
+bool String::Contains(const std::string &haystack, const std::string& needle) {
+  return std::string::npos != haystack.find(needle);
+}
+
 bool String::IsWhiteSpace(const std::string &str) {
   for (char c : str) if (c != ' ') return false;
 
@@ -81,6 +85,15 @@ bool String::Replace(
   (*haystack).replace(index, needle_len, replacement);
 
   return true;
+}
+
+void String::Remove(std::string *haystack, const std::regex &pattern) {
+  *haystack = std::regex_replace(*haystack, pattern, "");
+}
+
+int String::RemoveAll(std::string *haystack,
+                       const std::string &needle) {
+  return ReplaceAll(haystack, needle, "");
 }
 
 int String::ReplaceAll(std::string *haystack,

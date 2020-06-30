@@ -22,17 +22,15 @@ std::string docx_xml_styles::GetStyleId(
     styles::StyleType type, styles::StyleName name) {
   // TODO(kay): implement find/insert style
 
-  tinyxml2::XMLDocument doc;
+  doc_.Parse(xml_.c_str());
 
-  doc.Parse(xml_.c_str());
-
-  if (doc.ErrorID() != 0) {
+  if (doc_.ErrorID() != 0) {
     docxbox::AppLog::NotifyError("Failed parse word/styles.xml");
 
     return "";
   }
 
-  tinyxml2::XMLElement *styles = doc.FirstChildElement("w:styles");
+  tinyxml2::XMLElement *styles = doc_.FirstChildElement("w:styles");
 
   auto style = styles->FirstChildElement();
 

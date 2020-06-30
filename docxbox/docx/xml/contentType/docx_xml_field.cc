@@ -11,13 +11,11 @@ docx_xml_field::docx_xml_field(
 void docx_xml_field::CollectFields(const std::string& path_xml) {
   fields_in_current_xml_.clear();
 
-  tinyxml2::XMLDocument doc;
+  doc_.LoadFile(path_xml.c_str());
 
-  doc.LoadFile(path_xml.c_str());
+  if (doc_.ErrorID() != 0) return;
 
-  if (doc.ErrorID() != 0) return;
-
-  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc, path_xml);
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc_, path_xml);
 
   CollectFieldsFromNodes(body);
 
@@ -45,12 +43,11 @@ void docx_xml_field::CollectFieldsFromNodes(tinyxml2::XMLElement *node) {
 bool docx_xml_field::SetFieldText(const std::string& path_xml,
                                   const std::string &field_identifier,
                                   const std::string &text) {
-  tinyxml2::XMLDocument doc;
-  doc.LoadFile(path_xml.c_str());
+  doc_.LoadFile(path_xml.c_str());
 
-  if (doc.ErrorID() != 0) return false;
+  if (doc_.ErrorID() != 0) return false;
 
-  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc, path_xml);
+  tinyxml2::XMLElement *body = GetBodyByComponentPath(&doc_, path_xml);
 
   is_inside_searched_field_ = false;
 
@@ -60,7 +57,7 @@ bool docx_xml_field::SetFieldText(const std::string& path_xml,
     SetFieldTextInNodes(body, field_identifier, text);
 
   return has_xml_changed_
-             && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+             && tinyxml2::XML_SUCCESS != doc_.SaveFile(path_xml.c_str(), true)
          ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
          : true;
 }

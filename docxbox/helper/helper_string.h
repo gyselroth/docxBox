@@ -15,6 +15,7 @@
 #include <cmath>
 #include <functional>
 #include <locale>
+#include <regex>  // NOLINT [build/c++11]
 #include <sstream>
 #include <string>
 #include <utility>
@@ -39,16 +40,21 @@ extern bool IsAnyOf(const std::string& str, std::vector<std::string> endings);
 bool Matches(const std::string &subject, const std::string &pattern);
 
 extern bool Contains(const std::string &haystack, const char *needle);
+extern bool Contains(const std::string &haystack, const std::string& needle);
 
 extern bool IsWhiteSpace(const std::string &str);
 
-extern bool Replace(
-    std::string *haystack, const char *needle, const char *replacement);
+extern void Remove(std::string *haystack, const std::regex &pattern);
 
-extern int ReplaceAll(
-    std::string *haystack,
-    const std::string& needle,
-    const std::string& replacement);
+extern int RemoveAll(std::string *haystack, const std::string& needle);
+
+extern bool Replace(std::string *haystack,
+                    const char *needle,
+                    const char *replacement);
+
+extern int ReplaceAll(std::string *haystack,
+                      const std::string &needle,
+                      const std::string &replacement);
 
 // Get substring between given surrounding left- and center-hand-side delimiters
 extern std::string GetSubStrBetween(const std::string &str,

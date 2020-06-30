@@ -127,7 +127,7 @@ bool docx_archive_replace::ReplaceText() {
 
   auto file_list = docx_file.infolist();
 
-  auto preprocessor = new docx_xml_dissect(0, {});
+  auto preprocessor = new docx_xml_preprocess(0, {});
 
   auto parser = new docx_xml_replace(argc_, argv_);
   parser->SetPathExtract(path_extract_);
@@ -148,11 +148,14 @@ bool docx_archive_replace::ReplaceText() {
     // Ensure the search-string is reclusive in nodes
     // (= if initially there is more text within the same nodes,
     // split them into multiple nodes)
-    if (preprocessor->LoadXml(path_file_abs)
-        && preprocessor->DissectXmlNodesContaining(search))
-      preprocessor->SaveXml();
+    if (preprocessor->LoadXmlTidy(path_file_abs)) {
+      preprocessor->DissectXmlNodesContaining(search);
+      preprocessor->SaveDocToXml();
+    }
 
-    if (!parser->ReplaceInXml(path_file_abs, search, replacement))
+    std::string xml = preprocessor->GetXml();
+
+    if (!parser->ReplaceInXml(&xml, path_file_abs, search, replacement))
       return docxbox::AppLog::NotifyError(
           "Failed replace string in: " + file_in_zip.filename);
 
@@ -219,7 +222,7 @@ bool docx_archive_replace::RemoveBetweenText() {
 
   auto file_list = docx_file.infolist();
 
-  auto preprocessor = new docx_xml_dissect(0, {});
+  auto preprocessor = new docx_xml_preprocess(0, {});
 
   auto parser = new docx_xml_remove(argc_, argv_);
 
@@ -231,11 +234,10 @@ bool docx_archive_replace::RemoveBetweenText() {
     // Ensure left/right-hand strings are contained reclusive in nodes
     // (= if initially there is more text within the same nodes,
     // split them into multiple nodes)
-    if (preprocessor->LoadXml(path_file_abs)) {
-        bool has_dissected_lhs = preprocessor->DissectXmlNodesContaining(lhs);
-        bool has_dissected_rhs = preprocessor->DissectXmlNodesContaining(rhs);
-
-        if (has_dissected_lhs || has_dissected_rhs) preprocessor->SaveXml();
+    if (preprocessor->LoadXmlTidy(path_file_abs)) {
+      preprocessor->DissectXmlNodesContaining(lhs);
+      preprocessor->DissectXmlNodesContaining(rhs);
+      preprocessor->SaveDocToXml();
     }
 
     if (!parser->RemoveBetweenStringsInXml(path_file_abs, lhs, rhs)) {

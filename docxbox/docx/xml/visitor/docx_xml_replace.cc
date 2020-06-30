@@ -31,26 +31,11 @@ int docx_xml_replace::GetAmountReplaced() {
 // 2. A string containing JSON: will be interpreted for rendering word markup,
 //   which will than replace the <w:r> that contained the <w:t> node,
 //   which contained the search-string
-bool docx_xml_replace::ReplaceInXml(const std::string& path_xml,
+bool docx_xml_replace::ReplaceInXml(std::string *xml,
+                                    const std::string &path_xml,
                                     const std::string &search,
-                                    const std::string &replacement,
-                                    bool replace_segmented) {
-  replace_segmented_ = replace_segmented;
-
-  if (replace_segmented) {
-    segments_look_behind_ = 0;
-    previous_text_nodes_.clear();
-  }
-
+                                    const std::string &replacement) {
   is_replacement_xml_ = helper::Json::IsJson(replacement);
-
-  tinyxml2::XMLDocument doc;
-
-  std::string doc_xml;
-  helper::File::GetFileContents(path_xml, &doc_xml);
-
-  if (!helper::String::Contains(doc_xml, "w:document")
-      || !helper::String::Contains(doc_xml, "w:body")) return true;
 
   if (is_replacement_xml_) {
     // Replacement will be done in steps:
@@ -70,43 +55,32 @@ bool docx_xml_replace::ReplaceInXml(const std::string& path_xml,
     // Insert temporarily before body, will later be moved into correct place
     // TODO(kay): use resp. different root element instead of w:body,
     //            when not within document.xml
-    helper::String::ReplaceAll(&doc_xml, "<w:body>", kMarkup + "<w:body>");
+    helper::String::ReplaceAll(xml, "<w:body>", kMarkup + "<w:body>");
   }
 
-  doc.Parse(doc_xml.c_str());
+  doc_.Parse((*xml).c_str());
 
-  if (doc.ErrorID() != 0) return false;
+  if (doc_.ErrorID() != 0) return false;
 
   amount_replaced_ = 0;
 
   if (is_replacement_xml_)
     replacement_xml_element_ =
-        doc.FirstChildElement()->FirstChildElement(
+        doc_.FirstChildElement()->FirstChildElement(
             replacement_xml_root_tag_.c_str());
 
   tinyxml2::XMLElement *body =
-      doc.FirstChildElement("w:document")->FirstChildElement("w:body");
+      doc_.FirstChildElement("w:document")->FirstChildElement("w:body");
 
-  if (replace_segmented) {
-    do {
-      // Replace (regular and) segmented text
-      document_text_ = "";
-
-      ReplaceSegmentedStringInTextNodes(body, search, replacement);
-
-      segments_look_behind_++;
-    } while (helper::String::Contains(document_text_, search.c_str()));
-  } else {
-    // Replace unsegmented plain text,
-    // or if replacement is markup: locate runs to be replaced
-    ReplaceOrLocateStringInXml(body, search, replacement);
-  }
+  // Replace unsegmented plain text,
+  // or if replacement is markup: locate runs to be replaced
+  ReplaceOrLocateStringInXml(body, search, replacement);
 
   if (is_replacement_xml_ && !runs_to_be_replaced_.empty())
     ReplaceRunsByXmlElement();
 
   return amount_replaced_ > 0
-             && tinyxml2::XML_SUCCESS != doc.SaveFile(path_xml.c_str(), true)
+             && tinyxml2::XML_SUCCESS != doc_.SaveFile(path_xml.c_str(), true)
          ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
          : true;
 }
@@ -135,7 +109,7 @@ void docx_xml_replace::ReplaceOrLocateStringInXml(
         std::string text = sub_node->GetText();
 
         if (!text.empty()
-            && helper::String::Contains(text, search.c_str())) {
+            && helper::String::Contains(text, search)) {
           if (is_replacement_xml_) {
             runs_to_be_replaced_.push_back(current_run_);
           } else {
@@ -222,7 +196,7 @@ void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
         document_text_ += text;
 
         if (!text.empty()
-            && helper::String::Contains(text, search.c_str())) {
+            && helper::String::Contains(text, search)) {
           amount_replaced_ +=
               helper::String::ReplaceAll(&text, search, replacement);
 

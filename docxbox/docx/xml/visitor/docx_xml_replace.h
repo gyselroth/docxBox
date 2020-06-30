@@ -21,10 +21,10 @@ class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
   docx_xml_replace(int argc, const std::vector<std::string>& argv);
 
   bool ReplaceInXml(
-      const std::string& path_xml,
+      std::string *xml,
+      const std::string &path_xml,
       const std::string& search,
-      const std::string& replacement,
-      bool replace_segmented = false);
+      const std::string& replacement);
 
   int GetAmountReplaced();
 
@@ -37,8 +37,6 @@ class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
  private:
   // Replacement can be (plain)textual or XML markup
   bool is_replacement_xml_ = false;
-
-  bool replace_segmented_;
 
   // How many previous (tags containing text)
   // nodes to look behind during current replacement run?

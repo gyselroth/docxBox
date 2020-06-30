@@ -18,6 +18,11 @@ class docx_xml {
  public:
   docx_xml(int argc, std::vector<std::string>  argv);
 
+  std::string GetXml();
+
+  void SetXmlFromDoc();
+  void SetDocFromXml();
+
   static bool IsXmlFileContainingText(const std::string &filename);
 
  protected:
@@ -27,6 +32,8 @@ class docx_xml {
   std::string document_text_;
   std::string path_xml_file_;
   std::string xml_;
+
+  tinyxml2::XMLDocument doc_;
 
   tinyxml2::XMLElement *GetBodyByComponentPath(
       tinyxml2::XMLDocument *doc,
