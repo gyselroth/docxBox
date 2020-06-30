@@ -15,6 +15,10 @@ bool String::StartsWith(const char *str, const char *prefix) {
   return 0 == strncmp(str, prefix, strlen(prefix));
 }
 
+bool String::StartsWith(const std::string *str, const char *prefix) {
+  return str->substr(0, strlen(prefix)) == prefix;
+}
+
 bool String::StartsNumeric(const char *str) {
   return isdigit(str[0]);
 }

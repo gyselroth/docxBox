@@ -247,7 +247,7 @@ bool docx_xml_preprocess::SplitNodes(const char *str) {
     std::string node_type = node->Value();    // e.g. "w:t"
     std::string node_text = node->GetText();
 
-    if (helper::String::StartsWith(node_text.c_str(), str)) {
+    if (helper::String::StartsWith(&node_text, str)) {
       node->SetText(
           RenderSplitAfter(str, node_text, index).c_str());
     } else if (helper::String::EndsWith(node_text, str)) {
