@@ -109,31 +109,30 @@ title_ul="With \"${BASE_COMMAND} ul_as_JSON\" the given string is replaced by \
 a unordered list"
 @test "${title_ul}" {
   list="{\"ul\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
-  PATH_DOCX="test/tmp/cp_bio_assay.docx"
 
-  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"1\"/>"
+  ${DOCXBOX_BINARY} cat "${PATH_DOCX_NEW}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"1\"/>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" 5NISINisi ${list}
+  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" TITLE ${list}
   [ "$status" -eq 0 ]
 
-  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"1\"/>"
-  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "w:numPr" | grep --count "${DISPLAY_FILE}"
+  ${DOCXBOX_BINARY} cat "${PATH_DOCX_NEW}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"1\"/>"
+  ${DOCXBOX_BINARY} lsl "${PATH_DOCX_NEW}" "w:numPr" | grep --count "${DISPLAY_FILE}"
 }
 
-title_ol="With \"${BASE_COMMAND} ol_as_JSON\" the given string is replaced by \
-a ordered list"
-@test "${title_ol}" {
-  list="{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
-  PATH_DOCX="test/tmp/cp_bio_assay.docx"
-
-  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"2\"/>"
-
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" 5NISINisi ${list}
-  [ "$status" -eq 0 ]
-
-  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"2\"/>"
-  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "w:numPr" | grep --count -q "${DISPLAY_FILE}"
-}
+#title_ol="With \"${BASE_COMMAND} ol_as_JSON\" the given string is replaced by \
+#a ordered list"
+#@test "${title_ol}" {
+#  list="{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
+#  PATH_DOCX="test/tmp/cp_bio_assay.docx"
+#
+#  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"2\"/>"
+#
+#  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" 5NISINisi ${list}
+#  [ "$status" -eq 0 ]
+#
+#  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"2\"/>"
+#  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "w:numPr" | grep --count -q "${DISPLAY_FILE}"
+#}
 
 title_hyperlink="With \"${BASE_COMMAND} hyperlink_as_JSON\" the given string \
 is replaced by a hyperlink"
