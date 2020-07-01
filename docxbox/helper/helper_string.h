@@ -32,6 +32,8 @@ bool EndsWithCaseInsensitive(std::string str, const std::string &ending);
 
 // Check whether given string starts w/ given prefix
 extern bool StartsWith(const char *str, const char *prefix);
+extern bool StartsWith(const std::string *str, const char *prefix);
+extern bool StartsWith(const std::string *str, const std::string *prefix);
 
 extern bool StartsNumeric(const char *str);
 

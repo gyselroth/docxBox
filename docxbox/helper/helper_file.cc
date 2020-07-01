@@ -78,7 +78,7 @@ bool File::ResolvePath(const std::string &pwd,
                               bool must_exist) {
   helper::String::Trim(path);
 
-  if (!helper::String::StartsWith((*path).c_str(), "/"))
+  if (!helper::String::StartsWith(path, "/"))
     *path = helper::String::EndsWith(pwd, "/")
         ? pwd + (*path)
         : pwd + "/" + (*path);

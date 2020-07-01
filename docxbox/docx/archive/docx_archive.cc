@@ -179,7 +179,7 @@ bool docx_archive::IsZipArchive(const std::string& path_file) {
   if (!helper::File::GetFileContents(path_file, &file_contents))
     return false;
 
-  return helper::String::StartsWith(file_contents.c_str(), "PK\003\004\024")
+  return helper::String::StartsWith(&file_contents, "PK\003\004\024")
          ? true
          : docxbox::AppLog::NotifyError("File is no ZIP archive: " + path_file);
 }

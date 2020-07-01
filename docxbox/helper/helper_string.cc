@@ -15,6 +15,14 @@ bool String::StartsWith(const char *str, const char *prefix) {
   return 0 == strncmp(str, prefix, strlen(prefix));
 }
 
+bool String::StartsWith(const std::string *str, const char *prefix) {
+  return str->substr(0, strlen(prefix)) == prefix;
+}
+
+bool String::StartsWith(const std::string *str, const std::string *prefix) {
+  return str->find(*prefix) == 0;
+}
+
 bool String::StartsNumeric(const char *str) {
   return isdigit(str[0]);
 }
@@ -88,7 +96,9 @@ bool String::Replace(
 }
 
 void String::Remove(std::string *haystack, const std::regex &pattern) {
-  *haystack = std::regex_replace(*haystack, pattern, "");
+  //std::smatch m;
+  //while (std::regex_search(*haystack, m, pattern))
+    *haystack = std::regex_replace(*haystack, pattern, "");
 }
 
 int String::RemoveAll(std::string *haystack,

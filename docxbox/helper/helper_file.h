@@ -56,6 +56,7 @@ extern bool CopyFile(const std::string &path_source,
                      const std::string &path_destination);
 
 extern bool Remove(const char *path);
+
 extern bool RemoveRecursive(const char *file_path);
 
 extern std::string GetExtension(const std::string& file_path);
