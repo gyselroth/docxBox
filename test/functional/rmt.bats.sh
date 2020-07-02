@@ -22,6 +22,7 @@ fi
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_DOCX_NEW="test/tmp/cp_plain_text.docx"
+PATH_DOCX_STYLES="test/tmp/cp_text_with_styles.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "Output of \"docxbox rmt {missing filename}\" is an error message" {
@@ -113,6 +114,15 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "Foo"
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "${pattern}"
+}
+
+@test "Removing content between two given strings removes everything" {
+  run ${DOCXBOX_BINARY} rmt "${PATH_DOCX_STYLES}" "FROM" "Until"
+  [ "$status" -eq 0 ]
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_STYLES}" | grep --count "I’m a dummy text file"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_STYLES}" | grep --count "next time also in BOLD"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_STYLES}" | grep --count --invert-match "I’m bold AND italic"
 }
 
 @test "Output of \"docxbox rmt nonexistent.docx\" is an error message" {
