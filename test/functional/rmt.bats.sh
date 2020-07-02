@@ -41,7 +41,9 @@ String left-hand-side of part to be removed"
   [ "${pattern}" = "${lines[0]}" ]
 }
 
-@test "Output of \"docxbox rmt filename.docx leftHandString {missing_argument}\" is an error message" {
+title_missing_argument="Output of \"docxbox rmt filename.docx leftHandString \
+{missing_argument}\" is an error message"
+@test "${title_missing_argument}" {
   pattern="docxBox Error - Missing argument: \
 String right-hand-side of part to be removed"
 
@@ -50,7 +52,9 @@ String right-hand-side of part to be removed"
   [ "${pattern}" = "${lines[0]}" ]
 }
 
-@test "With \"docxbox rmt filename.docx leftHandString rightHandString\" removes text between and including given strings" {
+title_base_functionality="With \"docxbox rmt filename.docx leftHandString \
+rightHandString\" removes text between and including given strings"
+@test "${title_base_functionality}" {
   pattern="Fugiat excepteursed in qui sit velit duis veniam."
 
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" ${pattern} | grep --count "word/document.xml"
