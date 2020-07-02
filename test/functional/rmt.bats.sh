@@ -11,7 +11,7 @@ load _helper
 # rmt within
 
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/assets/documents/other/mem-leak.log"
+ --log-file=test/tmp/mem-leak.log"
 
 if $IS_VALGRIND_TEST;
 then
