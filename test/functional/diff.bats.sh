@@ -7,7 +7,7 @@
 load _helper
 
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/assets/documents/other/mem-leak.log"
+ --log-file=test/tmp/mem-leak.log"
 
 if $IS_VALGRIND_TEST;
 then
@@ -67,7 +67,7 @@ description="side by side view is displayed"
   result_original=$(${DOCXBOX_BINARY} cat "${PATH_DOCX_1}" word/document.xml | wc --bytes)
   result_changed=$(${DOCXBOX_BINARY} diff "${PATH_DOCX_1}" "${path_changed_docx}" word/document.xml -u | wc --bytes )
 
-  (( ${result_original} > ${result_changed} ))
+  (( ${result_original} != ${result_changed} ))
 }
 
 @test "Output of \"docxbox diff nonexistent.docx\" is an error message" {

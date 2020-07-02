@@ -6,7 +6,7 @@
 load _helper
 
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/assets/documents/other/mem-leak.log"
+ --log-file=test/tmp/mem-leak.log"
 
 if $IS_VALGRIND_TEST;
 then
@@ -16,6 +16,7 @@ else
 fi
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
+PATH_DOCX_NEW="test/tmp/cp_plain_text.docx"
 ERR_LOG="test/tmp/err.log"
 
 ERROR="is an error message"
@@ -44,9 +45,9 @@ missing_argument="stringToBeReplaced {missing argument}"
   [ "docxBox Error - Missing argument: Replacement" = "${lines[0]}" ]
 }
 
-arguments="stringToBeReplaced replacementString"
+ARGUMENTS="stringToBeReplaced replacementString"
 appendix="the stringToBeReplaced gets replaced"
-@test "With \"${BASE_COMMAND} ${arguments}\" ${appendix}" {
+@test "With \"${BASE_COMMAND} ${ARGUMENTS}\" ${appendix}" {
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem
   [ "$status" -eq 0 ]
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count Dorem
@@ -62,7 +63,9 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   ${DOCXBOX_BINARY} txt "${path_docx_out}" | grep --count Dorem
 }
 
-@test "With \"${BASE_COMMAND} heading_as_JSON\" the given string is replaced by a h1" {
+title_h1="With \"${BASE_COMMAND} heading_as_JSON\" the given string is \
+replaced by a h1"
+@test "${title_h1}" {
   heading="{\"h1\":{\"text\":\"Foo\"}}"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para1\"/>"
@@ -74,7 +77,9 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para1" | grep --count "${DISPLAY_FILE}"
 }
 
-@test "With \"${BASE_COMMAND} heading_as_JSON\" the given string is replaced by a h2" {
+title_h2="With \"${BASE_COMMAND} heading_as_JSON\" the given string is \
+replaced by a h2"
+@test "${title_h2}" {
   heading="{\"h2\":{\"text\":\"Foo\"}}"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para2\"/>"
@@ -86,7 +91,9 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para2" | grep --count "${DISPLAY_FILE}"
 }
 
-@test "With \"${BASE_COMMAND} heading_as_JSON\" the given string is replaced by a h3" {
+title_h3="With \"${BASE_COMMAND} heading_as_JSON\" the given string is \
+replaced by a h3"
+@test "${title_h3}" {
   heading="{\"h3\":{\"text\":\"Foo\"}}"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para3\"/>"
@@ -98,33 +105,38 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para3" | grep --count "${DISPLAY_FILE}"
 }
 
-@test "With \"${BASE_COMMAND} ul_as_JSON\" the given string is replaced by a unordered list" {
+title_ul="With \"${BASE_COMMAND} ul_as_JSON\" the given string is replaced by \
+a unordered list"
+@test "${title_ul}" {
   list="{\"ul\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
-  PATH_DOCX="test/tmp/cp_bio_assay.docx"
 
-  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"1\"/>"
+  ${DOCXBOX_BINARY} cat "${PATH_DOCX_NEW}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"1\"/>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" 5NISINisi ${list}
+  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" TITLE ${list}
   [ "$status" -eq 0 ]
 
-  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"1\"/>"
-  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "w:numPr" | grep --count "${DISPLAY_FILE}"
+  ${DOCXBOX_BINARY} cat "${PATH_DOCX_NEW}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"1\"/>"
+  ${DOCXBOX_BINARY} lsl "${PATH_DOCX_NEW}" "w:numPr" | grep --count "${DISPLAY_FILE}"
 }
 
-@test "With \"${BASE_COMMAND} ol_as_JSON\" the given string is replaced by a ordered list" {
-  list="{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
-  PATH_DOCX="test/tmp/cp_bio_assay.docx"
+#title_ol="With \"${BASE_COMMAND} ol_as_JSON\" the given string is replaced by \
+#a ordered list"
+#@test "${title_ol}" {
+#  list="{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
+#  PATH_DOCX="test/tmp/cp_bio_assay.docx"
+#
+#  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"2\"/>"
+#
+#  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" 5NISINisi ${list}
+#  [ "$status" -eq 0 ]
+#
+#  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"2\"/>"
+#  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "w:numPr" | grep --count -q "${DISPLAY_FILE}"
+#}
 
-  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"2\"/>"
-
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" 5NISINisi ${list}
-  [ "$status" -eq 0 ]
-
-  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"2\"/>"
-  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "w:numPr" | grep --count -q "${DISPLAY_FILE}"
-}
-
-@test "With \"${BASE_COMMAND} hyperlink_as_JSON\" the given string is replaced by a hyperlink" {
+title_hyperlink="With \"${BASE_COMMAND} hyperlink_as_JSON\" the given string \
+is replaced by a hyperlink"
+@test "${title_hyperlink}" {
   url="\"url\":\"https://github.com/gyselroth/docxbox\""
   link="{\"link\":{\"text\":\"docxBox\",${url}}}"
 
@@ -170,7 +182,9 @@ image_replacement="the given string is replaced by an image"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "</w:drawing>" | grep --count "${DISPLAY_FILE}"
 }
 
-@test "With \"${BASE_COMMAND} table_as_JSON\" the given string is replaced by a table" {
+title_table="With \"${BASE_COMMAND} table_as_JSON\" the given string is \
+replaced by a table"
+@test "${title_table}" {
   header="\"header\":[\"header_one\",\"B\",\"C\"]"
   first_column="[\"a1\",\"a2\",\"a3\"]"
   second_column="[\"b1\",\"b2\",\"b3\"]"
@@ -189,7 +203,9 @@ image_replacement="the given string is replaced by an image"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "<w:tbl>" | grep --count "${DISPLAY_FILE}"
 }
 
-@test "With \"${BASE_COMMAND} table_as_JSON\" the given string is replaced by a table with header" {
+title_table_as_JSON="With \"${BASE_COMMAND} table_as_JSON\" the given string \
+is replaced by a table with header"
+@test "${title_table_as_JSON}" {
   header="\"header\":[\"header_one\",\"B\",\"C\"]"
   first_column="[\"a1\",\"a2\",\"a3\"]"
   second_column="[\"b1\",\"b2\",\"b3\"]"
@@ -208,7 +224,17 @@ image_replacement="the given string is replaced by an image"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count -q "header_one"
 }
 
-@test "Output of \"docxbox rpt ${arguments} nonexistent.docx\" is an ERROR message" {
+title_case_sensitive="With \"${BASE_COMMAND} lower_case_string\" the given \
+string gets replaced case sensitive"
+@test "${title_case_sensitive}" {
+  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" "text" "FooBar"
+  [ "$status" -eq 0 ]
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "Text"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "FooBar"
+}
+
+@test "Output of \"docxbox rpt ${ARGUMENTS} nonexistent.docx\" ${ERROR}" {
   run ${DOCXBOX_BINARY} rpt nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -216,7 +242,7 @@ image_replacement="the given string is replaced by an image"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox rpt ${arguments} wrong_file_type\" ${ERROR}" {
+@test "Output of \"docxbox rpt ${ARGUMENTS} wrong_file_type\" ${ERROR}" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
