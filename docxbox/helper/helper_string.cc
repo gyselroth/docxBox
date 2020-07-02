@@ -96,8 +96,8 @@ bool String::Replace(
 }
 
 void String::Remove(std::string *haystack, const std::regex &pattern) {
-  //std::smatch m;
-  //while (std::regex_search(*haystack, m, pattern))
+//  std::smatch m;
+//  while (std::regex_search(*haystack, m, pattern))
     *haystack = std::regex_replace(*haystack, pattern, "");
 }
 
