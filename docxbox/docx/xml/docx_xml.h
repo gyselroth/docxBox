@@ -41,6 +41,13 @@ class docx_xml {
 
   bool SaveXml(bool compress);
 
+  // Unique index added to node's tag, e.g. "w:p_<INDEX>"
+  // makes nodes temporarily easier distinctly identifiable
+  static void AppendIndexToNodeTag(tinyxml2::XMLElement *node, int index);
+  static bool IsIndexedTag(const char *tag);
+  void RemoveIndexesFromTags();
+  static int ExtractIndexFromTagName(const char* tag);
+
   static std::string RemoveTmpEndingFromDocxPath(
       const std::string &xml_filename);
 };
