@@ -47,6 +47,15 @@ class docx_xml_remove:docx_xml {
                               const char *lhs,
                               const char *rhs);
 
+  bool CollectTextNodesForRemoval(const char *lhs,
+                                  const char *rhs,
+                                  tinyxml2::XMLElement *node);
+
+  void OnFoundLhs(tinyxml2::XMLElement *node);
+  void OnFoundRhs(tinyxml2::XMLElement *node);
+
+  void RememberParaForRemoval(tinyxml2::XMLElement *node);
+
   // Remove paragraphs of ancestry of node from removal stack
   void PopBackAncestorsFromRemoval(tinyxml2::XMLElement* node);
 
@@ -54,7 +63,6 @@ class docx_xml_remove:docx_xml {
   void PopBackSiblingsFromRemoval(unsigned int index_min);
 
   bool RemoveNodes(std::vector<tinyxml2::XMLElement*> *nodes);
-  void RememberParaForRemoval(tinyxml2::XMLElement *node);
 };
 
 #endif  // DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_REMOVE_H_

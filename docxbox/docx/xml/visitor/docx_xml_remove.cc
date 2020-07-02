@@ -50,6 +50,7 @@ void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
                                              const char *lhs,
                                              const char *rhs) {
   if (!node || node->NoChildren()) return;
+
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
 
   if (sub_node == nullptr) return;
@@ -58,39 +59,10 @@ void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
     const char *tag = sub_node->Value();
 
     if (tag) {
-      if (0 == strcmp(tag, "w:p")
-          || 0 == strcmp(tag, "w:drawing")
-          || 0 == strcmp(tag, "w:tbl")) {
+      if (0 != strcmp(tag, "w:t")) {
         if (found_lhs_) RememberParaForRemoval(sub_node);
-      } else if (0 == strcmp(tag, "w:t")
-          && sub_node->FirstChild() != nullptr) {
-        std::string text = sub_node->GetText();
-
-        if (text.empty() || (found_lhs_ && found_rhs_)) continue;
-
-        if (!found_lhs_ && 0 == strcmp(lhs, text.c_str())) {
-          found_lhs_ = true;
-
-          AppendIndexToNodeTag(sub_node, index_t_);
-          PopBackSiblingsFromRemoval(index_t_);
-
-          nodes_to_be_removed_.push_back(sub_node);
-        } else if (!found_rhs_) {
-          if (0 == strcmp(rhs, text.c_str())) {
-            AppendIndexToNodeTag(sub_node, index_t_);
-            nodes_to_be_removed_.push_back(sub_node);
-            found_rhs_ = true;
-
-            if (!paragraphs_to_be_removed_.empty()) {
-              // Exclude paragraph containing RHS from removal
-              PopBackAncestorsFromRemoval(sub_node);
-            }
-          } else if (found_lhs_) {
-            // Collect runs (if not yet) until RHS string is found
-            AppendIndexToNodeTag(sub_node, index_t_);
-            nodes_to_be_removed_.push_back(sub_node);
-          }
-        }
+      } else /*if (sub_node->FirstChild() != nullptr)*/ {
+        if (!CollectTextNodesForRemoval(lhs, rhs, sub_node)) continue;
       }
     }
 
@@ -101,6 +73,50 @@ void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
     LocateNodesBetweenText(sub_node, lhs, rhs);
   } while (!(found_lhs_ && found_rhs_)
       && (sub_node = sub_node->NextSiblingElement()));
+}
+
+bool docx_xml_remove::CollectTextNodesForRemoval(const char *lhs,
+                                                 const char *rhs,
+                                                 tinyxml2::XMLElement *node) {
+  std::string text = node->GetText();
+
+  if ((found_lhs_ && found_rhs_) || text.empty()) return false;
+
+  if (!found_lhs_ && 0 == strcmp(lhs, text.c_str())) {
+    OnFoundLhs(node);
+  } else if (!found_rhs_) {
+    if (0 == strcmp(rhs, text.c_str())) {
+      OnFoundRhs(node);
+    } else if (found_lhs_) {
+      // Collect runs after LHS until RHS is found
+      AppendIndexToNodeTag(node, index_t_);
+      nodes_to_be_removed_.push_back(node);
+    }
+  }
+
+  return true;
+}
+
+void docx_xml_remove::OnFoundRhs(tinyxml2::XMLElement *node) {
+  found_rhs_ = true;
+
+  AppendIndexToNodeTag(node, index_t_);
+  nodes_to_be_removed_.push_back(node);
+
+
+  if (!paragraphs_to_be_removed_.empty()) {
+    // Exclude paragraph containing RHS from removal
+    PopBackAncestorsFromRemoval(node);
+  }
+}
+
+void docx_xml_remove::OnFoundLhs(tinyxml2::XMLElement *node) {
+  found_lhs_ = true;
+
+  AppendIndexToNodeTag(node, index_t_);
+  PopBackSiblingsFromRemoval(index_t_);
+
+  nodes_to_be_removed_.push_back(node);
 }
 
 void docx_xml_remove::RememberParaForRemoval(tinyxml2::XMLElement *node) {
