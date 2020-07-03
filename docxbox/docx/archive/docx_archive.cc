@@ -422,7 +422,7 @@ bool docx_archive::ViewFilesDiff() {
 bool docx_archive::ModifyMeta() {
   auto *meta_component = new meta(argc_, argv_);
 
-  if (!meta_component->InitModificationArguments()
+  if (!meta_component->InitModificationArguments(is_batch_mode_)
       || (!is_batch_mode_
           && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName()))) {
     delete meta_component;

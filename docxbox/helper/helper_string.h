@@ -24,6 +24,8 @@
 namespace helper {
 namespace String {
 
+std::string UnwrapQuotes(const std::string& str);
+
 // Check whether given string ends w/ given string
 bool EndsWith(std::string const &str, std::string const &ending);
 

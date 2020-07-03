@@ -242,7 +242,7 @@ std::string meta::FetchAttributeFromCoreXml(const char lhs_of_value[],
 
 // Explicit meta modification CLI call:
 // Validate CLI arguments and initialize rel. properties
-bool meta::InitModificationArguments() {
+bool meta::InitModificationArguments(bool is_batch_mode) {
   if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       2, "DOCX filename",
@@ -255,6 +255,8 @@ bool meta::InitModificationArguments() {
     return InitFromJson();
   }
 
+  if (is_batch_mode) argv_[3] = helper::String::UnwrapQuotes(argv_[3]);
+
   attribute_type_ = ResolveAttribute(argv_[3]);
 
   if (attribute_type_ == AttributeType::Attr_Unknown)
@@ -264,6 +266,8 @@ bool meta::InitModificationArguments() {
 
   if (!docxbox::AppArgument::IsArgumentGiven(
       argc_, 4, "Value to set attribute to")) return false;
+
+  if (is_batch_mode) argv_[4] = helper::String::UnwrapQuotes(argv_[4]);
 
   attribute_value_ = argv_[4];
 

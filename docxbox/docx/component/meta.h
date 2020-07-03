@@ -123,7 +123,7 @@ class meta {
 
   // Explicit meta modification CLI call:
   // Validate CLI arguments and initialize rel. properties
-  bool InitModificationArguments();
+  bool InitModificationArguments(bool is_batch_mode = false);
 
   bool UpsertAttribute(bool saveXml = false);
   bool UpsertAttributeInCoreXml(bool saveXml = false);

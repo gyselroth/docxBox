@@ -10,6 +10,17 @@
 
 namespace helper {
 
+// Remove leading/trailing double quotes if given
+std::string String::UnwrapQuotes(const std::string& str) {
+  uint16_t len = str.length();
+
+  return
+      len > 2
+      && StartsWith(str.c_str(), "\"") && EndsWith(str, "\"")
+        ? str.substr(1, len - 2)
+        : str;
+}
+
 // Check whether given string starts w/ given prefix
 bool String::StartsWith(const char *str, const char *prefix) {
   return 0 == strncmp(str, prefix, strlen(prefix));
