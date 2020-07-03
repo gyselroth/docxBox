@@ -72,8 +72,7 @@ bool docx_xml_replace::ReplaceInXml(std::string *xml,
   tinyxml2::XMLElement *body =
       doc_.FirstChildElement("w:document")->FirstChildElement("w:body");
 
-  // Replace unsegmented plain text,
-  // or if replacement is markup: locate runs to be replaced
+  // Replace text, if replacement is markup: locate runs to be replaced
   ReplaceOrLocateStringInXml(body, search, replacement);
 
   if (is_replacement_xml_ && !runs_to_be_replaced_.empty())
@@ -85,7 +84,8 @@ bool docx_xml_replace::ReplaceInXml(std::string *xml,
          : true;
 }
 
-// Replaces the searched string when contained within a single <w:t> node
+// Replaces the searched string
+// Pre: A single <w:t> node contains the full string (ensured via docx_xml_tidy)
 void docx_xml_replace::ReplaceOrLocateStringInXml(
     tinyxml2::XMLElement *node,
     const std::string& search,
@@ -150,70 +150,4 @@ void docx_xml_replace::ReplaceRunsByXmlElement() {
   }
 
   replacement_xml_element_->Parent()->DeleteChild(replacement_xml_element_);
-}
-
-/*  Replaces the searched string when contained in a single <w:t> tag,
- *  and also when contained "segmented", that is:
- *  spread over multiple consecutive <w:t> nodes (due to formatting).
- *
- *  Steps for replacing segmented strings:
- *  1. Replace simple (look-behind level = 0),
- *     collecting document plaintext at the same time
- *  2. When plaintext of whole XML does not contain search-string anymore: done
- *  3. Increment look-behind level
- *  4. Iterate over text nodes, detect when concatenated text from
- *     previous nodes and current contains search-string
- *  5. When search-string found:
- *        - Replace matching text segment within 1st <w:t> node
- *          of current look-behind-sequence,
- *        - Remove matching text segments from other <w:t> nodes
- *          of current look-behind-sequence
- *  6. Repeat from step 2.
- */
-void docx_xml_replace::ReplaceSegmentedStringInTextNodes(
-    tinyxml2::XMLElement *node,
-    const std::string& search,
-    const std::string& replacement
-) {
-  if (!node || node->NoChildren()) return;
-
-  if (0 == strcmp(node->Value(), "w:p")) document_text_ += "\n";
-
-  tinyxml2::XMLElement *sub_node = node->FirstChildElement();
-
-  if (sub_node == nullptr) return;
-
-  do {
-    if (!sub_node) continue;
-
-    const char *value = sub_node->Value();
-
-    if (value) {
-      if (0 == strcmp(value, "w:t")
-          && sub_node->FirstChild() != nullptr) {
-        std::string text = sub_node->GetText();
-
-        document_text_ += text;
-
-        if (!text.empty()
-            && helper::String::Contains(text, search)) {
-          amount_replaced_ +=
-              helper::String::ReplaceAll(&text, search, replacement);
-
-          sub_node->SetText(text.c_str());
-        }
-
-        continue;
-      } else if (0 == strcmp(value, "w:fldChar")) {
-        if (
-            0 == strcmp(
-                sub_node->Attribute("w:fldCharType"),
-                "begin")) document_text_ += " ";
-      } else if (0 == strcmp(value, "w:instrText")) {
-        continue;
-      }
-    }
-
-    ReplaceOrLocateStringInXml(sub_node, search, replacement);
-  } while ((sub_node = sub_node->NextSiblingElement()));
 }

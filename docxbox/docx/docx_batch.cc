@@ -91,7 +91,7 @@ bool docx_batch::ProcessStep(int index) {
   app->SetPathDocxIn(archive_->GetPathDocxIn());
   app->SetPathExtract(archive_->GetPathExtract());
 
-  if (index == commands_.size() - 1) InitFinalBatchStep(app);
+  if (index == commands_.size() - 1) InitFinalStep(app);
 
   app->Process();
 
@@ -107,7 +107,7 @@ bool docx_batch::ProcessStep(int index) {
 }
 
 // Prepare write resulting DOCX during final step of batch processing
-void docx_batch::InitFinalBatchStep(docxbox::App *app) {
+void docx_batch::InitFinalStep(docxbox::App *app) {
   app->SetIsFinalBatchStep(true);
 
   auto last_argument = archive_->GetLastArgValue();
