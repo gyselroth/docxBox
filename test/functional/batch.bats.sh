@@ -30,6 +30,12 @@ BASE_COMMAND="docxbox batch filename.docx"
   [ "docxBox Error - Missing argument: Batch commands JSON" = "${lines[0]}" ]
 }
 
+# TODO(Lucas): Add testcase batch {1:mm}
+# TODO(Lucas): Add testcase batch {1:rpt}
+# TODO(Lucas): Add testcase batch {1:rmt}
+# TODO(Lucas): Add testcase batch {1:mm,2:rpt}
+# TODO(Lucas): Add testcase batch {1:mm,2:rmt}
+
 APPENDIX="a batch sequence can be executed"
 @test "With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${APPENDIX} and the title gets changed" {
   batch="{\"1\":{\"mm\":[\"title\",\"foo\"]},\"2\":{\"rpt\":[\"bar\",\"baz\"]},\"3\":{\"rpt\":[\"qux\",{\"h1\":{\"text\":\"Quux\"}}]}}"
