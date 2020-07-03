@@ -21,7 +21,6 @@ class docx_renderer {
     ElementType_Heading3,
     ElementType_Image,
     ElementType_Link,
-    ElementType_ListOrdered,
     ElementType_ListUnordered,
     ElementType_Paragraph,
     ElementType_Table,

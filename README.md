@@ -341,7 +341,7 @@ rendering and inserting the following
 * [Image](#insert-image) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, 
   ``jpg``, ``png``, ``tif``, ``tiff``, ``wmf``)
 * [Table](#insert-table)
-* [Ordered list, unordered list](#insert-list)  
+* [Unordered list](#insert-list)  
 
 Markup specification for such elements must be given as JSON, following these
 rules: 
@@ -386,9 +386,6 @@ with the text ``Foo``:
 
 Replace string ``search`` by an unordered list:  
 ````docxbox rpt foo.docx search "{\"ul\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"````  
-
-Replace string ``search`` by an ordered list:  
-````docxbox rpt foo.docx search "{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"````
 
 
 ##### Insert image

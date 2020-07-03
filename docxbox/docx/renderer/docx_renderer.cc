@@ -18,7 +18,6 @@ docx_renderer::ElementType docx_renderer::DetectElementType(
   if (identifier == "h3") return ElementType_Heading3;
   if (identifier == "image" || identifier == "img") return ElementType_Image;
   if (identifier == "link") return ElementType_Link;
-  if (identifier == "ol") return ElementType_ListOrdered;
   if (identifier == "p") return ElementType_Paragraph;
   if (identifier == "table") return ElementType_Table;
   if (identifier == "text") return ElementType_Text;
