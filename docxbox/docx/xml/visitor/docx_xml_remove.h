@@ -6,6 +6,7 @@
 
 #include <docxbox/app/app_log.h>
 #include <docxbox/docx/xml/docx_xml.h>
+#include <docxbox/docx/xml/visitor/docx_xml_tidy.h>
 #include <docxbox/helper/helper_file.h>
 #include <docxbox/helper/helper_string.h>
 
@@ -47,17 +48,20 @@ class docx_xml_remove:docx_xml {
                                         const char *lhs,
                                         const char *rhs);
 
-  bool CollectTextNodesForRemoval(const char *lhs,
-                                  const char *rhs,
-                                  tinyxml2::XMLElement *node);
+  void CheckTextNodeForRemoval(const char *lhs,
+                               const char *rhs,
+                               tinyxml2::XMLElement *node);
 
   void OnFoundLhs(tinyxml2::XMLElement *node);
   void OnFoundRhs(tinyxml2::XMLElement *node);
 
   void RememberNodeAsParentToBeRemoved(tinyxml2::XMLElement *node);
 
-  // Remove paragraphs of ancestry of node from removal stack
+  // Remove ancestors of node from removal stack
   void PopBackAncestorsFromRemoval(tinyxml2::XMLElement* node);
+
+  // Remove node w/ given tag from parents-removal-stack
+  void PopBackParent(const char *node_tag);
 
   // Remove w:t sibling preceding w:t which contains LHS from removal stack
   void PopBackPrecedingSiblingsFromRemoval(unsigned int index_min);

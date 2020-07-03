@@ -18,6 +18,7 @@ class docx_xml {
  public:
   docx_xml(int argc, std::vector<std::string>  argv);
 
+  void SetXml(const std::string &xml);
   std::string GetXml();
 
   void SetXmlFromDoc();
@@ -32,9 +33,6 @@ class docx_xml {
   std::string document_text_;
   std::string path_xml_file_;
   std::string xml_;
- public:
-  void SetXml(const std::string &xml);
- protected:
 
   tinyxml2::XMLDocument doc_;
 

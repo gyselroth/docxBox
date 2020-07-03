@@ -77,25 +77,27 @@ void docx_xml_tidy::RemoveDispensableTags() {
   helper::String::RemoveAll(&xml_, "<w:tbl/>");
 }
 
-void docx_xml_tidy::RemoveDispensableTags(std::string &xml) {
+void docx_xml_tidy::RemoveDispensableTags(std::string *xml) {
   auto processor = new docx_xml_tidy(0, {});
-  processor->SetXml(xml);
+  processor->SetXml(*xml);
 
   processor->RemoveDispensableTags();
-  xml = processor->GetXml();
+  *xml = processor->GetXml();
 }
 
 void docx_xml_tidy::RestorePreserveSpace() {
   helper::String::ReplaceAll(&xml_, "<w:t", "<w:t xml:space=\"preserve\"");
-  helper::String::ReplaceAll(&xml_, "<w:instrText", "<w:instrText xml:space=\"preserve\"");
+  helper::String::ReplaceAll(&xml_,
+                             "<w:instrText",
+                             "<w:instrText xml:space=\"preserve\"");
 }
 
-void docx_xml_tidy::RestorePreserveSpace(std::string &xml) {
+void docx_xml_tidy::RestorePreserveSpace(std::string *xml) {
   auto processor = new docx_xml_tidy(0, {});
-  processor->SetXml(xml);
+  processor->SetXml(*xml);
 
   processor->RestorePreserveSpace();
-  xml = processor->GetXml();
+  *xml = processor->GetXml();
 }
 
 bool docx_xml_tidy::DefragmentXml() {

@@ -75,13 +75,12 @@ std::string docx_xml::RemoveTmpEndingFromDocxPath(
 
 // Tag is e.g. "w:p_<INDEX>"?
 bool docx_xml::IsIndexedTag(const char *tag) {
-  return nullptr != tag
-      && strlen(tag) >= 3 && tag[2] == 'p' && tag[3] == '_';
+  return nullptr != tag && nullptr != strchr(tag, '_');
 }
 
 void docx_xml::AppendIndexToNodeTag(tinyxml2::XMLElement *node, int index) {
   std::string tag = node->Value();
-  std::string p_tag_marked = tag + std::to_string(index);
+  std::string p_tag_marked = tag + "_" + std::to_string(index);
 
   node->SetValue(p_tag_marked.c_str());
 }

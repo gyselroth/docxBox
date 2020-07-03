@@ -23,8 +23,6 @@ int main(int argc, char **argv) {
       ? app->Process()
       : false;
 
-  delete app;
-
   // TODO(kay): return comprehensible bash error codes instead of 125
   int return_signal = success ? 0 : 125;
 
@@ -33,6 +31,8 @@ int main(int argc, char **argv) {
       true);
 
   docxbox::AppLog::Output();
+
+  delete app;
 
   return return_signal;
 }
