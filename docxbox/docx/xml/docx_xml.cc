@@ -9,6 +9,10 @@ docx_xml::docx_xml(int argc, std::vector<std::string> argv)
     : argc_(argc), argv_(std::move(argv)) {
 }
 
+void docx_xml::SetXml(const std::string &xml) {
+  xml_ = xml;
+}
+
 std::string docx_xml::GetXml() {
   return xml_;
 }
@@ -83,12 +87,8 @@ void docx_xml::AppendIndexToNodeTag(tinyxml2::XMLElement *node, int index) {
 }
 
 void docx_xml::RemoveIndexesFromTags() {
-  SetXmlFromDoc();
-
   xml_ = std::regex_replace(xml_, std::regex("(<w:[a-z])+_\\d+"), "$1");
   xml_ = std::regex_replace(xml_, std::regex("(</w:[a-z])+_\\d+"), "$1");
-
-  SetDocFromXml();
 }
 
 int docx_xml::ExtractIndexFromTagName(const char* tag) {

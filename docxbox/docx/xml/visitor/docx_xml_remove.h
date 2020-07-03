@@ -32,7 +32,7 @@ class docx_xml_remove:docx_xml {
   std::vector<tinyxml2::XMLElement*> nodes_to_be_removed_;
 
   // Paragraphs between (excluding) paragraphs containing LHS/RHS string
-  std::vector<tinyxml2::XMLElement*> paragraphs_to_be_removed_;
+  std::vector<tinyxml2::XMLElement*> parents_to_be_removed_;
 
   // Counter to temporarily mark parent (paragraph, table, drawing)
   // distinctly for comparison
@@ -43,9 +43,9 @@ class docx_xml_remove:docx_xml {
 
   int amount_removed_ = 0;
 
-  void LocateNodesBetweenText(tinyxml2::XMLElement *node,
-                              const char *lhs,
-                              const char *rhs);
+  void LocateNodesForRemovalBetweenText(tinyxml2::XMLElement *node,
+                                        const char *lhs,
+                                        const char *rhs);
 
   bool CollectTextNodesForRemoval(const char *lhs,
                                   const char *rhs,
@@ -54,13 +54,13 @@ class docx_xml_remove:docx_xml {
   void OnFoundLhs(tinyxml2::XMLElement *node);
   void OnFoundRhs(tinyxml2::XMLElement *node);
 
-  void RememberParaForRemoval(tinyxml2::XMLElement *node);
+  void RememberNodeAsParentToBeRemoved(tinyxml2::XMLElement *node);
 
   // Remove paragraphs of ancestry of node from removal stack
   void PopBackAncestorsFromRemoval(tinyxml2::XMLElement* node);
 
   // Remove w:t sibling preceding w:t which contains LHS from removal stack
-  void PopBackSiblingsFromRemoval(unsigned int index_min);
+  void PopBackPrecedingSiblingsFromRemoval(unsigned int index_min);
 
   bool RemoveNodes(std::vector<tinyxml2::XMLElement*> *nodes);
 };

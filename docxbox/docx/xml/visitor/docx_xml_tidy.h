@@ -15,14 +15,18 @@
 #include <string>
 #include <vector>
 
-class docx_xml_preprocess: public docx_xml  {
+class docx_xml_tidy: public docx_xml  {
  public:
-  docx_xml_preprocess(int argc, const std::vector<std::string>& argv);
+  docx_xml_tidy(int argc, const std::vector<std::string>& argv);
 
   bool LoadXmlTidy(const std::string& path_xml);
   bool SaveDocToXml(bool decode = true);
 
   void RemoveDispensableTags();
+  static void RemoveDispensableTags(std::string &xml);
+
+  void RestorePreserveSpace();
+  static void RestorePreserveSpace(std::string &xml);
 
   // Defragment XML via iteration over its nodes
   bool DefragmentXml();

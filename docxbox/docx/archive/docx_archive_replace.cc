@@ -127,7 +127,7 @@ bool docx_archive_replace::ReplaceText() {
 
   auto file_list = docx_file.infolist();
 
-  auto preprocessor = new docx_xml_preprocess(0, {});
+  auto preprocessor = new docx_xml_tidy(0, {});
 
   auto parser = new docx_xml_replace(argc_, argv_);
   parser->SetPathExtract(path_extract_);
@@ -222,7 +222,7 @@ bool docx_archive_replace::RemoveBetweenText() {
 
   auto file_list = docx_file.infolist();
 
-  auto preprocessor = new docx_xml_preprocess(0, {});
+  auto preprocessor = new docx_xml_tidy(0, {});
 
   auto parser = new docx_xml_remove(argc_, argv_);
 

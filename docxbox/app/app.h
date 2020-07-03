@@ -48,7 +48,7 @@ class App {
 
   bool is_batch_mode_ = false;
 
-  AppCommands *command_;
+  AppCommands *command_ = nullptr;
 
   // Override-paths to be passed-on to archive-object during batch processing
   std::string path_docx_in_;

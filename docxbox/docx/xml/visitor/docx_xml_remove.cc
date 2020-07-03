@@ -2,6 +2,7 @@
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 #include <docxbox/docx/xml/visitor/docx_xml_remove.h>
+#include "docx_xml_tidy.h"
 
 docx_xml_remove::docx_xml_remove(
     int argc, const std::vector<std::string>& argv) : docx_xml(argc, argv) {}
@@ -9,13 +10,12 @@ docx_xml_remove::docx_xml_remove(
 bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
                                                 const std::string &lhs,
                                                 const std::string &rhs) {
-  std::string xml;
-  helper::File::GetFileContents(path_xml, &xml);
+  helper::File::GetFileContents(path_xml, &xml_);
 
-  if (!helper::String::Contains(xml, "w:document")
-      || !helper::String::Contains(xml, "w:body")) return true;
+  if (!helper::String::Contains(xml_, "w:document")
+      || !helper::String::Contains(xml_, "w:body")) return true;
 
-  doc_.LoadFile(path_xml.c_str());
+  SetDocFromXml();
 
   if (doc_.ErrorID() != 0) return false;
 
@@ -26,17 +26,21 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
   found_lhs_ = false;
   found_rhs_ = false;
 
-  LocateNodesBetweenText(body, lhs.c_str(), rhs.c_str());
+  LocateNodesForRemovalBetweenText(body, lhs.c_str(), rhs.c_str());
 
   if (found_lhs_ && found_rhs_
       && (!nodes_to_be_removed_.empty()
-          || !paragraphs_to_be_removed_.empty())) {
+          || !parents_to_be_removed_.empty())) {
     amount_removed_ = 0;
 
     RemoveNodes(&nodes_to_be_removed_);
-    RemoveNodes(&paragraphs_to_be_removed_);
+    RemoveNodes(&parents_to_be_removed_);
 
+    SetXmlFromDoc();
     RemoveIndexesFromTags();
+    docx_xml_tidy::RemoveDispensableTags(xml_);
+    docx_xml_tidy::RestorePreserveSpace(xml_);
+    SetDocFromXml();
 
     return tinyxml2::XML_SUCCESS != doc_.SaveFile(path_xml.c_str(), true)
            ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
@@ -46,45 +50,41 @@ bool docx_xml_remove::RemoveBetweenStringsInXml(const std::string& path_xml,
   return true;
 }
 
-void docx_xml_remove::LocateNodesBetweenText(tinyxml2::XMLElement *node,
-                                             const char *lhs,
-                                             const char *rhs) {
-  if (!node || node->NoChildren()) return;
-
+void docx_xml_remove::LocateNodesForRemovalBetweenText(
+    tinyxml2::XMLElement *node, const char *lhs, const char *rhs) {
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
 
-  if (sub_node == nullptr) return;
+  if (nullptr == sub_node) return;
 
-  do {
+  do {  // Iterate over all sibling nodes on current level
     const char *tag = sub_node->Value();
 
-    if (tag) {
-      if (0 != strcmp(tag, "w:t")) {
-        if (found_lhs_) RememberParaForRemoval(sub_node);
-      } else /*if (sub_node->FirstChild() != nullptr)*/ {
-        if (!CollectTextNodesForRemoval(lhs, rhs, sub_node)) continue;
-      }
+    if (0 == strcmp(tag, "w:t")) {
+      if (!CollectTextNodesForRemoval(lhs, rhs, sub_node)) continue;
+    } else {
+      if (found_lhs_) RememberNodeAsParentToBeRemoved(sub_node);
     }
 
-    if (found_lhs_ && found_rhs_) break;
+    if (found_rhs_) break;
 
     ++index_t_;
 
-    LocateNodesBetweenText(sub_node, lhs, rhs);
-  } while (!(found_lhs_ && found_rhs_)
-      && (sub_node = sub_node->NextSiblingElement()));
+    // Iterate children of current node
+    LocateNodesForRemovalBetweenText(sub_node, lhs, rhs);
+  } while (!found_rhs_ && (sub_node = sub_node->NextSiblingElement()));
 }
 
 bool docx_xml_remove::CollectTextNodesForRemoval(const char *lhs,
                                                  const char *rhs,
                                                  tinyxml2::XMLElement *node) {
-  std::string text = node->GetText();
+  if ((found_lhs_ && found_rhs_)) return false;
 
-  if ((found_lhs_ && found_rhs_) || text.empty()) return false;
+  auto tmp_text = node->GetText();
+  std::string text = nullptr == tmp_text ? "" : std::string(tmp_text);
 
-  if (!found_lhs_ && 0 == strcmp(lhs, text.c_str())) {
-    OnFoundLhs(node);
-  } else if (!found_rhs_) {
+  if (!found_lhs_ && 0 == strcmp(lhs, text.c_str())) OnFoundLhs(node);
+
+  if (found_lhs_ && !found_rhs_) {
     if (0 == strcmp(rhs, text.c_str())) {
       OnFoundRhs(node);
     } else if (found_lhs_) {
@@ -104,7 +104,7 @@ void docx_xml_remove::OnFoundRhs(tinyxml2::XMLElement *node) {
   nodes_to_be_removed_.push_back(node);
 
 
-  if (!paragraphs_to_be_removed_.empty()) {
+  if (!parents_to_be_removed_.empty()) {
     // Exclude paragraph containing RHS from removal
     PopBackAncestorsFromRemoval(node);
   }
@@ -114,12 +114,12 @@ void docx_xml_remove::OnFoundLhs(tinyxml2::XMLElement *node) {
   found_lhs_ = true;
 
   AppendIndexToNodeTag(node, index_t_);
-  PopBackSiblingsFromRemoval(index_t_);
+  PopBackPrecedingSiblingsFromRemoval(index_t_);
 
   nodes_to_be_removed_.push_back(node);
 }
 
-void docx_xml_remove::RememberParaForRemoval(tinyxml2::XMLElement *node) {
+void docx_xml_remove::RememberNodeAsParentToBeRemoved(tinyxml2::XMLElement *node) {
   auto parent_tag = node->Parent()->Value();
 
   if (nullptr == parent_tag
@@ -129,7 +129,7 @@ void docx_xml_remove::RememberParaForRemoval(tinyxml2::XMLElement *node) {
   AppendIndexToNodeTag(node, index_parent_);
   ++index_parent_;
 
-  paragraphs_to_be_removed_.push_back(node);
+  parents_to_be_removed_.push_back(node);
 }
 
 // Remove paragraphs of ancestry of node from removal stack
@@ -140,12 +140,12 @@ void docx_xml_remove::PopBackAncestorsFromRemoval(tinyxml2::XMLElement* node) {
     const char *tag_parent = parent->Value();
 
     if (IsIndexedTag(tag_parent)) {
-      for (auto iter = paragraphs_to_be_removed_.begin();
-           iter != paragraphs_to_be_removed_.end(); ++iter) {
+      for (auto iter = parents_to_be_removed_.begin();
+           iter != parents_to_be_removed_.end(); ++iter) {
         const char* tag_para = (*iter)->Value();
 
         if (tag_parent == tag_para) {
-          paragraphs_to_be_removed_.erase(iter);
+          parents_to_be_removed_.erase(iter);
           break;
         }
       }
@@ -156,7 +156,8 @@ void docx_xml_remove::PopBackAncestorsFromRemoval(tinyxml2::XMLElement* node) {
 }
 
 // Remove w:t sibling preceding w:t which contains LHS from removal stack
-void docx_xml_remove::PopBackSiblingsFromRemoval(unsigned int index_min) {
+void docx_xml_remove::PopBackPrecedingSiblingsFromRemoval(
+    unsigned int index_min) {
   for (auto iter = nodes_to_be_removed_.begin();
        iter != nodes_to_be_removed_.end(); ++iter) {
     auto tag = (*iter)->Value();
@@ -166,7 +167,7 @@ void docx_xml_remove::PopBackSiblingsFromRemoval(unsigned int index_min) {
     auto index = ExtractIndexFromTagName(tag);
 
     if (index < index_min)
-      paragraphs_to_be_removed_.erase(iter);
+      parents_to_be_removed_.erase(iter);
   }
 }
 

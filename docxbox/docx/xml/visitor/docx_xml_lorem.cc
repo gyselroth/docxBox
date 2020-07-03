@@ -24,17 +24,16 @@ bool docx_xml_lorem::RandomizeAllTextInXml(const std::string& path_xml) {
 
   if (!is_document_xml && !is_header_xml) return true;
 
-  std::string xml;
-  helper::File::GetFileContents(path_xml, &xml);
+  helper::File::GetFileContents(path_xml, &xml_);
 
   if (is_document_xml) {
-    if (!helper::String::Contains(xml, "w:document")
-        || !helper::String::Contains(xml, "w:body")) return true;
+    if (!helper::String::Contains(xml_, "w:document")
+        || !helper::String::Contains(xml_, "w:body")) return true;
   } else {
-    if (!helper::String::Contains(xml, "w:hdr")) return true;
+    if (!helper::String::Contains(xml_, "w:hdr")) return true;
   }
 
-  doc_.LoadFile(path_xml.c_str());
+  SetDocFromXml();
 
   if (doc_.ErrorID() != 0) return false;
 
