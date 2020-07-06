@@ -73,8 +73,8 @@ search_values=(
 }
 
 @test "Output of ${BASE_COMMAND}\" contains files' date and time" {
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "6/18/2020"
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "10:30"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
 }
 
 long_description="contains files with the given file ending"
