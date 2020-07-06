@@ -9,7 +9,7 @@ VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
 
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: 1 errors from 1 contexts"
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
