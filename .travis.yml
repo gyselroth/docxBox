@@ -38,5 +38,6 @@ matrix:
 
         # run functional tests
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh valgrind; fi
 
 #        - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/docxbox ; fi
