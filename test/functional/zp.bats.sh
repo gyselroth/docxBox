@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -23,6 +26,8 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
   run ${DOCXBOX_BINARY} zp
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox zp directory {missing argument}\" is an error message" {
@@ -31,6 +36,8 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
   run ${DOCXBOX_BINARY} zp "${UNZIPPED_DOCX_DIRECTORY}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 title="With \"docxbox zp directory /path-to-file/filename.docx\" "
@@ -47,5 +54,13 @@ title+="a directory can be zipped into a docx"
   run ${DOCXBOX_BINARY} zp "${UNZIPPED_DOCX_DIRECTORY}" "${path_new_docx}"
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   ls test/tmp | grep -c zp_table_unordered_list_images.docx
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

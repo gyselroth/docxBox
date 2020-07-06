@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -26,25 +29,35 @@ MERGE_FORMAT="\* MERGEFORMAT"
 @test "Exit code of ${BASE_COMMAND} filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsd "${PATH_DOCX}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of ${BASE_COMMAND} {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} lsd
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "With ${BASE_COMMAND} filename.docx\" the fields in the docx are listed" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FIELD}"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FORMAT}"
+
+  check_for_valgrind_error
 }
 
 @test "With ${BASE_COMMAND} filename.docx\" the fields in the header are listed" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "MERGEFIELD  Mergefield_Header"
+
+  check_for_valgrind_error
 }
 
 @test "With ${BASE_COMMAND} filename.docx\" the fields in the footer are listed" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "MERGEFIELD  Mergefield_Footer"
+
+  check_for_valgrind_error
 }
 
 title="With \"docxbox ls filename.docx --fields\" "
@@ -52,16 +65,22 @@ title+="the fields in the docx are listed"
 @test "$title" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FIELD}"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FORMAT}"
+
+  check_for_valgrind_error
 }
 
 @test "With \"docxbox ls filename.docx -d\" the fields in the docx are listed" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -d | grep --count "${MERGE_FIELD}"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -d | grep --count "${MERGE_FORMAT}"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsd nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsd nonexistent.docx
   [ "$status" -ne 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lsd nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -76,6 +95,13 @@ title+="the fields in the docx are listed"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsd "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

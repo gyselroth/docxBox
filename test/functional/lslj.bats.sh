@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -28,6 +31,8 @@ SEARCH_RESULTS=(
   run ${DOCXBOX_BINARY} lslj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
+  
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lslj filename.docx {missing argument} ${error_message}" {
@@ -37,12 +42,15 @@ SEARCH_RESULTS=(
   run ${DOCXBOX_BINARY} lslj "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+  
+  check_for_valgrind_error
 }
 
 @test "\"docxbox lslj filename.docx searchString\" ${description}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep -c "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -50,6 +58,7 @@ SEARCH_RESULTS=(
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" -j fonts | grep -c "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -57,6 +66,7 @@ SEARCH_RESULTS=(
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" --json fonts | grep -c "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -64,6 +74,7 @@ SEARCH_RESULTS=(
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -lj fonts | grep -c "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -71,6 +82,7 @@ SEARCH_RESULTS=(
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate -j fonts | grep -c "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -78,12 +90,15 @@ SEARCH_RESULTS=(
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate --json fonts | grep -c "${i}"
+    check_for_valgrind_error
   done
 }
 
 @test "Output of \"docxbox lslj nonexistent.docx searchString\" is an error message" {
   run ${DOCXBOX_BINARY} lslj nonexistent.docx fonts
   [ "$status" -ne 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lslj nonexistent.docx fonts 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -98,6 +113,13 @@ SEARCH_RESULTS=(
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lslj "${i}" fonts 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

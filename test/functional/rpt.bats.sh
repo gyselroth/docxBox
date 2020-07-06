@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -28,6 +31,8 @@ BASE_COMMAND="docxbox rpt filename.docx"
   run ${DOCXBOX_BINARY} rpt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND} {missing arguments}\" ${ERROR}" {
@@ -36,6 +41,8 @@ BASE_COMMAND="docxbox rpt filename.docx"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 missing_argument="stringToBeReplaced {missing argument}"
@@ -43,6 +50,8 @@ missing_argument="stringToBeReplaced {missing argument}"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" toBeReplaced
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Replacement" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 ARGUMENTS="stringToBeReplaced replacementString"
@@ -50,6 +59,9 @@ appendix="the stringToBeReplaced gets replaced"
 @test "With \"${BASE_COMMAND} ${ARGUMENTS}\" ${appendix}" {
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count Dorem
 }
 
@@ -60,6 +72,9 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
 
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem "${path_docx_out}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} txt "${path_docx_out}" | grep --count Dorem
 }
 
@@ -72,6 +87,8 @@ replaced by a h1"
 
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:pStyle w:val=\"para1\"/>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para1" | grep --count "${DISPLAY_FILE}"
@@ -87,6 +104,8 @@ replaced by a h2"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:pStyle w:val=\"para2\"/>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para2" | grep --count "${DISPLAY_FILE}"
 }
@@ -100,6 +119,8 @@ replaced by a h3"
 
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:pStyle w:val=\"para3\"/>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para3" | grep --count "${DISPLAY_FILE}"
@@ -115,24 +136,11 @@ a unordered list"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" TITLE ${list}
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} cat "${PATH_DOCX_NEW}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"1\"/>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX_NEW}" "w:numPr" | grep --count "${DISPLAY_FILE}"
 }
-
-#title_ol="With \"${BASE_COMMAND} ol_as_JSON\" the given string is replaced by \
-#a ordered list"
-#@test "${title_ol}" {
-#  list="{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
-#  PATH_DOCX="test/tmp/cp_bio_assay.docx"
-#
-#  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"2\"/>"
-#
-#  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" 5NISINisi ${list}
-#  [ "$status" -eq 0 ]
-#
-#  ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"2\"/>"
-#  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "w:numPr" | grep --count -q "${DISPLAY_FILE}"
-#}
 
 title_hyperlink="With \"${BASE_COMMAND} hyperlink_as_JSON\" the given string \
 is replaced by a hyperlink"
@@ -144,6 +152,8 @@ is replaced by a hyperlink"
 
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${link}
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "</w:hyperlink>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "</w:hyperlink>" | grep --count "${DISPLAY_FILE}"
@@ -160,6 +170,8 @@ image_replacement="the given string is replaced by an image"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${image} ${image_path}
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:drawing>"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "</w:drawing>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "<w:drawing>" | grep --count "${DISPLAY_FILE}"
@@ -175,6 +187,8 @@ image_replacement="the given string is replaced by an image"
 
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${image} ${image_path}
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:drawing>"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "</w:drawing>"
@@ -199,6 +213,8 @@ replaced by a table"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${table}
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "${pattern}"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "<w:tbl>" | grep --count "${DISPLAY_FILE}"
 }
@@ -220,6 +236,8 @@ is replaced by a table with header"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${table}
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "header_one" | grep --count -q "${DISPLAY_FILE}"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count -q "header_one"
 }
@@ -230,6 +248,8 @@ string gets replaced case sensitive"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" "text" "FooBar"
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "Text"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "FooBar"
 }
@@ -238,7 +258,12 @@ string gets replaced case sensitive"
   run ${DOCXBOX_BINARY} rpt nonexistent.docx
   [ "$status" -ne 0 ]
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} rpt nonexistent.docx Lorem Dorem 2>&1 | tee "${ERR_LOG}"
+
+  check_for_valgrind_error
+
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
@@ -252,6 +277,13 @@ string gets replaced case sensitive"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} rpt "${i}" Lorem Dorem 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

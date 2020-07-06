@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -28,12 +31,16 @@ BASE_COMMAND="docxbox rpi filename.docx"
   run ${DOCXBOX_BINARY} rpi
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND} {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of image to be replaced" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 missing_argument="imageName {missingReplacementImageName}"
@@ -41,6 +48,8 @@ missing_argument="imageName {missingReplacementImageName}"
   run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of replacement image" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 appendix="an image can be replaced"
@@ -48,6 +57,8 @@ appendix="an image can be replaced"
 
   run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg "${PATH_JPEG}"
   [ "$status" -eq 0 ]
+  check_for_valgrind_error
+
   if [ ! -d test/tmp/unziped ]; then
     mkdir test/tmp/unziped;
     unzip "${PATH_DOCX}" -d test/tmp/unziped;
@@ -63,6 +74,8 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
 
   run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg "${PATH_JPEG}" "${path_docx_out}"
   [ "$status" -eq 0 ]
+  check_for_valgrind_error
+
   if [ ! -d test/tmp/unziped ]; then
     mkdir test/tmp/unziped;
     unzip test/tmp/newImage.docx -d test/tmp/unziped;
@@ -75,6 +88,7 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
   error_message="docxBox Error - Copy file failed - file not found:"
 
   ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg nonexistent.jpeg 2>&1 | tee "${ERR_LOG}"
+  check_for_valgrind_error
   cat "${ERR_LOG}" | grep --count "${error_message}"
 }
 
@@ -83,6 +97,7 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
   [ "$status" -ne 0 ]
 
   ${DOCXBOX_BINARY} rpi nonexistent.docx 2>&1 image2.jpeg "${PATH_JPEG}" | tee "${ERR_LOG}"
+  check_for_valgrind_error
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
@@ -96,6 +111,13 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} rpi "${i}" image2.jpeg "${PATH_JPEG}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

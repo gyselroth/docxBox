@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -25,11 +28,14 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   run ${DOCXBOX_BINARY} uz
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox uz nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} uz nonexistent.docx
   [ "$status" -ne 0 ]
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} uz nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -45,6 +51,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} uz "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
@@ -54,6 +61,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 
   run ${DOCXBOX_BINARY} uz test/tmp/cp_bio_assay.docx
   [ "$status" -eq 0 ]
+  check_for_valgrind_error
 
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep --invert-match "${pattern}"
 }
@@ -63,5 +71,11 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 
   if [ -d "${UNZIPPED_FOLDER}" ]; then
     rm --recursive "${UNZIPPED_FOLDER}";
+  fi
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
   fi
 }

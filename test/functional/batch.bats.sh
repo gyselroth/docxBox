@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -22,12 +25,16 @@ BASE_COMMAND="docxbox batch filename.docx"
   run ${DOCXBOX_BINARY} batch
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX file" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND} {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Batch commands JSON" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 # TODO(Lucas): Add testcase batch {1:mm}
@@ -41,12 +48,16 @@ APPENDIX="a batch sequence can be executed"
   batch="{\"1\":{\"mm\":[\"title\",\"foo\"]},\"2\":{\"rpt\":[\"bar\",\"baz\"]},\"3\":{\"rpt\":[\"qux\",{\"h1\":{\"text\":\"Quux\"}}]}}"
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}" "${batch}"
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm ${PATH_DOCX} | grep --count "title: foo"
 }
 
 @test "With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${APPENDIX} and a string can be replaced" {
   batch="{\"1\":{\"mm\":[\"title\",\"foo\"]},\"2\":{\"rpt\":[\"bar\",\"baz\"]},\"3\":{\"rpt\":[\"qux\",{\"h1\":{\"text\":\"Quux\"}}]}}"
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}" "${batch}"
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} txt ${PATH_DOCX} | grep --count "baz"
 }
@@ -55,5 +66,13 @@ APPENDIX="a batch sequence can be executed"
   batch="{\"1\":{\"mm\":[\"title\",\"foo\"]},\"2\":{\"rpt\":[\"Officia\",\"baz\"]},\"3\":{\"rpt\":[\"Lorem\",{\"h1\":{\"text\":\"Quux\"}}]}}"
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}" "${batch}"
 
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${display_file}" | grep --count "<w:pStyle w:val=\"para1\"/>"
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }
