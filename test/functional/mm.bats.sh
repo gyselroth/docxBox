@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -24,6 +27,8 @@ BASE_COMMAND="docxbox mm filename.docx"
   run ${DOCXBOX_BINARY} mm
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND} {missing argument}\" is an error message" {
@@ -32,12 +37,17 @@ BASE_COMMAND="docxbox mm filename.docx"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 title="the meta attribute \"title\" can be modified"
 @test "With \"${BASE_COMMAND} title {argument}\" ${title}" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" title "someTitle"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "title: someTitle"
 }
 
@@ -45,6 +55,9 @@ creator="the meta attribute \"creator\" can be modified"
 @test "With \"${BASE_COMMAND} creator {argument}\" ${creator}" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" creator "John Doe"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "creator: John Doe"
 }
 
@@ -54,6 +67,9 @@ last_modified_by="the meta attribute \"lastModifiedBy\" can be modified"
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" lastModifiedBy "John Doe"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
 
@@ -64,6 +80,9 @@ last_printed="the meta attribute \"lastPrinted\" can be modified"
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" lastPrinted $print_date
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
 
@@ -71,6 +90,9 @@ language="the meta attribute \"language\" can be modified"
 @test "With \"${BASE_COMMAND} language {argument}\" ${language}" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" language "de-CH"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "language: de-CH"
 }
 
@@ -80,6 +102,9 @@ created="the meta attribute \"created\" can be modified"
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" created "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
 
@@ -89,6 +114,9 @@ modified="the meta attribute \"modified\" can be modified"
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
 
@@ -96,6 +124,9 @@ modified="the meta attribute \"modified\" can be modified"
   created=$(${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "created")
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
+  [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "${created}"
 }
@@ -104,6 +135,9 @@ revision="the meta attribute \"revision\" can be changed"
 @test "With \"${BASE_COMMAND} revision {argument}\" ${revision}" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" revision "25"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
+
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "revision: 25"
 }
 
@@ -111,6 +145,7 @@ revision="the meta attribute \"revision\" can be changed"
 @test "Output of \"docxbox mm nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} mm nonexistent.docx
   [ "$status" -ne 0 ]
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} mm nonexistent.docx revision "1" 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -127,6 +162,13 @@ argument="{meta_attribute} {argument}"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lorem "${i}" revision "12" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

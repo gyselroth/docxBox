@@ -6,8 +6,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -27,6 +30,8 @@ ERROR_MESSAGE="is an error message"
   run ${DOCXBOX_BINARY} diff
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX file to compare with" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND} {missing argument}\" ${ERROR_MESSAGE}" {
@@ -36,6 +41,8 @@ ERROR_MESSAGE="is an error message"
   run ${DOCXBOX_BINARY} diff "${path_docx}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 title="Output of \"${BASE_COMMAND} otherFilename.docx {missing argument}\""
@@ -45,6 +52,8 @@ title="Output of \"${BASE_COMMAND} otherFilename.docx {missing argument}\""
   run ${DOCXBOX_BINARY} diff "${PATH_DOCX_1}" "${PATH_DOCX_2}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 description="side by side view is displayed"
@@ -57,6 +66,8 @@ description="side by side view is displayed"
   result_changed=$(${DOCXBOX_BINARY} diff "${PATH_DOCX_1}" "${path_changed_docx}" word/document.xml | wc --bytes )
   
   (( ${result_original} < ${result_changed} ))
+
+  check_for_valgrind_error
 }
 
 @test "With \"${BASE_COMMAND} changedFilename.docx -u\" a unified ${description}" {
@@ -68,14 +79,18 @@ description="side by side view is displayed"
   result_changed=$(${DOCXBOX_BINARY} diff "${PATH_DOCX_1}" "${path_changed_docx}" word/document.xml -u | wc --bytes )
 
   (( ${result_original} != ${result_changed} ))
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox diff nonexistent.docx\" is an error message" {
-  run ${DOCXBOX_BINARY} lsmj nonexistent.docx
+  run ${DOCXBOX_BINARY} diff nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} lsmj nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  ${DOCXBOX_BINARY} diff nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox diff wrongFileType\" is an error message" {
@@ -88,6 +103,13 @@ description="side by side view is displayed"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} diff "${i}" "${PATH_DOCX_1}" word/document.xml 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -25,22 +28,31 @@ APPENDIX="is the segmented plain text from given file"
   run ${DOCXBOX_BINARY} txt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" is the the plain text from given file" {
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Officia"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND} -s \" ${APPENDIX}" {
   segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" -s | wc --lines)
   non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
+  check_for_valgrind_error
+
   (( ${segmented} > ${non_segmented} ))
+
 }
 
 @test "Output of \"${BASE_COMMAND} --segments \" ${APPENDIX}" {
   segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" --segments | wc --lines)
   non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
+
+  check_for_valgrind_error
 
   (( ${segmented} > ${non_segmented} ))
 }
@@ -48,6 +60,8 @@ APPENDIX="is the segmented plain text from given file"
 @test "Output of \"docxbox txt nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} txt nonexistent.docx
   [ "$status" -ne 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} txt nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -63,6 +77,13 @@ APPENDIX="is the segmented plain text from given file"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} txt "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

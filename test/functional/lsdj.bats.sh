@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -25,20 +28,28 @@ LONG_DESCRIPTION_JSON="the fields in the docx are listed as JSON"
 @test "Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsdj {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} lsdj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "With \"${BASE_COMMAND}\" the fields in the docx are listed as JSON" {
   pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "${pattern}"
 
+  check_for_valgrind_error
+
   pattern="/word/document.xml"
   ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "${pattern}"
+
+  check_for_valgrind_error
 }
 
 longhand="--fields --json"
@@ -48,8 +59,12 @@ title+="${LONG_DESCRIPTION_JSON}"
   pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" ${longhand} | grep --count "${pattern}"
 
+  check_for_valgrind_error
+
   pattern="/word/document.xml"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" ${longhand} | grep --count "${pattern}"
+
+  check_for_valgrind_error
 }
 
 @test "With \"docxbox ls filename.docx -dj\" ${LONG_DESCRIPTION_JSON}" {
@@ -58,19 +73,26 @@ title+="${LONG_DESCRIPTION_JSON}"
 
   pattern="/word/document.xml"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -dj | grep --count "${pattern}"
+
+  check_for_valgrind_error
 }
 
 @test "With \"docxbox lsd filename.docx --json\" ${LONG_DESCRIPTION_JSON}" {
   pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" --json | grep --count "${pattern}"
 
+  check_for_valgrind_error
+
   pattern="/word/document.xml"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" --json | grep --count "${pattern}"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsdj nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsdj nonexistent.docx
   [ "$status" -ne 0 ]
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lsdj nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -85,7 +107,13 @@ title+="${LONG_DESCRIPTION_JSON}"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsdj "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
 
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
+}

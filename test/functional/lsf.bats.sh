@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -24,6 +27,8 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
 @test "Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsf {missing argument}\" is an error message" {
@@ -32,24 +37,32 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   run ${DOCXBOX_BINARY} lsf
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains ground informations" {
   run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${LONGHAND_COMMAND} --fonts\" contains ground informations" {
   run ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --fonts
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${LONGHAND_COMMAND} -f\" contains ground informations" {
   run ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -f
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
@@ -63,15 +76,20 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   for i in "${attributes[@]}"
   do
     ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains fontfile-filename" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "fontTable.xml"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains amount fonts" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "10 fonts"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains font names" {
@@ -88,15 +106,20 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   for i in "${font_names[@]}"
   do
     ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
 @test "Output of \"${BASE_COMMAND}\" can contain alternative font names" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "宋体"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains font-charSets" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "00"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains font-family" {
@@ -108,16 +131,21 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   for i in "${font_family[@]}"
   do
     ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains font-pitch" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "variable"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsf nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsf nonexistent.docx
   [ "$status" -ne 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lsf nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -133,5 +161,12 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   do
     ${DOCXBOX_BINARY} lsf "${i}" 2>&1 | tee "${ERR_LOG}"
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
+    check_for_valgrind_error
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -24,12 +27,16 @@ ERR_LOG="test/tmp/err.log"
 @test "Exit code of ${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} ls "${PATH_DOCX}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox ls {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} ls
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of ${BASE_COMMAND}\" contains files' and directories' attributes" {
@@ -42,6 +49,7 @@ ERR_LOG="test/tmp/err.log"
   for i in "${attributs[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -65,22 +73,29 @@ search_values=(
   for i in "${search_values[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
 @test "Output of ${BASE_COMMAND}\" contains amount of contained files" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count '14 files'
+
+  check_for_valgrind_error
 }
 
 @test "Output of ${BASE_COMMAND}\" contains files' date and time" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
+
+  check_for_valgrind_error
 }
 
 long_description="contains files with the given file ending"
 @test "Output of ${BASE_COMMAND} *.file-ending\" ${long_description}" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.jpeg | grep --count "image2.jpeg"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.xml | grep --count "10 files"
+
+  check_for_valgrind_error
 }
 
 @test "With \"${BASE_COMMAND} changedFile.docx\" a side-by-side comparison is displayed" {
@@ -90,6 +105,8 @@ long_description="contains files with the given file ending"
   amount_chars_diff=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | wc --bytes)
 
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
+
+  check_for_valgrind_error
 }
 
 @test "Output of ${BASE_COMMAND} nonexistent.docx\" is an error message" {
@@ -98,6 +115,8 @@ long_description="contains files with the given file ending"
 
   ${DOCXBOX_BINARY} ls nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
+
+  check_for_valgrind_error
 }
 
 @test "Output of ${BASE_COMMAND} wrong_file_type\" is an error message" {
@@ -109,6 +128,13 @@ long_description="contains files with the given file ending"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} ls "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

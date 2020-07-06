@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -24,6 +27,8 @@ ERR_LOG="test/tmp/err.log"
 
   run ${DOCXBOX_BINARY} lorem "${path_docx}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lorem {missing argument}\" is an error message" {
@@ -32,6 +37,8 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} lorem
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "With \"${BASE_COMMAND}\" text gets replaced by dummy text" {
@@ -40,6 +47,8 @@ ERR_LOG="test/tmp/err.log"
 
   run ${DOCXBOX_BINARY} lorem "${path_docx}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} txt "${path_docx}" | grep --invert-match --count "${pattern}"
 }
@@ -51,12 +60,17 @@ title+="text gets replaced by dummy text and is saved to new file"
   path_docx_2="test/tmp/lorem.docx"
 
   ${DOCXBOX_BINARY} lorem "${path_docx_1}" "${path_docx_2}"
+
+  check_for_valgrind_error
+
   ls test/tmp | grep -c lorem.docx
 }
 
 @test "Output of \"docxbox lorem nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lorem nonexistent.docx
   [ "$status" -ne 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lorem nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -72,6 +86,13 @@ title+="text gets replaced by dummy text and is saved to new file"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lorem "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

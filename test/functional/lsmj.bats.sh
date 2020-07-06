@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -27,6 +30,8 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 @test "Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsmj {missing argument}\" is an error message" {
@@ -35,43 +40,61 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
   run ${DOCXBOX_BINARY} lsmj
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains information about the xml schema" {
   pattern="\"xmlSchema\": \"http://schemas.openxmlformats.org/officeDocument/2006\""
 
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "${pattern}"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsm filename.docx --json\" ${DESCRIPTION}" {
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" --json | grep --count "${PATTERN_CREATED}"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsm filename.docx -j\" ${DESCRIPTION}" {
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" -j | grep --count "${PATTERN_CREATED}"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox ls filename.docx --meta --json\" ${DESCRIPTION}" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --meta --json | grep --count "${PATTERN_CREATED}"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox ls filename.docx -mj\" ${DESCRIPTION}" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -mj | grep --count "${PATTERN_CREATED}"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains language information" {
   pattern="\"language\": \"en-US\""
 
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "${pattern}"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains information about the revision" {
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\"revision\": \"2\""
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsmj nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsmj nonexistent.docx
   [ "$status" -ne 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lsmj nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -87,6 +110,13 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsmj "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

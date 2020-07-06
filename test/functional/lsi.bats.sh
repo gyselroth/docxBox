@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -23,6 +26,8 @@ BASE_COMMAND="docxbox lsi filename.docx"
 @test "Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsi {missing argument}\" is an error message" {
@@ -31,6 +36,8 @@ BASE_COMMAND="docxbox lsi filename.docx"
   run ${DOCXBOX_BINARY} lsi
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
@@ -43,6 +50,7 @@ BASE_COMMAND="docxbox lsi filename.docx"
   for i in "${attributes[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -50,19 +58,27 @@ BASE_COMMAND="docxbox lsi filename.docx"
   run ${DOCXBOX_BINARY} lsi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX}" | grep --count "image2.jpeg"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox ls filename.docx -i\" is contained images" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -i | grep --count "image2.jpeg"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox ls filename.docx --images\" is contained images" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --images | grep --count "image2.jpeg"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsi nonexistent.docx\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox lsi nonexistent.docx
   [ "$status" -ne 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lsi nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -77,6 +93,13 @@ BASE_COMMAND="docxbox lsi filename.docx"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsi "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

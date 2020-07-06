@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -22,14 +25,26 @@ PATH_XML="word/document.xml"
   run ${DOCXBOX_BINARY} cat
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox cat filename.docx {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} cat "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: File to be displayed" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "With \"docxbox cat filename.docx filename.xml\" the XML is displayed" {
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${PATH_XML}" | grep "^[[:space:]]\{4\}"
+
+  check_for_valgrind_error
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }

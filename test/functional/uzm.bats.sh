@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -27,11 +30,14 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
   run ${DOCXBOX_BINARY} uzm
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox uzm nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} uzm nonexistent.docx
   [ "$status" -ne 0 ]
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} uzm nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -47,12 +53,15 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} uzm "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
 
 @test "With \"docxbox uzm filename.docx\" ${DESCRIPTION}" {
   run ${DOCXBOX_BINARY} uzm "${PATH_DOCX}"
+
+  check_for_valgrind_error
 }
 
 @test "Unzipped files are located in project root" {
@@ -65,6 +74,8 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 
 @test "With \"docxbox uz filename.docx --media\" ${DESCRIPTION}" {
   run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" --media
+
+  check_for_valgrind_error
 }
 
 @test "Unzipped files are located in project root after running uz --media " {
@@ -77,6 +88,8 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 
 @test "With \"docxbox uz filename.docx -m\" ${DESCRIPTION}" {
   run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" -m
+
+  check_for_valgrind_error
 }
 
 @test "Unzipped files are located in project root after running uz -m" {
@@ -84,5 +97,11 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 
   if [ -d "${UNZIPPED_DOCX}" ]; then
     rm --recursive "${UNZIPPED_DOCX}";
+  fi
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
   fi
 }

@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -26,11 +29,14 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   run ${DOCXBOX_BINARY} uzi
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox uzi nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} uzi nonexistent.docx
   [ "$status" -ne 0 ]
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} uzi nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -46,6 +52,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} uzi "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
@@ -53,6 +60,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 @test "With of \"docxbox uzi filename.docx\" all files are unzipped" {
   run ${DOCXBOX_BINARY} uzi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
+  check_for_valgrind_error
 
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
@@ -69,6 +77,8 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" -i
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
@@ -84,6 +94,8 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" --indent
   [ "$status" -eq 0 ]
 
+  check_for_valgrind_error
+
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
@@ -92,5 +104,11 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 
   if [ -d "${UNZIPPED_FOLDER}" ]; then
     rm --recursive "${UNZIPPED_FOLDER}";
+  fi
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
   fi
 }

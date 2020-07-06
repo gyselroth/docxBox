@@ -5,8 +5,11 @@
 
 load _helper
 
+VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
- --log-file=test/tmp/mem-leak.log"
+ --log-file=${VALGRIND_LOG}"
+
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -31,6 +34,7 @@ ATTRIBUTES=(
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -38,6 +42,7 @@ ATTRIBUTES=(
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --json | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -45,6 +50,7 @@ ATTRIBUTES=(
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -j | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
@@ -68,23 +74,30 @@ search_values=(
   for i in "${search_values[@]}"
   do
     ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "${i}"
+    check_for_valgrind_error
   done
 }
 
 @test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
   ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "7/./2020"
   ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "7/3/2020"
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsj {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} lsj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
+
+  check_for_valgrind_error
 }
 
 @test "Output of \"docxbox lsj nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsj nonexistent.docx
   [ "$status" -ne 0 ]
+
+  check_for_valgrind_error
 
   ${DOCXBOX_BINARY} lsj nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -99,6 +112,13 @@ search_values=(
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsj "${i}" 2>&1 | tee "${ERR_LOG}"
+    check_for_valgrind_error
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
+}
+
+check_for_valgrind_error() {
+  if $IS_VALGRIND_TEST; then
+    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+  fi
 }
