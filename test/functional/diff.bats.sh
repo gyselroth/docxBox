@@ -84,10 +84,10 @@ description="side by side view is displayed"
 }
 
 @test "Output of \"docxbox diff nonexistent.docx\" is an error message" {
-  run ${DOCXBOX_BINARY} diff nonexistent.docx
+  run ${DOCXBOX_BINARY} diff nonexistent.docx nonexistent.docx
   [ "$status" -ne 0 ]
 
-  ${DOCXBOX_BINARY} diff nonexistent.docx 2>&1 | tee "${ERR_LOG}"
+  ${DOCXBOX_BINARY} diff nonexistent.docx nonexistent.docx word/document.xml 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 
   check_for_valgrind_error
