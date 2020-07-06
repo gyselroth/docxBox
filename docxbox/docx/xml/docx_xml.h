@@ -18,6 +18,7 @@ class docx_xml {
  public:
   docx_xml(int argc, std::vector<std::string>  argv);
 
+  void SetXml(const std::string &xml);
   std::string GetXml();
 
   void SetXmlFromDoc();
@@ -40,6 +41,13 @@ class docx_xml {
       const std::string& path_xml) const;
 
   bool SaveXml(bool compress);
+
+  // Unique index added to node's tag, e.g. "w:p_<INDEX>"
+  // makes nodes temporarily easier distinctly identifiable
+  static void AppendIndexToNodeTag(tinyxml2::XMLElement *node, int index);
+  static bool IsIndexedTag(const char *tag);
+  void RemoveIndexesFromTags();
+  static int ExtractIndexFromTagName(const char* tag);
 
   static std::string RemoveTmpEndingFromDocxPath(
       const std::string &xml_filename);

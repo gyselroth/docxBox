@@ -1,8 +1,8 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#ifndef DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_PREPROCESS_H_
-#define DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_PREPROCESS_H_
+#ifndef DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_TIDY_H_
+#define DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_TIDY_H_
 
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_file.h>
@@ -15,14 +15,18 @@
 #include <string>
 #include <vector>
 
-class docx_xml_preprocess: public docx_xml  {
+class docx_xml_tidy: public docx_xml  {
  public:
-  docx_xml_preprocess(int argc, const std::vector<std::string>& argv);
+  docx_xml_tidy(int argc, const std::vector<std::string>& argv);
 
   bool LoadXmlTidy(const std::string& path_xml);
   bool SaveDocToXml(bool decode = true);
 
   void RemoveDispensableTags();
+  static void RemoveDispensableTags(std::string *xml);
+
+  void RestorePreserveSpace();
+  static void RestorePreserveSpace(std::string *xml);
 
   // Defragment XML via iteration over its nodes
   bool DefragmentXml();
@@ -82,4 +86,4 @@ class docx_xml_preprocess: public docx_xml  {
   void DecodeXmlEntities();
 };
 
-#endif  // DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_PREPROCESS_H_
+#endif  // DOCXBOX_DOCX_XML_VISITOR_DOCX_XML_TIDY_H_

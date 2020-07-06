@@ -40,8 +40,3 @@ matrix:
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
 
 #        - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/docxbox ; fi
-
-#    - language: shell    
-#      script:
-#        # lint functional tests
-#        - bash -c 'shopt -s globstar nullglob; shellcheck **/*.sh'

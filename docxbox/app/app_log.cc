@@ -150,19 +150,23 @@ void AppLog::Output(bool delete_instance) {
 void AppLog::OutputToStdOut() {
   std::string prev_message;
 
-  int index = -1;
+  unsigned int index = 0;
 
   for (auto &message : messages_) {
-    ++index;
-
     if (message == prev_message
-        || file_only_messages_.at(index)) continue;
+        || file_only_messages_.at(index)) {
+      ++index;
+
+      continue;
+    }
 
     if (verbose_ || MessageTypeExtortsOutput(message)) {
       std::cerr << message + "\n";
 
       prev_message = message;
     }
+
+    ++index;
   }
 }
 
@@ -175,16 +179,20 @@ void AppLog::OutputToLogFile() {
   std::string out;
   std::string prev_message;
 
-  int index = -1;
+  unsigned int index = 0;
 
   for (auto &message : messages_) {
-    ++index;
+    if (message == prev_message) {
+      ++index;
 
-    if (message == prev_message) continue;
+      continue;
+    }
 
     out += timestamps_.at(index) + " - " + message.substr(8) + "\n";
 
     prev_message = message;
+
+    ++index;
   }
 
   if (!clear_log_initially_) out = "\n" + out;

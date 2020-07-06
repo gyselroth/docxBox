@@ -11,10 +11,10 @@
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
-#include <docxbox/docx/xml/visitor/docx_xml_preprocess.h>
 #include <docxbox/docx/xml/visitor/docx_xml_lorem.h>
 #include <docxbox/docx/xml/visitor/docx_xml_remove.h>
 #include <docxbox/docx/xml/visitor/docx_xml_replace.h>
+#include <docxbox/docx/xml/visitor/docx_xml_tidy.h>
 #include <docxbox/docx/xml/visitor/docx_xml_to_plaintext.h>
 #include <docxbox/docx/xml/docx_xml.h>
 #include <docxbox/helper/helper_cli.h>

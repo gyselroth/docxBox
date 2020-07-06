@@ -1,9 +1,9 @@
 // Copyright (c) 2020 gyselroth GmbH
 // Licensed under the MIT License - https://opensource.org/licenses/MIT
 
-#include <docxbox/docx/xml/visitor/docx_xml_preprocess.h>
+#include <docxbox/docx/xml/visitor/docx_xml_tidy.h>
 
-docx_xml_preprocess::docx_xml_preprocess(
+docx_xml_tidy::docx_xml_tidy(
     int argc, const std::vector<std::string>& argv) : docx_xml(argc, argv) {
 }
 
@@ -14,7 +14,7 @@ docx_xml_preprocess::docx_xml_preprocess(
 // - Remove dispensable (non textual/formatting) attributes and (empty) tags
 // - Merge textual runs (<w:r><w:t></w:t></w:r>)
 //   that repeat the same (or no) run-properties in direct succession
-bool docx_xml_preprocess::LoadXmlTidy(const std::string& path_xml) {
+bool docx_xml_tidy::LoadXmlTidy(const std::string& path_xml) {
   helper::File::GetFileContents(path_xml, &xml_);
 
   if (!helper::String::Contains(xml_, "w:document")
@@ -31,7 +31,7 @@ bool docx_xml_preprocess::LoadXmlTidy(const std::string& path_xml) {
   return doc_.ErrorID() == 0 && DefragmentXml();
 }
 
-bool docx_xml_preprocess::SaveDocToXml(bool decode) {
+bool docx_xml_tidy::SaveDocToXml(bool decode) {
   SetXmlFromDoc();
 
   if (decode) DecodeXmlEntities();
@@ -39,12 +39,12 @@ bool docx_xml_preprocess::SaveDocToXml(bool decode) {
   return helper::File::WriteToNewFile(path_xml_, xml_);
 }
 
-void docx_xml_preprocess::DecodeXmlEntities() {
+void docx_xml_tidy::DecodeXmlEntities() {
   helper::String::ReplaceAll(&xml_, "_LT_", "<");
   helper::String::ReplaceAll(&xml_, "_GT_", ">");
 }
 
-void docx_xml_preprocess::RemoveDispensableTags() {
+void docx_xml_tidy::RemoveDispensableTags() {
   if (helper::String::Contains(xml_, "<w:rFonts "))
     helper::String::Remove(&xml_, std::regex(R"(<w:rFonts w:hint="\w+"/>)"));
 
@@ -65,16 +65,42 @@ void docx_xml_preprocess::RemoveDispensableTags() {
     helper::String::Remove(
         &xml_, std::regex(R"(<w:proofErr w:type="\w+"/>)"));
 
-  // TODO(kay): re-insert into all w:t and w:instrText nodes before saving
   helper::String::ReplaceAll(&xml_, "xml:space=\"preserve\"", "");
 
   // Remove empty tags
   helper::String::Remove(&xml_, std::regex(R"(<w:([a-zA-Z]+)></w:([a-zA-Z]+)>)"));
   helper::String::RemoveAll(&xml_, "<w:rPr></w:rPr>");
   helper::String::RemoveAll(&xml_, "<w:rPr/>");
+//  helper::String::RemoveAll(&xml_, "<w:pPr></w:pPr>");
+//  helper::String::RemoveAll(&xml_, "<w:pPr/>");
+
+  helper::String::RemoveAll(&xml_, "<w:tbl/>");
 }
 
-bool docx_xml_preprocess::DefragmentXml() {
+void docx_xml_tidy::RemoveDispensableTags(std::string *xml) {
+  auto processor = new docx_xml_tidy(0, {});
+  processor->SetXml(*xml);
+
+  processor->RemoveDispensableTags();
+  *xml = processor->GetXml();
+}
+
+void docx_xml_tidy::RestorePreserveSpace() {
+  helper::String::ReplaceAll(&xml_, "<w:t", "<w:t xml:space=\"preserve\"");
+  helper::String::ReplaceAll(&xml_,
+                             "<w:instrText",
+                             "<w:instrText xml:space=\"preserve\"");
+}
+
+void docx_xml_tidy::RestorePreserveSpace(std::string *xml) {
+  auto processor = new docx_xml_tidy(0, {});
+  processor->SetXml(*xml);
+
+  processor->RestorePreserveSpace();
+  *xml = processor->GetXml();
+}
+
+bool docx_xml_tidy::DefragmentXml() {
   tinyxml2::XMLElement *body =
       doc_.FirstChildElement("w:document")->FirstChildElement("w:body");
 
@@ -86,7 +112,7 @@ bool docx_xml_preprocess::DefragmentXml() {
   return MergeNodes();
 }
 
-void docx_xml_preprocess::InitMarRunsToBeMerged() {
+void docx_xml_tidy::InitMarRunsToBeMerged() {
   run_index_ = 0;
   is_within_run_properties_ = false;
   previous_run_properties_ = {};
@@ -94,7 +120,7 @@ void docx_xml_preprocess::InitMarRunsToBeMerged() {
   is_first_run_of_section = true;
 }
 
-void docx_xml_preprocess::MarkRunsToBeMerged(tinyxml2::XMLElement *node) {
+void docx_xml_tidy::MarkRunsToBeMerged(tinyxml2::XMLElement *node) {
   if (!node || node->NoChildren()) return;
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
@@ -145,7 +171,7 @@ void docx_xml_preprocess::MarkRunsToBeMerged(tinyxml2::XMLElement *node) {
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 
-bool docx_xml_preprocess::AreLastTwoRunPropertiesIdentical() {
+bool docx_xml_tidy::AreLastTwoRunPropertiesIdentical() {
   auto amount = properties_of_runs_.size();
 
   if (amount <= 1) return false;
@@ -165,7 +191,7 @@ bool docx_xml_preprocess::AreLastTwoRunPropertiesIdentical() {
 // where the string is not the sole content: Split (into up to 3) nodes than
 // to contain the given string in a tag of its own.
 // Used as preprocessor before: rmt, rpt
-bool docx_xml_preprocess::DissectXmlNodesContaining(const std::string& str) {
+bool docx_xml_tidy::DissectXmlNodesContaining(const std::string& str) {
   texts_to_be_split_.clear();
 
   tinyxml2::XMLElement *kWDocument = doc_.FirstChildElement("w:document");
@@ -187,8 +213,8 @@ bool docx_xml_preprocess::DissectXmlNodesContaining(const std::string& str) {
 
 // Locate w:t nodes containing given needle,
 // remember their parent run's revision section ID (w:rsidRPr)
-void docx_xml_preprocess::LocateNodesContaining(tinyxml2::XMLElement *node,
-                                                const std::string &str) {
+void docx_xml_tidy::LocateNodesContaining(tinyxml2::XMLElement *node,
+                                          const std::string &str) {
   if (!node || node->NoChildren()) return;
 
   tinyxml2::XMLElement *sub_node = node->FirstChildElement();
@@ -230,7 +256,7 @@ void docx_xml_preprocess::LocateNodesContaining(tinyxml2::XMLElement *node,
   } while ((sub_node = sub_node->NextSiblingElement()));
 }
 
-bool docx_xml_preprocess::MergeNodes() {
+bool docx_xml_tidy::MergeNodes() {
   SetXmlFromDoc();
 
   helper::String::Remove(
@@ -250,7 +276,7 @@ bool docx_xml_preprocess::MergeNodes() {
   return true;
 }
 
-bool docx_xml_preprocess::SplitNodes(const char *str) {
+bool docx_xml_tidy::SplitNodes(const char *str) {
   int index = 0;
 
   for (tinyxml2::XMLElement *node : texts_to_be_split_) {
@@ -279,7 +305,7 @@ bool docx_xml_preprocess::SplitNodes(const char *str) {
   return true;
 }
 
-std::string docx_xml_preprocess::RenderSplitAfter(
+std::string docx_xml_tidy::RenderSplitAfter(
     const char *str, const std::string &node_text, int index) const {
   return std::string(str)
             + "_LT_/w:t_GT__LT_/w:r_GT_"
@@ -289,7 +315,7 @@ std::string docx_xml_preprocess::RenderSplitAfter(
               + node_text.substr(strlen(str));
 }
 
-std::string docx_xml_preprocess::RenderSplitBefore(
+std::string docx_xml_tidy::RenderSplitBefore(
     const char *str, const std::string &node_text, int index) const {
   return node_text.substr(0, node_text.length() - strlen(str))
       + "_LT_/w:t_GT__LT_/w:r_GT_"
@@ -299,7 +325,7 @@ std::string docx_xml_preprocess::RenderSplitBefore(
       + str;
 }
 
-std::string docx_xml_preprocess::RenderSplitAround(
+std::string docx_xml_tidy::RenderSplitAround(
     const char *str, const std::string &node_text, int index) const {
   int offset_str = node_text.find(str);
 
@@ -318,7 +344,7 @@ std::string docx_xml_preprocess::RenderSplitAround(
           + node_text.substr(offset_str + strlen(str));
 }
 
-std::string docx_xml_preprocess::RenderRunProperties(int index) const {
+std::string docx_xml_tidy::RenderRunProperties(int index) const {
   auto properties = properties_of_runs_.at(index);
 
   if (properties.empty()) return "";

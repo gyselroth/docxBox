@@ -27,14 +27,10 @@ std::string docx_renderer_delegate::RenderMarkupFromJson(
       markup = RenderImage(json, &markup);
       break;
     case docx_renderer::ElementType_Link:
-      // TODO(kay): add differentiation among links to URL and bookmark
       markup = RenderHyperlink(json, &markup);
       break;
     case docx_renderer::ElementType_ListUnordered:
-      markup = RenderList(false, json, &markup);
-      break;
-    case docx_renderer::ElementType_ListOrdered:
-      markup = RenderList(true, json, &markup);
+      markup = RenderList(json, &markup);
       break;
     case docx_renderer::ElementType_Paragraph:
       markup = RenderParagraph(json, &markup);
@@ -117,12 +113,11 @@ std::string &docx_renderer_delegate::RenderParagraph(const std::string &json,
   return *markup;
 }
 
-std::string &docx_renderer_delegate::RenderList(bool is_ordered,
-                                                const std::string &json,
+std::string &docx_renderer_delegate::RenderList(const std::string &json,
                                                 std::string *markup) {
   auto renderer = new docx_renderer_list(path_extract_, json);
 
-  *markup = renderer->Render(is_ordered);
+  *markup = renderer->Render();
   replacement_xml_root_tag_ = renderer->generic_root_tag_;
 
   delete renderer;

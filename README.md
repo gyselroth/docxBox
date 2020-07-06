@@ -341,7 +341,7 @@ rendering and inserting the following
 * [Image](#insert-image) (formats: ``bmp``, ``emg``, ``gif``, ``jpeg``, 
   ``jpg``, ``png``, ``tif``, ``tiff``, ``wmf``)
 * [Table](#insert-table)
-* [Ordered list, unordered list](#insert-list)  
+* [Unordered list](#insert-list)  
 
 Markup specification for such elements must be given as JSON, following these
 rules: 
@@ -386,9 +386,6 @@ with the text ``Foo``:
 
 Replace string ``search`` by an unordered list:  
 ````docxbox rpt foo.docx search "{\"ul\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"````  
-
-Replace string ``search`` by an ordered list:  
-````docxbox rpt foo.docx search "{\"ol\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"````
 
 
 ##### Insert image
@@ -761,6 +758,7 @@ Roadmap
 -------
 
 * v1.0.0: Ensure all templating options work and output is microsoft word compatible
+* v1.0.0: Add HTTP/s server mode (make usable as local web service)
 * v1.1.0: Libre-Office compatible appending of two DOCX files into a single one 
   (by XML appending, instead of adding sub-documents) 
 
@@ -794,7 +792,6 @@ docxBox was built using the following third party libraries and tools:
 | [Cppcheck](http://cppcheck.sourceforge.net/)                    | Static analysis tool for C/C++ code                                        | [GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.html)                         |      
 | [cpplint](https://github.com/cpplint/cpplint)                   | Static code checker for C++                                                | [BSD-3 Clause](https://opensource.org/licenses/BSD-3-Clause)                                              |      
 | [GCC](https://gcc.gnu.org)                                      | GCC, the GNU Compiler Collection                                           | [GNU General Public License version 3](https://gcc.gnu.org/onlinedocs/libstdc++/manual/appendix_gpl.html) |      
-| [ShellCheck](https://github.com/koalaman/shellcheck)            | A static analysis tool for shell scripts                              | [GNU General Public License version 3](https://gcc.gnu.org/onlinedocs/libstdc++/manual/appendix_gpl.html) |      
 | [Travis CI](https://travis-ci.org)                              | Hosted Continuous Integration Service                                      | [MIT License](https://opensource.org/licenses/MIT)                                                        |
 | [Valgrind](https://valgrind.org)                                | System for debugging and profiling Linux programs                          | [GNU General Public License, version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)           |
 

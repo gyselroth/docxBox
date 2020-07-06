@@ -48,7 +48,7 @@ class docx_batch {
   bool ProcessStep(int index);
 
   // Prepare write resulting DOCX during final step of batch processing
-  void InitFinalBatchStep(docxbox::App *app);
+  void InitFinalStep(docxbox::App *app);
 };
 
 #endif  // DOCXBOX_DOCX_DOCX_BATCH_H_

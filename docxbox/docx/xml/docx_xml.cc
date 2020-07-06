@@ -9,6 +9,10 @@ docx_xml::docx_xml(int argc, std::vector<std::string> argv)
     : argc_(argc), argv_(std::move(argv)) {
 }
 
+void docx_xml::SetXml(const std::string &xml) {
+  xml_ = xml;
+}
+
 std::string docx_xml::GetXml() {
   return xml_;
 }
@@ -67,4 +71,29 @@ std::string docx_xml::RemoveTmpEndingFromDocxPath(
 
   return xml_filename.substr(0, offset_docx_ending) + ".docx"
       + xml_filename.substr(offset_slash_after_docx);
+}
+
+// Tag is e.g. "w:p_<INDEX>"?
+bool docx_xml::IsIndexedTag(const char *tag) {
+  return nullptr != tag && nullptr != strchr(tag, '_');
+}
+
+void docx_xml::AppendIndexToNodeTag(tinyxml2::XMLElement *node, int index) {
+  std::string tag = node->Value();
+  std::string p_tag_marked = tag + "_" + std::to_string(index);
+
+  node->SetValue(p_tag_marked.c_str());
+}
+
+void docx_xml::RemoveIndexesFromTags() {
+  xml_ = std::regex_replace(xml_, std::regex("(<w:[a-z])+_\\d+"), "$1");
+  xml_ = std::regex_replace(xml_, std::regex("(</w:[a-z])+_\\d+"), "$1");
+}
+
+int docx_xml::ExtractIndexFromTagName(const char* tag) {
+  auto parts = helper::String::Explode(std::string(tag), '_');
+
+  if (parts.size() <= 1) return -1;
+
+  return std::stoi(parts[1]);
 }

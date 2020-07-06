@@ -38,10 +38,6 @@ class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
   // Replacement can be (plain)textual or XML markup
   bool is_replacement_xml_ = false;
 
-  // How many previous (tags containing text)
-  // nodes to look behind during current replacement run?
-  int segments_look_behind_ = 0;
-
   // When replacing text by XML, the resp. parent nodes
   // (having child-nodes containing the text) must be replaced
   std::vector<tinyxml2::XMLElement *> runs_to_be_replaced_;
@@ -51,18 +47,11 @@ class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
 
   tinyxml2::XMLElement *replacement_xml_element_;
 
-  // Nodes stack, for when replacing text that is contained segmented
-  std::vector<tinyxml2::XMLElement *> previous_text_nodes_;
-
   int amount_replaced_ = 0;
 
   void ReplaceOrLocateStringInXml(tinyxml2::XMLElement *node,
                                   const std::string &search,
                                   const std::string &replacement);
-
-  void ReplaceSegmentedStringInTextNodes(tinyxml2::XMLElement *node,
-                                         const std::string &search,
-                                         const std::string &replacement);
 
   void ReplaceRunsByXmlElement();
 };

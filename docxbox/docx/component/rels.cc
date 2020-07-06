@@ -64,13 +64,6 @@ bool rels::AddRelationsAndReferences(
     *hyperlink_relationship_id = AddHyperlinkRelation(replacement);
 
     if ((*hyperlink_relationship_id).empty()) return false;
-  } else if (render_type == docx_renderer::ElementType_ListOrdered
-    /*|| render_type == docx_renderer::ElementType_ListUnordered*/  ) {
-    std::string path_extract_absolute =
-        path_working_dir_ + "/" + path_extract_;
-
-    if (!contentTypes::AddOverrideNumberingReference(path_extract_absolute))
-      return false;
   }
 
   return true;
