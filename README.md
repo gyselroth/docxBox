@@ -31,7 +31,7 @@ CLI tool for Word DOCX templating and analysis.
         + [Insert image](#insert-image)
         + [Insert list](#insert-list)
         + [Insert new table](#insert-new-table)
-        + [Insert text into existing table](#insert-text-into-existing-table)
+      + [Insert text into existing table](#insert-text-into-existing-table)
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
@@ -450,7 +450,7 @@ Replace ``search`` by table:
 ````docxbox rpt foo.docx search "{\"table\":{\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
 
 
-#### Insert text into existing table
+### Insert text into existing table
 
 ``stv`` inserts values (and cells if needed) into an existing table, starting at 
 1st cell of given row. If there are less columns in the row than values given,
