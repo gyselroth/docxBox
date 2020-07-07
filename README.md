@@ -30,7 +30,8 @@ CLI tool for Word DOCX templating and analysis.
         + [Insert hyperlink](#insert-hyperlink) 
         + [Insert image](#insert-image)
         + [Insert list](#insert-list)
-        + [Insert table](#insert-table)
+        + [Insert new table](#insert-new-table)
+        + [Insert text into existing table](#insert-text-into-existing-table)
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
@@ -414,7 +415,7 @@ When inserting a new image file, it must be given as additional argument:
 ````docxbox rpt foo.docx search "{\"image\":{\"size\":[2438400,1828800]}}" images/ex1.jpg````
 
 
-##### Insert table
+##### Insert new table
 
 To replace text by a newly rendered table like:
 
