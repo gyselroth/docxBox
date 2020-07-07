@@ -714,6 +714,9 @@ docxBox can optionally be configured using the following environment variables:
 | ``docxBox_verbose``            | ``0`` = Only most relevant notifications, if not disabled, are output to stdout | ``0``      |
 |                                | ``1`` = If enabled, all modification notifications are output to stdout         |            |
 
+**Example:**   
+Export variable to the environment docxBox runs in: ``export docxBox_verbose=1``
+
 
 Build Instructions
 ------------------
