@@ -252,6 +252,7 @@ string gets replaced case sensitive"
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "Text"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "FooBar"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count --invert-match "text"
 }
 
 @test "Output of \"docxbox rpt ${ARGUMENTS} nonexistent.docx\" ${ERROR}" {

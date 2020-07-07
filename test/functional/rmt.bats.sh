@@ -124,11 +124,15 @@ rightHandString\" removes text between and including given strings"
 @test "Removing strings at the end of a file" {
   pattern="Bold text passages are great"
 
+  before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
+
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "great"
 
   check_for_valgrind_error
 
-  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count --invert-match "${pattern}"
+  after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
+
+  (( before_rmt = after_rmt ))
 }
 
 @test "Trying to remove strings at the end of a file with a nonexistent string" {
