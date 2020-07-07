@@ -23,6 +23,7 @@ matrix:
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update -qq; fi
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq bats; fi
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install build-essential; fi
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install valgrind; fi
       script:
         # build docxBox
         - cmake CMakeLists.txt && make
@@ -38,5 +39,6 @@ matrix:
 
         # run functional tests
         - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh; fi
+        - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./test.sh valgrind; fi
 
 #        - if [ "$TRAVIS_OS_NAME" = "osx" ]; then ./bin/mac/docxbox ; fi
