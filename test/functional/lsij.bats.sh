@@ -70,7 +70,7 @@ DESCRIPTION="are contained images as JSON"
 }
 
 @test "Output of \"docxbox lsij nonexistent.docx\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsij nonexistent.docx
+  run ${DOCXBOX_BINARY} lsij nonexistent.docx
   [ "$status" -ne 0 ]
 
   check_for_valgrind_error

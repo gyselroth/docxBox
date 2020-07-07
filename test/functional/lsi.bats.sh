@@ -49,7 +49,7 @@ BASE_COMMAND="docxbox lsi filename.docx"
 
   for i in "${attributes[@]}"
   do
-    ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "${i}"
+    ${DOCXBOX_BINARY} lsi "${PATH_DOCX}" | grep --count "${i}"
     check_for_valgrind_error
   done
 }
@@ -75,7 +75,7 @@ BASE_COMMAND="docxbox lsi filename.docx"
 }
 
 @test "Output of \"docxbox lsi nonexistent.docx\" is an error message" {
-  run "$BATS_TEST_DIRNAME"/docxbox lsi nonexistent.docx
+  run ${DOCXBOX_BINARY} lsi nonexistent.docx
   [ "$status" -ne 0 ]
 
   check_for_valgrind_error
