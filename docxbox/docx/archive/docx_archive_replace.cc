@@ -215,8 +215,12 @@ bool docx_archive_replace::RemoveBetweenText() {
   std::string lhs = argv_[3];
   std::string rhs = argv_[4];
 
-  if (!is_batch_mode_
-      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (is_batch_mode_) {
+    lhs = helper::String::UnwrapQuotes(lhs);
+    rhs = helper::String::UnwrapQuotes(rhs);
+  } else if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) {
+    return false;
+  }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
