@@ -23,6 +23,7 @@ CLI tool for Word DOCX templating and analysis.
       + [Modify meta data](#modify-meta-data)
       + [Replace image](#replace-image)
       + [Replace text](#replace-text)
+      + [Insert text into existing table](#insert-text-into-existing-table)
       + [Replace by markup](#replace-by-markup)
         + [Insert heading](#insert-heading)
         + [Insert text](#insert-text)
@@ -31,7 +32,6 @@ CLI tool for Word DOCX templating and analysis.
         + [Insert image](#insert-image)
         + [Insert list](#insert-list)
         + [Insert new table](#insert-new-table)
-      + [Insert text into existing table](#insert-text-into-existing-table)
       + [Remove content between text](#remove-content-between-text)
       + [Set field value: Merge fields, generic fields](#set-field-value-merge-fields-generic-fields)
       + [Randomize document text](#randomize-document-text)
@@ -329,6 +329,22 @@ Replace all (case-sensitive) occurrences of given string in DOCX text:
 ````docxbox rpt foo.docx old new new.docx```` creates a new file new.docx  
 
 
+#### Insert text into existing table
+
+``stv`` inserts values (and cells if needed) into an existing table, starting at 
+1st cell of given row. If there are less columns in the row than values given,
+more rows are added after the row.
+
+This is useful for maintaining a specific table style (borders, coloring, font, 
+etc.) when rendering dynamic documents from DOCX templates. 
+
+**Example:** Fill/Insert four cells starting w/ second row of first table in 
+document:  
+````docxbox stv foo.docx {"table":1,"row":2,"values":["foo","bar","baz","qux"]}````  
+
+**Note:** Table and rows are indexed starting w/ 1 (not 0).
+
+
 #### Replace by markup
 
 Moreover [replacing text](#replace-text) and 
@@ -448,22 +464,6 @@ the table specification as JSON looks like:
 
 Replace ``search`` by table:    
 ````docxbox rpt foo.docx search "{\"table\":{\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
-
-
-### Insert text into existing table
-
-``stv`` inserts values (and cells if needed) into an existing table, starting at 
-1st cell of given row. If there are less columns in the row than values given,
-more rows are added after the row.
-
-This is useful for maintaining a specific table style (borders, coloring, font, 
-etc.) when rendering dynamic documents from DOCX templates. 
-
-**Example:** Fill/Insert four cells starting w/ second row of first table in 
-document:  
-````docxbox stv foo.docx {"table":1,"row":2,"values":["foo","bar","baz","qux"]}````  
-
-**Note:** Table and rows are indexed starting w/ 1 (not 0).
 
 
 #### Remove content between text
