@@ -108,8 +108,12 @@ bool docx_archive_replace::ReplaceText() {
   std::string image_relationship_id;
   std::string hyperlink_relationship_id;
 
-  if (!is_batch_mode_
-      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
+  if (is_batch_mode_) {
+    search = helper::String::UnwrapQuotes(search);
+    replacement = helper::String::UnwrapQuotes(replacement);
+  } else if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) {
+    return false;
+  }
 
   auto *kPRels = new rels(argc_, argv_, path_working_dir_, path_extract_);
 
