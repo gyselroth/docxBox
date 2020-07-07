@@ -68,9 +68,11 @@ and a string can be replaced with the \"rpt\" command"
 
   check_for_valgrind_error
 
-  bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX} | wc --bytes)
+  ${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | grep --count "FooBar"
 
-  (( bytes_before_batch > bytes_after_batch ))
+  bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --bytes)
+
+  (( bytes_before_batch < bytes_after_batch ))
 }
 
 title_rmt="Case 5: With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${APPENDIX} \
