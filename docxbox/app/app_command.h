@@ -37,6 +37,7 @@ class AppCommands {
     Command_ReplaceImage,
     Command_ReplaceText,
     Command_SetFieldValue,
+    Command_SetTableValues,
     Command_Unzip,
     Command_UnzipAndIndentXml,
     Command_UnzipMedia,

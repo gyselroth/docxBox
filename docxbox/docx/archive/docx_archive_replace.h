@@ -11,6 +11,7 @@
 #include <docxbox/docx/component/meta.h>
 #include <docxbox/docx/renderer/contentType/docx_renderer_table.h>
 #include <docxbox/docx/xml/contentType/docx_xml_field.h>
+#include <docxbox/docx/xml/contentType/docx_xml_table.h>
 #include <docxbox/docx/xml/visitor/docx_xml_lorem.h>
 #include <docxbox/docx/xml/visitor/docx_xml_remove.h>
 #include <docxbox/docx/xml/visitor/docx_xml_replace.h>
@@ -41,6 +42,8 @@ class docx_archive_replace : public docx_archive {
   bool ReplaceAllTextByLoremIpsum();
 
   bool SetFieldValue();
+
+  bool SetTableValues();
 
  private:
   void InitPathDocxOutForReplaceText(std::string *path_docx_out,

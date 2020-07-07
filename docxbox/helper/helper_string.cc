@@ -86,6 +86,39 @@ bool String::Contains(const std::string &haystack, const std::string& needle) {
   return std::string::npos != haystack.find(needle);
 }
 
+int String::SubStrCount(const std::string &haystack,
+                        const std::string& needle,
+                        size_t offset) {
+  unsigned long len_needle = needle.length();
+
+  int occurrences = 0;
+
+  while ((offset = haystack.find(needle, offset )) != std::string::npos) {
+    ++ occurrences;
+    offset += len_needle;
+  }
+  
+  return occurrences;
+}
+
+int String::FindNthOccurrence(const std::string &haystack,
+                              const std::string& needle,
+                              int n,
+                              size_t offset) {
+  int len_haystack = haystack.length();
+  int count = 0;
+
+  while (count < n && offset < len_haystack) {
+    offset = haystack.find(needle, offset);
+
+    if (offset == std::string::npos) return -1;
+
+    ++count;
+  }
+
+  return offset;
+}
+
 bool String::IsWhiteSpace(const std::string &str) {
   for (char c : str) if (c != ' ') return false;
 

@@ -46,6 +46,15 @@ bool Matches(const std::string &subject, const std::string &pattern);
 extern bool Contains(const std::string &haystack, const char *needle);
 extern bool Contains(const std::string &haystack, const std::string& needle);
 
+extern int SubStrCount(const std::string &haystack,
+                       const std::string& needle,
+                       size_t offset = 0);
+
+extern int FindNthOccurrence(const std::string &haystack,
+                             const std::string& needle,
+                             int n,
+                             size_t offset = 0);
+
 extern bool IsWhiteSpace(const std::string &str);
 
 extern void Remove(std::string *haystack, const std::regex &pattern);

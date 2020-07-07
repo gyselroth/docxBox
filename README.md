@@ -449,6 +449,22 @@ Replace ``search`` by table:
 ````docxbox rpt foo.docx search "{\"table\":{\"header\":[\"A\",\"B\",\"C\"],\"content\":[[\"a1\",\"a2\",\"a3\"],[\"b1\",\"b2\",\"b3\"],[\"c1\",\"c2\",\"c3\"]]}}"````
 
 
+#### Insert text into existing table
+
+``stv`` inserts values (and cells if needed) into an existing table, starting at 
+1st cell of given row. If there are less columns in the row than values given,
+more rows are added after the row.
+
+This is useful for maintaining a specific table style (borders, coloring, font, 
+etc.) when rendering dynamic documents from DOCX templates. 
+
+**Example:** Fill/Insert four cells starting w/ second row of first table in 
+document:  
+````docxbox stv foo.docx {"table":1,"row":2,"values":["foo","bar","baz","qux"]}````  
+
+**Note:** Table and rows are indexed starting w/ 1 (not 0).
+
+
 #### Remove content between text
 
 Remove content between (and including) given strings (``left`` and ``right``):    

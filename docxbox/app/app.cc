@@ -290,6 +290,9 @@ bool App::ProcessReplace(AppCommands::Command command) {
     case AppCommands::Command_SetFieldValue:  // sfv
       result = docx_archive->SetFieldValue();
       break;
+    case AppCommands::Command_SetTableValues:  // stv
+      result = docx_archive->SetTableValues();
+      break;
     case AppCommands::Command_Invalid:
     default:AppHelp::PrintUnknownArgumentMessage(argv_[1]);
       result = false;

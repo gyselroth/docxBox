@@ -62,6 +62,7 @@ add_executable(docxbox
         docxbox/docx/xml/component/docx_xml_rels.cc
         docxbox/docx/xml/component/docx_xml_styles.cc
         docxbox/docx/xml/contentType/docx_xml_field.cc
+        docxbox/docx/xml/contentType/docx_xml_table.cc
         docxbox/docx/xml/visitor/docx_xml_tidy.cc
         docxbox/docx/xml/visitor/docx_xml_lorem.cc
         docxbox/docx/xml/visitor/docx_xml_to_plaintext.cc
