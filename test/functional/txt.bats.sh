@@ -24,7 +24,7 @@ ERR_LOG="test/tmp/err.log"
 BASE_COMMAND="docxbox txt filename.docx"
 APPENDIX="is the segmented plain text from given file"
 
-@test "Output of \"docxbox txt {missing argument}\" is an error message" {
+@test "Case 1: Output of \"docxbox txt {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} txt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
@@ -32,13 +32,13 @@ APPENDIX="is the segmented plain text from given file"
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" is the the plain text from given file" {
+@test "Case 2: Output of \"${BASE_COMMAND}\" is the the plain text from given file" {
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Officia"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND} -s \" ${APPENDIX}" {
+@test "Case 3: Output of \"${BASE_COMMAND} -s \" ${APPENDIX}" {
   segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" -s | wc --lines)
   non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
@@ -48,7 +48,7 @@ APPENDIX="is the segmented plain text from given file"
 
 }
 
-@test "Output of \"${BASE_COMMAND} --segments \" ${APPENDIX}" {
+@test "Case 4: Output of \"${BASE_COMMAND} --segments \" ${APPENDIX}" {
   segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" --segments | wc --lines)
   non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
@@ -57,7 +57,7 @@ APPENDIX="is the segmented plain text from given file"
   (( ${segmented} > ${non_segmented} ))
 }
 
-@test "Output of \"docxbox txt nonexistent.docx\" is an error message" {
+@test "Case 5: Output of \"docxbox txt nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} txt nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -67,7 +67,7 @@ APPENDIX="is the segmented plain text from given file"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox txt wrong_file_type\" is an error message" {
+@test "Case 6: Output of \"docxbox txt wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"

@@ -32,7 +32,7 @@ title_one_missing_argument="Case 1: Output of \"docxbox batch \
   check_for_valgrind_error
 }
 
-title_two_missing_arguments="Case 2:Output of \"${BASE_COMMAND} \
+title_two_missing_arguments="Case 2: Output of \"${BASE_COMMAND} \
 {missing argument}\" is an error message"
 @test "${title_two_missing_arguments}" {
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}"

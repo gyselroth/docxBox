@@ -36,14 +36,14 @@ SEARCH_RESULTS=(
 
 REGEX_RESULT="docProps/core.xml"
 
-@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" fonts
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsl {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox lsl {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} lsl
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -51,7 +51,7 @@ REGEX_RESULT="docProps/core.xml"
   check_for_valgrind_error
 }
 
-title="Output of \"docxbox lsl filename.docx {missing argument}\" "
+title="Case 3: Output of \"docxbox lsl filename.docx {missing argument}\" "
 title+="is an error message"
 @test "${title}" {
   pattern="docxBox Error - Missing argument: "
@@ -64,7 +64,7 @@ title+="is an error message"
   check_for_valgrind_error
 }
 
-@test "\"${BASE_COMMAND}\" ${DESCRIPTION}" {
+@test "Case 4: \"${BASE_COMMAND}\" ${DESCRIPTION}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" fonts | grep --count "${i}"
@@ -72,7 +72,7 @@ title+="is an error message"
   done
 }
 
-@test "\"docxbox ls filename.docx -l searchString\" ${DESCRIPTION}" {
+@test "Case 4: \"docxbox ls filename.docx -l searchString\" ${DESCRIPTION}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -l fonts | grep --count "${i}"
@@ -80,7 +80,7 @@ title+="is an error message"
   done
 }
 
-@test "\"docxbox ls filename.docx --locate searchString\" ${DESCRIPTION}" {
+@test "Case 5: \"docxbox ls filename.docx --locate searchString\" ${DESCRIPTION}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" --locate fonts | grep --count "${i}"
@@ -88,25 +88,25 @@ title+="is an error message"
   done
 }
 
-@test "With \"docxbox lsl filename.docx REGEX\" ${REGEX_DESCRIPTION}" {
+@test "Case 6: With \"docxbox lsl filename.docx REGEX\" ${REGEX_DESCRIPTION}" {
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "${REGEX}" | grep --count ${REGEX_RESULT}
 
   check_for_valgrind_error
 }
 
-@test "With \"docxbox ls filename.docx -l REGEX\" ${REGEX_DESCRIPTION}" {
+@test "Case 7: With \"docxbox ls filename.docx -l REGEX\" ${REGEX_DESCRIPTION}" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -l "${REGEX}" | grep --count ${REGEX_RESULT}
 
   check_for_valgrind_error
 }
 
-@test "With \"docxbox ls filename.docx --locate REGEX\" ${REGEX_DESCRIPTION}" {
+@test "Case 8: With \"docxbox ls filename.docx --locate REGEX\" ${REGEX_DESCRIPTION}" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate "${REGEX}" | grep --count ${REGEX_RESULT}
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsl nonexistent.docx searchString\" is an error message" {
+@test "Case 9: Output of \"docxbox lsl nonexistent.docx searchString\" is an error message" {
   run ${DOCXBOX_BINARY} lsl nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
@@ -116,7 +116,7 @@ title+="is an error message"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox lsl wrong_file_type\" is an error message" {
+@test "Case 10: Output of \"docxbox lsl wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

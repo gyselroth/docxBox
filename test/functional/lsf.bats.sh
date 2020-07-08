@@ -24,14 +24,14 @@ ERR_LOG="test/tmp/err.log"
 BASE_COMMAND="docxbox lsf filename.docx"
 LONGHAND_COMMAND="docxbox ls filename.docx"
 
-@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsf {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox lsf {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} lsf
@@ -41,7 +41,7 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains ground informations" {
+@test "Case 3: Output of \"${BASE_COMMAND}\" contains ground informations" {
   run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
@@ -49,7 +49,7 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"${LONGHAND_COMMAND} --fonts\" contains ground informations" {
+@test "Case 4: Output of \"${LONGHAND_COMMAND} --fonts\" contains ground informations" {
   run ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --fonts
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
@@ -57,7 +57,7 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"${LONGHAND_COMMAND} -f\" contains ground informations" {
+@test "Case 5: Output of \"${LONGHAND_COMMAND} -f\" contains ground informations" {
   run ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -f
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
@@ -65,7 +65,7 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
+@test "Case 6: Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
   attributes=(
   "Font"
   "AltName"
@@ -80,19 +80,19 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   done
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains fontfile-filename" {
+@test "Case 7: Output of \"${BASE_COMMAND}\" contains fontfile-filename" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "fontTable.xml"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains amount fonts" {
+@test "Case 8: Output of \"${BASE_COMMAND}\" contains amount fonts" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "10 fonts"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains font names" {
+@test "Case 9: Output of \"${BASE_COMMAND}\" contains font names" {
   font_names=(
     "Calibri
     Times New Roman
@@ -110,7 +110,7 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   done
 }
 
-@test "Output of \"${BASE_COMMAND}\" can contain alternative font names" {
+@test "Case 10: Output of \"${BASE_COMMAND}\" can contain alternative font names" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "宋体"
 
   check_for_valgrind_error
@@ -122,7 +122,7 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains font-family" {
+@test "Case 11: Output of \"${BASE_COMMAND}\" contains font-family" {
   font_family=(
   "roman"
   "swiss"
@@ -135,13 +135,13 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   done
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains font-pitch" {
+@test "Case 12: Output of \"${BASE_COMMAND}\" contains font-pitch" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "variable"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsf nonexistent.docx\" is an error message" {
+@test "Case 13: Output of \"docxbox lsf nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsf nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -151,7 +151,7 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox lsf wrong_file_type\" is an error message" {
+@test "Case 14: Output of \"docxbox lsf wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

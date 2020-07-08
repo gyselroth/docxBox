@@ -18,7 +18,7 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-@test "\"docxbox v\" displays version number" {
+@test "Case 1: \"docxbox v\" displays version number" {
   pattern="(^|\s)+(docxBox version )\K([0-9]|\.)*(?=\s|$)"
 
   ${DOCXBOX_BINARY} v | grep -Po "${pattern}"

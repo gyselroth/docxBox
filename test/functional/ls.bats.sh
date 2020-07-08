@@ -24,14 +24,14 @@ PATH_NEW_DOCX="test/tmp/changedFile.docx"
 
 ERR_LOG="test/tmp/err.log"
 
-@test "Exit code of ${BASE_COMMAND}\" is zero" {
+@test "Case 1: Exit code of ${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} ls "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox ls {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox ls {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} ls
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -39,7 +39,7 @@ ERR_LOG="test/tmp/err.log"
   check_for_valgrind_error
 }
 
-@test "Output of ${BASE_COMMAND}\" contains files' and directories' attributes" {
+@test "Case 3: Output of ${BASE_COMMAND}\" contains files' and directories' attributes" {
   attributes=(
   "Length"
   "Date"
@@ -53,7 +53,7 @@ ERR_LOG="test/tmp/err.log"
   done
 }
 
-@test "Output of ${BASE_COMMAND}\" is contained files" {
+@test "Case 4: Output of ${BASE_COMMAND}\" is contained files" {
 search_values=(
 "[Content_Types].xml"
 "_rels/.rels"
@@ -77,13 +77,13 @@ search_values=(
   done
 }
 
-@test "Output of ${BASE_COMMAND}\" contains amount of contained files" {
+@test "Case 5: Output of ${BASE_COMMAND}\" contains amount of contained files" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count '14 files'
 
   check_for_valgrind_error
 }
 
-@test "Output of ${BASE_COMMAND}\" contains files' date and time" {
+@test "Case 6: Output of ${BASE_COMMAND}\" contains files' date and time" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
 
@@ -91,14 +91,14 @@ search_values=(
 }
 
 long_description="contains files with the given file ending"
-@test "Output of ${BASE_COMMAND} *.file-ending\" ${long_description}" {
+@test "Case 7: Output of ${BASE_COMMAND} *.file-ending\" ${long_description}" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.jpeg | grep --count "image2.jpeg"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.xml | grep --count "10 files"
 
   check_for_valgrind_error
 }
 
-@test "With \"${BASE_COMMAND} changedFile.docx\" a side-by-side comparison is displayed" {
+@test "Case 8: With \"${BASE_COMMAND} changedFile.docx\" a side-by-side comparison is displayed" {
   run ${DOCXBOX_BINARY} lorem "${PATH_DOCX}" "${PATH_NEW_DOCX}"
 
   amount_chars_base=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" | wc --bytes)
@@ -109,7 +109,7 @@ long_description="contains files with the given file ending"
   check_for_valgrind_error
 }
 
-@test "Output of ${BASE_COMMAND} nonexistent.docx\" is an error message" {
+@test "Case 9: Output of ${BASE_COMMAND} nonexistent.docx\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -119,7 +119,7 @@ long_description="contains files with the given file ending"
   check_for_valgrind_error
 }
 
-@test "Output of ${BASE_COMMAND} wrong_file_type\" is an error message" {
+@test "Case 10: Output of ${BASE_COMMAND} wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

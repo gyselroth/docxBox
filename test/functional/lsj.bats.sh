@@ -30,7 +30,7 @@ ATTRIBUTES=(
   "time"
   "file")
 
-@test "Output of \"docxbox lsj filename.docx\" ${DESCRIPTION}" {
+@test "Case 1: Output of \"docxbox lsj filename.docx\" ${DESCRIPTION}" {
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "${i}"
@@ -38,7 +38,7 @@ ATTRIBUTES=(
   done
 }
 
-@test "Output of \"${LONGHAND_COMMAND} --json\" ${DESCRIPTION}" {
+@test "Case 2: Output of \"${LONGHAND_COMMAND} --json\" ${DESCRIPTION}" {
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --json | grep --count "${i}"
@@ -46,7 +46,7 @@ ATTRIBUTES=(
   done
 }
 
-@test "Output of \"${LONGHAND_COMMAND} -j\" ${DESCRIPTION}" {
+@test "Case 3: Output of \"${LONGHAND_COMMAND} -j\" ${DESCRIPTION}" {
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -j | grep --count "${i}"
@@ -54,7 +54,7 @@ ATTRIBUTES=(
   done
 }
 
-@test "Output of \"docxbox lsj filename.docx\" are contained files" {
+@test "Case 4: Output of \"docxbox lsj filename.docx\" are contained files" {
 search_values=(
 "[Content_Types].xml"
 "_rels/.rels"
@@ -78,14 +78,14 @@ search_values=(
   done
 }
 
-@test "Output of \"docxbox lsj filename.docx\" contains files' date and time" {
+@test "Case 5: Output of \"docxbox lsj filename.docx\" contains files' date and time" {
   ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "7/./2020"
   ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "7/3/2020"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsj {missing argument}\" is an error message" {
+@test "Case 6: Output of \"docxbox lsj {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} lsj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -93,7 +93,7 @@ search_values=(
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsj nonexistent.docx\" is an error message" {
+@test "Case 7: Output of \"docxbox lsj nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsj nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -103,7 +103,7 @@ search_values=(
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox lsj wrong_file_type\" is an error message" {
+@test "Case 8: Output of \"docxbox lsj wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

@@ -23,7 +23,7 @@ ERR_LOG="test/tmp/err.log"
 
 BASE_COMMAND="docxbox mm filename.docx"
 
-@test "Output of \"docxbox mm {missing argument}\" is an error message" {
+@test "Case 1: Output of \"docxbox mm {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} mm
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -31,7 +31,7 @@ BASE_COMMAND="docxbox mm filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND} {missing argument}\" is an error message" {
+@test "Case 2: Output of \"${BASE_COMMAND} {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Meta attribute to be set"
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}"
@@ -42,7 +42,7 @@ BASE_COMMAND="docxbox mm filename.docx"
 }
 
 title="the meta attribute \"title\" can be modified"
-@test "With \"${BASE_COMMAND} title {argument}\" ${title}" {
+@test "Case 3: With \"${BASE_COMMAND} title {argument}\" ${title}" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" title "someTitle"
   [ "$status" -eq 0 ]
 
@@ -52,7 +52,7 @@ title="the meta attribute \"title\" can be modified"
 }
 
 creator="the meta attribute \"creator\" can be modified"
-@test "With \"${BASE_COMMAND} creator {argument}\" ${creator}" {
+@test "Case 4: With \"${BASE_COMMAND} creator {argument}\" ${creator}" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" creator "John Doe"
   [ "$status" -eq 0 ]
 
@@ -62,7 +62,7 @@ creator="the meta attribute \"creator\" can be modified"
 }
 
 last_modified_by="the meta attribute \"lastModifiedBy\" can be modified"
-@test "With \"${BASE_COMMAND} lastModifiedBy {argument}\" ${last_modified_by}" {
+@test "Case 5: With \"${BASE_COMMAND} lastModifiedBy {argument}\" ${last_modified_by}" {
   pattern="lastModifiedBy: John Doe"
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" lastModifiedBy "John Doe"
@@ -74,7 +74,7 @@ last_modified_by="the meta attribute \"lastModifiedBy\" can be modified"
 }
 
 last_printed="the meta attribute \"lastPrinted\" can be modified"
-@test "With \"${BASE_COMMAND} lastPrinted {argument}\" ${last_printed}" {
+@test "Case 6: With \"${BASE_COMMAND} lastPrinted {argument}\" ${last_printed}" {
   print_date="2020-02-20T10:31:00Z"
   pattern="lastPrinted: 2020-02-20T10:31:00Z"
 
@@ -87,7 +87,7 @@ last_printed="the meta attribute \"lastPrinted\" can be modified"
 }
 
 language="the meta attribute \"language\" can be modified"
-@test "With \"${BASE_COMMAND} language {argument}\" ${language}" {
+@test "Case 7: With \"${BASE_COMMAND} language {argument}\" ${language}" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" language "de-CH"
   [ "$status" -eq 0 ]
 
@@ -97,7 +97,7 @@ language="the meta attribute \"language\" can be modified"
 }
 
 created="the meta attribute \"created\" can be modified"
-@test "With \"${BASE_COMMAND} created {argument}\" ${created}" {
+@test "Case 8: With \"${BASE_COMMAND} created {argument}\" ${created}" {
   pattern="created: 2020-10-20T10:20:00Z"
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" created "2020-10-20T10:20:00Z"
@@ -109,7 +109,7 @@ created="the meta attribute \"created\" can be modified"
 }
 
 modified="the meta attribute \"modified\" can be modified"
-@test "With \"${BASE_COMMAND} modified {argument}\" ${modified}" {
+@test "Case 9: With \"${BASE_COMMAND} modified {argument}\" ${modified}" {
   pattern="modified: 2020-10-20T10:20:00Z"
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
@@ -120,7 +120,7 @@ modified="the meta attribute \"modified\" can be modified"
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
 
-@test "Modifying the meta attribute \"created\" does not change the meta attribute \"modified\"" {
+@test "Case 10: Modifying the meta attribute \"created\" does not change the meta attribute \"modified\"" {
   created=$(${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "created")
 
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
@@ -132,7 +132,7 @@ modified="the meta attribute \"modified\" can be modified"
 }
 
 revision="the meta attribute \"revision\" can be changed"
-@test "With \"${BASE_COMMAND} revision {argument}\" ${revision}" {
+@test "Case 11: With \"${BASE_COMMAND} revision {argument}\" ${revision}" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" revision "25"
   [ "$status" -eq 0 ]
 
@@ -142,7 +142,7 @@ revision="the meta attribute \"revision\" can be changed"
 }
 
 
-@test "Output of \"docxbox mm nonexistent.docx\" is an error message" {
+@test "Case 12: Output of \"docxbox mm nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} mm nonexistent.docx
   [ "$status" -ne 0 ]
   check_for_valgrind_error
@@ -152,7 +152,7 @@ revision="the meta attribute \"revision\" can be changed"
 }
 
 argument="{meta_attribute} {argument}"
-@test "Output of \"docxbox mm ${argument} wrong_file_type\" is an error message" {
+@test "Case 12: Output of \"docxbox mm ${argument} wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"

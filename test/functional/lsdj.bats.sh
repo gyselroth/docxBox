@@ -25,14 +25,14 @@ ERR_LOG="test/tmp/err.log"
 
 LONG_DESCRIPTION_JSON="the fields in the docx are listed as JSON"
 
-@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsdj {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox lsdj {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} lsdj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
@@ -40,7 +40,7 @@ LONG_DESCRIPTION_JSON="the fields in the docx are listed as JSON"
   check_for_valgrind_error
 }
 
-@test "With \"${BASE_COMMAND}\" the fields in the docx are listed as JSON" {
+@test "Case 3: With \"${BASE_COMMAND}\" the fields in the docx are listed as JSON" {
   pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "${pattern}"
 
@@ -53,7 +53,7 @@ LONG_DESCRIPTION_JSON="the fields in the docx are listed as JSON"
 }
 
 longhand="--fields --json"
-title="With \"docxbox ls filename.docx ${longhand}\" "
+title="Case 4: With \"docxbox ls filename.docx ${longhand}\" "
 title+="${LONG_DESCRIPTION_JSON}"
 @test "${title}" {
   pattern="table_unordered_list_images.docx-"
@@ -67,7 +67,7 @@ title+="${LONG_DESCRIPTION_JSON}"
   check_for_valgrind_error
 }
 
-@test "With \"docxbox ls filename.docx -dj\" ${LONG_DESCRIPTION_JSON}" {
+@test "Case 5: With \"docxbox ls filename.docx -dj\" ${LONG_DESCRIPTION_JSON}" {
   pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -dj | grep --count "${pattern}"
 
@@ -77,7 +77,7 @@ title+="${LONG_DESCRIPTION_JSON}"
   check_for_valgrind_error
 }
 
-@test "With \"docxbox lsd filename.docx --json\" ${LONG_DESCRIPTION_JSON}" {
+@test "Case 6: With \"docxbox lsd filename.docx --json\" ${LONG_DESCRIPTION_JSON}" {
   pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" --json | grep --count "${pattern}"
 
@@ -89,7 +89,7 @@ title+="${LONG_DESCRIPTION_JSON}"
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsdj nonexistent.docx\" is an error message" {
+@test "Case 7: Output of \"docxbox lsdj nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsdj nonexistent.docx
   [ "$status" -ne 0 ]
   check_for_valgrind_error
@@ -98,7 +98,7 @@ title+="${LONG_DESCRIPTION_JSON}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"${BASE_COMMAND} wrong_file_type\" is an error message" {
+@test "Case 8: Output of \"${BASE_COMMAND} wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
