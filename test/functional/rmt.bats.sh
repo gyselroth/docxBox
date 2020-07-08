@@ -28,7 +28,7 @@ PATH_DOCX_NEW="test/tmp/cp_plain_text.docx"
 PATH_DOCX_STYLES="test/tmp/cp_text_with_styles.docx"
 ERR_LOG="test/tmp/err.log"
 
-@test "Output of \"docxbox rmt {missing filename}\" is an error message" {
+@test "Case 1: Output of \"docxbox rmt {missing filename}\" is an error message" {
   run ${DOCXBOX_BINARY} rmt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -36,7 +36,7 @@ ERR_LOG="test/tmp/err.log"
   check_for_valgrind_error
 }
 
-title="Output of \"docxbox rmt filename.docx {missing arguments}\" "
+title="Case 2: Output of \"docxbox rmt filename.docx {missing arguments}\" "
 title+="is an error message"
 @test "${title}" {
   pattern="docxBox Error - Missing argument: \
@@ -49,8 +49,8 @@ String left-hand-side of part to be removed"
   check_for_valgrind_error
 }
 
-title_missing_argument="Output of \"docxbox rmt filename.docx leftHandString \
-{missing_argument}\" is an error message"
+title_missing_argument="Case 3: Output of \"docxbox rmt filename.docx \
+leftHandString {missing_argument}\" is an error message"
 @test "${title_missing_argument}" {
   pattern="docxBox Error - Missing argument: \
 String right-hand-side of part to be removed"
@@ -62,8 +62,8 @@ String right-hand-side of part to be removed"
   check_for_valgrind_error
 }
 
-title_base_functionality="With \"docxbox rmt filename.docx leftHandString \
-rightHandString\" removes text between and including given strings"
+title_base_functionality="Case 4: With \"docxbox rmt filename.docx \
+leftHandString rightHandString\" removes text between and including given strings"
 @test "${title_base_functionality}" {
   pattern="Fugiat excepteursed in qui sit velit duis veniam."
 
@@ -77,7 +77,7 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count --invert-match "${pattern}"
 }
 
-@test "Removing strings at the beginning of a file" {
+@test "Case 5: Removing strings at the beginning of a file" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "THIS" "TITLE"
 
   check_for_valgrind_error
@@ -85,7 +85,7 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IN ALL CAPS"
 }
 
-@test "Removing strings at the beginning of a file within a sentence" {
+@test "Case 6: Removing strings at the beginning of a file within a sentence" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "TITLE" "ALL"
 
   check_for_valgrind_error
@@ -93,7 +93,7 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "THIS IS A  CAPS"
 }
 
-@test "Removing strings in the middle of a file" {
+@test "Case 7: Removing strings in the middle of a file" {
   pattern="Text in cursive"
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "style" "cursive"
@@ -103,7 +103,7 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count --invert-match "${pattern}"
 }
 
-@test "Removing strings in the middle of a file within a sentence" {
+@test "Case 8: Removing strings in the middle of a file within a sentence" {
   pattern="A style"
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" " paragraph" "special"
@@ -113,7 +113,7 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "${pattern}"
 }
 
-@test "Removing strings with different styles" {
+@test "Case 9: Removing strings with different styles" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "CAPS" "paragraph"
 
   check_for_valgrind_error
@@ -121,7 +121,7 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "without special style"
 }
 
-@test "Removing strings at the end of a file" {
+@test "Case 10: Removing strings at the end of a file" {
   pattern="Bold text passages are great"
 
   before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
@@ -135,7 +135,7 @@ rightHandString\" removes text between and including given strings"
   (( before_rmt = after_rmt ))
 }
 
-@test "Trying to remove strings at the end of a file with a nonexistent string" {
+@test "Case 11: Trying to remove strings at the end of a file with a nonexistent string" {
   pattern="Bold text passages are great"
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "Foo"
@@ -145,7 +145,7 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "${pattern}"
 }
 
-@test "Removing content between two given strings removes everything" {
+@test "Case 12: Removing content between two given strings removes everything" {
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX_STYLES}" | grep --count "image1.png"
 
   run ${DOCXBOX_BINARY} rmt "${PATH_DOCX_STYLES}" "FROM" "Until"
@@ -160,7 +160,7 @@ rightHandString\" removes text between and including given strings"
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX_STYLES}" | grep --invert-match "image1.png"
 }
 
-@test "Output of \"docxbox rmt nonexistent.docx\" is an error message" {
+@test "Case 13: Output of \"docxbox rmt nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} rmt nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -169,7 +169,7 @@ rightHandString\" removes text between and including given strings"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox rmt wrong_file_type\" is an error message" {
+@test "Case 14: Output of \"docxbox rmt wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"

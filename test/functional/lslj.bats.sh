@@ -27,7 +27,7 @@ SEARCH_RESULTS=(
 "\"file\":\"word/numbering.xml\""
 "\"file\":\"word/styles.xml\"")
 
-@test "Output of \"docxbox lslj {missing argument}\" ${error_message}" {
+@test "Case 1: Output of \"docxbox lslj {missing argument}\" ${error_message}" {
   run ${DOCXBOX_BINARY} lslj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -35,7 +35,7 @@ SEARCH_RESULTS=(
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lslj filename.docx {missing argument} ${error_message}" {
+@test "Case 2: Output of \"docxbox lslj filename.docx {missing argument} ${error_message}" {
   pattern="docxBox Error - Missing argument: "
   pattern+="String or regular expression to be located"
 
@@ -46,7 +46,7 @@ SEARCH_RESULTS=(
   check_for_valgrind_error
 }
 
-@test "\"docxbox lslj filename.docx searchString\" ${description}" {
+@test "Case 3: \"docxbox lslj filename.docx searchString\" ${description}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep -c "${i}"
@@ -54,7 +54,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "\"docxbox lsl filename.docx -j searchString\" ${description}" {
+@test "Case 4: \"docxbox lsl filename.docx -j searchString\" ${description}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" -j fonts | grep -c "${i}"
@@ -62,7 +62,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "\"docxbox lsl filename.docx --json searchString\" ${description}" {
+@test "Case 5: \"docxbox lsl filename.docx --json searchString\" ${description}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" --json fonts | grep -c "${i}"
@@ -70,7 +70,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "\"docxbox ls filename.docx -lj searchString\" ${description}" {
+@test "Case 6: \"docxbox ls filename.docx -lj searchString\" ${description}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -lj fonts | grep -c "${i}"
@@ -78,7 +78,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "\"docxbox ls filename.docx --locate -j searchString\" ${description}" {
+@test "Case 7: \"docxbox ls filename.docx --locate -j searchString\" ${description}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate -j fonts | grep -c "${i}"
@@ -86,7 +86,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "\"docxbox ls filename.docx --locate --json searchString\" ${description}" {
+@test "Case 8: \"docxbox ls filename.docx --locate --json searchString\" ${description}" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate --json fonts | grep -c "${i}"
@@ -94,7 +94,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "Output of \"docxbox lslj nonexistent.docx searchString\" is an error message" {
+@test "Case 9: Output of \"docxbox lslj nonexistent.docx searchString\" is an error message" {
   run ${DOCXBOX_BINARY} lslj nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
@@ -104,7 +104,7 @@ SEARCH_RESULTS=(
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox lslj wrong_file_type searchString\" ${error_message}" {
+@test "Case 10: Output of \"docxbox lslj wrong_file_type searchString\" ${error_message}" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

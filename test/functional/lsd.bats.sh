@@ -26,14 +26,14 @@ ERR_LOG="test/tmp/err.log"
 MERGE_FIELD="MERGEFIELD"
 MERGE_FORMAT="\* MERGEFORMAT"
 
-@test "Exit code of ${BASE_COMMAND} filename.docx\" is zero" {
+@test "Case 1: Exit code of ${BASE_COMMAND} filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsd "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Output of ${BASE_COMMAND} {missing argument}\" is an error message" {
+@test "Case 2: Output of ${BASE_COMMAND} {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} lsd
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
@@ -41,26 +41,26 @@ MERGE_FORMAT="\* MERGEFORMAT"
   check_for_valgrind_error
 }
 
-@test "With ${BASE_COMMAND} filename.docx\" the fields in the docx are listed" {
+@test "Case 3: With ${BASE_COMMAND} filename.docx\" the fields in the docx are listed" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FIELD}"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FORMAT}"
 
   check_for_valgrind_error
 }
 
-@test "With ${BASE_COMMAND} filename.docx\" the fields in the header are listed" {
+@test "Case 4: With ${BASE_COMMAND} filename.docx\" the fields in the header are listed" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "MERGEFIELD  Mergefield_Header"
 
   check_for_valgrind_error
 }
 
-@test "With ${BASE_COMMAND} filename.docx\" the fields in the footer are listed" {
+@test "Case 5: With ${BASE_COMMAND} filename.docx\" the fields in the footer are listed" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "MERGEFIELD  Mergefield_Footer"
 
   check_for_valgrind_error
 }
 
-title="With \"docxbox ls filename.docx --fields\" "
+title="Case 6: With \"docxbox ls filename.docx --fields\" "
 title+="the fields in the docx are listed"
 @test "$title" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FIELD}"
@@ -69,14 +69,14 @@ title+="the fields in the docx are listed"
   check_for_valgrind_error
 }
 
-@test "With \"docxbox ls filename.docx -d\" the fields in the docx are listed" {
+@test "Case 7: With \"docxbox ls filename.docx -d\" the fields in the docx are listed" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -d | grep --count "${MERGE_FIELD}"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -d | grep --count "${MERGE_FORMAT}"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsd nonexistent.docx\" is an error message" {
+@test "Case 8: Output of \"docxbox lsd nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsd nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -86,7 +86,7 @@ title+="the fields in the docx are listed"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of ${BASE_COMMAND} wrong_file_type\" is an error message" {
+@test "Case 9: Output of ${BASE_COMMAND} wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

@@ -33,14 +33,14 @@ ATTRIBUTES=(
   "family"
   "pitch")
 
-@test "Exit code of \"docxbox ls filename.docx\" is zero" {
+@test "Case 1: Exit code of \"docxbox ls filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsfj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsfj {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox lsfj {missing argument}\" is an error message" {
   run ${DOCXBOX_BINARY} lsfj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
@@ -48,7 +48,7 @@ ATTRIBUTES=(
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" ${LONG_DESCRIPTION}" {
+@test "Case 3: Output of \"${BASE_COMMAND}\" ${LONG_DESCRIPTION}" {
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "${i}"
@@ -56,7 +56,7 @@ ATTRIBUTES=(
   done
 }
 
-@test "Output of \"${LONGHAND_COMMAND} --json\" ${LONG_DESCRIPTION}" {
+@test "Case 4: Output of \"${LONGHAND_COMMAND} --json\" ${LONG_DESCRIPTION}" {
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" --json | grep --count "${i}"
@@ -64,7 +64,7 @@ ATTRIBUTES=(
   done
 }
 
-@test "Output of \"${LONGHAND_COMMAND} -j\" ${LONG_DESCRIPTION}" {
+@test "Case 5: Output of \"${LONGHAND_COMMAND} -j\" ${LONG_DESCRIPTION}" {
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" -j | grep --count "${i}"
@@ -73,7 +73,7 @@ ATTRIBUTES=(
 }
 
 LONGHAND="--fonts --json"
-@test "Output of \"docxbox ls filename.docx ${LONGHAND}\" ${LONG_DESCRIPTION}" {
+@test "Case 6: Output of \"docxbox ls filename.docx ${LONGHAND}\" ${LONG_DESCRIPTION}" {
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" ${LONGHAND} | grep --count "${i}"
@@ -81,7 +81,7 @@ LONGHAND="--fonts --json"
   done
 }
 
-@test "Output of \"docxbox ls filename.docx -fj\" ${LONG_DESCRIPTION}" {
+@test "Case 7: Output of \"docxbox ls filename.docx -fj\" ${LONG_DESCRIPTION}" {
   for i in "${ATTRIBUTES[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -fj | grep --count "${i}"
@@ -89,13 +89,13 @@ LONGHAND="--fonts --json"
   done
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains fontfile-filename" {
+@test "Case 8: Output of \"${BASE_COMMAND}\" contains fontfile-filename" {
   ${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "fontTable.xml"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains font names" {
+@test "Case 9: Output of \"${BASE_COMMAND}\" contains font names" {
   font_names=(
     "Calibri
     Times New Roman
@@ -113,19 +113,19 @@ LONGHAND="--fonts --json"
   done
 }
 
-@test "Output of \"${BASE_COMMAND}\" can contain alternative font names" {
+@test "Case 10: Output of \"${BASE_COMMAND}\" can contain alternative font names" {
   ${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "宋体"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains font-charSets" {
+@test "Case 11: Output of \"${BASE_COMMAND}\" contains font-charSets" {
   ${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "00"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains font-family" {
+@test "Case 12: Output of \"${BASE_COMMAND}\" contains font-family" {
   font_family=(
   "roman"
   "swiss"
@@ -138,13 +138,13 @@ LONGHAND="--fonts --json"
   done
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains font-pitch" {
+@test "Case 13: Output of \"${BASE_COMMAND}\" contains font-pitch" {
   ${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "variable"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsfj nonexistent.docx\" is an error message" {
+@test "Case 14: Output of \"docxbox lsfj nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsfj nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -154,7 +154,7 @@ LONGHAND="--fonts --json"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox lsfj wrong_file_type\" is an error message" {
+@test "Case 15: Output of \"docxbox lsfj wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

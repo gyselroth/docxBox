@@ -22,7 +22,7 @@ ERR_LOG="test/tmp/err.log"
 
 UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 
-@test "Output of \"docxbox uz {missing argument}\" is an error message" {
+@test "Case 1: Output of \"docxbox uz {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} uz
@@ -32,7 +32,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox uz nonexistent.docx\" is an error message" {
+@test "Case 2: Output of \"docxbox uz nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} uz nonexistent.docx
   [ "$status" -ne 0 ]
   check_for_valgrind_error
@@ -41,7 +41,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox uz wrong_file_type\" is an error message" {
+@test "Case 3: Output of \"docxbox uz wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
@@ -56,7 +56,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   done
 }
 
-@test "With \"docxbox uz filename.docx\" all files are unziped" {
+@test "Case 4: With \"docxbox uz filename.docx\" all files are unziped" {
   pattern="^[[:space:]]\{4\}"
 
   run ${DOCXBOX_BINARY} uz test/tmp/cp_bio_assay.docx
@@ -66,7 +66,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep --invert-match "${pattern}"
 }
 
-@test "Unziped files are located in project root" {
+@test "Case 5: Unziped files are located in project root" {
   ls | grep --count "${UNZIPPED_FOLDER}"
 
   if [ -d "${UNZIPPED_FOLDER}" ]; then

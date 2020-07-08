@@ -29,7 +29,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
 
 ARGUMENTS="filename.docx fieldIdentifier fieldValue"
 
-@test "Output of \"${BASE_COMMAND} {missing argument}\" is an error message" {
+@test "Case 1: Output of \"${BASE_COMMAND} {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} sfv
@@ -40,7 +40,7 @@ ARGUMENTS="filename.docx fieldIdentifier fieldValue"
 }
 
 missing_arguments="filename.docx {missing argument}"
-@test "Output of \"${BASE_COMMAND} ${missing_arguments}\" is an error message" {
+@test "Case 2: Output of \"${BASE_COMMAND} ${missing_arguments}\" is an error message" {
   run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Field identifier" = "${lines[0]}" ]
@@ -49,7 +49,7 @@ missing_arguments="filename.docx {missing argument}"
 }
 
 missing_value="filename.docx fieldIdentifier {missing argument}"
-@test "Output of \"${BASE_COMMAND} ${missing_value}\" is an error message" {
+@test "Case 3: Output of \"${BASE_COMMAND} ${missing_value}\" is an error message" {
   run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Value to be set" = "${lines[0]}" ]
@@ -58,7 +58,7 @@ missing_value="filename.docx fieldIdentifier {missing argument}"
 }
 
 appendix=" the value of the given field is changed"
-@test "With \"${BASE_COMMAND} ${ARGUMENTS}\" ${appendix}" {
+@test "Case 4: With \"${BASE_COMMAND} ${ARGUMENTS}\" ${appendix}" {
   run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD}" foobar
   [ "$status" -eq 0 ]
 
@@ -67,7 +67,9 @@ appendix=" the value of the given field is changed"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "foobar"
 }
 
-@test "With \"${BASE_COMMAND} ${ARGUMENTS}\" the value of the MERGEFIELD in the header gets changed" {
+title_header="Case 5: With \"${BASE_COMMAND} ${ARGUMENTS}\" the value of the \
+MERGEFIELD in the header gets changed"
+@test "${title_header}" {
   run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD_HEADER}" foobar
   [ "$status" -eq 0 ]
 
@@ -76,7 +78,9 @@ appendix=" the value of the given field is changed"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "foobar"
 }
 
-@test "With \"${BASE_COMMAND} ${ARGUMENTS}\" the value of the MERGEFIELD in the footer gets changed" {
+title_footer="Case 6: With \"${BASE_COMMAND} ${ARGUMENTS}\" the value of the \
+MERGEFIELD in the footer gets changed"
+@test "${title_footer}" {
   run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD_FOOTER}" foobar
   [ "$status" -eq 0 ]
 
@@ -85,7 +89,7 @@ appendix=" the value of the given field is changed"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "foobar"
 }
 
-@test "Output of \"docxbox sfv nonexistent.docx\" is an error message" {
+@test "Case 7: Output of \"docxbox sfv nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} sfv nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -95,7 +99,7 @@ appendix=" the value of the given field is changed"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-title="Output of \"docxbox fieldIdentifier fieldValue wrong_file_type\" "
+title="Case 8: Output of \"docxbox fieldIdentifier fieldValue wrong_file_type\" "
 title+="is an error message"
 @test "${title}" {
   pattern="docxBox Error - File is no ZIP archive:"

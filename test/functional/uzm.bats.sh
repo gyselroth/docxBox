@@ -24,7 +24,7 @@ ERR_LOG="test/tmp/err.log"
 DESCRIPTION="only media files are extracted"
 UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 
-@test "Output of \"docxbox uzm {missing argument}\" is an error message" {
+@test "Case 1: Output of \"docxbox uzm {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} uzm
@@ -34,7 +34,7 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox uzm nonexistent.docx\" is an error message" {
+@test "Case 2: Output of \"docxbox uzm nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} uzm nonexistent.docx
   [ "$status" -ne 0 ]
   check_for_valgrind_error
@@ -43,7 +43,7 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox uzm wrong_file_type\" is an error message" {
+@test "Case 3: Output of \"docxbox uzm wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
@@ -58,13 +58,13 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
   done
 }
 
-@test "With \"docxbox uzm filename.docx\" ${DESCRIPTION}" {
+@test "Case 4: With \"docxbox uzm filename.docx\" ${DESCRIPTION}" {
   run ${DOCXBOX_BINARY} uzm "${PATH_DOCX}"
 
   check_for_valgrind_error
 }
 
-@test "Unzipped files are located in project root" {
+@test "Case 5: Unzipped files are located in project root" {
   ls | grep --count "${UNZIPPED_DOCX}"
 
   if [ -d "${UNZIPPED_DOCX}" ]; then
@@ -72,13 +72,13 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
   fi
 }
 
-@test "With \"docxbox uz filename.docx --media\" ${DESCRIPTION}" {
+@test "Case 6: With \"docxbox uz filename.docx --media\" ${DESCRIPTION}" {
   run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" --media
 
   check_for_valgrind_error
 }
 
-@test "Unzipped files are located in project root after running uz --media " {
+@test "Case 7: Unzipped files are located in project root after running uz --media " {
   ls | grep --count "${UNZIPPED_DOCX}"
 
   if [ -d "${UNZIPPED_DOCX}" ]; then
@@ -86,13 +86,13 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
   fi
 }
 
-@test "With \"docxbox uz filename.docx -m\" ${DESCRIPTION}" {
+@test "Case 8: With \"docxbox uz filename.docx -m\" ${DESCRIPTION}" {
   run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" -m
 
   check_for_valgrind_error
 }
 
-@test "Unzipped files are located in project root after running uz -m" {
+@test "Case 9: Unzipped files are located in project root after running uz -m" {
   ls | grep --count "${UNZIPPED_DOCX}"
 
   if [ -d "${UNZIPPED_DOCX}" ]; then

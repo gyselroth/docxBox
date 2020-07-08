@@ -23,14 +23,14 @@ ERR_LOG="test/tmp/err.log"
 
 BASE_COMMAND="docxbox lsi filename.docx"
 
-@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsi {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox lsi {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} lsi
@@ -40,7 +40,7 @@ BASE_COMMAND="docxbox lsi filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
+@test "Case 3: Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
   attributes=(
   "Length"
   "Date"
@@ -54,7 +54,7 @@ BASE_COMMAND="docxbox lsi filename.docx"
   done
 }
 
-@test "Output of \"${BASE_COMMAND}\" is contained images" {
+@test "Case 4: Output of \"${BASE_COMMAND}\" is contained images" {
   run ${DOCXBOX_BINARY} lsi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX}" | grep --count "image2.jpeg"
@@ -62,19 +62,19 @@ BASE_COMMAND="docxbox lsi filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox ls filename.docx -i\" is contained images" {
+@test "Case 5: Output of \"docxbox ls filename.docx -i\" is contained images" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -i | grep --count "image2.jpeg"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox ls filename.docx --images\" is contained images" {
+@test "Case 6: Output of \"docxbox ls filename.docx --images\" is contained images" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --images | grep --count "image2.jpeg"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsi nonexistent.docx\" is an error message" {
+@test "Case 7: Output of \"docxbox lsi nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsi nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -84,7 +84,7 @@ BASE_COMMAND="docxbox lsi filename.docx"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox lsi wrong_file_type\" is an error message" {
+@test "Case 8: Output of \"docxbox lsi wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

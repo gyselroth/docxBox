@@ -27,14 +27,14 @@ DESCRIPTION="contains information about the creation time and date"
 
 PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 
-@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
   run ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsmj {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox lsmj {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} lsmj
@@ -44,7 +44,7 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains information about the xml schema" {
+@test "Case 3: Output of \"${BASE_COMMAND}\" contains information about the xml schema" {
   pattern="\"xmlSchema\": \"http://schemas.openxmlformats.org/officeDocument/2006\""
 
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "${pattern}"
@@ -52,31 +52,31 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsm filename.docx --json\" ${DESCRIPTION}" {
+@test "Case 4: Output of \"docxbox lsm filename.docx --json\" ${DESCRIPTION}" {
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" --json | grep --count "${PATTERN_CREATED}"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsm filename.docx -j\" ${DESCRIPTION}" {
+@test "Case 5: Output of \"docxbox lsm filename.docx -j\" ${DESCRIPTION}" {
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" -j | grep --count "${PATTERN_CREATED}"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox ls filename.docx --meta --json\" ${DESCRIPTION}" {
+@test "Case 6: Output of \"docxbox ls filename.docx --meta --json\" ${DESCRIPTION}" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --meta --json | grep --count "${PATTERN_CREATED}"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox ls filename.docx -mj\" ${DESCRIPTION}" {
+@test "Case 7: Output of \"docxbox ls filename.docx -mj\" ${DESCRIPTION}" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -mj | grep --count "${PATTERN_CREATED}"
 
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains language information" {
+@test "Case 8: Output of \"${BASE_COMMAND}\" contains language information" {
   pattern="\"language\": \"en-US\""
 
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "${pattern}"
@@ -84,13 +84,13 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains information about the revision" {
+@test "Case 9: Output of \"${BASE_COMMAND}\" contains information about the revision" {
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\"revision\": \"2\""
 
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lsmj nonexistent.docx\" is an error message" {
+@test "Case 10: Output of \"docxbox lsmj nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsmj nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -100,7 +100,7 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox lsmj wrong_file_type\" is an error message" {
+@test "Case 11: Output of \"docxbox lsmj wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"

@@ -20,7 +20,7 @@ fi
 
 UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
 
-@test "Output of \"docxbox zp {missing argument}\" is an error message" {
+@test "Case 1: Output of \"docxbox zp {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Path of directory to be zipped"
 
   run ${DOCXBOX_BINARY} zp
@@ -30,7 +30,7 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox zp directory {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox zp directory {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of docx to be created"
 
   run ${DOCXBOX_BINARY} zp "${UNZIPPED_DOCX_DIRECTORY}"
@@ -40,7 +40,7 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
   check_for_valgrind_error
 }
 
-title="With \"docxbox zp directory /path-to-file/filename.docx\" "
+title="Case 3: With \"docxbox zp directory /path-to-file/filename.docx\" "
 title+="a directory can be zipped into a docx"
 @test "$title" {
   if [ ! -d "${UNZIPPED_DOCX_DIRECTORY}" ]; then

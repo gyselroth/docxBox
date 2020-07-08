@@ -26,7 +26,7 @@ ERR_LOG="test/tmp/err.log"
 BASE_COMMAND="docxbox diff filename.docx"
 ERROR_MESSAGE="is an error message"
 
-@test "Output of \"docxbox diff {missing argument}\" ${ERROR_MESSAGE}" {
+@test "Case 1: Output of \"docxbox diff {missing argument}\" ${ERROR_MESSAGE}" {
   run ${DOCXBOX_BINARY} diff
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX file to compare with" = "${lines[0]}" ]
@@ -34,7 +34,7 @@ ERROR_MESSAGE="is an error message"
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND} {missing argument}\" ${ERROR_MESSAGE}" {
+@test "Case 2: Output of \"${BASE_COMMAND} {missing argument}\" ${ERROR_MESSAGE}" {
   path_docx="test/tmp/cp_table_unordered_list_images.docx"
   pattern="docxBox Error - Missing argument: DOCX file to compare with"
 
@@ -45,7 +45,7 @@ ERROR_MESSAGE="is an error message"
   check_for_valgrind_error
 }
 
-title="Output of \"${BASE_COMMAND} otherFilename.docx {missing argument}\""
+title="Case 3: Output of \"${BASE_COMMAND} otherFilename.docx {missing argument}\""
 @test "${title} ${ERROR_MESSAGE}" {
   pattern="docxBox Error - Missing argument: File within DOCX archives to be compared"
 
@@ -56,8 +56,8 @@ title="Output of \"${BASE_COMMAND} otherFilename.docx {missing argument}\""
   check_for_valgrind_error
 }
 
-description="side by side view is displayed"
-@test "With \"${BASE_COMMAND} changedFilename.docx\" a ${description}" {
+DESCRIPTION="side by side view is displayed"
+@test "Case 4: With \"${BASE_COMMAND} changedFilename.docx\" a ${DESCRIPTION}" {
   path_changed_docx="test/tmp/cp_table_unordered_list_images_v2.docx"
   
   run ${DOCXBOX_BINARY} lorem "${PATH_DOCX_1}" "${path_changed_docx}"
@@ -70,7 +70,7 @@ description="side by side view is displayed"
   check_for_valgrind_error
 }
 
-@test "With \"${BASE_COMMAND} changedFilename.docx -u\" a unified ${description}" {
+@test "Case 5: With \"${BASE_COMMAND} changedFilename.docx -u\" a unified ${DESCRIPTION}" {
   path_changed_docx="test/tmp/cp_table_unordered_list_images_v2.docx"
 
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_1}" Officia Foo "${path_changed_docx}"
@@ -83,7 +83,7 @@ description="side by side view is displayed"
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox diff nonexistent.docx\" is an error message" {
+@test "Case 6: Output of \"docxbox diff nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} diff nonexistent.docx nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -93,7 +93,7 @@ description="side by side view is displayed"
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox diff wrongFileType\" is an error message" {
+@test "Case 7: Output of \"docxbox diff wrongFileType\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"

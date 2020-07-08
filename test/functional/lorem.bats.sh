@@ -22,7 +22,7 @@ BASE_COMMAND="docxbox lorem filename.docx"
 
 ERR_LOG="test/tmp/err.log"
 
-@test "Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
   path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
   run ${DOCXBOX_BINARY} lorem "${path_docx}"
@@ -31,7 +31,7 @@ ERR_LOG="test/tmp/err.log"
   check_for_valgrind_error
 }
 
-@test "Output of \"docxbox lorem {missing argument}\" is an error message" {
+@test "Case 2: Output of \"docxbox lorem {missing argument}\" is an error message" {
   pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} lorem
@@ -41,7 +41,7 @@ ERR_LOG="test/tmp/err.log"
   check_for_valgrind_error
 }
 
-@test "With \"${BASE_COMMAND}\" text gets replaced by dummy text" {
+@test "Case 3: With \"${BASE_COMMAND}\" text gets replaced by dummy text" {
   path_docx="test/tmp/cp_table_unordered_list_images.docx"
   pattern="Culpa ad eiusmod"
 
@@ -53,7 +53,7 @@ ERR_LOG="test/tmp/err.log"
   ${DOCXBOX_BINARY} txt "${path_docx}" | grep --invert-match --count "${pattern}"
 }
 
-title="With \"${BASE_COMMAND} newFilename.docx\" "
+title="Case 4: With \"${BASE_COMMAND} newFilename.docx\" "
 title+="text gets replaced by dummy text and is saved to new file"
 @test "${title}" {
   path_docx_1="test/tmp/cp_table_unordered_list_images.docx"
@@ -66,7 +66,7 @@ title+="text gets replaced by dummy text and is saved to new file"
   ls test/tmp | grep -c lorem.docx
 }
 
-@test "Output of \"docxbox lorem nonexistent.docx\" is an error message" {
+@test "Case 5: Output of \"docxbox lorem nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lorem nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -76,7 +76,7 @@ title+="text gets replaced by dummy text and is saved to new file"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Output of \"docxbox lorem wrong_file_type\" is an error message" {
+@test "Case 6: Output of \"docxbox lorem wrong_file_type\" is an error message" {
   pattern="docxBox Error - File is no ZIP archive:"
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
