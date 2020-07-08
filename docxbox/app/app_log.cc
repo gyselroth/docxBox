@@ -16,7 +16,10 @@ AppLog::AppLog() {
 }
 
 void AppLog::InitMode() {
-  auto env_var = std::getenv("docxBox_notify");
+  auto env_var = std::getenv("docxBox_verbose");
+  verbose_ = env_var != nullptr && 0 == strcmp(env_var, "1");
+
+  env_var = std::getenv("docxBox_notify");
 
   std::string option = env_var == nullptr
       ? ""
@@ -33,9 +36,6 @@ void AppLog::InitMode() {
   } else if (option == "off") {
     mode_ = LogMode::LogTo_None;
   }
-
-  env_var = std::getenv("docxBox_verbose");
-  verbose_ = env_var != nullptr && 0 == strcmp(env_var, "1");
 }
 
 void AppLog::InitLogFile() {
@@ -46,18 +46,28 @@ void AppLog::InitLogFile() {
       : std::string(env_var);
 
   path_log_file_ = setting_path.empty()
-      ? std::string(getenv("PWD")) + "/out.log"
+      ? std::string(std::getenv("PWD")) + "/out.log"
       : setting_path;
 
   env_var = std::getenv("docxBox_clear_log_on_start");
 
-  if (env_var == nullptr) return;
+  if (env_var != nullptr) {
+    std::string setting_flush_on_start = std::string(env_var);
+    clear_log_initially_ = setting_flush_on_start == "1";
+  }
 
-  std::string setting_flush_on_start = std::string(env_var);
-  clear_log_initially_ = setting_flush_on_start == "1";
+  bool has_logfile = true;
 
-  if (clear_log_initially_ || !helper::File::FileExists(path_log_file_))
-    helper::File::WriteToNewFile(path_log_file_, "");
+  if (clear_log_initially_ || !helper::File::FileExists(path_log_file_)) {
+    if (!helper::File::WriteToNewFile(path_log_file_, "")) {
+      has_logfile = false;
+      std::cerr << "Failed create logfile: " << path_log_file_;
+    }
+  }
+
+  if (verbose_ && has_logfile) {
+    std::cout << "Log file is: " << path_log_file_ << "\n";
+  }
 }
 
 AppLog* AppLog::GetInstance() {
@@ -154,7 +164,7 @@ void AppLog::OutputToStdOut() {
 
   for (auto &message : messages_) {
     if (message == prev_message
-        || file_only_messages_.at(index)) {
+        || (!verbose_ && file_only_messages_.at(index))) {
       ++index;
 
       continue;

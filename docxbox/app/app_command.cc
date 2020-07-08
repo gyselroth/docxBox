@@ -45,6 +45,7 @@ AppCommands::Command AppCommands::ResolveCommandByName(
   if (command == "rpi") return Command_ReplaceImage;
   if (command == "rpt") return Command_ReplaceText;
   if (command == "sfv") return Command_SetFieldValue;
+  if (command == "stv") return Command_SetTableValues;
   if (command == "txt") return Command_GetPlainText;
   if (command == "uz") return Command_Unzip;
   if (command == "uzi") return Command_UnzipAndIndentXml;
@@ -76,7 +77,8 @@ bool AppCommands::IsReplaceCommand(Command command) {
       || command == Command_ReplaceImage
       || command == Command_RemoveBetweenText
       || command == Command_LoremIpsum
-      || command == Command_SetFieldValue;
+      || command == Command_SetFieldValue
+      || command == Command_SetTableValues;
 }
 
 }  // namespace docxbox

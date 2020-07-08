@@ -60,6 +60,9 @@ bool AppHelp::PrintHelp(bool with_title,
     case AppCommands::Command_SetFieldValue:
       return PrintHelpOnSetFieldValue();
 
+    case AppCommands::Command_SetTableValues:
+      return PrintHelpOnSetTableValues();
+
     case AppCommands::Command_ModifyMeta:return PrintHelpOnModifyMeta();
     case AppCommands::Command_ReplaceImage:return PrintHelpOnReplaceImage();
     case AppCommands::Command_ReplaceText:return PrintHelpOnReplaceText();
@@ -410,6 +413,19 @@ bool AppHelp::PrintHelpOnSetFieldValue() {
        "    docxbox sfv foo.docx \"MERGEFIELD foo\" bar\n\n"
        "  Save to new DOCX file:\n"
        "    docxbox sfv foo.docx \"MERGEFIELD foo\" bar new.docx\n\n";
+
+  return true;
+}
+
+bool AppHelp::PrintHelpOnSetTableValues() {
+  std::cout
+    << "Command: stv - Set table values:\n"
+       "--------------------------------\n"
+       "Inserts values (and cells) into an existing table, starting at 1st cell of given row.\n"
+       "If there are less columns in the row than values given, more rows are added after the row.\n"
+       "\n"
+       "Fill/Insert four cells starting w/ second row of first table in document:\n"
+       "    docxbox stv foo.docx {\"table\":1,\"row\":2,\"values\":[\"foo\",\"bar\",\"baz\",\"qux\"]}\n\n";
 
   return true;
 }

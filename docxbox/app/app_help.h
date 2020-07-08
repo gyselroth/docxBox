@@ -38,6 +38,7 @@ class AppHelp {
   static bool PrintHelpOnReplaceText();
   static bool PrintHelpOnRemoveBetweenText();
   static bool PrintHelpOnSetFieldValue();
+  static bool PrintHelpOnSetTableValues();
 
   static bool PrintHelpOnUnzip(
       bool with_uz = true,

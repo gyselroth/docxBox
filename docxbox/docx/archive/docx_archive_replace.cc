@@ -388,3 +388,53 @@ bool docx_archive_replace::SetFieldValue() {
          : docxbox::AppLog::NotifyError(
           "Failed rename temporary DOCX to: " + path_docx_out_);
 }
+
+bool docx_archive_replace::SetTableValues() {
+  if ((!is_batch_mode_
+      && !UnzipDocxByArgv(true, "-" + helper::File::GetTmpName()))
+      || !docxbox::AppArgument::IsArgumentGiven(
+          argc_, 3, "Table value insertion specs (JSON)")) return false;
+
+  std::string specs = argv_[3];
+
+  if (!helper::Json::IsJson(specs))
+    return docxbox::AppLog::NotifyError("Invalid table values specs.");
+
+  miniz_cpp::zip_file docx_file(path_docx_in_);
+
+  auto parser = new docx_xml_table(argc_, argv_);
+
+  if (!parser->SetTableValues(path_extract_ + "/word/document.xml", specs)) {
+      delete parser;
+
+      return false;
+    }
+
+
+  delete parser;
+
+  // Create resulting DOCX from files during non-batch mode
+  // or at final step of batch sequence
+  if (is_batch_mode_) {
+    if (!is_final_batch_step_) return true;
+  } else {
+    if (argc_ >= 4) {
+      // Result filename is given as argument
+      path_docx_out_ = argv_[4];
+      helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
+    } else {
+      // Overwrite original DOCX
+      path_docx_out_ = path_docx_in_;
+    }
+  }
+
+  std::string path_docx_out_tmp = path_docx_out_ + "tmp";
+
+  if (!Zip(false, path_extract_, path_docx_out_tmp))
+    return docxbox::AppLog::NotifyError("DOCX creation failed.");
+
+  return 0 == std::rename(path_docx_out_tmp.c_str(), path_docx_out_.c_str())
+         ? docxbox::AppLog::NotifyInfo("Saved DOCX: " + path_docx_out_)
+         : docxbox::AppLog::NotifyError(
+          "Failed rename temporary DOCX to: " + path_docx_out_);
+}
