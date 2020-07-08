@@ -116,13 +116,13 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   check_for_valgrind_error
 }
 
-@test "Output of \"${BASE_COMMAND}\" contains font-charSets" {
+@test "Case 11: Output of \"${BASE_COMMAND}\" contains font-charSets" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "00"
 
   check_for_valgrind_error
 }
 
-@test "Case 11: Output of \"${BASE_COMMAND}\" contains font-family" {
+@test "Case 12: Output of \"${BASE_COMMAND}\" contains font-family" {
   font_family=(
   "roman"
   "swiss"
@@ -135,13 +135,13 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   done
 }
 
-@test "Case 12: Output of \"${BASE_COMMAND}\" contains font-pitch" {
+@test "Case 13: Output of \"${BASE_COMMAND}\" contains font-pitch" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "variable"
 
   check_for_valgrind_error
 }
 
-@test "Case 13: Output of \"docxbox lsf nonexistent.docx\" is an error message" {
+@test "Case 14: Output of \"docxbox lsf nonexistent.docx\" is an error message" {
   run ${DOCXBOX_BINARY} lsf nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -151,7 +151,7 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 14: Output of \"docxbox lsf wrong_file_type\" is an error message" {
+@test "Case 15: Output of \"docxbox lsf wrong_file_type\" is an error message" {
   wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
