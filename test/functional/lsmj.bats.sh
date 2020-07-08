@@ -115,6 +115,25 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
   done
 }
 
+title_first_char="Case 12: First char of the output of \"./docxbox lsmj \
+filename.docx\"'s JSON is a \"{}\""
+@test "${title_first_char}" {
+  ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep "^[{]"
+}
+
+title_last_char="Case 13: Last char of the output of \"./docxbox lsmj \
+filename.docx\"'s JSON is a \"}\""
+@test "${title_last_char}" {
+  ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep "[}]$"
+}
+
+@test "Case 15: Amount opening and closing brackets \"{}\" must match" {
+  amount_opening=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\{")
+  amount_closing=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\}")
+
+  (( amount_opening = amount_closing ))
+}
+
 check_for_valgrind_error() {
   if $IS_VALGRIND_TEST; then
     cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
