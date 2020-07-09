@@ -58,15 +58,3 @@ title+="a directory can be zipped into a docx"
 
   ls test/tmp | grep -c zp_table_unordered_list_images.docx
 }
-
-check_for_valgrind_error() {
-  if $IS_VALGRIND_TEST; then
-    n=$(cat "${VALGRIND_LOG}" | grep --count "${VALGRIND_ERR_PATTERN}" || /bin/true)
-    if [ "$n" -eq 0 ]; then
-      return 0
-    else
-      echo "There was a possible memory leak" >&2
-      return 1
-    fi
-  fi
-}
