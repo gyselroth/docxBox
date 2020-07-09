@@ -5,6 +5,8 @@
 
 load _helper
 
+CMD="docxbox zpc"
+
 VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
@@ -21,8 +23,8 @@ fi
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 UNZIPPED_DOCX_DIRECTORY="cp_table_unordered_list_images.docx-extracted"
 
-@test "Case 1: Output of \"docxbox zpc {missing argument}\" is an error message" {
-  pattern="docxBox Error - Missing argument: Path of directory to be zipped"
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: Path of directory to be zipped"
 
   run ${DOCXBOX_BINARY} zpc
   [ "$status" -ne 0 ]
@@ -31,8 +33,8 @@ UNZIPPED_DOCX_DIRECTORY="cp_table_unordered_list_images.docx-extracted"
   check_for_valgrind_error
 }
 
-@test "Case 2: Output of \"docxbox zpc directory {missing argument}\" is an error message" {
-  pattern="docxBox Error - Missing argument: Filename of docx to be created"
+@test "${BATS_TEST_NUMBER}: \"${CMD} directory {missing argument}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: Filename of docx to be created"
 
   run ${DOCXBOX_BINARY} zpc "${UNZIPPED_DOCX_DIRECTORY}"
   [ "$status" -ne 0 ]
@@ -41,9 +43,7 @@ UNZIPPED_DOCX_DIRECTORY="cp_table_unordered_list_images.docx-extracted"
   check_for_valgrind_error
 }
 
-title="Case 3: With \"docxbox zp directory /path-to-file/filename.docx\" "
-title+="a directory can be zipped into a docx"
-@test "$title" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} directory /path-to-file/filename.docx\" zips directory into docx" {
   if [ ! -d "${UNZIPPED_DOCX_DIRECTORY}" ]; then
     ${DOCXBOX_BINARY} uzi "${PATH_DOCX}"
   fi

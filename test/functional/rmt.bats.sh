@@ -5,11 +5,6 @@
 
 load _helper
 
-#@todo: extend test
-# rmt at the beginning
-# rmt at the end
-# rmt within
-
 CMD="docxbox rmt"  # current command
 
 VALGRIND_LOG="test/tmp/mem-leak.log"
@@ -30,7 +25,7 @@ PATH_DOCX_NEW="test/tmp/cp_plain_text.docx"
 PATH_DOCX_STYLES="test/tmp/cp_text_with_styles.docx"
 ERR_LOG="test/tmp/err.log"
 
-@test "$BATS_TEST_NUMBER: $CMD {no filename}\" prints an error message" {
+@test "$BATS_TEST_NUMBER: \"$CMD {no filename}\" prints an error message" {
   run ${DOCXBOX_BINARY} rmt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -115,7 +110,7 @@ String right-hand-side of part to be removed"
 
   check_for_valgrind_error
 
-  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "w/o special style"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "without special style"
 }
 
 @test "$BATS_TEST_NUMBER: Removing strings at the end of a file" {
@@ -158,7 +153,7 @@ String right-hand-side of part to be removed"
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX_STYLES}" | grep --invert-match "image1.png"
 }
 
-@test "$BATS_TEST_NUMBER: Output of \"$CMD nonexistent.docx\" is an error message" {
+@test "$BATS_TEST_NUMBER: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} rmt nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -167,7 +162,7 @@ String right-hand-side of part to be removed"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "$BATS_TEST_NUMBER: Output of \"$CMD wrong_file_type\" is an error message" {
+@test "$BATS_TEST_NUMBER: \"${CMD} wrong_file_type\" prints an error message" {
   local pattern="docxBox Error - File is no ZIP archive:"
   local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"

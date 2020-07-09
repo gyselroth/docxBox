@@ -5,6 +5,8 @@
 
 load _helper
 
+CMD="docxbox uzi"
+
 VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
@@ -23,8 +25,8 @@ ERR_LOG="test/tmp/err.log"
 
 UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 
-@test "Case 1: Output of \"docxbox uzi {missing argument}\" is an error message" {
-  pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} uzi
   [ "$status" -ne 0 ]
@@ -33,7 +35,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   check_for_valgrind_error
 }
 
-@test "Case 2: Output of \"docxbox uzi nonexistent.docx\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} uzi nonexistent.docx
   [ "$status" -ne 0 ]
   check_for_valgrind_error
@@ -42,9 +44,9 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 3: Output of \"docxbox uzi wrong_file_type\" is an error message" {
-  pattern="docxBox Error - File is no ZIP archive:"
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
+  local pattern="docxBox Error - File is no ZIP archive:"
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")
@@ -57,7 +59,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   done
 }
 
-@test "Case 4: With of \"docxbox uzi filename.docx\" all files are unzipped" {
+@test "${BATS_TEST_NUMBER}: \"docxbox uzi filename.docx\" unzippes all files" {
   run ${DOCXBOX_BINARY} uzi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
   check_for_valgrind_error
@@ -65,7 +67,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
-@test "Case 5: Unzipped files are located in project root" {
+@test "${BATS_TEST_NUMBER}: Unzipped files are located in project root" {
   ls | grep --count "${UNZIPPED_FOLDER}"
 
   if [ -d "${UNZIPPED_FOLDER}" ]; then
@@ -73,7 +75,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   fi
 }
 
-@test "Case 6: With of \"docxbox uz filename.docx -i\" all files are unzipped" {
+@test "${BATS_TEST_NUMBER}: \"docxbox uz filename.docx -i\" unzippes all files" {
   run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" -i
   [ "$status" -eq 0 ]
 
@@ -82,7 +84,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
-@test "Case 7: Unzipped files are located in project root after running uz -i" {
+@test "${BATS_TEST_NUMBER}: Unzipped files are located in project root after running uz -i" {
   ls | grep --count "${UNZIPPED_FOLDER}"
 
   if [ -d "${UNZIPPED_FOLDER}" ]; then
@@ -90,7 +92,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   fi
 }
 
-@test "Case 8: With of \"docxbox uz filename.docx --indent\" all files are unzipped" {
+@test "${BATS_TEST_NUMBER}: \"docxbox uz filename.docx --indent\" unzippes all files" {
   run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" --indent
   [ "$status" -eq 0 ]
 
@@ -99,7 +101,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep "^[[:space:]]\{4\}"
 }
 
-@test "Case 9: Unzipped files are located in project root after running uz --indent" {
+@test "${BATS_TEST_NUMBER}: Unzipped files are located in project root after running uz --indent" {
   ls | grep --count "${UNZIPPED_FOLDER}"
 
   if [ -d "${UNZIPPED_FOLDER}" ]; then

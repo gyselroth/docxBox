@@ -5,6 +5,8 @@
 
 load _helper
 
+CMD="docxbox lsi"
+
 VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
@@ -21,17 +23,15 @@ fi
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
 
-BASE_COMMAND="docxbox lsi filename.docx"
-
-@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Case 2: Output of \"docxbox lsi {missing argument}\" is an error message" {
-  pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} lsi
   [ "$status" -ne 0 ]
@@ -40,8 +40,8 @@ BASE_COMMAND="docxbox lsi filename.docx"
   check_for_valgrind_error
 }
 
-@test "Case 3: Output of \"${BASE_COMMAND}\" contains files' and directories' attributes" {
-  attributes=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays files' and directories' attributes" {
+  local attributes=(
   "Length"
   "Date"
   "Time"
@@ -54,7 +54,7 @@ BASE_COMMAND="docxbox lsi filename.docx"
   done
 }
 
-@test "Case 4: Output of \"${BASE_COMMAND}\" is contained images" {
+@test "${BATS_TEST_NUMBER}: \"${CMD}\" displays contained images" {
   run ${DOCXBOX_BINARY} lsi "${PATH_DOCX}"
   [ "$status" -eq 0 ]
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX}" | grep --count "image2.jpeg"
@@ -62,19 +62,19 @@ BASE_COMMAND="docxbox lsi filename.docx"
   check_for_valgrind_error
 }
 
-@test "Case 5: Output of \"docxbox ls filename.docx -i\" is contained images" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -i\" displays contained images" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -i | grep --count "image2.jpeg"
 
   check_for_valgrind_error
 }
 
-@test "Case 6: Output of \"docxbox ls filename.docx --images\" is contained images" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --images\" displays contained images" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --images | grep --count "image2.jpeg"
 
   check_for_valgrind_error
 }
 
-@test "Case 7: Output of \"docxbox lsi nonexistent.docx\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} lsi nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -84,8 +84,8 @@ BASE_COMMAND="docxbox lsi filename.docx"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 8: Output of \"docxbox lsi wrong_file_type\" is an error message" {
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")

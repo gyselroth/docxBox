@@ -5,6 +5,8 @@
 
 load _helper
 
+CMD="docxbox rpt"
+
 VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
@@ -22,12 +24,9 @@ PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_DOCX_NEW="test/tmp/cp_plain_text.docx"
 ERR_LOG="test/tmp/err.log"
 
-ERROR="is an error message"
 DISPLAY_FILE="word/document.xml"
 
-BASE_COMMAND="docxbox rpt filename.docx"
-
-@test "Case 1: Output of \"docxbox rpt {missing filename}\" ${ERROR}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing filename}\" prints an error message" {
   run ${DOCXBOX_BINARY} rpt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -35,8 +34,8 @@ BASE_COMMAND="docxbox rpt filename.docx"
   check_for_valgrind_error
 }
 
-@test "Case 2: Output of \"${BASE_COMMAND} {missing arguments}\" ${ERROR}" {
-  pattern="docxBox Error - Missing argument: String to be found (and replaced)"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing arguments}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: String to be found (and replaced)"
 
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}"
   [ "$status" -ne 0 ]
@@ -45,8 +44,7 @@ BASE_COMMAND="docxbox rpt filename.docx"
   check_for_valgrind_error
 }
 
-missing_argument="stringToBeReplaced {missing argument}"
-@test "Case 3: Output of \"${BASE_COMMAND} ${missing_argument}\" ${ERROR}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx stringToBeReplaced {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" toBeReplaced
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Replacement" = "${lines[0]}" ]
@@ -54,9 +52,7 @@ missing_argument="stringToBeReplaced {missing argument}"
   check_for_valgrind_error
 }
 
-ARGUMENTS="stringToBeReplaced replacementString"
-appendix="the stringToBeReplaced gets replaced"
-@test "Case 4: With \"${BASE_COMMAND} ${ARGUMENTS}\" ${appendix}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx stringToBeReplaced replacementString\" replaces stringToBeReplaced" {
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem
   [ "$status" -eq 0 ]
 
@@ -65,10 +61,8 @@ appendix="the stringToBeReplaced gets replaced"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count Dorem
 }
 
-arguments_new_docx="stringToBeReplaced replacementString newFile.docx"
-appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file"
-@test "Case 5: With \"${BASE_COMMAND} ${arguments_new_docx}\" ${appendix_new_docx}" {
-  path_docx_out="test/tmp/replacedString.docx"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx stringToBeReplaced replacementString newFile.docx\" replaces stringToBeReplaced saves to new file" {
+  local path_docx_out="test/tmp/replacedString.docx"
 
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem "${path_docx_out}"
   [ "$status" -eq 0 ]
@@ -78,10 +72,8 @@ appendix_new_docx="the stringToBeReplaced gets replaced and is saved to new file
   ${DOCXBOX_BINARY} txt "${path_docx_out}" | grep --count Dorem
 }
 
-title_h1="Case 6: With \"${BASE_COMMAND} heading_as_JSON\" the given string is \
-replaced by a h1"
-@test "${title_h1}" {
-  heading="{\"h1\":{\"text\":\"Foo\"}}"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx heading_as_JSON\" replaces given string with a h1" {
+  local heading="{\"h1\":{\"text\":\"Foo\"}}"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para1\"/>"
 
@@ -94,10 +86,8 @@ replaced by a h1"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para1" | grep --count "${DISPLAY_FILE}"
 }
 
-title_h2="Case 7: With \"${BASE_COMMAND} heading_as_JSON\" the given string is \
-replaced by a h2"
-@test "${title_h2}" {
-  heading="{\"h2\":{\"text\":\"Foo\"}}"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx heading_as_JSON\" replaces given string with a h2" {
+  local heading="{\"h2\":{\"text\":\"Foo\"}}"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para2\"/>"
 
@@ -110,10 +100,8 @@ replaced by a h2"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para2" | grep --count "${DISPLAY_FILE}"
 }
 
-title_h3="Case 8: With \"${BASE_COMMAND} heading_as_JSON\" the given string is \
-replaced by a h3"
-@test "${title_h3}" {
-  heading="{\"h3\":{\"text\":\"Foo\"}}"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx heading_as_JSON\" replaces given string with a h3" {
+  local heading="{\"h3\":{\"text\":\"Foo\"}}"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para3\"/>"
 
@@ -126,10 +114,8 @@ replaced by a h3"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para3" | grep --count "${DISPLAY_FILE}"
 }
 
-title_ul="Case 9: With \"${BASE_COMMAND} ul_as_JSON\" the given string is \
-replaced by a unordered list"
-@test "${title_ul}" {
-  list="{\"ul\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx ul_as_JSON\" replaces given string with an unordered list" {
+  local list="{\"ul\":{\"items\":[\"item-1\",\"item-2\",\"item-3\"]}}"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX_NEW}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"1\"/>"
 
@@ -142,11 +128,9 @@ replaced by a unordered list"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX_NEW}" "w:numPr" | grep --count "${DISPLAY_FILE}"
 }
 
-title_hyperlink="Case 10: With \"${BASE_COMMAND} hyperlink_as_JSON\" the given \
-string is replaced by a hyperlink"
-@test "${title_hyperlink}" {
-  url="\"url\":\"https://github.com/gyselroth/docxbox\""
-  link="{\"link\":{\"text\":\"docxBox\",${url}}}"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx hyperlink_as_JSON\" replaces given string with a hyperlink" {
+  local url="\"url\":\"https://github.com/gyselroth/docxbox\""
+  local link="{\"link\":{\"text\":\"docxBox\",${url}}}"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "</w:hyperlink>"
 
@@ -159,10 +143,9 @@ string is replaced by a hyperlink"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "</w:hyperlink>" | grep --count "${DISPLAY_FILE}"
 }
 
-image_replacement="the given string is replaced by an image"
-@test "Case 11: With \"${BASE_COMMAND} image_as_JSON\" ${image_replacement} using EMU" {
-  image="{\"image\":{\"size\":[2438400,1828800]}}"
-  image_path="test/assets/images/2100x400.jpeg"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx image_as_JSON\" replaces given string with an image using EMU" {
+  local image="{\"image\":{\"size\":[2438400,1828800]}}"
+  local image_path="test/assets/images/2100x400.jpeg"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:drawing>"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "</w:drawing>"
@@ -178,9 +161,9 @@ image_replacement="the given string is replaced by an image"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "</w:drawing>" | grep --count "${DISPLAY_FILE}"
 }
 
-@test "Case 12: With \"${BASE_COMMAND} image_as_JSON\" ${image_replacement} using pixels" {
-  image="{\"image\":{\"size\":[\"2100px\",\"400px\"]}}"
-  image_path="test/assets/images/2100x400.jpeg"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx image_as_JSON\" replaces given string with an image using pixels" {
+  local image="{\"image\":{\"size\":[\"2100px\",\"400px\"]}}"
+  local image_path="test/assets/images/2100x400.jpeg"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:drawing>"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "</w:drawing>"
@@ -196,17 +179,15 @@ image_replacement="the given string is replaced by an image"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "</w:drawing>" | grep --count "${DISPLAY_FILE}"
 }
 
-title_table="Case 13: With \"${BASE_COMMAND} table_as_JSON\" the given string \
-is replaced by a table"
-@test "${title_table}" {
-  header="\"header\":[\"header_one\",\"B\",\"C\"]"
-  first_column="[\"a1\",\"a2\",\"a3\"]"
-  second_column="[\"b1\",\"b2\",\"b3\"]"
-  third_column="[\"c1\",\"c2\",\"c3\"]"
-  content="\"content\":[${first_column},${second_column},${third_column}]"
-  table="{\"table\":{${header},${content}}}"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx table_as_JSON\" replaces given string with a table" {
+  local header="\"header\":[\"header_one\",\"B\",\"C\"]"
+  local first_column="[\"a1\",\"a2\",\"a3\"]"
+  local second_column="[\"b1\",\"b2\",\"b3\"]"
+  local third_column="[\"c1\",\"c2\",\"c3\"]"
+  local content="\"content\":[${first_column},${second_column},${third_column}]"
+  local table="{\"table\":{${header},${content}}}"
 
-  pattern="<w:tblStyle w:val=\"TableGrid\"/>"
+  local pattern="<w:tblStyle w:val=\"TableGrid\"/>"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "${pattern}"
 
@@ -219,17 +200,15 @@ is replaced by a table"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "<w:tbl>" | grep --count "${DISPLAY_FILE}"
 }
 
-title_table_as_JSON="Case 14: With \"${BASE_COMMAND} table_as_JSON\" the given \
-string is replaced by a table with header"
-@test "${title_table_as_JSON}" {
-  header="\"header\":[\"header_one\",\"B\",\"C\"]"
-  first_column="[\"a1\",\"a2\",\"a3\"]"
-  second_column="[\"b1\",\"b2\",\"b3\"]"
-  third_column="[\"c1\",\"c2\",\"c3\"]"
-  content="\"content\":[${first_column},${second_column},${third_column}]"
-  table="{\"table\":{${header},${content}}}"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx table_as_JSON\" replaces given string with a table with header" {
+  local header="\"header\":[\"header_one\",\"B\",\"C\"]"
+  local first_column="[\"a1\",\"a2\",\"a3\"]"
+  local second_column="[\"b1\",\"b2\",\"b3\"]"
+  local third_column="[\"c1\",\"c2\",\"c3\"]"
+  local content="\"content\":[${first_column},${second_column},${third_column}]"
+  local table="{\"table\":{${header},${content}}}"
 
-  pattern="<w:tblStyle w:val=\"TableGrid\"/>"
+  local pattern="<w:tblStyle w:val=\"TableGrid\"/>"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "${pattern}"
 
@@ -242,9 +221,7 @@ string is replaced by a table with header"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count -q "header_one"
 }
 
-title_case_sensitive="Case 15: With \"${BASE_COMMAND} lower_case_string\" the \
-given string gets replaced case sensitive"
-@test "${title_case_sensitive}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx lower_case_string\" replaces given string case sensitive" {
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" "text" "FooBar"
   [ "$status" -eq 0 ]
 
@@ -255,7 +232,7 @@ given string gets replaced case sensitive"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count --invert-match "text"
 }
 
-@test "Case 16: Output of \"docxbox rpt ${ARGUMENTS} nonexistent.docx\" ${ERROR}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} stringToBeReplaced replacementString nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} rpt nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -268,9 +245,9 @@ given string gets replaced case sensitive"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 17: Output of \"docxbox rpt ${ARGUMENTS} wrong_file_type\" ${ERROR}" {
-  pattern="docxBox Error - File is no ZIP archive:"
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} stringToBeReplaced replacementString wrong_file_type\" prints an error message" {
+  local pattern="docxBox Error - File is no ZIP archive:"
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")

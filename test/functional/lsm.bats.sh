@@ -5,6 +5,8 @@
 
 load _helper
 
+CMD="docxbox lsm"
+
 VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
@@ -21,16 +23,14 @@ fi
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
 
-BASE_COMMAND="docxbox lsm filename.docx"
-
-@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsm "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Case 2: Output of \"docxbox lsm {missing argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} lsm
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
@@ -38,37 +38,35 @@ BASE_COMMAND="docxbox lsm filename.docx"
   check_for_valgrind_error
 }
 
-@test "Case 3: Output of \"${BASE_COMMAND}\" contains information about the xml schema" {
-  xml_schema="xmlSchema: http://schemas.openxmlformats.org/officeDocument/2006"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays xml schema information" {
+  local xml_schema="xmlSchema: http://schemas.openxmlformats.org/officeDocument/2006"
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${xml_schema}"
 
   check_for_valgrind_error
 }
 
-title="Case 4: Output of \"${BASE_COMMAND}\" "
-title+="contains information about the creation time and date"
-@test "${title}" {
-  created="created: 2020-06-18T10:30:11Z"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays creation time/date information" {
+  local created="created: 2020-06-18T10:30:11Z"
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${created}"
 
   check_for_valgrind_error
 }
 
-@test "Case 5: Output of \"${BASE_COMMAND}\" contains language information" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays language information" {
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "language: en-US"
 
   check_for_valgrind_error
 }
 
-@test "Case 6: Output of \"${BASE_COMMAND}\" contains information about the revision" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays revision information" {
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "revision: 2"
 
   check_for_valgrind_error
 }
 
-@test "Case 7: Output of \"docxbox lsm nonexistent.docx\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} lsm nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -78,9 +76,9 @@ title+="contains information about the creation time and date"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 8: Output of \"docxbox lsm wrong_file_type\" is an error message" {
-  pattern="docxBox Error - File is no ZIP archive:"
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
+  local pattern="docxBox Error - File is no ZIP archive:"
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")

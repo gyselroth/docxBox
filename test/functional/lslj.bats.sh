@@ -5,6 +5,8 @@
 
 load _helper
 
+CMD="docxbox lslj"
+
 VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
@@ -27,7 +29,7 @@ SEARCH_RESULTS=(
 "\"file\":\"word/numbering.xml\""
 "\"file\":\"word/styles.xml\"")
 
-@test "Case 1: Output of \"docxbox lslj {missing argument}\" ${error_message}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} lslj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -35,9 +37,9 @@ SEARCH_RESULTS=(
   check_for_valgrind_error
 }
 
-@test "Case 2: Output of \"docxbox lslj filename.docx {missing argument} ${error_message}" {
-  pattern="docxBox Error - Missing argument: "
-  pattern+="String or regular expression to be located"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: \
+String or regular expression to be located"
 
   run ${DOCXBOX_BINARY} lslj "${PATH_DOCX}"
   [ "$status" -ne 0 ]
@@ -46,7 +48,7 @@ SEARCH_RESULTS=(
   check_for_valgrind_error
 }
 
-@test "Case 3: \"docxbox lslj filename.docx searchString\" ${description}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep -c "${i}"
@@ -54,7 +56,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "Case 4: \"docxbox lsl filename.docx -j searchString\" ${description}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox lsl filename.docx -j searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" -j fonts | grep -c "${i}"
@@ -62,7 +64,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "Case 5: \"docxbox lsl filename.docx --json searchString\" ${description}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox lsl filename.docx --json searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" --json fonts | grep -c "${i}"
@@ -70,7 +72,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "Case 6: \"docxbox ls filename.docx -lj searchString\" ${description}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -lj searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -lj fonts | grep -c "${i}"
@@ -78,7 +80,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "Case 7: \"docxbox ls filename.docx --locate -j searchString\" ${description}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --locate -j searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate -j fonts | grep -c "${i}"
@@ -86,7 +88,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "Case 8: \"docxbox ls filename.docx --locate --json searchString\" ${description}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --locate --json searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate --json fonts | grep -c "${i}"
@@ -94,7 +96,7 @@ SEARCH_RESULTS=(
   done
 }
 
-@test "Case 9: Output of \"docxbox lslj nonexistent.docx searchString\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx searchString\" prints an error message" {
   run ${DOCXBOX_BINARY} lslj nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
@@ -104,8 +106,8 @@ SEARCH_RESULTS=(
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 10: Output of \"docxbox lslj wrong_file_type searchString\" ${error_message}" {
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type searchString\" prints an error message" {
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")
@@ -118,28 +120,24 @@ SEARCH_RESULTS=(
   done
 }
 
-title_first_char="Case 11: First char of the output of \"./docxbox lslj \
-filename.docx\"'s JSON is a \"[\""
-@test "${title_first_char}" {
+@test "${BATS_TEST_NUMBER}: First char of \"${CMD} filename.docx\"'s JSON is a \"[\"" {
   ${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep "^[[]"
 }
 
-title_last_char="Case 12: Last char of the output of \"./docxbox lslj \
-filename.docx\"'s JSON is a \"]\""
-@test "${title_last_char}" {
+@test "${BATS_TEST_NUMBER}: Last char of \"${CMD} filename.docx\"'s JSON is a \"]\"" {
   ${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep "[]]$"
 }
 
-@test "Case 13: Amount opening and closing brackets \"[]\" must match" {
-  amount_opening=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\[")
-  amount_closing=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\]")
+@test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"[]\" must match" {
+  local amount_opening=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\[")
+  local amount_closing=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\]")
 
   (( amount_opening = amount_closing ))
 }
 
-@test "Case 14: Amount opening and closing brackets \"{}\" must match" {
-  amount_opening=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\{")
-  amount_closing=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\}")
+@test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
+  local amount_opening=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\{")
+  local amount_closing=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\}")
 
   (( amount_opening = amount_closing ))
 }

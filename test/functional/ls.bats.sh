@@ -5,6 +5,8 @@
 
 load _helper
 
+CMD="docxbox ls"
+
 VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
@@ -18,20 +20,19 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-BASE_COMMAND="\"docxbox ls filename.docx"
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_NEW_DOCX="test/tmp/changedFile.docx"
 
 ERR_LOG="test/tmp/err.log"
 
-@test "Case 1: Exit code of ${BASE_COMMAND}\" is zero" {
+@test "$BATS_TEST_NUMBER: Exit code of \"${CMD}\" is zero" {
   run ${DOCXBOX_BINARY} ls "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   check_for_valgrind_error
 }
 
-@test "Case 2: Output of \"docxbox ls {missing argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} ls
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
@@ -39,8 +40,8 @@ ERR_LOG="test/tmp/err.log"
   check_for_valgrind_error
 }
 
-@test "Case 3: Output of ${BASE_COMMAND}\" contains files' and directories' attributes" {
-  attributes=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays files' and directories' attributes" {
+  local attributes=(
   "Length"
   "Date"
   "Time"
@@ -53,22 +54,22 @@ ERR_LOG="test/tmp/err.log"
   done
 }
 
-@test "Case 4: Output of ${BASE_COMMAND}\" is contained files" {
-search_values=(
-"[Content_Types].xml"
-"_rels/.rels"
-"word/_rels/document.xml.rels"
-"word/document.xml"
-"word/theme/theme1.xml"
-"word/media/image1.png"
-"word/media/image2.jpeg"
-"word/settings.xml"
-"word/webSettings.xml"
-"word/styles.xml"
-"word/numbering.xml"
-"docProps/core.xml"
-"word/fontTable.xml"
-"docProps/app.xml")
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays contained files" {
+local search_values=(
+  "[Content_Types].xml"
+  "_rels/.rels"
+  "word/_rels/document.xml.rels"
+  "word/document.xml"
+  "word/theme/theme1.xml"
+  "word/media/image1.png"
+  "word/media/image2.jpeg"
+  "word/settings.xml"
+  "word/webSettings.xml"
+  "word/styles.xml"
+  "word/numbering.xml"
+  "docProps/core.xml"
+  "word/fontTable.xml"
+  "docProps/app.xml")
 
   for i in "${search_values[@]}"
   do
@@ -77,39 +78,38 @@ search_values=(
   done
 }
 
-@test "Case 5: Output of ${BASE_COMMAND}\" contains amount of contained files" {
+@test "${BATS_TEST_NUMBER}: \"${CMD}\" displays amount of contained files" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count '14 files'
 
   check_for_valgrind_error
 }
 
-@test "Case 6: Output of ${BASE_COMMAND}\" contains files' date and time" {
+@test "${BATS_TEST_NUMBER}: \"${CMD}\" displays files' date and time" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
 
   check_for_valgrind_error
 }
 
-long_description="contains files with the given file ending"
-@test "Case 7: Output of ${BASE_COMMAND} *.file-ending\" ${long_description}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} *.file-ending\" displays files with the given file ending" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.jpeg | grep --count "image2.jpeg"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.xml | grep --count "10 files"
 
   check_for_valgrind_error
 }
 
-@test "Case 8: With \"${BASE_COMMAND} changedFile.docx\" a side-by-side comparison is displayed" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} changedFile.docx\" displays a side-by-side comparison" {
   run ${DOCXBOX_BINARY} lorem "${PATH_DOCX}" "${PATH_NEW_DOCX}"
 
-  amount_chars_base=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" | wc --bytes)
-  amount_chars_diff=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | wc --bytes)
+  local amount_chars_base=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" | wc --bytes)
+  local amount_chars_diff=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | wc --bytes)
 
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | (( ${amount_chars_base} < ${amount_chars_diff} ))
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | (( amount_chars_base < amount_chars_diff ))
 
   check_for_valgrind_error
 }
 
-@test "Case 9: Output of ${BASE_COMMAND} nonexistent.docx\" is an error message" {
+@test "${BATS_TEST_NUMBER}: Output of ${CMD} nonexistent.docx\" is an error message" {
   run "$BATS_TEST_DIRNAME"/docxbox ls nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -119,8 +119,8 @@ long_description="contains files with the given file ending"
   check_for_valgrind_error
 }
 
-@test "Case 10: Output of ${BASE_COMMAND} wrong_file_type\" is an error message" {
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: Output of ${CMD} wrong_file_type\" is an error message" {
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")

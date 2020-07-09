@@ -5,6 +5,8 @@
 
 load _helper
 
+{CMD}="docxbox lorem"
+
 VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
@@ -18,12 +20,10 @@ else
   DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
 fi
 
-BASE_COMMAND="docxbox lorem filename.docx"
-
 ERR_LOG="test/tmp/err.log"
 
-@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
-  path_docx="test/tmp/cp_table_unordered_list_images.docx"
+@test "$BATS_TEST_NUMBER: Exit code of \"${CMD} filename.docx\" is zero" {
+  local path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
   run ${DOCXBOX_BINARY} lorem "${path_docx}"
   [ "$status" -eq 0 ]
@@ -31,8 +31,8 @@ ERR_LOG="test/tmp/err.log"
   check_for_valgrind_error
 }
 
-@test "Case 2: Output of \"docxbox lorem {missing argument}\" is an error message" {
-  pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
+@test "$BATS_TEST_NUMBER: \"${CMD} {missing argument}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} lorem
   [ "$status" -ne 0 ]
@@ -41,9 +41,9 @@ ERR_LOG="test/tmp/err.log"
   check_for_valgrind_error
 }
 
-@test "Case 3: With \"${BASE_COMMAND}\" text gets replaced by dummy text" {
-  path_docx="test/tmp/cp_table_unordered_list_images.docx"
-  pattern="Culpa ad eiusmod"
+@test "$BATS_TEST_NUMBER: \"${CMD} filename.docx\" replaces all text by dummy text" {
+  local path_docx="test/tmp/cp_table_unordered_list_images.docx"
+  local pattern="Culpa ad eiusmod"
 
   run ${DOCXBOX_BINARY} lorem "${path_docx}"
   [ "$status" -eq 0 ]
@@ -53,11 +53,9 @@ ERR_LOG="test/tmp/err.log"
   ${DOCXBOX_BINARY} txt "${path_docx}" | grep --invert-match --count "${pattern}"
 }
 
-title="Case 4: With \"${BASE_COMMAND} newFilename.docx\" "
-title+="text gets replaced by dummy text and is saved to new file"
-@test "${title}" {
-  path_docx_1="test/tmp/cp_table_unordered_list_images.docx"
-  path_docx_2="test/tmp/lorem.docx"
+@test "$BATS_TEST_NUMBER: \"${CMD} filename.docx newFilename.docx\" replaces all text by dummy text and saves it to new file" {
+  local path_docx_1="test/tmp/cp_table_unordered_list_images.docx"
+  local path_docx_2="test/tmp/lorem.docx"
 
   ${DOCXBOX_BINARY} lorem "${path_docx_1}" "${path_docx_2}"
 
@@ -66,7 +64,7 @@ title+="text gets replaced by dummy text and is saved to new file"
   ls test/tmp | grep -c lorem.docx
 }
 
-@test "Case 5: Output of \"docxbox lorem nonexistent.docx\" is an error message" {
+@test "$BATS_TEST_NUMBER: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} lorem nonexistent.docx
   [ "$status" -ne 0 ]
 
@@ -76,9 +74,9 @@ title+="text gets replaced by dummy text and is saved to new file"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 6: Output of \"docxbox lorem wrong_file_type\" is an error message" {
-  pattern="docxBox Error - File is no ZIP archive:"
-  wrong_file_types=(
+@test "$BATS_TEST_NUMBER: \"${CMD} wrong_file_type\" prints an error message" {
+  local pattern="docxBox Error - File is no ZIP archive:"
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")
