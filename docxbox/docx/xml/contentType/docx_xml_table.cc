@@ -17,16 +17,15 @@ bool docx_xml_table::SetTableValues(const std::string &path_xml,
   helper::File::GetFileContents(path_xml, &xml_);
 
   // If given markup allows setting table values:
-  // 1. Extract table markup from xml_ into table_xml_
-  // 2. Replace table markup in xml_ by "###TABLE_TO_BE_UPDATED###"
+  // Extract table markup from xml_ into table_xml_
   if (!PrepareXmlToBeUpdated()) return false;
 
   // Modify markup in table_xml_
   EnsureTableHasEnoughCellsToFill();
   SetValuesInCells();
 
-  helper::String::Replace(&xml_, "###STV_TABLE###", table_xml_.c_str());
-
+  // Replace table markup in xml_ than set initialize doc_ from
+  ReInsertTableIntoXml();
   SetDocFromXml();
 
   if (doc_.ErrorID() != 0) return false;
@@ -88,14 +87,13 @@ bool docx_xml_table::InitFromJson(const std::string &json) {
   }
 }
 
-// Ensure table and row to be updated are contained,
-// extract table markup and replace it by placeholder
+// If table and row to be updated are contained: extract table markup
 bool docx_xml_table::PrepareXmlToBeUpdated() {
   if (!XmlContainsTableToBeUpdated()) return docxbox::AppLog::NotifyError(
         std::string("Invalid document- must contain at least")
             + std::to_string(index_table_) + " tables");
 
-  ExtractXmlOfTableToBeUpdated();
+  ExtractTableMarkup();
 
   if (!TableContainsRowToBeUpdated()) return docxbox::AppLog::NotifyError(
         std::string("Invalid document- must contain at least")
@@ -106,16 +104,21 @@ bool docx_xml_table::PrepareXmlToBeUpdated() {
   return true;
 }
 
-void docx_xml_table::ExtractXmlOfTableToBeUpdated() {
-  auto offset_table_start =
+void docx_xml_table::ExtractTableMarkup() {
+  offset_table_start_ =
       helper::String::FindNthOccurrence(xml_, "<w:tbl", index_table_);
 
-  int offset_table_end = xml_.find("</w:tbl>", offset_table_start);
+  offset_table_end_ = xml_.find("</w:tbl>", offset_table_start_);
 
-  auto len = offset_table_end - offset_table_start + 8;
-  table_xml_ = xml_.substr(offset_table_start, len);
+  auto len = offset_table_end_ - offset_table_start_ + 8;
+  table_xml_ = xml_.substr(offset_table_start_, len);
+}
 
-  xml_.replace(offset_table_start, len, "###STV_TABLE###");
+void docx_xml_table::ReInsertTableIntoXml() {
+  xml_.replace(
+      offset_table_start_,
+      offset_table_end_ - offset_table_start_ + 8,
+      table_xml_);
 }
 
 bool docx_xml_table::TableContainsRowToBeUpdated() {

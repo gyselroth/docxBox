@@ -404,12 +404,12 @@ bool docx_archive_replace::SetTableValues() {
 
   auto parser = new docx_xml_table(argc_, argv_);
 
+  // TODO(kay): add option to set table values in header.xml
   if (!parser->SetTableValues(path_extract_ + "/word/document.xml", specs)) {
       delete parser;
 
       return false;
-    }
-
+  }
 
   delete parser;
 

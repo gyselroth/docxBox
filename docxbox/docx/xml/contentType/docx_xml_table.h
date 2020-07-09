@@ -31,6 +31,10 @@ class docx_xml_table: docx_xml {
   int amount_values_to_insert_ = 0;
   std::vector<std::string> values_to_insert_ = {};
 
+  // Offsets of "<w:tbl>...</w:tbl>" in source XML, including tags
+  int64_t offset_table_start_;
+  int64_t offset_table_end_;
+
   std::string table_xml_;  // xml sub-string: table to be modified
 
   bool InitFromJson(const std::string &json);
@@ -42,7 +46,7 @@ class docx_xml_table: docx_xml {
   bool XmlContainsTableToBeUpdated();
   bool TableContainsRowToBeUpdated();
 
-  void ExtractXmlOfTableToBeUpdated();
+  void ExtractTableMarkup();
 
   bool DuplicateRow(int amount = 1, int index_row = 0);
 
@@ -52,6 +56,8 @@ class docx_xml_table: docx_xml {
   void SetValuesInCells();
 
   static void ClearTextInSiblingCells(tinyxml2::XMLElement *cell);
+
+  void ReInsertTableIntoXml();
 };
 
 #endif  // DOCXBOX_DOCX_XML_CONTENTTYPE_DOCX_XML_TABLE_H_
