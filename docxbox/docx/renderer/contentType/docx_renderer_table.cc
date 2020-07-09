@@ -20,60 +20,64 @@ bool docx_renderer_table::InitFromJson() {
   amount_columns_ = 0;
   amount_rows_ = 0;
 
-  auto json_outer = nlohmann::json::parse(json_);
+  try {
+    auto json_outer = nlohmann::json::parse(json_);
 
-  for (auto& json_inner : json_outer) {
-    for (nlohmann::json::iterator it = json_inner.begin();
-         it != json_inner.end();
-         ++it) {
-      const std::string& key = it.key();
+    for (auto &json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        const std::string &key = it.key();
 
-      if (key == "columns") {
-        amount_columns_ = it.value();
-      } else if (key == "rows") {
-        amount_rows_ = it.value();
-      } else if (key == "header") {
-        has_column_headers = true;
-        amount_columns_ = 0;
+        if (key == "columns") {
+          amount_columns_ = it.value();
+        } else if (key == "rows") {
+          amount_rows_ = it.value();
+        } else if (key == "header") {
+          has_column_headers = true;
+          amount_columns_ = 0;
 
-        auto headers = it.value();
+          auto headers = it.value();
 
-        for (nlohmann::json::iterator it_header = headers.begin();
-             it_header != headers.end();
-             ++it_header) {
-          column_headers_.push_back(it_header.value());
+          for (nlohmann::json::iterator it_header = headers.begin();
+               it_header != headers.end();
+               ++it_header) {
+            column_headers_.push_back(it_header.value());
 
-          ++amount_columns_;
-        }
-      } else if (key == "content") {
-        amount_rows_ = 0;
-
-        auto rows = it.value();
-
-        for (nlohmann::json::iterator it_row = rows.begin();
-             it_row != rows.end();
-             ++it_row) {
-          auto row = it_row.value();
-
-          for (nlohmann::json::iterator it_column = row.begin();
-               it_column != row.end();
-               ++it_column) {
-            cell_content_.push_back(it_column.value());
+            ++amount_columns_;
           }
+        } else if (key == "content") {
+          amount_rows_ = 0;
 
-          ++amount_rows_;
+          auto rows = it.value();
+
+          for (nlohmann::json::iterator it_row = rows.begin();
+               it_row != rows.end();
+               ++it_row) {
+            auto row = it_row.value();
+
+            for (nlohmann::json::iterator it_column = row.begin();
+                 it_column != row.end();
+                 ++it_column) {
+              cell_content_.push_back(it_column.value());
+            }
+
+            ++amount_rows_;
+          }
+        } else if (key == "pre" || key == "post") {
+          ExtractPreOrPostfix(it);
         }
-      } else if (key == "pre" || key == "post") {
-        ExtractPreOrPostfix(it);
       }
     }
-  }
 
-  return amount_columns_ == 0
-             || amount_rows_ == 0
-         ? docxbox::AppLog::NotifyError(
-          "Invalid table config: must contain column(s) / row(s)")
-         : true;
+    return amount_columns_ == 0
+               || amount_rows_ == 0
+           ? docxbox::AppLog::NotifyError(
+            "Invalid table config: must contain column(s) / row(s)")
+           : true;
+  } catch (nlohmann::detail::parse_error &e) {
+    return docxbox::AppLog::NotifyError("Parse error - Invalid JSON: " + json_);
+  }
 }
 
 // @see http://officeopenxml.com/WPtable.php
@@ -104,10 +108,10 @@ std::string docx_renderer_table::Render() {
 
 std::string docx_renderer_table::RenderTableProperties() {
   return
-    "<w:tblPr>"
+      "<w:tblPr>"
       "<w:tblStyle w:val=\"TableGrid\"/>"
       "<w:tblW w:w=\"" + std::to_string(table_width_) + "\" w:type=\"pct\"/>"
-    "</w:tblPr>";
+                                                        "</w:tblPr>";
 }
 
 std::string docx_renderer_table::RenderTableGrid() {
@@ -152,10 +156,10 @@ std::string docx_renderer_table::RenderTableCell(
     int index_cell, bool is_header) {
   return
       "<w:tc>"
-        "<w:tcPr>"
-          "<w:tcW w:w=\"" + std::to_string(col_width_) + "\" w:type=\"dxa\"/>"
-        "</w:tcPr>"
-        + RenderTextInRunInParagraph(is_header
-            ? column_headers_[index_cell]
-            : cell_content_[index_cell]) + "</w:tc>";
+      "<w:tcPr>"
+      "<w:tcW w:w=\"" + std::to_string(col_width_) + "\" w:type=\"dxa\"/>"
+                                                     "</w:tcPr>"
+          + RenderTextInRunInParagraph(is_header
+                                       ? column_headers_[index_cell]
+                                       : cell_content_[index_cell]) + "</w:tc>";
 }

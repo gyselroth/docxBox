@@ -3,6 +3,7 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
+* Add set table values ``stv`` command
 * Merge textual runs (``<w:r><w:t>``) in direct succession w/ identical run properties
 * Segment tags containing more text than given string-markers (``rmt``, ``rpt``) for finer granularity 
 * Modify multiple attributes via JSON argument of ``mm`` command

@@ -18,59 +18,62 @@ void docx_renderer_image::SetRelationshipId(
 }
 
 bool docx_renderer_image::InitFromJson() {
-  if (!helper::Json::IsJson(json_)
-      || !docx_renderer::IsElementType(ElementType_Image)) return false;
+  if (!docx_renderer::IsElementType(ElementType_Image)) return false;
 
-  auto json_outer = nlohmann::json::parse(json_);
+  try {
+    auto json_outer = nlohmann::json::parse(json_);
 
-  for (auto& json_inner : json_outer) {
-    for (nlohmann::json::iterator it = json_inner.begin();
-         it != json_inner.end();
-         ++it) {
-      const std::string& key = it.key();
+    for (auto &json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        const std::string &key = it.key();
 
-      if (key == "name") {
-        image_name = it.value();
-      } else if (key == "offset") {
-        auto value = it.value();
+        if (key == "name") {
+          image_name = it.value();
+        } else if (key == "offset") {
+          auto value = it.value();
 
-        offset_x_ = value.at(0);
-        offset_y_ = value.at(1);
-      } else if (key == "size") {
-        auto value = it.value();
+          offset_x_ = value.at(0);
+          offset_y_ = value.at(1);
+        } else if (key == "size") {
+          auto value = it.value();
 
-        try {
-          width_ = value.at(0);
-        } catch (nlohmann::detail::type_error &error) {
-          // Fallback: Value not given as int, assume it being a string
-          std::string width_str = value.at(0);
+          try {
+            width_ = value.at(0);
+          } catch (nlohmann::detail::type_error &error) {
+            // Fallback: Value not given as int, assume it being a string
+            std::string width_str = value.at(0);
 
-          width_ = (helper::String::EndsWith(width_str, "px"))
-                   ? PixelsToEmus(width_str)
-                   : helper::Numeric::ExtractLeadingNumber(width_str);
+            width_ = (helper::String::EndsWith(width_str, "px"))
+                     ? PixelsToEmus(width_str)
+                     : helper::Numeric::ExtractLeadingNumber(width_str);
+          }
+
+          try {
+            height_ = value.at(1);
+          } catch (nlohmann::detail::type_error &error) {
+            // Fallback: Value not given as int, assume it being a string
+            std::string height_str = value.at(1);
+
+            height_ = (helper::String::EndsWith(height_str, "px"))
+                      ? PixelsToEmus(height_str)
+                      : helper::Numeric::ExtractLeadingNumber(height_str);
+          }
+        } else if (key == "pre" || key == "post") {
+          ExtractPreOrPostfix(it);
         }
-
-        try {
-          height_ = value.at(1);
-        } catch (nlohmann::detail::type_error &error) {
-          // Fallback: Value not given as int, assume it being a string
-          std::string height_str = value.at(1);
-
-          height_ = (helper::String::EndsWith(height_str, "px"))
-                   ? PixelsToEmus(height_str)
-                   : helper::Numeric::ExtractLeadingNumber(height_str);
-        }
-      } else if (key == "pre" || key == "post") {
-        ExtractPreOrPostfix(it);
       }
     }
-  }
 
-  return width_ > 0 && height_ > 0;
+    return width_ > 0 && height_ > 0;
+  } catch (nlohmann::detail::parse_error &e) {
+    return docxbox::AppLog::NotifyError("Parse error - Invalid JSON: " + json_);
+  }
 }
 
 std::string docx_renderer_image::Render(
-    const std::string& image_relationship_id) {
+    const std::string &image_relationship_id) {
   SetRelationshipId(image_relationship_id);
 
   return Render();

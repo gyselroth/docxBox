@@ -89,19 +89,18 @@ bool String::Contains(const std::string &haystack, const std::string& needle) {
 int String::SubStrCount(const std::string &haystack,
                         const std::string& needle,
                         size_t offset) {
-  unsigned long len_needle = needle.length();
-
+  auto len_needle = needle.length();
   int occurrences = 0;
 
-  while ((offset = haystack.find(needle, offset )) != std::string::npos) {
-    ++ occurrences;
+  while ((offset = haystack.find(needle, offset)) != std::string::npos) {
+    ++occurrences;
     offset += len_needle;
   }
-  
+
   return occurrences;
 }
 
-int String::FindNthOccurrence(const std::string &haystack,
+int64_t String::FindNthOccurrence(const std::string &haystack,
                               const std::string& needle,
                               int n,
                               size_t offset) {
@@ -116,7 +115,27 @@ int String::FindNthOccurrence(const std::string &haystack,
     ++count;
   }
 
-  return offset;
+  return count < n ? -1 : offset;
+}
+
+int String::FindLast(const std::string &str,
+                     const std::string &needle,
+                     int offset_start,
+                     int offset_end) {
+  int offset_needle = offset_start;
+  int offset_needle_prev = offset_needle;
+
+  do {
+    offset_needle_prev = offset_needle;
+    offset_needle = str.find(needle, offset_needle + 1);
+  } while (offset_needle != std::string::npos
+           && offset_needle < offset_end);
+
+  return
+      offset_needle == std::string::npos
+          || offset_needle > offset_end
+      ? offset_needle_prev
+      : offset_needle;
 }
 
 bool String::IsWhiteSpace(const std::string &str) {

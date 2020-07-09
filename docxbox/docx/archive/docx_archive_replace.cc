@@ -418,9 +418,9 @@ bool docx_archive_replace::SetTableValues() {
   if (is_batch_mode_) {
     if (!is_final_batch_step_) return true;
   } else {
-    if (argc_ >= 4) {
+    if (argc_ >= 5) {
       // Result filename is given as argument
-      path_docx_out_ = argv_[4];
+      path_docx_out_ = argv_[5];
       helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
     } else {
       // Overwrite original DOCX

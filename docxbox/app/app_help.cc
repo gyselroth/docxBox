@@ -421,11 +421,15 @@ bool AppHelp::PrintHelpOnSetTableValues() {
   std::cout
     << "Command: stv - Set table values:\n"
        "--------------------------------\n"
-       "Inserts values (and cells) into an existing table, starting at 1st cell of given row.\n"
-       "If there are less columns in the row than values given, more rows are added after the row.\n"
+       "Inserts values (and cells) into an existing table, "
+       "starting at 1st cell of given row.\n"
+       "If there are less columns in the row than values given, "
+       "more rows are added after the row.\n"
        "\n"
-       "Fill/Insert four cells starting w/ second row of first table in document:\n"
-       "    docxbox stv foo.docx {\"table\":1,\"row\":2,\"values\":[\"foo\",\"bar\",\"baz\",\"qux\"]}\n\n";
+       "Fill/Insert four cells starting w/ second row of first table in "
+       "document:\n"
+       "    docxbox stv foo.docx "
+       "{\"table\":1,\"row\":2,\"values\":[\"foo\",\"bar\",\"baz\"]}\n\n";
 
   return true;
 }
