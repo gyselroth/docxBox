@@ -9,7 +9,7 @@ VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
 
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -285,6 +285,12 @@ given string gets replaced case sensitive"
 
 check_for_valgrind_error() {
   if $IS_VALGRIND_TEST; then
-    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+    n=$(cat "${VALGRIND_LOG}" | grep --count "${VALGRIND_ERR_PATTERN}" || /bin/true)
+    if [ "$n" -eq 0 ]; then
+      return 0
+    else
+      echo "There was a possible memory leak" >&2
+      return 1
+    fi
   fi
 }

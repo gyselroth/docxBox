@@ -9,7 +9,7 @@ VALGRIND_LOG="test/tmp/mem-leak.log"
 VALGRIND="valgrind -v --leak-check=full\
  --log-file=${VALGRIND_LOG}"
 
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [0-9] errors from [0-9] contexts"
+VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
 
 if $IS_VALGRIND_TEST;
 then
@@ -20,6 +20,7 @@ fi
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_DOCX_PLAINTEXT="test/tmp/cp_plain_text.docx"
+PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 BASE_COMMAND="docxbox batch filename.docx"
 
 title_one_missing_argument="Case 1: Output of \"docxbox batch \
@@ -64,7 +65,7 @@ and a string can be replaced with the \"rpt\" command"
 
   bytes_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --bytes)
 
-  run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" ${batch}
+  run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
   check_for_valgrind_error
 
@@ -82,7 +83,7 @@ and a string can be replaced with the \"rmt\" command"
 
   wc_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
 
-  run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" ${batch}
+  run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
   check_for_valgrind_error
 
@@ -91,8 +92,27 @@ and a string can be replaced with the \"rmt\" command"
   (( wc_before_batch > wc_after_batch ))
 }
 
+title_sfv="Case 6: With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${APPENDIX} \
+and a mergefield can be replaced with the \"sfv\" command"
+@test "${title_sfv}" {
+  mergefield="MERGEFIELD  Mergefield_One"
+  batch="{\"1\":{\"sfv\":[\"MERGEFIELD  Mergefield_One\",\"FooBar\"]}}"
+
+  run ${DOCXBOX_BINARY} batch "${PATH_DOCX_MERGEFIELD}" "${batch}"
+
+  check_for_valgrind_error
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_MERGEFIELD}" | grep --count "FooBar"
+}
+
 check_for_valgrind_error() {
   if $IS_VALGRIND_TEST; then
-    cat "${VALGRIND_LOG}" | grep --count --invert-match "${VALGRIND_ERR_PATTERN}"
+    n=$(cat "${VALGRIND_LOG}" | grep --count "${VALGRIND_ERR_PATTERN}" || /bin/true)
+    if [ "$n" -eq 0 ]; then
+      return 0
+    else
+      echo "There was a possible memory leak" >&2
+      return 1
+    fi
   fi
 }
