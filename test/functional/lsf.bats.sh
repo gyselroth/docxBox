@@ -164,15 +164,3 @@ LONGHAND_COMMAND="docxbox ls filename.docx"
     check_for_valgrind_error
   done
 }
-
-check_for_valgrind_error() {
-  if $IS_VALGRIND_TEST; then
-    n=$(cat "${VALGRIND_LOG}" | grep --count "${VALGRIND_ERR_PATTERN}" || /bin/true)
-    if [ "$n" -eq 0 ]; then
-      return 0
-    else
-      echo "There was a possible memory leak" >&2
-      return 1
-    fi
-  fi
-}
