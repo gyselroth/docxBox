@@ -354,6 +354,11 @@ bool docx_archive_replace::SetFieldValue() {
   std::string field_identifier = argv_[3];
   std::string value = argv_[4];
 
+  if (is_batch_mode_) {
+    field_identifier = helper::String::UnwrapQuotes(field_identifier);
+    value = helper::String::UnwrapQuotes(value);
+  }
+
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto file_list = docx_file.infolist();
