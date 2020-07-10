@@ -4,21 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox sfv"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 PATH_DOCX="test/tmp/cp_mergefields.docx"
 ERR_LOG="test/tmp/err.log"
@@ -34,7 +22,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
@@ -42,7 +30,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Field identifier" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx fieldIdentifier {missing argument}\" prints an error message" {
@@ -50,14 +38,14 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Value to be set" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx fieldIdentifier fieldValue\" changes value of given field" {
   run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD}" foobar
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "foobar"
 }
@@ -66,7 +54,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
   run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD_HEADER}" foobar
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "foobar"
 }
@@ -75,7 +63,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
   run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD_FOOTER}" foobar
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "foobar"
 }
@@ -84,7 +72,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
   run ${DOCXBOX_BINARY} sfv nonexistent.docx
   [ "$status" -ne 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} sfv nonexistent.docx "${MERGEFIELD}" foobar 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -100,7 +88,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lorem "${i}" "${MERGEFIELD}" foobar 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }

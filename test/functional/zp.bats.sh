@@ -4,21 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox zp"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
 
@@ -29,7 +17,7 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} directory {missing argument}\" prints an error message" {
@@ -39,7 +27,7 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} directory /path-to-file/filename.docx\" zips directory into docx" {
@@ -54,7 +42,7 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
   run ${DOCXBOX_BINARY} zp "${UNZIPPED_DOCX_DIRECTORY}" "${path_new_docx}"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ls test/tmp | grep -c zp_table_unordered_list_images.docx
 }

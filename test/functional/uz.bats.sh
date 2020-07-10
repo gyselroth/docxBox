@@ -4,21 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox uz"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 ERR_LOG="test/tmp/err.log"
 
@@ -31,13 +19,13 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} uz nonexistent.docx
   [ "$status" -ne 0 ]
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} uz nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -53,7 +41,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} uz "${i}" 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
@@ -63,7 +51,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 
   run ${DOCXBOX_BINARY} uz test/tmp/cp_bio_assay.docx
   [ "$status" -eq 0 ]
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   cat "${UNZIPPED_FOLDER}/word/document.xml" | grep --invert-match "${pattern}"
 }

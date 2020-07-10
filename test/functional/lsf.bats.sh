@@ -4,21 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox lsf"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 PATH_DOCX="test/tmp/cp_mergefields.docx"
 ERR_LOG="test/tmp/err.log"
@@ -27,7 +15,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
@@ -37,7 +25,7 @@ ERR_LOG="test/tmp/err.log"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays ground information" {
@@ -45,7 +33,7 @@ ERR_LOG="test/tmp/err.log"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --fonts\" displays ground information" {
@@ -53,7 +41,7 @@ ERR_LOG="test/tmp/err.log"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -f\" displays ground information" {
@@ -61,7 +49,7 @@ ERR_LOG="test/tmp/err.log"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD}\" displays files' and directories' attributes" {
@@ -75,20 +63,20 @@ ERR_LOG="test/tmp/err.log"
   for i in "${attributes[@]}"
   do
     ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays fontfile-filename" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "fontTable.xml"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays amount fonts" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "10 fonts"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays font names" {
@@ -105,20 +93,20 @@ ERR_LOG="test/tmp/err.log"
   for i in "${font_names[@]}"
   do
     ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays alternative font names if available" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "宋体"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays font-charSets" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "00"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays font-family" {
@@ -130,21 +118,21 @@ ERR_LOG="test/tmp/err.log"
   for i in "${font_family[@]}"
   do
     ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays font-pitch" {
   ${DOCXBOX_BINARY} lsf "${PATH_DOCX}" | grep --count "variable"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} lsf nonexistent.docx
   [ "$status" -ne 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsf nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -160,6 +148,6 @@ ERR_LOG="test/tmp/err.log"
   do
     ${DOCXBOX_BINARY} lsf "${i}" 2>&1 | tee "${ERR_LOG}"
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }

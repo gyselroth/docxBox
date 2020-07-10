@@ -4,22 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
-
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox batch"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_DOCX_PLAINTEXT="test/tmp/cp_plain_text.docx"
@@ -31,7 +18,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX file" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 
@@ -40,7 +27,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Batch commands JSON" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 # TODO(Lucas): Add testcase batch {1:mm,2:rpt}
@@ -50,7 +37,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
   local batch="{\"1\":{\"mm\":[\"title\",\"foo\"]}}"
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX}" "${batch}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm ${PATH_DOCX} | grep --count "title: foo"
 }
@@ -62,7 +49,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | grep --count "FooBar"
 
@@ -78,7 +65,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   local wc_after_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
 
@@ -91,7 +78,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX_MERGEFIELD}" "${batch}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_MERGEFIELD}" | grep --count "FooBar"
 }

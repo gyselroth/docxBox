@@ -4,32 +4,18 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox lsij"
 
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
-
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
-
-DESCRIPTION="are contained images as JSON"
 
 @test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsij "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
@@ -37,44 +23,44 @@ DESCRIPTION="are contained images as JSON"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays contained images as JSON" {
   ${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "image2.jpeg"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox lsi filename.docx --json\" displays contained images as JSON" {
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX}" --json | grep --count "image2.jpeg"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox lsi filename.docx -j\" displays contained images as JSON" {
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX}" -j | grep --count "image2.jpeg"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -ij\" displays contained images as JSON" {
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX}" -ij | grep --count "image2.jpeg"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --images --json\" displays contained images as JSON" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --images --json | grep --count "image2.jpeg"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} lsij nonexistent.docx
   [ "$status" -ne 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsij nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -89,7 +75,7 @@ DESCRIPTION="are contained images as JSON"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsij "${i}" 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

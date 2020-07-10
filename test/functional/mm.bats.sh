@@ -4,21 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox mm"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 PATH_DOCX="test/tmp/cp_bio_assay.docx"
 ERR_LOG="test/tmp/err.log"
@@ -28,7 +16,7 @@ ERR_LOG="test/tmp/err.log"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
@@ -38,14 +26,14 @@ ERR_LOG="test/tmp/err.log"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx title {argument}\" modifies meta attribute \"title\"" {
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" title "someTitle"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "title: someTitle"
 }
@@ -54,7 +42,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" creator "John Doe"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "creator: John Doe"
 }
@@ -65,7 +53,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" lastModifiedBy "John Doe"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
@@ -77,7 +65,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" lastPrinted $print_date
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
@@ -86,7 +74,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" language "de-CH"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "language: de-CH"
 }
@@ -97,7 +85,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" created "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
@@ -108,7 +96,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${pattern}"
 }
@@ -119,7 +107,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "${created}"
 }
@@ -128,7 +116,7 @@ ERR_LOG="test/tmp/err.log"
   run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" revision "25"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "revision: 25"
 }
@@ -137,7 +125,7 @@ ERR_LOG="test/tmp/err.log"
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} mm nonexistent.docx
   [ "$status" -ne 0 ]
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} mm nonexistent.docx revision "1" 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -153,7 +141,7 @@ ERR_LOG="test/tmp/err.log"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lorem "${i}" revision "12" 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }

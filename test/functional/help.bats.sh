@@ -4,19 +4,7 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
+source ./test/functional/_set_docxbox_binary.sh
 
 REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 
@@ -24,37 +12,37 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
 @test "$BATS_TEST_NUMBER: Running w/o any command displays help" {
   ${DOCXBOX_BINARY} | grep "Usage: docxbox <command> \[args\]"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: Running w/o any command displays version" {
   ${DOCXBOX_BINARY} | grep --perl-regexp --only-matching "${REGEX_VERSION_CHECK}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h\" displays help" {
   ${DOCXBOX_BINARY} h | grep "Usage: docxbox <command> \[args\]"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h\" displays version" {
   ${DOCXBOX_BINARY} h | grep --perl-regexp --only-matching "${REGEX_VERSION_CHECK}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox ?\" displays help" {
   ${DOCXBOX_BINARY} ? | grep "Usage: docxbox <command> \[args\]"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox ?\" displays version" {
   ${DOCXBOX_BINARY} ? | grep --perl-regexp --only-matching "${REGEX_VERSION_CHECK}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 # List DOCX contents:
@@ -63,7 +51,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: ls - List DOCX contents:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsj\" displays help for lsj command" {
@@ -71,7 +59,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: ls - List DOCX contents:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsl\" displays help for lsl command" {
@@ -81,7 +69,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lslj\" displays help for lslj command" {
@@ -91,7 +79,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsf\" displays help for lsf command" {
@@ -99,7 +87,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: lsf - List fonts referenced in DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsfj\" displays help for lsfj command" {
@@ -107,7 +95,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: lsf - List fonts referenced in DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsd\" displays help for lsd command" {
@@ -115,7 +103,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: lsd - List fields from DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsdj\" displays help for lsdj command" {
@@ -123,7 +111,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: lsd - List fields from DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsi\" displays help for lsi command" {
@@ -131,7 +119,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: lsf - List images in DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsij\" displays help for lsij command" {
@@ -139,7 +127,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: lsf - List images in DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsm\" displays help for lsm command" {
@@ -147,7 +135,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: lsm - List meta data of DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h lsmj\" displays help for lsmj command" {
@@ -155,7 +143,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: lsm - List meta data of DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 # Manipulate DOCX document:
@@ -164,7 +152,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: rpi - Replace image in DOCX document:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h rpt\" displays help for rpt command" {
@@ -172,7 +160,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: rpt - Replace text in DOCX document:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h rmt\" displays help for rmt command" {
@@ -182,7 +170,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h mm\" displays help for mm command" {
@@ -190,7 +178,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: mm - Modify or set meta attribute in DOCX:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h sfv\" displays help for sfv command" {
@@ -198,7 +186,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: sfv - Set field value:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 # Convert DOCX:
@@ -207,7 +195,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: txt - Output plaintext from DOCX document:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h diff\" displays help for diff command" {
@@ -217,7 +205,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 # Batch process
@@ -228,7 +216,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 # Extract and create DOCX:
@@ -237,7 +225,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: uz - Unzip given DOCX file:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h uzi\" displays help for uzi command" {
@@ -245,7 +233,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: uzi - Unzip DOCX and indent XML files:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h uzm\" displays help for uzm command" {
@@ -253,7 +241,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: uzm - Unzip only media files DOCX file:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h zp\" displays help for zp command" {
@@ -261,7 +249,7 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "Command: zp - Create (zip) DOCX from files:" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"docxbox h zpc\" displays help for zpc command" {
@@ -271,5 +259,5 @@ REGEX_VERSION_CHECK="(^|\s)+(docxBox v)\K([0-9]|\.)*(?=\s|$)"
   [ "$status" -eq 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }

@@ -4,21 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox lslj"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
@@ -34,7 +22,7 @@ SEARCH_RESULTS=(
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
   
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
@@ -45,14 +33,14 @@ String or regular expression to be located"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
   
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep -c "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
@@ -60,7 +48,7 @@ String or regular expression to be located"
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" -j fonts | grep -c "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
@@ -68,7 +56,7 @@ String or regular expression to be located"
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" --json fonts | grep -c "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
@@ -76,7 +64,7 @@ String or regular expression to be located"
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -lj fonts | grep -c "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
@@ -84,7 +72,7 @@ String or regular expression to be located"
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate -j fonts | grep -c "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
@@ -92,7 +80,7 @@ String or regular expression to be located"
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate --json fonts | grep -c "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
@@ -100,7 +88,7 @@ String or regular expression to be located"
   run ${DOCXBOX_BINARY} lslj nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lslj nonexistent.docx fonts 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
@@ -115,7 +103,7 @@ String or regular expression to be located"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lslj "${i}" fonts 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

@@ -5,34 +5,20 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox diff"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 PATH_DOCX_1="test/tmp/cp_table_unordered_list_images.docx"
 PATH_DOCX_2="test/tmp/cp_bio_assay.docx"
 ERR_LOG="test/tmp/err.log"
-
-ERROR_MESSAGE="is an error message"
 
 @test "$BATS_TEST_NUMBER: \"${CMD} filename.docx {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} diff
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX file to compare with" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
@@ -43,7 +29,7 @@ ERROR_MESSAGE="is an error message"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx otherFilename.docx {missing argument}\" prints an error message " {
@@ -53,7 +39,7 @@ ERROR_MESSAGE="is an error message"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename_v1.docx filename_v2.docx compare_file\" displays a side by side view" {
@@ -66,7 +52,7 @@ ERROR_MESSAGE="is an error message"
   
   (( result_original < result_changed ))
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} changedFilename.docx -u\" displays a unified side by side view" {
@@ -79,7 +65,7 @@ ERROR_MESSAGE="is an error message"
 
   (( result_original != result_changed ))
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
@@ -89,7 +75,7 @@ ERROR_MESSAGE="is an error message"
   ${DOCXBOX_BINARY} diff nonexistent.docx nonexistent.docx word/document.xml 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} wrongFileType\" prints an error message" {
@@ -102,7 +88,7 @@ ERROR_MESSAGE="is an error message"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} diff "${i}" "${PATH_DOCX_1}" word/document.xml 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }

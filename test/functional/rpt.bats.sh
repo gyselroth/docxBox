@@ -4,21 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox rpt"
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_DOCX_NEW="test/tmp/cp_plain_text.docx"
@@ -31,7 +19,7 @@ DISPLAY_FILE="word/document.xml"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing arguments}\" prints an error message" {
@@ -41,7 +29,7 @@ DISPLAY_FILE="word/document.xml"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx stringToBeReplaced {missing argument}\" prints an error message" {
@@ -49,14 +37,14 @@ DISPLAY_FILE="word/document.xml"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Replacement" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx stringToBeReplaced replacementString\" replaces stringToBeReplaced" {
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count Dorem
 }
@@ -67,7 +55,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem "${path_docx_out}"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${path_docx_out}" | grep --count Dorem
 }
@@ -80,7 +68,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:pStyle w:val=\"para1\"/>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para1" | grep --count "${DISPLAY_FILE}"
@@ -94,7 +82,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:pStyle w:val=\"para2\"/>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para2" | grep --count "${DISPLAY_FILE}"
@@ -108,7 +96,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:pStyle w:val=\"para3\"/>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "para3" | grep --count "${DISPLAY_FILE}"
@@ -122,7 +110,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" TITLE ${list}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX_NEW}" "${DISPLAY_FILE}" | grep --count "<w:numId w:val=\"1\"/>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX_NEW}" "w:numPr" | grep --count "${DISPLAY_FILE}"
@@ -137,7 +125,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${link}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "</w:hyperlink>"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "</w:hyperlink>" | grep --count "${DISPLAY_FILE}"
@@ -153,7 +141,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${image} ${image_path}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:drawing>"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "</w:drawing>"
@@ -171,7 +159,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${image} ${image_path}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "<w:drawing>"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "</w:drawing>"
@@ -194,7 +182,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${table}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count "${pattern}"
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "<w:tbl>" | grep --count "${DISPLAY_FILE}"
@@ -215,7 +203,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${table}
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "header_one" | grep --count -q "${DISPLAY_FILE}"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --count -q "header_one"
@@ -225,7 +213,7 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" "text" "FooBar"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "Text"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "FooBar"
@@ -236,11 +224,11 @@ DISPLAY_FILE="word/document.xml"
   run ${DOCXBOX_BINARY} rpt nonexistent.docx
   [ "$status" -ne 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} rpt nonexistent.docx Lorem Dorem 2>&1 | tee "${ERR_LOG}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
@@ -255,7 +243,7 @@ DISPLAY_FILE="word/document.xml"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} rpt "${i}" Lorem Dorem 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
