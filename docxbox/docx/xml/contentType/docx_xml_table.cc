@@ -16,9 +16,11 @@ bool docx_xml_table::SetTableValues(const std::string &path_xml,
   path_xml_file_ = path_xml;
   helper::File::GetFileContents(path_xml, &xml_);
 
-  // If given markup allows setting table values:
-  // Extract table markup from xml_ into table_xml_
-  if (!PrepareXmlToBeUpdated()) return false;
+  if (cell_start_text_.empty()) {
+    if (!ExtractTableMarkupByIndexes()) return false;
+  } else {
+    if (!ExtractTableMarkupByCellContent()) return false;
+  }
 
   // Modify markup in table_xml_
   EnsureTableHasEnoughCellsToFill();
@@ -49,7 +51,9 @@ bool docx_xml_table::InitFromJson(const std::string &json) {
           index_table_ = it.value();
 // TODO(kay): wrap into try/catch and allow being given as string also
 //          index_table_ = std::stoi(std::string(it.value()));
-        } else if (key == "row") {
+        } else if (key == "cell") {
+          cell_start_text_ = it.value();
+        }  else if (key == "row") {
           index_row_start_ = it.value();
 // TODO(kay): wrap into try/catch and allow being given as string also
 //          std::stoi(std::string(value));
@@ -76,8 +80,8 @@ bool docx_xml_table::InitFromJson(const std::string &json) {
       }
     }
 
-    return index_table_ == 0
-               || index_row_start_ == 0
+    return (cell_start_text_.empty()
+        && (index_table_ == 0 || index_row_start_ == 0))
                || amount_values_to_insert_ == 0
                || values_to_insert_.empty()
            ? docxbox::AppLog::NotifyError("Invalid table config")
@@ -87,15 +91,21 @@ bool docx_xml_table::InitFromJson(const std::string &json) {
   }
 }
 
-// If table and row to be updated are contained: extract table markup
-bool docx_xml_table::PrepareXmlToBeUpdated() {
-  if (!XmlContainsTableToBeUpdated()) return docxbox::AppLog::NotifyError(
+bool docx_xml_table::ExtractTableMarkupByIndexes() {
+  if (!XmlContainsTableToBeUpdated())
+    return docxbox::AppLog::NotifyError(
         std::string("Invalid document- must contain at least")
             + std::to_string(index_table_) + " tables");
 
+  offset_table_start_ =
+      helper::String::FindNthOccurrence(xml_, "<w:tbl", index_table_);
+
+  offset_table_end_ = xml_.find("</w:tbl>", offset_table_start_);
+
   ExtractTableMarkup();
 
-  if (!TableContainsRowToBeUpdated()) return docxbox::AppLog::NotifyError(
+  if (!TableContainsRowToBeUpdated())
+    return docxbox::AppLog::NotifyError(
         std::string("Invalid document- must contain at least")
             + std::to_string(index_row_start_) + " rows "
                                                  "in table "
@@ -104,12 +114,27 @@ bool docx_xml_table::PrepareXmlToBeUpdated() {
   return true;
 }
 
-void docx_xml_table::ExtractTableMarkup() {
+bool docx_xml_table::ExtractTableMarkupByCellContent() {
+  auto offset_content = xml_.find(cell_start_text_);
+
+  if (offset_content == std::string::npos)
+    return docxbox::AppLog::NotifyError(
+        std::string("stv failed - Cell content \"")
+        + cell_start_text_ + "\" not found");
+
   offset_table_start_ =
-      helper::String::FindNthOccurrence(xml_, "<w:tbl", index_table_);
+      helper::String::FindLast(xml_, "<w:tbl>", 0, offset_content);
 
   offset_table_end_ = xml_.find("</w:tbl>", offset_table_start_);
 
+  ExtractTableMarkup();
+
+  LocateStartingRowByCellContent();
+
+  return true;
+}
+
+void docx_xml_table::ExtractTableMarkup() {
   auto len = offset_table_end_ - offset_table_start_ + 8;
   table_xml_ = xml_.substr(offset_table_start_, len);
 }
@@ -144,6 +169,13 @@ void docx_xml_table::EnsureTableHasEnoughCellsToFill() {
 
     DuplicateRow(index_row_start_, amount_rows_missing);
   }
+}
+
+void docx_xml_table::LocateStartingRowByCellContent() {
+  auto offset_cell_content = table_xml_.find(cell_start_text_);
+  auto rows_until_cell = table_xml_.substr(0, offset_cell_content);
+
+  index_row_start_ = helper::String::SubStrCount(table_xml_, "<w:tr>") - 1;
 }
 
 int docx_xml_table::GetAmountCellsInFirstRow(const std::string &table_xml) {

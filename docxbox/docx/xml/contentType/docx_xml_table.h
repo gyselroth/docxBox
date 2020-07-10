@@ -26,6 +26,7 @@ class docx_xml_table: docx_xml {
   static int GetAmountCellsInFirstRow(const std::string &table_xml);
 
  private:
+  std::string cell_start_text_;
   int index_table_ = 0;
   int index_row_start_ = 0;
   int amount_values_to_insert_ = 0;
@@ -39,14 +40,13 @@ class docx_xml_table: docx_xml {
 
   bool InitFromJson(const std::string &json);
 
-  // Ensure table and row to be updated are contained,
-  // extract table markup and replace it by placeholder
-  bool PrepareXmlToBeUpdated();
+  bool ExtractTableMarkupByCellContent();
+  bool ExtractTableMarkupByIndexes();
+  void ExtractTableMarkup();
 
+  void LocateStartingRowByCellContent();
   bool XmlContainsTableToBeUpdated();
   bool TableContainsRowToBeUpdated();
-
-  void ExtractTableMarkup();
 
   bool DuplicateRow(int amount = 1, int index_row = 0);
 
