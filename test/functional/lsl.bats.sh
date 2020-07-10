@@ -4,27 +4,12 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
+CMD="docxbox lsl"
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
-
-BASE_COMMAND="docxbox lsl filename.docx searchString"
-
-DESCRIPTION="lists all files containing given searchString"
-REGEX_DESCRIPTION="lists all files containing given regular expression"
 
 REGEX="/[0-9A-Z]\{8\}/"
 
@@ -36,88 +21,86 @@ SEARCH_RESULTS=(
 
 REGEX_RESULT="docProps/core.xml"
 
-@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx searchString\" is zero" {
   run ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" fonts
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 2: Output of \"docxbox lsl {missing argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} lsl
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-title="Case 3: Output of \"docxbox lsl filename.docx {missing argument}\" "
-title+="is an error message"
-@test "${title}" {
-  pattern="docxBox Error - Missing argument: "
-  pattern+="String or regular expression to be located"
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: \
+String or regular expression to be located"
 
   run ${DOCXBOX_BINARY} lsl "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 4: \"${BASE_COMMAND}\" ${DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" fonts | grep --count "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
-@test "Case 4: \"docxbox ls filename.docx -l searchString\" ${DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -l searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -l fonts | grep --count "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
-@test "Case 5: \"docxbox ls filename.docx --locate searchString\" ${DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --locate searchString\" lists all files containing given searchString" {
   for i in "${SEARCH_RESULTS[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" --locate fonts | grep --count "${i}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
   done
 }
 
-@test "Case 6: With \"docxbox lsl filename.docx REGEX\" ${REGEX_DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox lsl filename.docx REGEX\" lists all files containing given regular expression" {
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "${REGEX}" | grep --count ${REGEX_RESULT}
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 7: With \"docxbox ls filename.docx -l REGEX\" ${REGEX_DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -l REGEX\" lists all files containing given regular expression" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -l "${REGEX}" | grep --count ${REGEX_RESULT}
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 8: With \"docxbox ls filename.docx --locate REGEX\" ${REGEX_DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --locate REGEX\" lists all files containing given regular expression" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --locate "${REGEX}" | grep --count ${REGEX_RESULT}
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 9: Output of \"docxbox lsl nonexistent.docx searchString\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx searchString\" prints an error message" {
   run ${DOCXBOX_BINARY} lsl nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsl nonexistent.docx fonts 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 10: Output of \"docxbox lsl wrong_file_type\" is an error message" {
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")
@@ -125,7 +108,7 @@ title+="is an error message"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsl "${i}" fonts 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

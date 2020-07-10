@@ -4,21 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
-
-BASE_COMMAND="\"docxbox lsd"
+CMD="docxbox lsd"
 
 PATH_DOCX="test/tmp/cp_mergefields.docx"
 ERR_LOG="test/tmp/err.log"
@@ -26,68 +14,66 @@ ERR_LOG="test/tmp/err.log"
 MERGE_FIELD="MERGEFIELD"
 MERGE_FORMAT="\* MERGEFORMAT"
 
-@test "Case 1: Exit code of ${BASE_COMMAND} filename.docx\" is zero" {
+@test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsd "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 2: Output of ${BASE_COMMAND} {missing argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} lsd
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 3: With ${BASE_COMMAND} filename.docx\" the fields in the docx are listed" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" lists fields in docx" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FIELD}"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FORMAT}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 4: With ${BASE_COMMAND} filename.docx\" the fields in the header are listed" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" lists fields in the header" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "MERGEFIELD  Mergefield_Header"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 5: With ${BASE_COMMAND} filename.docx\" the fields in the footer are listed" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" lists fields in the footer" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "MERGEFIELD  Mergefield_Footer"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-title="Case 6: With \"docxbox ls filename.docx --fields\" "
-title+="the fields in the docx are listed"
-@test "$title" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --fields\" lists fields in docx" {
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FIELD}"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" | grep --count "${MERGE_FORMAT}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 7: With \"docxbox ls filename.docx -d\" the fields in the docx are listed" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -d\" lists fields in docx" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -d | grep --count "${MERGE_FIELD}"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -d | grep --count "${MERGE_FORMAT}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 8: Output of \"docxbox lsd nonexistent.docx\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"docxbox lsd nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} lsd nonexistent.docx
   [ "$status" -ne 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsd nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 9: Output of ${BASE_COMMAND} wrong_file_type\" is an error message" {
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")
@@ -95,7 +81,7 @@ title+="the fields in the docx are listed"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsd "${i}" 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }

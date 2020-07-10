@@ -4,105 +4,91 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
+CMD="docxbox lsmj"
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
 
-BASE_COMMAND="docxbox lsmj filename.docx"
-
-DESCRIPTION="contains information about the creation time and date"
-
 PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 
-@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 2: Output of \"docxbox lsmj {missing argument}\" is an error message" {
-  pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
+  local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
   run ${DOCXBOX_BINARY} lsmj
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 3: Output of \"${BASE_COMMAND}\" contains information about the xml schema" {
-  pattern="\"xmlSchema\": \"http://schemas.openxmlformats.org/officeDocument/2006\""
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays xml schema information" {
+  local pattern="\"xmlSchema\": \"http://schemas.openxmlformats.org/officeDocument/2006\""
 
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 4: Output of \"docxbox lsm filename.docx --json\" ${DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox lsm filename.docx --json\" displays creation time/date information" {
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" --json | grep --count "${PATTERN_CREATED}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 5: Output of \"docxbox lsm filename.docx -j\" ${DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox lsm filename.docx -j\" displays creation time/date information" {
   ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" -j | grep --count "${PATTERN_CREATED}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 6: Output of \"docxbox ls filename.docx --meta --json\" ${DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --meta --json\" displays creation time/date information" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --meta --json | grep --count "${PATTERN_CREATED}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 7: Output of \"docxbox ls filename.docx -mj\" ${DESCRIPTION}" {
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -mj\" displays creation time/date information" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -mj | grep --count "${PATTERN_CREATED}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 8: Output of \"${BASE_COMMAND}\" contains language information" {
-  pattern="\"language\": \"en-US\""
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays language information" {
+  local pattern="\"language\": \"en-US\""
 
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 9: Output of \"${BASE_COMMAND}\" contains information about the revision" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays revision information" {
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\"revision\": \"2\""
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 10: Output of \"docxbox lsmj nonexistent.docx\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} lsmj nonexistent.docx
   [ "$status" -ne 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsmj nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 11: Output of \"docxbox lsmj wrong_file_type\" is an error message" {
-  pattern="docxBox Error - File is no ZIP archive:"
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
+  local pattern="docxBox Error - File is no ZIP archive:"
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")
@@ -110,26 +96,22 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsmj "${i}" 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
 
-title_first_char="Case 12: First char of the output of \"./docxbox lsmj \
-filename.docx\"'s JSON is a \"{}\""
-@test "${title_first_char}" {
+@test "${BATS_TEST_NUMBER}: First char of \"${CMD} filename.docx\"'s JSON is a \"{}\"" {
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep "^[{]"
 }
 
-title_last_char="Case 13: Last char of the output of \"./docxbox lsmj \
-filename.docx\"'s JSON is a \"}\""
-@test "${title_last_char}" {
+@test "${BATS_TEST_NUMBER}: Last char of \"${CMD} filename.docx\"'s JSON is a \"}\"" {
   ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep "[}]$"
 }
 
-@test "Case 15: Amount opening and closing brackets \"{}\" must match" {
-  amount_opening=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\{")
-  amount_closing=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\}")
+@test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
+  local amount_opening=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\{")
+  local amount_closing=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\}")
 
   (( amount_opening = amount_closing ))
 }

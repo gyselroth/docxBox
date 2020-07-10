@@ -4,41 +4,31 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
+CMD="docxbox cat"
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_XML="word/document.xml"
 
-@test "Case 1: Output of \"docxbox cat {missing argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} cat
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 2: Output of \"docxbox cat filename.docx {missing argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} cat "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: File to be displayed" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 3: With \"docxbox cat filename.docx filename.xml\" the XML is displayed" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx filename.xml\" displays the XML " {
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${PATH_XML}" | grep "^[[:space:]]\{4\}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }

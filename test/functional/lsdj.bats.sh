@@ -4,102 +4,85 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
-
-BASE_COMMAND="docxbox lsdj filename.docx"
+CMD="docxbox lsdj"
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
 
-LONG_DESCRIPTION_JSON="the fields in the docx are listed as JSON"
-
-@test "Case 1: Exit code of \"${BASE_COMMAND}\" is zero" {
+@test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
   run ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 2: Output of \"docxbox lsdj {missing argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} lsdj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 3: With \"${BASE_COMMAND}\" the fields in the docx are listed as JSON" {
-  pattern="table_unordered_list_images.docx-"
+@test "${BATS_TEST_NUMBER}: \"${CMD}\" lists fields in docx as JSON" {
+  local pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
-  pattern="/word/document.xml"
+  local pattern="/word/document.xml"
   ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-longhand="--fields --json"
-title="Case 4: With \"docxbox ls filename.docx ${longhand}\" "
-title+="${LONG_DESCRIPTION_JSON}"
-@test "${title}" {
-  pattern="table_unordered_list_images.docx-"
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" ${longhand} | grep --count "${pattern}"
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --fields --json\" lists fields in docx as JSON" {
+  local pattern="table_unordered_list_images.docx-"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --fields --json | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
-  pattern="/word/document.xml"
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" ${longhand} | grep --count "${pattern}"
+  local pattern="/word/document.xml"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --fields --json | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 5: With \"docxbox ls filename.docx -dj\" ${LONG_DESCRIPTION_JSON}" {
-  pattern="table_unordered_list_images.docx-"
+@test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -dj\" lists fields in docx as JSON" {
+  local pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -dj | grep --count "${pattern}"
 
-  pattern="/word/document.xml"
+  local pattern="/word/document.xml"
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -dj | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 6: With \"docxbox lsd filename.docx --json\" ${LONG_DESCRIPTION_JSON}" {
-  pattern="table_unordered_list_images.docx-"
+@test "${BATS_TEST_NUMBER}: \"docxbox lsd filename.docx --json\" lists fields in docx as JSON" {
+  local pattern="table_unordered_list_images.docx-"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" --json | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
-  pattern="/word/document.xml"
+  local pattern="/word/document.xml"
   ${DOCXBOX_BINARY} lsd "${PATH_DOCX}" --json | grep --count "${pattern}"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 7: Output of \"docxbox lsdj nonexistent.docx\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} lsdj nonexistent.docx
   [ "$status" -ne 0 ]
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} lsdj nonexistent.docx 2>&1 | tee "${ERR_LOG}"
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 8: Output of \"${BASE_COMMAND} wrong_file_type\" is an error message" {
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")
@@ -107,33 +90,29 @@ title+="${LONG_DESCRIPTION_JSON}"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} lsdj "${i}" 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "docxBox Error - File is no ZIP archive:"
   done
 }
 
-title_first_char="Case 9: First char of the output of \"./docxbox lsdj \
-filename.docx\"'s JSON is a \"{\""
-@test "${title_first_char}" {
+@test "${BATS_TEST_NUMBER}: First char of \"${CMD} filename.docx\"'s JSON is a \"{\"" {
   ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep "^[{]"
 }
 
-title_last_char="Case 10: Last char of the output of \"./docxbox lsdj \
-filename.docx\"'s JSON is a \"}\""
-@test "${title_last_char}" {
+@test "${BATS_TEST_NUMBER}: Last char of \"${CMD} filename.docx\"'s JSON is a \"}\"" {
   ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep "[}]$"
 }
 
-@test "Case 11: Amount opening and closing brackets \"[]\" must match" {
-  amount_opening=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\[")
-  amount_closing=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\]")
+@test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"[]\" must match" {
+  local amount_opening=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\[")
+  local amount_closing=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\]")
 
-  (( amount_opening = amount_closing ))
+  (( amount_opening == amount_closing ))
 }
 
-@test "Case 12: Amount opening and closing brackets \"{}\" must match" {
-  amount_opening=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\{")
-  amount_closing=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\}")
+@test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
+  local amount_opening=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\{")
+  local amount_closing=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\}")
 
-  (( amount_opening = amount_closing ))
+  (( amount_opening == amount_closing ))
 }

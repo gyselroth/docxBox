@@ -4,19 +4,9 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
+source ./test/functional/_set_docxbox_binary.sh
 
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
+CMD="docxbox rpi"
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
@@ -24,40 +14,35 @@ ERR_LOG="test/tmp/err.log"
 PATH_EXTRACTED_IMAGE="test/tmp/unziped/word/media/image2.jpeg"
 PATH_JPEG="test/assets/images/2100x400.jpeg"
 
-
-BASE_COMMAND="docxbox rpi filename.docx"
-
-@test "Case 1: Output of \"docxbox rpi {missing filename}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} {missing filename}\" prints an error message" {
   run ${DOCXBOX_BINARY} rpi
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-@test "Case 2: Output of \"${BASE_COMMAND} {missing argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
   run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of image to be replaced" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-missing_argument="imageName {missingReplacementImageName}"
-@test "Case 3: Output of \"${BASE_COMMAND} ${missing_argument}\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx imageName {missingReplacementImageName}\" prints an error message" {
   run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of replacement image" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-appendix="an image can be replaced"
-@test "Case 4: With \"${BASE_COMMAND} imageName replacementImageName\" ${appendix}" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx imageName replacementImageName\" replaces an image" {
 
   run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg "${PATH_JPEG}"
   [ "$status" -eq 0 ]
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   if [ ! -d test/tmp/unziped ]; then
     mkdir test/tmp/unziped;
@@ -67,14 +52,12 @@ appendix="an image can be replaced"
   file "${PATH_EXTRACTED_IMAGE}" | grep --count "2100x400"
 }
 
-arguments="imageName replacementImageName newFilename.docx"
-appendix_new_docx="an image can be replaced and saved to new doxc"
-@test "Case 5: With \"${BASE_COMMAND} ${arguments}\" ${appendix_new_docx}" {
-  path_docx_out="test/tmp/newImage.docx"
+@test "${BATS_TEST_NUMBER}: \"${CMD} imageName replacementImageName newFilename.docx\" replaces image and saves to new docx" {
+  local path_docx_out="test/tmp/newImage.docx"
 
   run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg "${PATH_JPEG}" "${path_docx_out}"
   [ "$status" -eq 0 ]
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   if [ ! -d test/tmp/unziped ]; then
     mkdir test/tmp/unziped;
@@ -84,26 +67,26 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
   file "${PATH_EXTRACTED_IMAGE}" | grep --count "2100x400"
 }
 
-@test "Case 6: Output of \"${BASE_COMMAND} nonexistent.image\" is an error message" {
-  error_message="docxBox Error - Copy file failed - file not found:"
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.image\" prints an error message" {
+  local error_message="docxBox Error - Copy file failed - file not found:"
 
   ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg nonexistent.jpeg 2>&1 | tee "${ERR_LOG}"
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
   cat "${ERR_LOG}" | grep --count "${error_message}"
 }
 
-@test "Case 7: Output of \"docxbox rpi nonexistent.docx\" is an error message" {
+@test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} rpi nonexistent.docx
   [ "$status" -ne 0 ]
 
   ${DOCXBOX_BINARY} rpi nonexistent.docx 2>&1 image2.jpeg "${PATH_JPEG}" | tee "${ERR_LOG}"
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "Case 8: Output of \"docxbox rpi wrong_file_type\" is an error message" {
-  pattern="docxBox Error - File is no ZIP archive:"
-  wrong_file_types=(
+@test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
+  local pattern="docxBox Error - File is no ZIP archive:"
+  local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
   "test/tmp/cp_mock_excel.xls")
@@ -111,7 +94,7 @@ appendix_new_docx="an image can be replaced and saved to new doxc"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} rpi "${i}" image2.jpeg "${PATH_JPEG}" 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }

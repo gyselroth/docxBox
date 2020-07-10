@@ -4,38 +4,21 @@
 # Licensed under the MIT License - https://opensource.org/licenses/MIT
 
 load _helper
-
-#@todo: extend test
-# rmt at the beginning
-# rmt at the end
-# rmt within
+source ./test/functional/_set_docxbox_binary.sh
 
 CMD="docxbox rmt"  # current command
-
-VALGRIND_LOG="test/tmp/mem-leak.log"
-VALGRIND="valgrind -v --leak-check=full\
- --log-file=${VALGRIND_LOG}"
-
-VALGRIND_ERR_PATTERN="ERROR SUMMARY: [1-9] errors from [1-9] contexts"
-
-if $IS_VALGRIND_TEST;
-then
-  DOCXBOX_BINARY="${VALGRIND} $BATS_TEST_DIRNAME/../tmp/docxbox"
-else
-  DOCXBOX_BINARY="$BATS_TEST_DIRNAME/../tmp/docxbox"
-fi
 
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_DOCX_NEW="test/tmp/cp_plain_text.docx"
 PATH_DOCX_STYLES="test/tmp/cp_text_with_styles.docx"
 ERR_LOG="test/tmp/err.log"
 
-@test "$BATS_TEST_NUMBER: $CMD {no filename}\" prints an error message" {
+@test "$BATS_TEST_NUMBER: \"$CMD {no filename}\" prints an error message" {
   run ${DOCXBOX_BINARY} rmt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"$CMD filename.docx {no arguments}\" prints an error message" {
@@ -46,7 +29,7 @@ String left-hand-side of part to be removed"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"$CMD filename.docx leftHandString {no arguments}\" prints an error message" {
@@ -57,7 +40,7 @@ String right-hand-side of part to be removed"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "$BATS_TEST_NUMBER: \"$CMD filename.docx leftHandString rightHandString\" removes text between and including given strings" {
@@ -68,7 +51,7 @@ String right-hand-side of part to be removed"
   run ${DOCXBOX_BINARY} rmt "${PATH_DOCX}" "Fugiat" "."
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count --invert-match "${pattern}"
 }
@@ -77,7 +60,7 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: Removing strings at the beginning of a file" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "THIS" "TITLE"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IN ALL CAPS"
 }
@@ -85,7 +68,7 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: Removing strings at the beginning of a file within a sentence" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "TITLE" "ALL"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "THIS IS A  CAPS"
 }
@@ -95,7 +78,7 @@ String right-hand-side of part to be removed"
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "style" "cursive"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count --invert-match "${pattern}"
 }
@@ -105,7 +88,7 @@ String right-hand-side of part to be removed"
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" " paragraph" "special"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "${pattern}"
 }
@@ -113,9 +96,9 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: Removing strings w/ different styles" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "CAPS" "paragraph"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
-  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "w/o special style"
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "without special style"
 }
 
 @test "$BATS_TEST_NUMBER: Removing strings at the end of a file" {
@@ -126,7 +109,7 @@ String right-hand-side of part to be removed"
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "great"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
 
@@ -138,7 +121,7 @@ String right-hand-side of part to be removed"
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "Foo"
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "${pattern}"
 }
@@ -149,7 +132,7 @@ String right-hand-side of part to be removed"
   run ${DOCXBOX_BINARY} rmt "${PATH_DOCX_STYLES}" "FROM" "Until"
   [ "$status" -eq 0 ]
 
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_STYLES}" | grep --count "I’m a dummy text file"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_STYLES}" | grep --count "next time also in BOLD"
@@ -158,16 +141,16 @@ String right-hand-side of part to be removed"
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX_STYLES}" | grep --invert-match "image1.png"
 }
 
-@test "$BATS_TEST_NUMBER: Output of \"$CMD nonexistent.docx\" is an error message" {
+@test "$BATS_TEST_NUMBER: \"${CMD} nonexistent.docx\" prints an error message" {
   run ${DOCXBOX_BINARY} rmt nonexistent.docx
   [ "$status" -ne 0 ]
 
   ${DOCXBOX_BINARY} rmt nonexistent.docx Dolore incididunt 2>&1 | tee "${ERR_LOG}"
-  check_for_valgrind_error
+  source ./test/functional/_check_for_valgrind_errors.sh
   cat "${ERR_LOG}" | grep --count "docxBox Error - File not found:"
 }
 
-@test "$BATS_TEST_NUMBER: Output of \"$CMD wrong_file_type\" is an error message" {
+@test "$BATS_TEST_NUMBER: \"${CMD} wrong_file_type\" prints an error message" {
   local pattern="docxBox Error - File is no ZIP archive:"
   local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
@@ -177,7 +160,7 @@ String right-hand-side of part to be removed"
   for i in "${wrong_file_types[@]}"
   do
     ${DOCXBOX_BINARY} rmt "${i}" Dolore incididunt 2>&1 | tee "${ERR_LOG}"
-    check_for_valgrind_error
+    source ./test/functional/_check_for_valgrind_errors.sh
     cat "${ERR_LOG}" | grep --count "${pattern}"
   done
 }
