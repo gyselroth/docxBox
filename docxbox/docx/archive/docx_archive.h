@@ -37,7 +37,8 @@ class docx_archive {
 
   virtual ~docx_archive();
 
-  std::string GetArgValue(int index);
+  const std::vector<std::string> &GetArgv() const;
+  std::string GetArgValueAt(int index);
   std::string GetLastArgValue();
 
   std::string UnzipDocx(

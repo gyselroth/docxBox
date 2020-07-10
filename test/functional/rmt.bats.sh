@@ -56,7 +56,6 @@ String right-hand-side of part to be removed"
   ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count --invert-match "${pattern}"
 }
 
-
 @test "$BATS_TEST_NUMBER: Removing strings at the beginning of a file" {
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "THIS" "TITLE"
 

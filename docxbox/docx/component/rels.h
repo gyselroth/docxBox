@@ -31,6 +31,8 @@ class rels {
        std::string path_working_dir,
        std::string path_extract);
 
+  std::string AddImageFileAndRelation(std::string *path_image);
+
   bool HasAddedImageFile() const;
 
   // Get relationship ID, insert if not existing yet
@@ -38,7 +40,10 @@ class rels {
                                        const std::string &target,
                                        RelationType relation_type);
 
-  bool AddRelationsAndReferences(
+  bool GetImageRelationshipId(const std::string &filename,
+                              std::string *relationship_id);
+
+  bool AddRelationsAndReferencesOfGenericRenderType(
       const std::string& replacement,
       std::string *image_relationship_id,
       std::string *hyperlink_relationship_id);
@@ -53,7 +58,9 @@ class rels {
   // New image file added, requires adding resp. relation
   bool added_image_file_ = false;
 
-  std::string AddImageFileAndRelation(const std::string &image_markup_json);
+  std::string AddImageFileAndRelationOfGenericRenderType(
+      const std::string &image_markup_json, int index_argument = 5);
+
   std::string AddHyperlinkRelation(const std::string &markup_json);
 };
 

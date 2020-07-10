@@ -50,12 +50,14 @@ bool docx_batch::ProcessSequence() {
 }
 
 bool docx_batch::ProcessStep(int index) {
+  if (index == 0) AddImagesIntoDocument(archive_->GetPathExtract());
+
   // Resolve command + arguments
   std::vector<std::string> app_cli_arguments;
 
-  app_cli_arguments.emplace_back(archive_->GetArgValue(0));
+  app_cli_arguments.emplace_back(archive_->GetArgValueAt(0));
   app_cli_arguments.emplace_back(commands_[index]);
-  app_cli_arguments.emplace_back(archive_->GetArgValue(1));
+  app_cli_arguments.emplace_back(archive_->GetArgValueAt(1));
 
   if (arguments_json_[index] != "[]") {
     auto json_outer = nlohmann::json::parse(arguments_json_[index]);
@@ -108,6 +110,26 @@ bool docx_batch::ProcessStep(int index) {
   return false;
 }
 
+bool docx_batch::AddImagesIntoDocument(const std::string &path_extract) {
+  auto arguments = archive_->GetArgv();
+  rels *kRels = new rels(0, {}, getenv("PWD"), path_extract);
+
+  bool added_image = false;
+
+  for (auto &argument : arguments) {
+    if (helper::File::IsWordCompatibleImage(argument)
+        && !kRels->AddImageFileAndRelation(&argument).empty())
+      added_image = true;
+  }
+
+// TODO(kay): save modified rels
+//  if (added_image) kRels->Save();
+
+  delete kRels;
+
+  return added_image;
+}
+
 // Prepare write resulting DOCX during final step of batch processing
 void docx_batch::InitFinalStep(docxbox::App *app) {
   app->SetIsFinalBatchStep(true);
@@ -120,4 +142,18 @@ void docx_batch::InitFinalStep(docxbox::App *app) {
       ? last_argument
       // Overwrite source DOCX
       : archive_->GetPathDocxIn());
+}
+
+std::string docx_batch::ExtractImageFilenameFromBatchStepJson(
+    const std::vector<std::string> &arguments) {
+  for (auto argument : arguments) {
+    helper::String::ReplaceAll(&argument, " ", "");
+
+    if (!helper::Json::IsJson(argument)
+        || !helper::String::Contains(argument, "\"name\":")) continue;
+
+    return helper::String::GetSubStrBetween(argument, R"("name":")", "\",");
+  }
+
+  return "";
 }

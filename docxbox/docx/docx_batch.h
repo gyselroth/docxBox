@@ -26,6 +26,9 @@ class docx_batch {
 
   bool ProcessSequence();
 
+  static std::string ExtractImageFilenameFromBatchStepJson(
+      const std::vector<std::string> &arguments);
+
  private:
   bool is_json_valid_;
 
@@ -46,6 +49,8 @@ class docx_batch {
   bool InitFromJson();
 
   bool ProcessStep(int index);
+
+  bool AddImagesIntoDocument(const std::string &path_extract);
 
   // Prepare write resulting DOCX during final step of batch processing
   void InitFinalStep(docxbox::App *app);
