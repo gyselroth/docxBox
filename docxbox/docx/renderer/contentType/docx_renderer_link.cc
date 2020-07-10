@@ -14,26 +14,31 @@ docx_renderer_link::docx_renderer_link(std::string path_extract,
 
 bool docx_renderer_link::InitFromJson() {
   if (!helper::Json::IsJson(json_)
-      || !docx_renderer::IsElementType(ElementType_Link)) return false;
+      || !docx_renderer::IsElementType(ElementType_Link))
+    return false;
 
-  auto json_outer = nlohmann::json::parse(json_);
+  try {
+    auto json_outer = nlohmann::json::parse(json_);
 
-  for (auto &json_inner : json_outer) {
-    for (nlohmann::json::iterator it = json_inner.begin();
-         it != json_inner.end();
-         ++it) {
-      const std::string &key = it.key();
-      auto &value = it.value();
+    for (auto &json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        const std::string &key = it.key();
+        auto &value = it.value();
 
-      if (key == "text") text_ = value;
-      else if (key == "url") url_ = value;
-      else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
-      // TODO(kay): add bookmark linking
+        if (key == "text") text_ = value;
+        else if (key == "url") url_ = value;
+        else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
+        // TODO(kay): add bookmark linking
 //      else if (key == "bookmark")
+      }
     }
-  }
 
-  return !text_.empty() && !url_.empty();
+    return !text_.empty() && !url_.empty();
+  } catch (nlohmann::detail::parse_error &e) {
+    return docxbox::AppLog::NotifyError("Parse error - Invalid JSON: " + json_);
+  }
 }
 
 void docx_renderer_link::SetRelationshipId(const std::string &relationship_id) {

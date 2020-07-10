@@ -21,26 +21,30 @@ void docx_renderer_heading::SetLevel(int level) {
 bool docx_renderer_heading::InitFromJson() {
   if (!helper::Json::IsJson(json_)
       || !docx_renderer::IsElementType(
-      {ElementType_Heading1, ElementType_Heading2, ElementType_Heading3}))
+          {ElementType_Heading1, ElementType_Heading2, ElementType_Heading3}))
     return false;
 
   text_ = "";
 
-  auto json_outer = nlohmann::json::parse(json_);
+  try {
+    auto json_outer = nlohmann::json::parse(json_);
 
-  for (auto &json_inner : json_outer) {
-    for (nlohmann::json::iterator it = json_inner.begin();
-         it != json_inner.end();
-         ++it) {
-      const std::string &key = it.key();
-      const std::string &value = it.value();
+    for (auto &json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        const std::string &key = it.key();
+        const std::string &value = it.value();
 
-      if (key == "text") text_ = value;
-      else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
+        if (key == "text") text_ = value;
+        else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
+      }
     }
-  }
 
-  return !text_.empty();
+    return !text_.empty();
+  } catch (nlohmann::detail::parse_error &e) {
+    return docxbox::AppLog::NotifyError("Parse error - Invalid JSON: " + json_);
+  }
 }
 
 std::string docx_renderer_heading::Render() {
@@ -60,11 +64,11 @@ std::string docx_renderer_heading::Render(int level) {
 
   wml_ =
       "<w:p>"
-        "<w:pPr>"
-          "<w:pStyle w:val=\"para" + std::to_string(level_) + "\"/>"
-        "</w:pPr>"
-        + RenderTextInRun(text_)
-    + "</w:p>";
+      "<w:pPr>"
+      "<w:pStyle w:val=\"para" + std::to_string(level_) + "\"/>"
+                                                          "</w:pPr>"
+          + RenderTextInRun(text_)
+          + "</w:p>";
 
   RenderPreAndPostFixAroundWml();
 

@@ -43,9 +43,9 @@ const char meta::ATTR_DC_XSI[] = " xsi:type=\"dcterms:W3CDTF\"";
 const char meta::TAG_LHS_XML_SCHEME[] = "<Properties xmlns=\"";
 const char meta::TAG_RHS_XML_SCHEME[] = "\" ";
 
-meta::meta(int argc, const std::vector<std::string>& argv) {
-    argc_ = argc;
-    argv_ = argv;
+meta::meta(int argc, const std::vector<std::string> &argv) {
+  argc_ = argc;
+  argv_ = argv;
 }
 
 meta::AttributeType meta::GetAttribute() const {
@@ -206,7 +206,7 @@ std::string meta::GetRhsTagByAttribute(const meta::AttributeType &attribute) {
   }
 }
 
-std::string meta::FetchAttributeFromAppXml(const char* lhs_of_value,
+std::string meta::FetchAttributeFromAppXml(const char *lhs_of_value,
                                            const char *rhs_of_value,
                                            const std::string &label) {
   if (!helper::String::Contains(app_xml_, lhs_of_value)) return "";
@@ -246,7 +246,8 @@ bool meta::InitModificationArguments(bool is_batch_mode) {
   if (!docxbox::AppArgument::AreArgumentsGiven(
       argc_,
       2, "DOCX filename",
-      3, "Meta attribute to be set")) return false;
+      3, "Meta attribute to be set"))
+    return false;
 
   if (helper::Json::IsJson(argv_[3])) {
     is_json_ = true;
@@ -265,7 +266,8 @@ bool meta::InitModificationArguments(bool is_batch_mode) {
             "Invalid argument: Unknown or unsupported attribute: ") + argv_[3]);
 
   if (!docxbox::AppArgument::IsArgumentGiven(
-      argc_, 4, "Value to set attribute to")) return false;
+      argc_, 4, "Value to set attribute to"))
+    return false;
 
   if (is_batch_mode) argv_[4] = helper::String::UnwrapQuotes(argv_[4]);
 
@@ -277,9 +279,9 @@ bool meta::InitModificationArguments(bool is_batch_mode) {
 bool meta::UpsertAttribute(bool saveXml) {
   if (is_json_) return UpsertAttributesFromJson();
 
-    return IsAppAttribute()
-      ? UpsertAttributeInAppXml(saveXml)
-      : UpsertAttributeInCoreXml(saveXml);
+  return IsAppAttribute()
+         ? UpsertAttributeInAppXml(saveXml)
+         : UpsertAttributeInCoreXml(saveXml);
 }
 
 bool meta::UpsertAttributesFromJson() {
@@ -292,38 +294,42 @@ bool meta::UpsertAttributesFromJson() {
       UpsertAttributeInAppXml();
     else if (UpsertAttributeInCoreXml()
         && attribute_type_ == Attr_Core_Modified)
-        // When having explicitly updated the modification date,
-        // Upon re-zipping the result, the mod-date is not updated again
-        has_modified_modification_date_ = true;
+      // When having explicitly updated the modification date,
+      // Upon re-zipping the result, the mod-date is not updated again
+      has_modified_modification_date_ = true;
   }
 
   return SaveXml();
 }
 
 bool meta::InitFromJson() {
-  auto json_outer = nlohmann::json::parse(json_);
+  try {
+    auto json_outer = nlohmann::json::parse(json_);
 
-  for (auto &json_inner : json_outer) {
-    for (nlohmann::json::iterator it = json_inner.begin();
-         it != json_inner.end();
-         ++it) {
-      AttributeType attribute_type = ResolveAttribute(it.key());
+    for (auto &json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        AttributeType attribute_type = ResolveAttribute(it.key());
 
-      if (AttributeType::Attr_Unknown == attribute_type) {
-        docxbox::AppLog::NotifyWarning(
-            "Invalid argument - failed parse attributes from JSON");
-        continue;
+        if (AttributeType::Attr_Unknown == attribute_type) {
+          docxbox::AppLog::NotifyWarning(
+              "Invalid argument - failed parse attributes from JSON");
+          continue;
+        }
+
+        attributes_from_json_.emplace_back(
+            std::make_tuple(attribute_type, it.value()));
       }
-
-      attributes_from_json_.emplace_back(
-          std::make_tuple(attribute_type, it.value()));
     }
-  }
 
-  return attributes_from_json_.empty()
-         ? docxbox::AppLog::NotifyError(
-             "Invalid argument - failed parse attributes from JSON")
-         : true;
+    return attributes_from_json_.empty()
+           ? docxbox::AppLog::NotifyError(
+            "Invalid argument - failed parse attributes from JSON")
+           : true;
+  } catch (nlohmann::detail::parse_error &e) {
+    return docxbox::AppLog::NotifyError("Parse error - Invalid JSON: " + json_);
+  }
 }
 
 bool meta::UpsertAttributeInCoreXml(bool saveXml) {
@@ -340,15 +346,15 @@ bool meta::UpsertAttributeInCoreXml(bool saveXml) {
     bool attribute_exists = AttributeExistsInCoreXml(attribute_type_);
 
     result = attribute_exists
-           ? UpdateCoreAttribute(attribute_type_, attribute_value_)
-           : InsertCoreAttribute(attribute_type_, attribute_value_);
+             ? UpdateCoreAttribute(attribute_type_, attribute_value_)
+             : InsertCoreAttribute(attribute_type_, attribute_value_);
   } catch (std::string &message) {
     return docxbox::AppLog::NotifyError(message);
   }
 
   return result && saveXml
-    ? SaveCoreXml()
-    : result;
+         ? SaveCoreXml()
+         : result;
 }
 
 bool meta::UpsertAttributeInAppXml(bool saveXml) {
@@ -365,19 +371,19 @@ bool meta::UpsertAttributeInAppXml(bool saveXml) {
     bool attribute_exists = AttributeExistsInAppXml(attribute_type_);
 
     result = attribute_exists
-           ? UpdateAppAttribute(attribute_type_, attribute_value_)
-           : InsertAppAttribute(attribute_type_, attribute_value_);
+             ? UpdateAppAttribute(attribute_type_, attribute_value_)
+             : InsertAppAttribute(attribute_type_, attribute_value_);
   } catch (std::string &message) {
     return docxbox::AppLog::NotifyError(message);
   }
 
   return result && saveXml
-    ? SaveAppXml()
-    : result;
+         ? SaveAppXml()
+         : result;
 }
 
 bool meta::UpdateAppAttribute(AttributeType attribute,
-                              const std::string& value) {
+                              const std::string &value) {
   EnsureIsLoadedAppXml();
 
   std::string lhs_of_value = GetLhsTagByAttribute(attribute);
@@ -397,7 +403,7 @@ bool meta::UpdateAppAttribute(AttributeType attribute,
 
 bool meta::UpdateCoreAttribute(
     AttributeType attribute,
-    const std::string& value) {
+    const std::string &value) {
   EnsureIsLoadedCoreXml();
 
   std::string lhs_of_value = GetLhsTagByAttribute(attribute);
@@ -418,7 +424,7 @@ bool meta::UpdateCoreAttribute(
 }
 
 bool meta::InsertAppAttribute(AttributeType attribute,
-                              const std::string& value) {
+                              const std::string &value) {
   EnsureIsLoadedAppXml();
 
   const std::string &kLhsTag = GetLhsTagByAttribute(attribute);
@@ -435,7 +441,7 @@ bool meta::InsertAppAttribute(AttributeType attribute,
 }
 
 bool meta::InsertCoreAttribute(AttributeType attribute,
-                               const std::string& value) {
+                               const std::string &value) {
   EnsureIsLoadedCoreXml();
 
   const std::string &kLhsTag = GetLhsTagByAttribute(attribute);
@@ -458,8 +464,8 @@ bool meta::AttributeExistsInAppXml(AttributeType attribute) {
   std::string lhs_of_tag = GetLhsTagByAttribute(attribute);
 
   return lhs_of_tag.empty()
-    ? false
-    : helper::String::Contains(app_xml_, lhs_of_tag);
+         ? false
+         : helper::String::Contains(app_xml_, lhs_of_tag);
 }
 
 // Check whether core.xml of current DOCX contains given attribute
@@ -469,8 +475,8 @@ bool meta::AttributeExistsInCoreXml(AttributeType attribute) {
   std::string lhs_of_tag = GetLhsTagByAttribute(attribute);
 
   return lhs_of_tag.empty()
-    ? false
-    : helper::String::Contains(core_xml_, lhs_of_tag);
+         ? false
+         : helper::String::Contains(core_xml_, lhs_of_tag);
 }
 
 void meta::EnsureIsLoadedAppXml() {
@@ -489,11 +495,11 @@ void meta::EnsureIsLoadedCoreXml() {
   }
 }
 
-void meta::LoadAppXml(const std::string& path) {
+void meta::LoadAppXml(const std::string &path) {
   helper::File::GetFileContents(path, &app_xml_);
 }
 
-void meta::LoadCoreXml(const std::string& path) {
+void meta::LoadCoreXml(const std::string &path) {
   helper::File::GetFileContents(path, &core_xml_);
 }
 
@@ -514,12 +520,13 @@ bool meta::SaveXml() {
 
 bool meta::SaveCoreXml() {
   return helper::File::WriteToNewFile(path_core_xml_, core_xml_)
-    ? docxbox::AppLog::NotifyInfo("Saved modified docProps/core.xml", true)
-    : docxbox::AppLog::NotifyError("Failed saving core.xml: " + path_core_xml_);
+         ? docxbox::AppLog::NotifyInfo("Saved modified docProps/core.xml", true)
+         : docxbox::AppLog::NotifyError(
+          "Failed saving core.xml: " + path_core_xml_);
 }
 
 void meta::CollectFromAppXml(std::string path_app_xml_current,
-                             const std::string& app_xml) {
+                             const std::string &app_xml) {
   // Attempt output after collecting meta data from app.xml and core.xml,
   // but when parsing the 2nd app.xml w/o having parsed a rel. core.xml:
   // output prematurely
@@ -556,7 +563,7 @@ std::string meta::ExtractXmlSchemaFromAppXml(const std::string &app_xml) const {
 
   helper::String::Replace(
       &xml_schema,
-      (std::string("/") + segments[ segments.size() - 1]).c_str(),
+      (std::string("/") + segments[segments.size() - 1]).c_str(),
       "");
 
   return xml_schema;

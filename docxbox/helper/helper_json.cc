@@ -8,16 +8,17 @@ namespace helper {
 bool Json::IsJson(const std::string &str, bool contains_association) {
   if (str.empty()) return false;
 
+  try {
+    auto json_outer = nlohmann::json::parse(str);
+  } catch (nlohmann::detail::parse_error &e) {
+    return false;
+  }
+
   const char *kStr = str.c_str();
 
-  return
-      ((helper::String::StartsWith(kStr, "{")
-        && helper::String::EndsWith(str, "}"))
-          || (helper::String::StartsWith(kStr, "[")
-              && helper::String::EndsWith(str, "]")))
-       && (!contains_association
-           || (helper::String::Contains(kStr, "\"")
-               && helper::String::Contains(kStr, ":")));
+  return !contains_association
+      || (helper::String::Contains(kStr, "\"")
+          && helper::String::Contains(kStr, ":"));
 }
 
 // Extract 1st key out of JSON like: {"<KEY>"...}

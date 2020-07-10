@@ -38,39 +38,44 @@ void docx_renderer_list::AddNumberingRels() const {
 }
 
 bool docx_renderer_list::InitFromJson() {
-  if (!helper::Json::IsJson(json_)
-      || !docx_renderer::IsElementType(ElementType_ListUnordered)) return false;
+  if (!docx_renderer::IsElementType(ElementType_ListUnordered))
+    return false;
 
   items_.clear();
 
-  auto json_outer = nlohmann::json::parse(json_);
+  try {
+    auto json_outer = nlohmann::json::parse(json_);
 
-  for (auto &json_inner : json_outer) {
-    for (nlohmann::json::iterator it = json_inner.begin();
-         it != json_inner.end();
-         ++it) {
-      try {
-        const std::string &key = it.key();
+    for (auto &json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        try {
+          const std::string &key = it.key();
 
-        if ("items" == key) {
-          auto items = it.value();
+          if ("items" == key) {
+            auto items = it.value();
 
-          for (nlohmann::json::iterator it_items = items.begin();
-               it_items != items.end();
-               ++it_items)
-            items_.push_back(it_items.value());
-        } else if (key == "pre" || key == "post") {
-          ExtractPreOrPostfix(it);
+            for (nlohmann::json::iterator it_items = items.begin();
+                 it_items != items.end();
+                 ++it_items)
+              items_.push_back(it_items.value());
+          } else if (key == "pre" || key == "post") {
+            ExtractPreOrPostfix(it);
+          }
+        } catch (nlohmann::detail::invalid_iterator &e) {
+          continue;
         }
-      } catch (nlohmann::detail::invalid_iterator &e) {
-        continue;
       }
     }
-  }
 
-  return items_.empty()
-    ? docxbox::AppLog::NotifyError("Invalid markup: list contains no items.")
-    : true;
+    return items_.empty()
+           ? docxbox::AppLog::NotifyError(
+            "Invalid markup: list contains no items.")
+           : true;
+  } catch (nlohmann::detail::parse_error &e) {
+    return docxbox::AppLog::NotifyError("Parse error - Invalid JSON: " + json_);
+  }
 }
 
 std::string docx_renderer_list::Render(bool is_ordered) {
@@ -94,18 +99,18 @@ std::string docx_renderer_list::Render() {
 
   wml_ = TAG_LHS_RUN;
 
-  for (std::string& item : items_) {
+  for (std::string &item : items_) {
     wml_ +=
         "<w:p>"
-          "<w:pPr>"
-            "<w:numPr>"
-              "<w:ilvl w:val=\"0\"/>"
-              "<w:numId w:val=\"1\"/>"
-            "</w:numPr>"
-            "<w:ind w:left=\"360\" w:hanging=\"360\"/>"
-          "</w:pPr>"
-          + RenderTextInRun(item)
-        + "</w:p>";
+        "<w:pPr>"
+        "<w:numPr>"
+        "<w:ilvl w:val=\"0\"/>"
+        "<w:numId w:val=\"1\"/>"
+        "</w:numPr>"
+        "<w:ind w:left=\"360\" w:hanging=\"360\"/>"
+        "</w:pPr>"
+            + RenderTextInRun(item)
+            + "</w:p>";
   }
 
   wml_ += TAG_RHS_RUN;

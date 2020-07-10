@@ -50,10 +50,15 @@ extern int SubStrCount(const std::string &haystack,
                        const std::string& needle,
                        size_t offset = 0);
 
-extern int FindNthOccurrence(const std::string &haystack,
+extern int64_t FindNthOccurrence(const std::string &haystack,
                              const std::string& needle,
                              int n,
                              size_t offset = 0);
+
+int FindLast(const std::string &str,
+             const std::string &needle,
+             int offset_start,
+             int offset_end);
 
 extern bool IsWhiteSpace(const std::string &str);
 

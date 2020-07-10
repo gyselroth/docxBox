@@ -16,24 +16,26 @@ docx_batch::docx_batch(class docx_archive *archive, std::string json) {
 
 // Extract batch commands and rel. arguments
 bool docx_batch::InitFromJson() {
-  if (!helper::Json::IsJson(json_)) return false;
+  try {
+    auto json_outer = nlohmann::json::parse(json_);
 
-  auto json_outer = nlohmann::json::parse(json_);
+    for (auto json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        commands_.push_back(it.key());
 
-  for (auto json_inner : json_outer) {
-    for (nlohmann::json::iterator it = json_inner.begin();
-         it != json_inner.end();
-         ++it) {
-      commands_.push_back(it.key());
-
-      // NOTE: Dumped JSON string has associations alphabetically sorted,
-      //       not necessarily same order as originally given
-      arguments_json_.push_back(it.value().dump());
+        // NOTE: Dumped JSON string has associations alphabetically sorted,
+        //       not necessarily same order as originally given
+        arguments_json_.push_back(it.value().dump());
+      }
     }
-  }
 
-  return !commands_.empty()
-         && commands_.size() == arguments_json_.size();
+    return !commands_.empty()
+        && commands_.size() == arguments_json_.size();
+  } catch (nlohmann::detail::parse_error &e) {
+    return docxbox::AppLog::NotifyError("Parse error - Invalid JSON: " + json_);
+  }
 }
 
 bool docx_batch::ProcessSequence() {

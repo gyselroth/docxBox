@@ -338,7 +338,7 @@ more rows are added after the row.
 This is useful for maintaining a specific table style (borders, coloring, font, 
 etc.) when rendering dynamic documents from DOCX templates. 
 
-**Example:** Fill/Insert four cells starting w/ second row of first table in 
+**Example:** Fill/Insert three cells starting w/ second row of first table in 
 document:  
 ````docxbox stv foo.docx {"table":1,"row":2,"values":["foo","bar","baz","qux"]}````  
 

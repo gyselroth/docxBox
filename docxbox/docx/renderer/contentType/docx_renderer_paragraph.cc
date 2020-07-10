@@ -13,26 +13,28 @@ docx_renderer_paragraph::docx_renderer_paragraph(std::string path_extract,
 }
 
 bool docx_renderer_paragraph::InitFromJson() {
-  if (!helper::Json::IsJson(json_)
-      || !docx_renderer::IsElementType(ElementType_Paragraph))
-    return false;
+  if (!docx_renderer::IsElementType(ElementType_Paragraph)) return false;
 
   text_ = "";
 
-  auto json_outer = nlohmann::json::parse(json_);
+  try {
+    auto json_outer = nlohmann::json::parse(json_);
 
-  for (auto &json_inner : json_outer) {
-    for (nlohmann::json::iterator it = json_inner.begin();
-         it != json_inner.end();
-         ++it) {
-      const std::string &key = it.key();
+    for (auto &json_inner : json_outer) {
+      for (nlohmann::json::iterator it = json_inner.begin();
+           it != json_inner.end();
+           ++it) {
+        const std::string &key = it.key();
 
-      if (key == "text") text_ = it.value();
-      else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
+        if (key == "text") text_ = it.value();
+        else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
+      }
     }
-  }
 
-  return !text_.empty();
+    return !text_.empty();
+  } catch (nlohmann::detail::parse_error &e) {
+    return docxbox::AppLog::NotifyError("Parse error - Invalid JSON: " + json_);
+  }
 }
 
 std::string docx_renderer_paragraph::Render() {
