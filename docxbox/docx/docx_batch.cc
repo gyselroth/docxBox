@@ -19,15 +19,17 @@ bool docx_batch::InitFromJson() {
   try {
     auto json_outer = nlohmann::json::parse(json_);
 
-    for (auto json_inner : json_outer) {
-      for (nlohmann::json::iterator it = json_inner.begin();
+    for (auto json_inner : json_outer) {  // Sequence keys e.g "1", "2", ...
+      for (nlohmann::json::iterator it = json_inner.begin();  // Commands + JSON
            it != json_inner.end();
            ++it) {
         commands_.push_back(it.key());
 
         // NOTE: Dumped JSON string has associations alphabetically sorted,
         //       not necessarily same order as originally given
-        arguments_json_.push_back(it.value().dump());
+        const std::basic_string<char> &kArgsJson = it.value().dump();
+
+        arguments_json_.push_back(kArgsJson);
       }
     }
 
@@ -43,8 +45,12 @@ bool docx_batch::ProcessSequence() {
     return docxbox::AppLog::NotifyError(
         "Cannot process: Detected invalid JSON");
 
-  for (int index = 0; index < commands_.size(); ++index)
+  int index = 0;
+
+  for (auto command : commands_) {
     if (!ProcessStep(index)) return false;
+    ++index;
+  }
 
   return true;
 }
@@ -52,7 +58,9 @@ bool docx_batch::ProcessSequence() {
 bool docx_batch::ProcessStep(int index) {
   if (index == 0) AddImagesIntoDocument(archive_->GetPathExtract());
 
-  // Resolve command + arguments
+  docxbox::AppLog::NotifyInfo("Batch-process step " + std::to_string(index));
+
+  // Extract command of process step
   std::vector<std::string> app_cli_arguments;
 
   app_cli_arguments.emplace_back(archive_->GetArgValueAt(0));
@@ -60,6 +68,7 @@ bool docx_batch::ProcessStep(int index) {
   app_cli_arguments.emplace_back(archive_->GetArgValueAt(1));
 
   if (arguments_json_[index] != "[]") {
+    // Extract arguments of process step into app_cli_arguments<>
     auto json_outer = nlohmann::json::parse(arguments_json_[index]);
 
     for (auto json_inner : json_outer) {
@@ -69,7 +78,13 @@ bool docx_batch::ProcessStep(int index) {
         nlohmann::json basic_json = it.value();
 
         if (basic_json.is_object()) {
-          app_cli_arguments.emplace_back(std::string(basic_json.dump()));
+          std::string object_json =
+              std::string("{\"")
+              .append(it.key()).append("\":")
+              .append(std::string(basic_json.dump()))
+              .append("}");
+
+          app_cli_arguments.emplace_back(object_json);
         } else if (basic_json.is_string()) {
           app_cli_arguments.emplace_back(it.value().dump().c_str());
         }
@@ -107,7 +122,7 @@ bool docx_batch::ProcessStep(int index) {
 
   delete app;
 
-  return false;
+  return true;
 }
 
 bool docx_batch::AddImagesIntoDocument(const std::string &path_extract) {
@@ -118,8 +133,10 @@ bool docx_batch::AddImagesIntoDocument(const std::string &path_extract) {
 
   for (auto &argument : arguments) {
     if (helper::File::IsWordCompatibleImage(argument)
-        && !kRels->AddImageFileAndRelation(&argument).empty())
+        && !kRels->AddImageFileAndRelation(&argument).empty()) {
+      docxbox::AppLog::NotifyInfo("Added image file and relation: " + argument);
       added_image = true;
+    }
   }
 
 // TODO(kay): save modified rels

@@ -188,12 +188,15 @@ bool docx_archive_replace::ReplaceText() {
   // Create resulting DOCX from files during non-batch mode
   // or at final step of batch sequence
   if (is_batch_mode_) {
-    if (!is_final_batch_step_) return true;
+    if (!is_final_batch_step_)
+      return docxbox::AppLog::NotifyInfo("Finish batch step");
 
     overwrite_source_docx = path_docx_in_ == path_docx_out_;
   } else {
     InitPathDocxOutForReplaceText(&path_docx_out_, &overwrite_source_docx);
   }
+
+  docxbox::AppLog::NotifyInfo("Zip files into DOCX: " + path_docx_out_);
 
   return CreateDocxFromExtract(path_docx_out_, overwrite_source_docx);
 }
