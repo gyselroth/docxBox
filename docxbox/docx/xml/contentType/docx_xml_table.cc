@@ -215,8 +215,7 @@ bool docx_xml_table::DuplicateRow(int amount, int index_row) {
   auto row = table_xml_.substr(offset_start, len);
   auto duplication = row;
 
-  for (int i=0; i < index_row; i++)
-    duplication += row;
+  for (int i=0; i < index_row; i++) duplication += row;
 
   table_xml_.replace(offset_start, len, duplication);
 
