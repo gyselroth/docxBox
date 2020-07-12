@@ -45,7 +45,8 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 @test "$BATS_TEST_NUMBER: \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, string gets replaced with the \"rpt\" command" {
   local batch="{\"1\":{\"rpt\":[\"text\",\"FooBar\"]}}"
 
-  local bytes_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --bytes)
+  local bytes_before_batch
+  bytes_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --bytes)
 
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
@@ -53,7 +54,8 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 
   ${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | grep --count "FooBar"
 
-  local bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --bytes)
+  local bytes_after_batch
+  bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --bytes)
 
   (( bytes_before_batch < bytes_after_batch ))
 }
@@ -61,19 +63,20 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 @test "$BATS_TEST_NUMBER: \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, string gets replaced with the \"rmt\" command" {
   local batch="{\"1\":{\"rmt\":[\"THIS\",\"TITLE\"]}}"
 
-  local wc_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
+  local wc_before_batch
+  wc_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
 
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  local wc_after_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
+  local wc_after_batch
+  wc_after_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
 
   (( wc_before_batch > wc_after_batch ))
 }
 
 @test "$BATS_TEST_NUMBER: \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, mergefields get replaced with the \"sfv\" command" {
-  local mergefield="MERGEFIELD  Mergefield_One"
   local batch="{\"1\":{\"sfv\":[\"MERGEFIELD  Mergefield_One\",\"FooBar\"]}}"
 
   run ${DOCXBOX_BINARY} batch "${PATH_DOCX_MERGEFIELD}" "${batch}"

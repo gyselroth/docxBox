@@ -26,8 +26,9 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx -s\" displays segmented plain text of given file" {
-  local segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" -s | wc --lines)
-  local non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
+  local segmented non_segmented
+  segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" -s | wc --lines)
+  non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -36,8 +37,9 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx --segments\" displays segmented plain text of given file" {
-  local segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" --segments | wc --lines)
-  local non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
+  local segmented non_segmented
+  segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" --segments | wc --lines)
+  non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -56,6 +58,7 @@ ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
   local pattern="docxBox Error - File is no ZIP archive:"
+
   local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

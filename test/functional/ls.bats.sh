@@ -89,8 +89,9 @@ local search_values=(
 @test "${BATS_TEST_NUMBER}: \"${CMD} changedFile.docx\" displays a side-by-side comparison" {
   run ${DOCXBOX_BINARY} lorem "${PATH_DOCX}" "${PATH_NEW_DOCX}"
 
-  local amount_chars_base=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" | wc --bytes)
-  local amount_chars_diff=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | wc --bytes)
+  local amount_chars_base amount_chars_diff
+  amount_chars_base=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" | wc --bytes)
+  amount_chars_diff=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | wc --bytes)
 
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | (( amount_chars_base < amount_chars_diff ))
 

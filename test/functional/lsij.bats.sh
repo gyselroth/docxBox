@@ -89,15 +89,17 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"[]\" must match" {
-  local amount_opening=$(${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "\[")
-  local amount_closing=$(${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "\]")
+  local amount_opening amount_closing
+  amount_opening=$(${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "\[")
+  amount_closing=$(${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "\]")
 
   (( amount_opening = amount_closing ))
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
-  local amount_opening=$(${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "\{")
-  local amount_closing=$(${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "\}")
+  local amount_opening amount_closing
+  amount_opening=$(${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "\{")
+  amount_closing=$(${DOCXBOX_BINARY} lsij "${PATH_DOCX}" | grep --count "\}")
 
   (( amount_opening = amount_closing ))
 }

@@ -88,6 +88,7 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
   local pattern="docxBox Error - File is no ZIP archive:"
+
   local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
@@ -110,8 +111,9 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
-  local amount_opening=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\{")
-  local amount_closing=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\}")
+  local amount_opening amount_closing
+  amount_opening=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\{")
+  amount_closing=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\}")
 
   (( amount_opening = amount_closing ))
 }

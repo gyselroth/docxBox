@@ -86,6 +86,7 @@ PATH_JPEG="test/assets/images/2100x400.jpeg"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
   local pattern="docxBox Error - File is no ZIP archive:"
+
   local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
