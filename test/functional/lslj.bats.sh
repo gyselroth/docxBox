@@ -18,7 +18,7 @@ SEARCH_RESULTS=(
 "\"file\":\"word/styles.xml\"")
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} lslj
+  run "${DOCXBOX_BINARY}" lslj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
   
@@ -29,7 +29,7 @@ SEARCH_RESULTS=(
   local pattern="docxBox Error - Missing argument: \
 String or regular expression to be located"
 
-  run ${DOCXBOX_BINARY} lslj "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lslj "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
   
@@ -85,7 +85,7 @@ String or regular expression to be located"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx searchString\" prints an error message" {
-  run ${DOCXBOX_BINARY} lslj nonexistent.docx fonts
+  run "${DOCXBOX_BINARY}" lslj nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

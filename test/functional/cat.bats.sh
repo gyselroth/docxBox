@@ -12,7 +12,7 @@ PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 PATH_XML="word/document.xml"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} cat
+  run "${DOCXBOX_BINARY}" cat
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
@@ -20,7 +20,7 @@ PATH_XML="word/document.xml"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} cat "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" cat "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: File to be displayed" = "${lines[0]}" ]
 

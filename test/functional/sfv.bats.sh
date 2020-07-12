@@ -18,7 +18,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run ${DOCXBOX_BINARY} sfv
+  run "${DOCXBOX_BINARY}" sfv
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -26,7 +26,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" sfv "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Field identifier" = "${lines[0]}" ]
 
@@ -34,7 +34,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx fieldIdentifier {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD}"
+  run "${DOCXBOX_BINARY}" sfv "${PATH_DOCX}" "${MERGEFIELD}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Value to be set" = "${lines[0]}" ]
 
@@ -42,7 +42,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx fieldIdentifier fieldValue\" changes value of given field" {
-  run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD}" foobar
+  run "${DOCXBOX_BINARY}" sfv "${PATH_DOCX}" "${MERGEFIELD}" foobar
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -51,7 +51,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx fieldIdentifier fieldValue\" changes value of MERGEFIELD within header" {
-  run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD_HEADER}" foobar
+  run "${DOCXBOX_BINARY}" sfv "${PATH_DOCX}" "${MERGEFIELD_HEADER}" foobar
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -60,7 +60,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx fieldIdentifier fieldValue\" changes value of MERGEFIELD within footer" {
-  run ${DOCXBOX_BINARY} sfv "${PATH_DOCX}" "${MERGEFIELD_FOOTER}" foobar
+  run "${DOCXBOX_BINARY}" sfv "${PATH_DOCX}" "${MERGEFIELD_FOOTER}" foobar
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -69,7 +69,7 @@ MERGEFIELD_FOOTER="MERGEFIELD  Mergefield_Footer"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} sfv nonexistent.docx
+  run "${DOCXBOX_BINARY}" sfv nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

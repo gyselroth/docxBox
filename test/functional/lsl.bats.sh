@@ -22,14 +22,14 @@ SEARCH_RESULTS=(
 REGEX_RESULT="docProps/core.xml"
 
 @test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx searchString\" is zero" {
-  run ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" fonts
+  run "${DOCXBOX_BINARY}" lsl "${PATH_DOCX}" fonts
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsl
+  run "${DOCXBOX_BINARY}" lsl
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
@@ -40,7 +40,7 @@ REGEX_RESULT="docProps/core.xml"
   local pattern="docxBox Error - Missing argument: \
 String or regular expression to be located"
 
-  run ${DOCXBOX_BINARY} lsl "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lsl "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -90,7 +90,7 @@ String or regular expression to be located"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx searchString\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsl nonexistent.docx fonts
+  run "${DOCXBOX_BINARY}" lsl nonexistent.docx fonts
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

@@ -14,7 +14,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 
 
 @test "$BATS_TEST_NUMBER: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} batch
+  run "${DOCXBOX_BINARY}" batch
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX file" = "${lines[0]}" ]
 
@@ -23,7 +23,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 
 
 @test "$BATS_TEST_NUMBER: \"${CMD} filename.docx {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} batch "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" batch "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Batch commands JSON" = "${lines[0]}" ]
 
@@ -35,7 +35,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 
 @test "$BATS_TEST_NUMBER: \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, meta attribute title gets changed" {
   local batch="{\"1\":{\"mm\":[\"title\",\"foo\"]}}"
-  run ${DOCXBOX_BINARY} batch "${PATH_DOCX}" "${batch}"
+  run "${DOCXBOX_BINARY}" batch "${PATH_DOCX}" "${batch}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -48,7 +48,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
   local bytes_before_batch
   bytes_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --bytes)
 
-  run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
+  run "${DOCXBOX_BINARY}" batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -66,7 +66,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
   local wc_before_batch
   wc_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
 
-  run ${DOCXBOX_BINARY} batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
+  run "${DOCXBOX_BINARY}" batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -79,7 +79,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 @test "$BATS_TEST_NUMBER: \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, mergefields get replaced with the \"sfv\" command" {
   local batch="{\"1\":{\"sfv\":[\"MERGEFIELD  Mergefield_One\",\"FooBar\"]}}"
 
-  run ${DOCXBOX_BINARY} batch "${PATH_DOCX_MERGEFIELD}" "${batch}"
+  run "${DOCXBOX_BINARY}" batch "${PATH_DOCX_MERGEFIELD}" "${batch}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 

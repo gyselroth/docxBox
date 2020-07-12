@@ -12,7 +12,7 @@ PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} txt
+  run "${DOCXBOX_BINARY}" txt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 
@@ -47,7 +47,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} txt nonexistent.docx
+  run "${DOCXBOX_BINARY}" txt nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

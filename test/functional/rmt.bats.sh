@@ -14,7 +14,7 @@ PATH_DOCX_STYLES="test/tmp/cp_text_with_styles.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "$BATS_TEST_NUMBER: \"$CMD {no filename}\" prints an error message" {
-  run ${DOCXBOX_BINARY} rmt
+  run "${DOCXBOX_BINARY}" rmt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
@@ -25,7 +25,7 @@ ERR_LOG="test/tmp/err.log"
   local pattern="docxBox Error - Missing argument: \
 String left-hand-side of part to be removed"
 
-  run ${DOCXBOX_BINARY} rmt "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" rmt "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -36,7 +36,7 @@ String left-hand-side of part to be removed"
   local pattern="docxBox Error - Missing argument: \
 String right-hand-side of part to be removed"
 
-  run ${DOCXBOX_BINARY} rmt "${PATH_DOCX}" "FooBar"
+  run "${DOCXBOX_BINARY}" rmt "${PATH_DOCX}" "FooBar"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -46,9 +46,9 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: \"$CMD filename.docx leftHandString rightHandString\" removes text between and including given strings" {
   pattern="Fugiat excepteursed in qui sit velit duis veniam."
 
-  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" ${pattern} | grep --count "word/document.xml"
+  ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "${pattern}" | grep --count "word/document.xml"
 
-  run ${DOCXBOX_BINARY} rmt "${PATH_DOCX}" "Fugiat" "."
+  run "${DOCXBOX_BINARY}" rmt "${PATH_DOCX}" "Fugiat" "."
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -128,7 +128,7 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: Removing content between two given strings removes everything" {
   ${DOCXBOX_BINARY} lsi "${PATH_DOCX_STYLES}" | grep --count "image1.png"
 
-  run ${DOCXBOX_BINARY} rmt "${PATH_DOCX_STYLES}" "FROM" "Until"
+  run "${DOCXBOX_BINARY}" rmt "${PATH_DOCX_STYLES}" "FROM" "Until"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -141,7 +141,7 @@ String right-hand-side of part to be removed"
 }
 
 @test "$BATS_TEST_NUMBER: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} rmt nonexistent.docx
+  run "${DOCXBOX_BINARY}" rmt nonexistent.docx
   [ "$status" -ne 0 ]
 
   ${DOCXBOX_BINARY} rmt nonexistent.docx Dolore incididunt 2>&1 | tee "${ERR_LOG}"

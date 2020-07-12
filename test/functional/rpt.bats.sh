@@ -15,7 +15,7 @@ ERR_LOG="test/tmp/err.log"
 DISPLAY_FILE="word/document.xml"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing filename}\" prints an error message" {
-  run ${DOCXBOX_BINARY} rpt
+  run "${DOCXBOX_BINARY}" rpt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
@@ -25,7 +25,7 @@ DISPLAY_FILE="word/document.xml"
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing arguments}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: String to be found (and replaced)"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -33,7 +33,7 @@ DISPLAY_FILE="word/document.xml"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx stringToBeReplaced {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" toBeReplaced
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" toBeReplaced
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Replacement" = "${lines[0]}" ]
 
@@ -41,7 +41,7 @@ DISPLAY_FILE="word/document.xml"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx stringToBeReplaced replacementString\" replaces stringToBeReplaced" {
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Lorem Dorem
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -52,7 +52,7 @@ DISPLAY_FILE="word/document.xml"
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx stringToBeReplaced replacementString newFile.docx\" replaces stringToBeReplaced saves to new file" {
   local path_docx_out="test/tmp/replacedString.docx"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Lorem Dorem "${path_docx_out}"
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Lorem Dorem "${path_docx_out}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -65,7 +65,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para1\"/>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -79,7 +79,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para2\"/>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -93,7 +93,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para3\"/>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${heading}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia ${heading}
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -107,7 +107,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX_NEW}" "${DISPLAY_FILE}" | grep --invert-match "<w:numId w:val=\"1\"/>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" TITLE ${list}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX_NEW}" TITLE "${list}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -122,7 +122,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "</w:hyperlink>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${link}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia ${link}
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -138,7 +138,7 @@ DISPLAY_FILE="word/document.xml"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:drawing>"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "</w:drawing>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${image} ${image_path}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia "${image}" ${image_path}
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -156,7 +156,7 @@ DISPLAY_FILE="word/document.xml"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:drawing>"
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "</w:drawing>"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${image} ${image_path}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia "${image}" ${image_path}
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -179,7 +179,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "${pattern}"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${table}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia "${table}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -200,7 +200,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "${pattern}"
 
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX}" Officia ${table}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia "${table}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -210,7 +210,7 @@ DISPLAY_FILE="word/document.xml"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx lower_case_string\" replaces given string case sensitive" {
-  run ${DOCXBOX_BINARY} rpt "${PATH_DOCX_NEW}" "text" "FooBar"
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX_NEW}" "text" "FooBar"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -221,7 +221,7 @@ DISPLAY_FILE="word/document.xml"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} stringToBeReplaced replacementString nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} rpt nonexistent.docx
+  run "${DOCXBOX_BINARY}" rpt nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

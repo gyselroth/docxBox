@@ -14,7 +14,7 @@ ERR_LOG="test/tmp/err.log"
 PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 
 @test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
-  run ${DOCXBOX_BINARY} lsmj "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lsmj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -23,7 +23,7 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run ${DOCXBOX_BINARY} lsmj
+  run "${DOCXBOX_BINARY}" lsmj
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -77,7 +77,7 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsmj nonexistent.docx
+  run "${DOCXBOX_BINARY}" lsmj nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

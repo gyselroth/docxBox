@@ -15,7 +15,7 @@ PATH_EXTRACTED_IMAGE="test/tmp/unziped/word/media/image2.jpeg"
 PATH_JPEG="test/assets/images/2100x400.jpeg"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing filename}\" prints an error message" {
-  run ${DOCXBOX_BINARY} rpi
+  run "${DOCXBOX_BINARY}" rpi
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
@@ -23,7 +23,7 @@ PATH_JPEG="test/assets/images/2100x400.jpeg"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" rpi "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of image to be replaced" = "${lines[0]}" ]
 
@@ -31,7 +31,7 @@ PATH_JPEG="test/assets/images/2100x400.jpeg"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx imageName {missingReplacementImageName}\" prints an error message" {
-  run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg
+  run "${DOCXBOX_BINARY}" rpi "${PATH_DOCX}" image2.jpeg
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of replacement image" = "${lines[0]}" ]
 
@@ -40,7 +40,7 @@ PATH_JPEG="test/assets/images/2100x400.jpeg"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx imageName replacementImageName\" replaces an image" {
 
-  run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg "${PATH_JPEG}"
+  run "${DOCXBOX_BINARY}" rpi "${PATH_DOCX}" image2.jpeg "${PATH_JPEG}"
   [ "$status" -eq 0 ]
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -55,7 +55,7 @@ PATH_JPEG="test/assets/images/2100x400.jpeg"
 @test "${BATS_TEST_NUMBER}: \"${CMD} imageName replacementImageName newFilename.docx\" replaces image and saves to new docx" {
   local path_docx_out="test/tmp/newImage.docx"
 
-  run ${DOCXBOX_BINARY} rpi "${PATH_DOCX}" image2.jpeg "${PATH_JPEG}" "${path_docx_out}"
+  run "${DOCXBOX_BINARY}" rpi "${PATH_DOCX}" image2.jpeg "${PATH_JPEG}" "${path_docx_out}"
   [ "$status" -eq 0 ]
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -76,7 +76,7 @@ PATH_JPEG="test/assets/images/2100x400.jpeg"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} rpi nonexistent.docx
+  run "${DOCXBOX_BINARY}" rpi nonexistent.docx
   [ "$status" -ne 0 ]
 
   ${DOCXBOX_BINARY} rpi nonexistent.docx 2>&1 image2.jpeg "${PATH_JPEG}" | tee "${ERR_LOG}"

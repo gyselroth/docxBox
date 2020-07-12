@@ -13,7 +13,7 @@ ERR_LOG="test/tmp/err.log"
 @test "$BATS_TEST_NUMBER: Exit code of \"${CMD} filename.docx\" is zero" {
   local path_docx="test/tmp/cp_table_unordered_list_images.docx"
 
-  run ${DOCXBOX_BINARY} lorem "${path_docx}"
+  run "${DOCXBOX_BINARY}" lorem "${path_docx}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -22,7 +22,7 @@ ERR_LOG="test/tmp/err.log"
 @test "$BATS_TEST_NUMBER: \"${CMD} {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run ${DOCXBOX_BINARY} lorem
+  run "${DOCXBOX_BINARY}" lorem
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -33,7 +33,7 @@ ERR_LOG="test/tmp/err.log"
   local path_docx="test/tmp/cp_table_unordered_list_images.docx"
   local pattern="Culpa ad eiusmod"
 
-  run ${DOCXBOX_BINARY} lorem "${path_docx}"
+  run "${DOCXBOX_BINARY}" lorem "${path_docx}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -53,7 +53,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "$BATS_TEST_NUMBER: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} lorem nonexistent.docx
+  run "${DOCXBOX_BINARY}" lorem nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

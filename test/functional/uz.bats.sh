@@ -15,7 +15,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run ${DOCXBOX_BINARY} uz
+  run "${DOCXBOX_BINARY}" uz
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -23,7 +23,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} uz nonexistent.docx
+  run "${DOCXBOX_BINARY}" uz nonexistent.docx
   [ "$status" -ne 0 ]
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -50,7 +50,7 @@ UNZIPPED_FOLDER="cp_bio_assay.docx-extracted"
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" unzipes all files" {
   local pattern="^[[:space:]]\{4\}"
 
-  run ${DOCXBOX_BINARY} uz test/tmp/cp_bio_assay.docx
+  run "${DOCXBOX_BINARY}" uz test/tmp/cp_bio_assay.docx
   [ "$status" -eq 0 ]
   source ./test/functional/_check_for_valgrind_errors.sh
 

@@ -15,14 +15,14 @@ MERGE_FIELD="MERGEFIELD"
 MERGE_FORMAT="\* MERGEFORMAT"
 
 @test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
-  run ${DOCXBOX_BINARY} lsd "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lsd "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsd
+  run "${DOCXBOX_BINARY}" lsd
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 
@@ -63,7 +63,7 @@ MERGE_FORMAT="\* MERGEFORMAT"
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox lsd nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsd nonexistent.docx
+  run "${DOCXBOX_BINARY}" lsd nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
