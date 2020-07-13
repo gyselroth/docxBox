@@ -128,13 +128,21 @@ or ````docxbox ls foo.docx --locate --json foo````
 
 ##### List image files
 
-Output list of contained images
+Output list of contained images and their media attributes (like width, height, 
+encoding, compression, etc.)
+
+**Note:** Media attributes are read using the 
+[``file``](https://darwinsys.com/file/) command, which must be installed on your
+system (but usually should be already) when using docxBox's ``lsi`` command. 
 
 ````docxbox lsi foo.docx````  
 or ````docxbox ls foo.docx -i````  
 or ````docxbox ls foo.docx --images````  
 
 To output as JSON:
+
+**Note:** JSON output of the ``lsi`` command does not yet include the images' 
+media attributes.
 
 ````docxbox lsij foo.docx````  
 or ````docxbox lsi foo.docx -j````  

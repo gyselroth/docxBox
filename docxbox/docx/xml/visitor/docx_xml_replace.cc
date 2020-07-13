@@ -32,7 +32,7 @@ int docx_xml_replace::GetAmountReplaced() {
 // 2. A string containing JSON: will be interpreted for rendering word markup,
 //   which will than replace the <w:r> that contained the <w:t> node,
 //   which contained the search-string
-bool docx_xml_replace::ReplaceInXmlIntoDoc(std::string &xml,
+bool docx_xml_replace::ReplaceInXmlIntoDoc(std::string xml,
                                            const std::string &search,
                                            const std::string &replacement) {
   is_replacement_xml_ = helper::Json::IsJson(replacement);
