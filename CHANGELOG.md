@@ -3,6 +3,7 @@ docxBox Changelog
 
 V1.0.0 - Not finished yet
 -------------------------
+* Add given images into document also during batch processing
 * Add output of images media attributes (width, height, encoding, compression, etc.) to ``lsi`` command  
 * Add set table values ``stv`` command
 * Merge textual runs (``<w:r><w:t>``) in direct succession w/ identical run properties
