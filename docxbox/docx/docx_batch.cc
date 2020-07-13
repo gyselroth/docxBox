@@ -95,14 +95,6 @@ bool docx_batch::ProcessStep(int index) {
 
   int argc = app_cli_arguments.size();
 
-  // Convert from std::vector<std::string> to char**
-//  char **argv = new char*[argc + 1];
-//
-//  for (size_t i = 0; i < argc; ++i)
-//    argv[i] = strdup(app_cli_arguments[i].c_str());
-//
-//  argv[argc] = nullptr;
-
   // Init process
 //  auto app = new docxbox::App(argc, argv, true);
   auto app = new docxbox::App(argc, app_cli_arguments, true);
