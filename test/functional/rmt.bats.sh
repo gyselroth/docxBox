@@ -46,6 +46,8 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: \"$CMD filename.docx leftHandString rightHandString\" removes text between and including given strings" {
   pattern="Fugiat excepteursed in qui sit velit duis veniam."
 
+  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "${pattern}")
+
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" ${pattern} | grep --count "word/document.xml"
 
   run ${DOCXBOX_BINARY} rmt "${PATH_DOCX}" "Fugiat" "."
@@ -53,14 +55,24 @@ String right-hand-side of part to be removed"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count --invert-match "${pattern}"
+  local after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "${pattern}")
+
+  ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Officia"
+
+  (( before_rmt > after_rmt ))
 }
 
 
 @test "$BATS_TEST_NUMBER: Removing strings at the beginning of a file" {
+  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IS A")
+
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "THIS" "TITLE"
 
   source ./test/functional/_check_for_valgrind_errors.sh
+
+  local after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IS A")
+
+  (( before_rmt > after_rmt ))
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IN ALL CAPS"
 }
@@ -104,16 +116,15 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: Removing strings at the end of a file" {
   local pattern="Bold text passages are great"
 
-  local before_rmt
-  before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
+  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "great"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
+  local after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
 
-  (( before_rmt = after_rmt ))
+  (( before_rmt > after_rmt ))
 }
 
 @test "$BATS_TEST_NUMBER: Trying to remove strings at the end of a file w/ a nonexistent string" {
