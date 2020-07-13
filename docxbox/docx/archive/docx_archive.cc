@@ -17,7 +17,11 @@ docx_archive::~docx_archive() {
   RemoveTemporaryFiles();
 }
 
-std::string docx_archive::GetArgValue(int index) {
+const std::vector<std::string> &docx_archive::GetArgv() const {
+  return argv_;
+}
+
+std::string docx_archive::GetArgValueAt(int index) {
   return argv_[index];
 }
 
@@ -320,8 +324,11 @@ bool docx_archive::Batch() {
   if (!UnzipDocxByArgv(true, "", true, true)) return false;
 
   auto batch = new docx_batch(this, std::string(argv_[3]));
+  bool result = batch->ProcessSequence();
 
-  if (!batch->ProcessSequence()) {
+  if (!result) {
+    delete batch;
+
     return false;
   }
 
@@ -501,9 +508,12 @@ bool docx_archive::UpdateCoreXmlDate(meta::AttributeType attribute,
   if (value.empty()) {
     meta_component->SetValue(helper::DateTime::GetCurrentDateTimeInIso8601());
   } else {
-    if (!helper::DateTime::IsIso8601Date(value))
+    if (!helper::DateTime::IsIso8601Date(value)) {
+      delete meta_component;
+
       return docxbox::AppLog::NotifyError(
           "Invalid date (must be ISO 8601): " + value);
+    }
 
     meta_component->SetValue(value);
   }

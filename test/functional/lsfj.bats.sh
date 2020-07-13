@@ -19,14 +19,14 @@ ATTRIBUTES=(
   "pitch")
 
 @test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
-  run ${DOCXBOX_BINARY} lsfj "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lsfj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsfj
+  run "${DOCXBOX_BINARY}" lsfj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 
@@ -129,7 +129,7 @@ ATTRIBUTES=(
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox lsfj nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsfj nonexistent.docx
+  run "${DOCXBOX_BINARY}" lsfj nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -161,6 +161,7 @@ ATTRIBUTES=(
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"[]\" must match" {
+  local amount_opening amount_closing
   local amount_opening=$(${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "\[")
   local amount_closing=$(${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "\]")
 
@@ -168,6 +169,7 @@ ATTRIBUTES=(
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
+  local amount_opening amount_closing
   local amount_opening=$(${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "\{")
   local amount_closing=$(${DOCXBOX_BINARY} lsfj "${PATH_DOCX}" | grep --count "\}")
 

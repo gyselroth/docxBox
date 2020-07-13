@@ -117,7 +117,14 @@ bool docx_archive_replace::ReplaceText() {
 
   auto *kPRels = new rels(argc_, argv_, path_working_dir_, path_extract_);
 
-  if (!kPRels->AddRelationsAndReferences(
+  if (is_batch_mode_) {
+    auto image_filename =
+        docx_batch::ExtractImageFilenameFromBatchStepJson(argv_);
+
+    if (!image_filename.empty()) {
+      kPRels->GetImageRelationshipId(image_filename, &image_relationship_id);
+    }
+  } else if (!kPRels->AddRelationsAndReferencesOfGenericRenderType(
       replacement, &image_relationship_id, &hyperlink_relationship_id)) {
     delete kPRels;
 
@@ -159,9 +166,13 @@ bool docx_archive_replace::ReplaceText() {
 
     std::string xml = preprocessor->GetXml();
 
-    if (!parser->ReplaceInXml(&xml, path_file_abs, search, replacement))
+    if (!parser->ReplaceInXml(&xml, path_file_abs, search, replacement)) {
+      delete preprocessor;
+      delete parser;
+
       return docxbox::AppLog::NotifyError(
           "Failed replace string in: " + file_in_zip.filename);
+    }
 
     docxbox::AppLog::NotifyInfo(
         std::to_string(parser->GetAmountReplaced())
@@ -177,12 +188,15 @@ bool docx_archive_replace::ReplaceText() {
   // Create resulting DOCX from files during non-batch mode
   // or at final step of batch sequence
   if (is_batch_mode_) {
-    if (!is_final_batch_step_) return true;
+    if (!is_final_batch_step_)
+      return docxbox::AppLog::NotifyInfo("Finish batch step");
 
     overwrite_source_docx = path_docx_in_ == path_docx_out_;
   } else {
     InitPathDocxOutForReplaceText(&path_docx_out_, &overwrite_source_docx);
   }
+
+  docxbox::AppLog::NotifyInfo("Zip files into DOCX: " + path_docx_out_);
 
   return CreateDocxFromExtract(path_docx_out_, overwrite_source_docx);
 }
@@ -342,6 +356,11 @@ bool docx_archive_replace::SetFieldValue() {
 
   std::string field_identifier = argv_[3];
   std::string value = argv_[4];
+
+  if (is_batch_mode_) {
+    field_identifier = helper::String::UnwrapQuotes(field_identifier);
+    value = helper::String::UnwrapQuotes(value);
+  }
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 

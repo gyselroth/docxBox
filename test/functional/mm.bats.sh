@@ -12,7 +12,7 @@ PATH_DOCX="test/tmp/cp_bio_assay.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} mm
+  run "${DOCXBOX_BINARY}" mm
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
@@ -22,7 +22,7 @@ ERR_LOG="test/tmp/err.log"
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Meta attribute to be set"
 
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -30,7 +30,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx title {argument}\" modifies meta attribute \"title\"" {
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" title "someTitle"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" title "someTitle"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -39,7 +39,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx creator {argument}\" modifies meta attribute \"creator\"" {
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" creator "John Doe"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" creator "John Doe"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -50,7 +50,7 @@ ERR_LOG="test/tmp/err.log"
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx lastModifiedBy {argument}\" modifies meta attribute \"lastModifiedBy\"" {
   local pattern="lastModifiedBy: John Doe"
 
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" lastModifiedBy "John Doe"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" lastModifiedBy "John Doe"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -62,7 +62,7 @@ ERR_LOG="test/tmp/err.log"
   local print_date="2020-02-20T10:31:00Z"
   local pattern="lastPrinted: 2020-02-20T10:31:00Z"
 
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" lastPrinted $print_date
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" lastPrinted $print_date
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -71,7 +71,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx language {argument}\" modifies meta attribute \"language\"" {
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" language "de-CH"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" language "de-CH"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -82,7 +82,7 @@ ERR_LOG="test/tmp/err.log"
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx created {argument}\" modifies meta attribute \"created\"" {
   local pattern="created: 2020-10-20T10:20:00Z"
 
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" created "2020-10-20T10:20:00Z"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" created "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -93,7 +93,7 @@ ERR_LOG="test/tmp/err.log"
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx modified {argument}\" modifies meta attribute \"modified\"" {
   local pattern="modified: 2020-10-20T10:20:00Z"
 
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -102,9 +102,10 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: Modifying the meta attribute \"created\" does not change the meta attribute \"modified\"" {
+  local created
   local created=$(${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "created")
 
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -113,7 +114,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx revision {argument}\" modifies meta attribute \"revision\"" {
-  run ${DOCXBOX_BINARY} mm "${PATH_DOCX}" revision "25"
+  run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" revision "25"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -123,7 +124,7 @@ ERR_LOG="test/tmp/err.log"
 
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} mm nonexistent.docx
+  run "${DOCXBOX_BINARY}" mm nonexistent.docx
   [ "$status" -ne 0 ]
   source ./test/functional/_check_for_valgrind_errors.sh
 

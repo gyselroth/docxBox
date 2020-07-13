@@ -14,14 +14,14 @@ PATH_NEW_DOCX="test/tmp/changedFile.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "$BATS_TEST_NUMBER: Exit code of \"${CMD}\" is zero" {
-  run ${DOCXBOX_BINARY} ls "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" ls "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} ls
+  run "${DOCXBOX_BINARY}" ls
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
@@ -87,10 +87,11 @@ local search_values=(
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} changedFile.docx\" displays a side-by-side comparison" {
-  run ${DOCXBOX_BINARY} lorem "${PATH_DOCX}" "${PATH_NEW_DOCX}"
+  run "${DOCXBOX_BINARY}" lorem "${PATH_DOCX}" "${PATH_NEW_DOCX}"
 
-  local amount_chars_base=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" | wc --bytes)
-  local amount_chars_diff=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | wc --bytes)
+  local amount_chars_base amount_chars_diff
+  amount_chars_base=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" | wc --bytes)
+  amount_chars_diff=$(${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | wc --bytes)
 
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" "${PATH_NEW_DOCX}" | (( amount_chars_base < amount_chars_diff ))
 

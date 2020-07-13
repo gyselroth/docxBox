@@ -13,7 +13,7 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Path of directory to be zipped"
 
-  run ${DOCXBOX_BINARY} zp
+  run "${DOCXBOX_BINARY}" zp
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -23,7 +23,7 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
 @test "${BATS_TEST_NUMBER}: \"${CMD} directory {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Filename of docx to be created"
 
-  run ${DOCXBOX_BINARY} zp "${UNZIPPED_DOCX_DIRECTORY}"
+  run "${DOCXBOX_BINARY}" zp "${UNZIPPED_DOCX_DIRECTORY}"
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -39,7 +39,7 @@ UNZIPPED_DOCX_DIRECTORY="test/tmp/unzipped"
 
   path_new_docx="test/tmp/zp_table_unordered_list_images.docx"
 
-  run ${DOCXBOX_BINARY} zp "${UNZIPPED_DOCX_DIRECTORY}" "${path_new_docx}"
+  run "${DOCXBOX_BINARY}" zp "${UNZIPPED_DOCX_DIRECTORY}" "${path_new_docx}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

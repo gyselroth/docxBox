@@ -76,11 +76,19 @@ void docx_xml_remove::LocateNodesForRemovalBetweenText(
 void docx_xml_remove::CheckTextNodeForRemoval(
     const char *lhs, const char *rhs, tinyxml2::XMLElement *node) {
   auto tmp_text = node->GetText();
-  const char* text = nullptr == tmp_text ? "" : std::string(tmp_text).c_str();
 
-  if (!found_lhs_ && 0 == strcmp(lhs, text)) OnFoundLhs(node);
+  if (nullptr != tmp_text) {
+    const char *text = std::string(tmp_text).c_str();
 
-  if (found_lhs_ && !found_rhs_ && 0 == strcmp(rhs, text)) OnFoundRhs(node);
+    if (!found_lhs_
+        && 0 == strcmp(lhs, text))
+      OnFoundLhs(node);
+
+    if (found_lhs_
+        && !found_rhs_
+        && 0 == strcmp(rhs, text))
+      OnFoundRhs(node);
+  }
 
   if (found_lhs_ && !found_rhs_) {
     // Collect runs after LHS until RHS is found
@@ -142,6 +150,7 @@ void docx_xml_remove::PopBackParent(const char *node_tag) {
 
     if (0 == strcmp(node_tag, tag_para)) {
       parents_to_be_removed_.erase(iter);
+
       break;
     }
   }

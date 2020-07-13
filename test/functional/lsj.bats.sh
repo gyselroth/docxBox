@@ -18,14 +18,14 @@ ATTRIBUTES=(
   "file")
 
 @test "$BATS_TEST_NUMBER: Exit code of \"${CMD} filename.docx\" is zero" {
-  run ${DOCXBOX_BINARY} lsj "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lsj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsj
+  run "${DOCXBOX_BINARY}" lsj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: DOCX filename" = "${lines[0]}" ]
 
@@ -88,7 +88,7 @@ local search_values=(
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsj nonexistent.docx
+  run "${DOCXBOX_BINARY}" lsj nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -120,6 +120,7 @@ local search_values=(
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"[]\" must match" {
+  local amount_opening amount_closing
   local amount_opening=$(${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "\[")
   local amount_closing=$(${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "\]")
 
@@ -127,6 +128,7 @@ local search_values=(
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
+  local amount_opening amount_closing
   local amount_opening=$(${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "\{")
   local amount_closing=$(${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "\}")
 

@@ -83,6 +83,8 @@ void docx_xml_tidy::RemoveDispensableTags(std::string *xml) {
 
   processor->RemoveDispensableTags();
   *xml = processor->GetXml();
+
+  delete processor;
 }
 
 void docx_xml_tidy::RestorePreserveSpace() {
@@ -98,6 +100,8 @@ void docx_xml_tidy::RestorePreserveSpace(std::string *xml) {
 
   processor->RestorePreserveSpace();
   *xml = processor->GetXml();
+
+  delete processor;
 }
 
 bool docx_xml_tidy::DefragmentXml() {

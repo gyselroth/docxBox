@@ -49,7 +49,11 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
     GetRelationshipId(relationship, &relationship_id);
 
     if (target_value == target) {
+      // TODO(kay) check targets, seems like path prefix causes not identifying
+      //  existing targets
+      docxbox::AppLog::NotifyInfo("Found relationship ID to: " + target);
       target_exists = true;
+
       break;
     }
   } while ((relationship = relationship->NextSiblingElement()));
@@ -72,6 +76,8 @@ std::string docx_xml_rels::GetRelationShipIdByTarget(
       relationship_id) + "</Relationships>";
 
   helper::String::Replace(&xml_, "</Relationships>", kRelationshipTag.c_str());
+
+  docxbox::AppLog::NotifyInfo("Add relationship ID to: " + target);
 
   if (SaveXml(true)) return relationship_id;
 

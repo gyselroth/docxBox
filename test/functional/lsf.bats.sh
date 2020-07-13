@@ -12,7 +12,7 @@ PATH_DOCX="test/tmp/cp_mergefields.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: Exit code of \"${CMD}\" is zero" {
-  run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -21,7 +21,7 @@ ERR_LOG="test/tmp/err.log"
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run ${DOCXBOX_BINARY} lsf
+  run "${DOCXBOX_BINARY}" lsf
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -29,7 +29,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays ground information" {
-  run ${DOCXBOX_BINARY} lsf "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lsf "${PATH_DOCX}"
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 
@@ -37,7 +37,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --fonts\" displays ground information" {
-  run ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --fonts
+  run "${DOCXBOX_BINARY}" ls "${PATH_DOCX}" --fonts
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 
@@ -45,7 +45,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -f\" displays ground information" {
-  run ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -f
+  run "${DOCXBOX_BINARY}" ls "${PATH_DOCX}" -f
   [ "$status" -eq 0 ]
   [ "word/fontTable.xml lists 10 fonts:" = "${lines[0]}" ]
 
@@ -129,7 +129,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsf nonexistent.docx
+  run "${DOCXBOX_BINARY}" lsf nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

@@ -12,14 +12,14 @@ PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
-  run ${DOCXBOX_BINARY} lsdj "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" lsdj "${PATH_DOCX}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsdj
+  run "${DOCXBOX_BINARY}" lsdj
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 
@@ -73,7 +73,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} lsdj nonexistent.docx
+  run "${DOCXBOX_BINARY}" lsdj nonexistent.docx
   [ "$status" -ne 0 ]
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -104,6 +104,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"[]\" must match" {
+  local amount_opening amount_closing
   local amount_opening=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\[")
   local amount_closing=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\]")
 
@@ -111,6 +112,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
+  local amount_opening amount_closing
   local amount_opening=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\{")
   local amount_closing=$(${DOCXBOX_BINARY} lsdj "${PATH_DOCX}" | grep --count "\}")
 

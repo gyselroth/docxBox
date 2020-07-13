@@ -12,7 +12,7 @@ PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
-  run ${DOCXBOX_BINARY} txt
+  run "${DOCXBOX_BINARY}" txt
   [ "$status" -ne 0 ]
   [ "docxBox Error - Missing argument: Filename of DOCX to be extracted" = "${lines[0]}" ]
 
@@ -26,8 +26,9 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx -s\" displays segmented plain text of given file" {
-  local segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" -s | wc --lines)
-  local non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
+  local segmented non_segmented
+  segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" -s | wc --lines)
+  non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -36,8 +37,9 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx --segments\" displays segmented plain text of given file" {
-  local segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" --segments | wc --lines)
-  local non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
+  local segmented non_segmented
+  segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" --segments | wc --lines)
+  non_segmented=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | wc --lines)
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -45,7 +47,7 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} txt nonexistent.docx
+  run "${DOCXBOX_BINARY}" txt nonexistent.docx
   [ "$status" -ne 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

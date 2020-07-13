@@ -16,7 +16,7 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 @test "${BATS_TEST_NUMBER}: \"${CMD} {missing argument}\" prints an error message" {
   local pattern="docxBox Error - Missing argument: Filename of DOCX to be extracted"
 
-  run ${DOCXBOX_BINARY} uzm
+  run "${DOCXBOX_BINARY}" uzm
   [ "$status" -ne 0 ]
   [ "${pattern}" = "${lines[0]}" ]
 
@@ -24,7 +24,7 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} nonexistent.docx\" prints an error message" {
-  run ${DOCXBOX_BINARY} uzm nonexistent.docx
+  run "${DOCXBOX_BINARY}" uzm nonexistent.docx
   [ "$status" -ne 0 ]
   source ./test/functional/_check_for_valgrind_errors.sh
 
@@ -48,7 +48,7 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" extracts only media files" {
-  run ${DOCXBOX_BINARY} uzm "${PATH_DOCX}"
+  run "${DOCXBOX_BINARY}" uzm "${PATH_DOCX}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
@@ -62,7 +62,7 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx --media\" extracts only media files" {
-  run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" --media
+  run "${DOCXBOX_BINARY}" uz "${PATH_DOCX}" --media
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
@@ -76,7 +76,7 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx -m\" extracts only media files" {
-  run ${DOCXBOX_BINARY} uz "${PATH_DOCX}" -m
+  run "${DOCXBOX_BINARY}" uz "${PATH_DOCX}" -m
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }

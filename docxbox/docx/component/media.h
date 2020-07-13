@@ -18,7 +18,7 @@ class media {
   bool AddImageFile(const std::string& path_image);
 
   // Get (add if not exists) relationship in _rels/document.xml.rels
-  std::string GetImageRelationshipId(const std::string &target);
+  std::string GetRelationshipId(const std::string &target);
 
   std::string GetMediaPathNewImage();
 
