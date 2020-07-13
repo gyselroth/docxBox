@@ -139,7 +139,7 @@ std::string docx_archive::UnzipDocx(const std::string &path_docx,
 bool docx_archive::UnzipDocxByArgv(bool is_temporary,
                                    const std::string &dir_appendix,
                                    bool ensure_is_docx,
-                                   bool format_xml_files) {
+                                   bool indent_xml_files) {
   if (!docxbox::AppArgument::IsArgumentGiven(
       argc_, 2, "Filename of DOCX to be extracted")) return false;
 
@@ -171,7 +171,7 @@ bool docx_archive::UnzipDocxByArgv(bool is_temporary,
       "Unzipped DOCX: " + path_docx_in_
           + " to: " + path_working_dir_ + "/" + path_extract_);
 
-  return format_xml_files
+  return indent_xml_files
          ? miniz_cpp_ext::IndentXmlFiles(path_extract_, file_list)
          : true;
 }

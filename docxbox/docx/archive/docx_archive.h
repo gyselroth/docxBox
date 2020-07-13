@@ -51,7 +51,7 @@ class docx_archive {
   bool UnzipDocxByArgv(bool is_temporary = false,
                        const std::string &dir_appendix = "",
                        bool ensure_is_docx = true,
-                       bool format_xml_files = false);
+                       bool indent_xml_files = false);
 
   static bool IsZipArchive(const std::string& path_file);
 

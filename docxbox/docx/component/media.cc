@@ -10,11 +10,13 @@ media::media(std::string path_extract) {
   path_extract_ = std::move(path_extract);
 }
 
+// Copy given image file into media/<file>, set media_path_new_image_
 bool media::AddImageFile(const std::string& path_image) {
-  std::string number = GetNextImageNumber();
+//  std::string number = GetNextImageNumber();
+//  std::string filename_image =
+//      "image" + number + "." + helper::File::GetExtension(path_image);
 
-  std::string filename_image =
-      "image" + number + "." + helper::File::GetExtension(path_image);
+  std::string filename_image = helper::File::GetBasename(path_image);
 
   std::string path_destination = path_media_ + "/" + filename_image;
 

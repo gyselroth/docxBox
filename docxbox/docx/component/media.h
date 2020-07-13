@@ -15,6 +15,7 @@ class media {
  public:
   explicit media(std::string path_extract);
 
+  // Copy given image file into media/<file>, set media_path_new_image_
   bool AddImageFile(const std::string& path_image);
 
   // Get (add if not exists) relationship in _rels/document.xml.rels
