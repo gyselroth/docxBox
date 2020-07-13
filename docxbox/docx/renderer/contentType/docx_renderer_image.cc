@@ -91,13 +91,13 @@ std::string docx_renderer_image::Render() {
 
   wml_ = TAG_LHS_RUN;
 
-  // TODO(kay): insert dimension from JSON -> a:ext...
-
   wml_ +=
     "<w:rPr><w:noProof/></w:rPr>"
     "<w:drawing>"
       "<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">"
-        "<wp:extent cx=\"3810000\" cy=\"3810000\"/>"
+        "<wp:extent "
+          "cx=\"" + std::to_string(width_)
+          + "\" cy=\"" + std::to_string(height_) + "\"/>"
         "<wp:effectExtent l=\"0\" t=\"0\" r=\"0\" b=\"0\"/>"
         "<wp:docPr id=\"1\" name=\"Picture1\"/>"
         "<wp:cNvGraphicFramePr>\n"
