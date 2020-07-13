@@ -46,6 +46,8 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: \"$CMD filename.docx leftHandString rightHandString\" removes text between and including given strings" {
   local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Fugiat")
 
+  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "${pattern}")
+
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "${pattern}" | grep --count "word/document.xml"
 
   run "${DOCXBOX_BINARY}" rmt "${PATH_DOCX}" "Fugiat" "."

@@ -100,7 +100,43 @@ bool docx_archive_list::ListImageFilesInDocx(bool as_json) {
 
   delete miniz_ext;
 
+  OutputImagesMediaAttributes();
+
   return true;
+}
+
+void docx_archive_list::OutputImagesMediaAttributes() const {
+  std::vector<std::string> files;
+  files = helper::File::ScanDirRecursive(path_extract_.c_str(), files);
+
+  int index_image = 0;
+
+  for (const auto& path_file : files) {
+    if (helper::File::IsWordCompatibleImage(path_file)) {
+      std::string command = "file " + path_file;
+      auto file_info = helper::Cli::GetExecutionResponse(command.c_str());
+      helper::String::ReplaceAll(&file_info, path_extract_ + "/", "");
+
+      if (0 == index_image)
+        std::cout << "\nMedia Attributes:\n-----------------\n";
+
+      auto lines = helper::String::Explode(file_info, ',');
+      int index_line = 0;
+      for (const auto& line : lines) {
+        std::string whitespace = index_line == 0
+            ? ""
+            : helper::String::Repeat(
+                " ",
+                path_file.length() - path_extract_.length());
+
+        std::cout << whitespace << line << "\n";
+
+        ++index_line;
+      }
+
+      ++index_image;
+    }
+  }
 }
 
 bool docx_archive_list::LocateFilesContainingString(bool as_json) {

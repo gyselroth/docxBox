@@ -53,6 +53,8 @@ class docx_archive_list : public docx_archive {
                               const std::string &file_pattern,
                               std::string *file_list_1,
                               std::string *summary_1);
+
+  void OutputImagesMediaAttributes() const;
 };
 
 #endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_LIST_H_

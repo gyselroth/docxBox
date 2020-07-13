@@ -21,7 +21,7 @@ class docx_xml_replace:public docx_xml, public docx_renderer_delegate  {
   docx_xml_replace(int argc, const std::vector<std::string>& argv);
 
   // Replace given search string in given XML, update doc_ from it
-  bool ReplaceInXmlIntoDoc(std::string &xml,
+  bool ReplaceInXmlIntoDoc(std::string xml,
                            const std::string& search,
                            const std::string& replacement);
 
