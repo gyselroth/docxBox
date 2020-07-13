@@ -334,7 +334,7 @@ bool docx_archive::Batch() {
 
   std::string path_docx_out;
 
-  if (argc_ >= 4) {
+  if (argc_ >= 4 && helper::String::EndsWith(argv_[4], ".docx")) {
     // Result filename is given as argument
     path_docx_out = argv_[4];
     helper::File::ResolvePath(path_working_dir_, &path_docx_out);
@@ -461,7 +461,7 @@ bool docx_archive::ModifyMeta() {
       return true;
     }
   } else {
-    if (argc_ >= 6) {
+    if (argc_ >= 6 && helper::String::EndsWith(argv_[5], ".docx")) {
       // Result filename is given as argument
       path_docx_out_ = argv_[5];
       helper::File::ResolvePath(path_working_dir_, &path_docx_out_);

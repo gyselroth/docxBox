@@ -114,12 +114,6 @@ bool docx_batch::ProcessStep(int index) {
 
   app->Process();
 
-  // delete argv
-//  for (size_t i = 0; i < argc; ++i)
-//    delete argv[i];  // free memory for each c-style string
-//
-//  delete[] argv;  // free memory for outer char* array
-
   delete app;
 
   return true;
@@ -138,9 +132,6 @@ bool docx_batch::AddImagesIntoDocument(const std::string &path_extract) {
       added_image = true;
     }
   }
-
-// TODO(kay): save modified rels
-//  if (added_image) kRels->Save();
 
   delete kRels;
 

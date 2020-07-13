@@ -69,8 +69,11 @@ bool docx_archive_replace::ReplaceImage() {
     } else {
       overwrite_source_docx = argc_ < 6;
 
-      if (overwrite_source_docx) {
+      if (overwrite_source_docx
+          || !helper::String::EndsWith(argv_[5], ".docx")
+      ) {
         // Overwrite original DOCX
+        overwrite_source_docx = true;
         path_docx_out_ = path_docx_in_;
       } else {
         // Result filename is given as argument
@@ -291,7 +294,7 @@ bool docx_archive_replace::RemoveBetweenText() {
   if (is_batch_mode_) {
     if (!is_final_batch_step_) return true;
   } else {
-    if (argc_ >= 7) {
+    if (argc_ >= 7 && helper::String::EndsWith(argv_[6], ".docx")) {
       // Result filename is given as argument
       path_docx_out_ = argv_[6];
       helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
@@ -341,7 +344,10 @@ bool docx_archive_replace::ReplaceAllTextByLoremIpsum() {
   } else {
     overwrite_source_docx = argc_ < 4;
 
-    if (overwrite_source_docx) {
+    if (overwrite_source_docx
+        || !helper::String::EndsWith(argv_[3], ".docx")
+    ) {
+      overwrite_source_docx = true;
       path_docx_out_ = path_docx_in_;
     } else {
       // Result filename is given as argument
@@ -394,7 +400,7 @@ bool docx_archive_replace::SetFieldValue() {
   if (is_batch_mode_) {
     if (!is_final_batch_step_) return true;
   } else {
-    if (argc_ >= 6) {
+    if (argc_ >= 6 && helper::String::EndsWith(argv_[5], ".docx")) {
       // Result filename is given as argument
       path_docx_out_ = argv_[5];
       helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
@@ -444,7 +450,7 @@ bool docx_archive_replace::SetTableValues() {
   if (is_batch_mode_) {
     if (!is_final_batch_step_) return true;
   } else {
-    if (argc_ >= 5) {
+    if (argc_ >= 5 && helper::String::EndsWith(argv_[5], ".docx")) {
       // Result filename is given as argument
       path_docx_out_ = argv_[5];
       helper::File::ResolvePath(path_working_dir_, &path_docx_out_);
