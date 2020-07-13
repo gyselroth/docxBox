@@ -16,15 +16,14 @@
 #include <string>
 #include <vector>
 
-class docx_xml_replace:docx_xml, public docx_renderer_delegate  {
+class docx_xml_replace:public docx_xml, public docx_renderer_delegate  {
  public:
   docx_xml_replace(int argc, const std::vector<std::string>& argv);
 
-  bool ReplaceInXml(
-      std::string *xml,
-      const std::string &path_xml,
-      const std::string& search,
-      const std::string& replacement);
+  // Replace given search string in given XML, update doc_ from it
+  bool ReplaceInXmlIntoDoc(std::string &xml,
+                           const std::string& search,
+                           const std::string& replacement);
 
   int GetAmountReplaced();
 

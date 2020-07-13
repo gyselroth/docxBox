@@ -17,6 +17,12 @@ std::string docx_xml::GetXml() {
   return xml_;
 }
 
+bool docx_xml::SaveXmlFromDoc(const std::string& path_xml) {
+  return tinyxml2::XML_SUCCESS != doc_.SaveFile(path_xml.c_str(), true)
+     ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
+     : true;
+}
+
 bool docx_xml::IsXmlFileContainingText(const std::string &filename) {
   return !helper::String::EndsWith(filename, "/")
       && helper::String::EndsWith(filename, ".xml")
