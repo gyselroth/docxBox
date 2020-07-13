@@ -197,16 +197,6 @@ bool File::RemoveRecursive(const char *path) {
   return result;
 }
 
-std::string File::GetExtension(const std::string& file_path) {
-  if (helper::String::Contains(file_path, ".")) {
-    std::vector<std::string> parts = helper::String::Explode(file_path, '.');
-
-    return parts[parts.size() - 1];
-  }
-
-  return "";
-}
-
 std::string File::GetLastPathSegment(std::string path) {
   if (helper::String::Contains(path, "/")) {
     std::vector<std::string> parts = helper::String::Explode(path, '/');

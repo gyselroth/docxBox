@@ -62,7 +62,6 @@ extern bool Remove(const char *path);
 
 extern bool RemoveRecursive(const char *file_path);
 
-extern std::string GetExtension(const std::string& file_path);
 extern std::string GetLastPathSegment(std::string path);
 
 extern std::vector<std::string> ScanDir(const char *path);
