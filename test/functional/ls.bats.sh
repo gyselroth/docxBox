@@ -67,21 +67,21 @@ local search_values=(
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD}\" displays amount of contained files" {
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count '14 files'
+  local regex_pattern="\d{1,2} files"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count --perl-regexp "${regex_pattern}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD}\" displays files' date and time" {
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count "7/3/2020"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" | grep --count --perl-regexp "\d{1,2}/\d{1,2}/\d{4,4}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} *.file-ending\" displays files with the given file ending" {
   ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.jpeg | grep --count "image2.jpeg"
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.xml | grep --count "10 files"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" *.xml | grep --count --perl-regexp "\d files"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }

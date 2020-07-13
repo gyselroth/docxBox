@@ -44,9 +44,7 @@ String right-hand-side of part to be removed"
 }
 
 @test "$BATS_TEST_NUMBER: \"$CMD filename.docx leftHandString rightHandString\" removes text between and including given strings" {
-  pattern="Fugiat excepteursed in qui sit velit duis veniam."
-
-  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "${pattern}")
+  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Fugiat")
 
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "${pattern}" | grep --count "word/document.xml"
 
@@ -55,11 +53,10 @@ String right-hand-side of part to be removed"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  local after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "${pattern}")
-
-  ${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Officia"
+  local after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Fugiat")
 
   (( before_rmt > after_rmt ))
+  (( after_rmt == "0" ))
 }
 
 @test "$BATS_TEST_NUMBER: Removing strings at the beginning of a file" {

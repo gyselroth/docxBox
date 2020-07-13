@@ -81,8 +81,8 @@ local search_values=(
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays files' date and time" {
-  ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "7/./2020"
-  ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count "7/3/2020"
+  local rex="\"date\":\"\d{1,2}/\d{1,2}/\d{4,4}"
+  ${DOCXBOX_BINARY} lsj "${PATH_DOCX}" | grep --count --perl-regexp "${rex}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }

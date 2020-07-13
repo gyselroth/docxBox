@@ -35,9 +35,9 @@ ERR_LOG="test/tmp/err.log"
 }
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} filename.docx\" displays creation time/date information" {
-  local created="created: 2020-06-18T10:30:11Z"
+  local created="created: \d{4,4}-\d{2,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}Z"
 
-  ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count "${created}"
+  ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep --count --perl-regexp "${created}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
