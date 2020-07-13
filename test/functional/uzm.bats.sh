@@ -34,7 +34,6 @@ UNZIPPED_DOCX="cp_table_unordered_list_images.docx-media-extracted"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} wrong_file_type\" prints an error message" {
   local pattern="docxBox Error - File is no ZIP archive:"
-
   local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

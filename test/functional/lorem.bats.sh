@@ -33,12 +33,16 @@ ERR_LOG="test/tmp/err.log"
   local path_docx="test/tmp/cp_table_unordered_list_images.docx"
   local pattern="Culpa ad eiusmod"
 
+  local before_lorem=$(${DOCXBOX_BINARY} txt "${path_docx}" | grep --count "Culpa ad eiusmod")
+
   run "${DOCXBOX_BINARY}" lorem "${path_docx}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  ${DOCXBOX_BINARY} txt "${path_docx}" | grep --invert-match --count "${pattern}"
+  local after_lorem=$(${DOCXBOX_BINARY} txt "${path_docx}" | grep --count "Culpa ad eiusmod")
+
+  (( before_lorem > after_lorem ))
 }
 
 @test "$BATS_TEST_NUMBER: \"${CMD} filename.docx newFilename.docx\" replaces all text by dummy text and saves it to new file" {
@@ -64,7 +68,6 @@ ERR_LOG="test/tmp/err.log"
 
 @test "$BATS_TEST_NUMBER: \"${CMD} wrong_file_type\" prints an error message" {
   local pattern="docxBox Error - File is no ZIP archive:"
-
   local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"

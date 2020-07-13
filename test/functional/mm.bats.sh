@@ -103,7 +103,7 @@ ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: Modifying the meta attribute \"created\" does not change the meta attribute \"modified\"" {
   local created
-  created=$(${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "created")
+  local created=$(${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "created")
 
   run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
@@ -134,7 +134,6 @@ ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: \"${CMD} {meta_attribute} {argument} wrong_file_type\" prints an error message" {
   local pattern="docxBox Error - File is no ZIP archive:"
-
   local wrong_file_types=(
   "test/tmp/cp_lorem_ipsum.pdf"
   "test/tmp/cp_mock_csv.csv"
