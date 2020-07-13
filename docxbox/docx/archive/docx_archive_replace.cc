@@ -164,14 +164,21 @@ bool docx_archive_replace::ReplaceText() {
       preprocessor->SaveDocToXml();
     }
 
-    std::string xml = preprocessor->GetXml();
+    auto xml = preprocessor->GetXml();
 
-    if (!parser->ReplaceInXml(&xml, path_file_abs, search, replacement)) {
+    if (!parser->ReplaceInXmlIntoDoc(xml, search, replacement)) {
       delete preprocessor;
       delete parser;
 
       return docxbox::AppLog::NotifyError(
           "Failed replace string in: " + file_in_zip.filename);
+    }
+
+    if (!parser->SaveXmlFromDoc(path_file_abs)) {
+      delete preprocessor;
+      delete parser;
+
+      return false;
     }
 
     docxbox::AppLog::NotifyInfo(

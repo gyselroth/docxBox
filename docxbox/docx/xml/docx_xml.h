@@ -24,6 +24,8 @@ class docx_xml {
   void SetXmlFromDoc();
   void SetDocFromXml();
 
+  bool SaveXmlFromDoc(const std::string& path_xml);
+
   static bool IsXmlFileContainingText(const std::string &filename);
 
  protected:

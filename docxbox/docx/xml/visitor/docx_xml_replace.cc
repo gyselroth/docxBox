@@ -26,15 +26,15 @@ int docx_xml_replace::GetAmountReplaced() {
   return amount_replaced_;
 }
 
-// Replace given search string by replacement, which can be:
+// Replace given search string in given XML, update doc_ from it
+// Replacement can be:
 // 1. A regular string: will replace the given string
 // 2. A string containing JSON: will be interpreted for rendering word markup,
 //   which will than replace the <w:r> that contained the <w:t> node,
 //   which contained the search-string
-bool docx_xml_replace::ReplaceInXml(std::string *xml,
-                                    const std::string &path_xml,
-                                    const std::string &search,
-                                    const std::string &replacement) {
+bool docx_xml_replace::ReplaceInXmlIntoDoc(std::string &xml,
+                                           const std::string &search,
+                                           const std::string &replacement) {
   is_replacement_xml_ = helper::Json::IsJson(replacement);
 
   if (is_replacement_xml_) {
@@ -55,10 +55,10 @@ bool docx_xml_replace::ReplaceInXml(std::string *xml,
     // Insert temporarily before body, will later be moved into correct place
     // TODO(kay): use resp. different root element instead of w:body,
     //            when not within document.xml
-    helper::String::ReplaceAll(xml, "<w:body>", kMarkup + "<w:body>");
+    helper::String::ReplaceAll(&xml, "<w:body>", kMarkup + "<w:body>");
   }
 
-  doc_.Parse((*xml).c_str());
+  doc_.Parse((xml).c_str());
 
   if (doc_.ErrorID() != 0) return false;
 
@@ -78,10 +78,7 @@ bool docx_xml_replace::ReplaceInXml(std::string *xml,
   if (is_replacement_xml_ && !runs_to_be_replaced_.empty())
     ReplaceRunsByXmlElement();
 
-  return amount_replaced_ > 0
-             && tinyxml2::XML_SUCCESS != doc_.SaveFile(path_xml.c_str(), true)
-         ? docxbox::AppLog::NotifyError("Failed saving: " + path_xml)
-         : true;
+  return amount_replaced_ > 0;
 }
 
 // Replaces the searched string

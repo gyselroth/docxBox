@@ -90,6 +90,11 @@ bool File::ResolvePath(const std::string &pwd,
          : true;
 }
 
+// Get trailing name component of given path, e.g. the filename w/ extension
+std::string File::GetBasename(const std::string &path) {
+  return GetLastPathSegment(path);
+}
+
 std::streampos File::GetFileSize(std::ifstream &file) {
   file.seekg(0, std::ios::end);
   std::streampos length = file.tellg();
@@ -128,19 +133,15 @@ bool File::CopyFile(const std::string &path_source,
     return docxbox::AppLog::NotifyError(
         "Copy file failed - file not found: " + path_source);
 
-  int source = open(path_source.c_str(), O_RDONLY, 0);
-  int dest = open(path_destination.c_str(), O_WRONLY | O_CREAT, 0644);
+  std::ifstream source(path_source, std::ios::binary);
+  std::ofstream destination(path_destination, std::ios::binary);
 
-  // struct required, rationale: function stat() exists also
-  struct stat stat_source{};
-  fstat(source, &stat_source);
+  destination << source.rdbuf();
 
-  auto success = -1 != sendfile(dest, source, nullptr, stat_source.st_size);
+  source.close();
+  destination.close();
 
-  close(source);
-  close(dest);
-
-  return success;
+  return true;
 }
 
 bool File::Remove(const char *path) {
@@ -194,16 +195,6 @@ bool File::RemoveRecursive(const char *path) {
   if (!result) result = rmdir(path);
 
   return result;
-}
-
-std::string File::GetExtension(const std::string& file_path) {
-  if (helper::String::Contains(file_path, ".")) {
-    std::vector<std::string> parts = helper::String::Explode(file_path, '.');
-
-    return parts[parts.size() - 1];
-  }
-
-  return "";
 }
 
 std::string File::GetLastPathSegment(std::string path) {

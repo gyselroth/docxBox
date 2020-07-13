@@ -35,6 +35,9 @@ extern bool ResolvePath(const std::string &pwd,
                         std::string *path,
                         bool must_exist = false);
 
+// Get trailing name component of given path, e.g. the filename w/ extension
+extern std::string GetBasename(const std::string &path);
+
 extern std::streampos GetFileSize(std::ifstream &file);
 
 extern bool GetFileContents(
@@ -59,7 +62,6 @@ extern bool Remove(const char *path);
 
 extern bool RemoveRecursive(const char *file_path);
 
-extern std::string GetExtension(const std::string& file_path);
 extern std::string GetLastPathSegment(std::string path);
 
 extern std::vector<std::string> ScanDir(const char *path);
