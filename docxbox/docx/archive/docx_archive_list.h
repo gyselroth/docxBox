@@ -26,6 +26,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <tuple>
 
 class docx_archive_list : public docx_archive {
  public:
@@ -36,7 +37,12 @@ class docx_archive_list : public docx_archive {
   bool LocateFilesContainingString(bool as_json = false);
 
   // List files inside DOCX archive and their attributes
-  bool ListFilesInDocx(bool as_json, bool images_only = false);
+  bool ListFilesInDocx(
+      bool as_json,
+      bool images_only = false,
+      const std::vector<std::tuple<std::string,
+                                   std::string>> &media_attributes_json = {});
+
   bool ListImageFilesInDocx(bool as_json);
 
   // List data stored within XML(s) of DOCX
@@ -54,7 +60,10 @@ class docx_archive_list : public docx_archive {
                               std::string *file_list_1,
                               std::string *summary_1);
 
-  void OutputImagesMediaAttributes() const;
+  std::vector<std::tuple<std::string,
+                         std::string>> GetImagesMediaAttributesJson();
+
+  bool OutputImagesMediaAttributes() const;
 };
 
 #endif  // DOCXBOX_DOCX_ARCHIVE_DOCX_ARCHIVE_LIST_H_

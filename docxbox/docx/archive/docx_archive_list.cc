@@ -9,7 +9,11 @@ docx_archive_list::docx_archive_list(
     bool is_batch_mode) : docx_archive(argc, argv, is_batch_mode) {}
 
 // List files inside DOCX archive and their attributes
-bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
+bool docx_archive_list::ListFilesInDocx(
+    bool as_json,
+    bool images_only,
+    const std::vector<std::tuple<std::string,
+                                 std::string>> &media_attributes_json) {
   if (!docxbox::AppArgument::IsArgumentGiven(argc_, 2, "DOCX filename"))
     return false;
 
@@ -36,8 +40,13 @@ bool docx_archive_list::ListFilesInDocx(bool as_json, bool images_only) {
 
   std::string files_list = miniz_ext->PrintDir(
       &docx_file,
-      as_json, images_only, file_pattern, {},
-      false, has_second_docx);
+      as_json,
+      images_only,
+      file_pattern,
+      {},
+      false,
+      has_second_docx,
+      media_attributes_json);
 
   if (has_second_docx) {
     std::string kSummary1 = miniz_ext->GetSummary();
@@ -88,55 +97,87 @@ void docx_archive_list::ListFilesInDocxCompare(bool as_json,
 
 // List contained images and their attributes
 bool docx_archive_list::ListImageFilesInDocx(bool as_json) {
-  if (as_json) return ListFilesInDocx(as_json, true);
-
   if (!UnzipDocxByArgv(true, "-" + helper::File::GetTmpName())) return false;
 
   miniz_cpp::zip_file docx_file(path_docx_in_);
 
   auto miniz_ext = new miniz_cpp_ext();
 
-  std::cout << miniz_ext->PrintDir(&docx_file, false, true);
+  if (!as_json) std::cout << miniz_ext->PrintDir(&docx_file, false, true);
 
   delete miniz_ext;
 
-  OutputImagesMediaAttributes();
-
-  return true;
+  return as_json
+    ? ListFilesInDocx(as_json, true, GetImagesMediaAttributesJson())
+    : OutputImagesMediaAttributes();
 }
 
-void docx_archive_list::OutputImagesMediaAttributes() const {
+std::vector<std::tuple<std::string, std::string>>
+docx_archive_list::GetImagesMediaAttributesJson() {
+  std::vector<std::tuple<std::string, std::string>> attributes = {};
+
+  std::vector<std::string> files;
+  files = helper::File::ScanDirRecursive(path_extract_.c_str(), files);
+
+  for (const auto& path_file : files) {
+    if (!helper::File::IsWordCompatibleImage(path_file)) continue;
+
+    std::string command = "file " + path_file;
+    auto file_info = helper::Cli::GetExecutionResponse(command.c_str());
+    helper::String::ReplaceAll(&file_info, path_extract_ + "/", "");
+
+    auto lines = helper::String::Explode(file_info, ',');
+    std::string file_attributes;
+
+    for (std::string line : lines) {
+      helper::String::Trim(&line);
+      file_attributes += "\"" + line + "\",";
+    }
+
+    file_attributes = file_attributes.substr(0, file_attributes.length() - 1);
+    file_attributes = std::string("[").append(file_attributes).append("]");
+
+    attributes.emplace_back(path_file, file_attributes);
+  }
+
+  return attributes;
+}
+
+bool docx_archive_list::OutputImagesMediaAttributes() const {
   std::vector<std::string> files;
   files = helper::File::ScanDirRecursive(path_extract_.c_str(), files);
 
   int index_image = 0;
 
   for (const auto& path_file : files) {
-    if (helper::File::IsWordCompatibleImage(path_file)) {
-      std::string command = "file " + path_file;
-      auto file_info = helper::Cli::GetExecutionResponse(command.c_str());
-      helper::String::ReplaceAll(&file_info, path_extract_ + "/", "");
+    if (!helper::File::IsWordCompatibleImage(path_file)) continue;
 
-      if (0 == index_image)
-        std::cout << "\nMedia Attributes:\n-----------------\n";
+    std::string command = "file " + path_file;
+    auto file_info = helper::Cli::GetExecutionResponse(command.c_str());
+    helper::String::ReplaceAll(&file_info, path_extract_ + "/", "");
 
-      auto lines = helper::String::Explode(file_info, ',');
-      int index_line = 0;
-      for (const auto& line : lines) {
-        std::string whitespace = index_line == 0
-            ? ""
-            : helper::String::Repeat(
-                " ",
-                path_file.length() - path_extract_.length());
+    if (0 == index_image)
+      std::cout << "\nMedia Attributes:\n-----------------\n";
 
-        std::cout << whitespace << line << "\n";
+    auto lines = helper::String::Explode(file_info, ',');
+    int index_line = 0;
 
-        ++index_line;
-      }
+    for (const auto& line : lines) {
+      std::string whitespace = index_line == 0
+          ? ""
+          : helper::String::Repeat(
+              " ",
+              path_file.length() - path_extract_.length());
 
-      ++index_image;
+      std::cout << whitespace << line << "\n";
+
+      ++index_line;
     }
+
+    ++index_image;
   }
+
+  return true;
 }
 
 bool docx_archive_list::LocateFilesContainingString(bool as_json) {

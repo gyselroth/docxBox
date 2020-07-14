@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include <vendor/miniz-cpp/zip_file.hpp>
@@ -96,7 +97,9 @@ class miniz_cpp_ext {
       const std::string& filter_pattern = "",
       const std::vector<std::string>& filter_filenames = {},
       bool output_directories = false,
-      bool files_only = false) {
+      bool files_only = false,
+      const std::vector<std::tuple<std::string,
+                                   std::string>> &media_attributes_json = {}) {
     std::string out;
 
     if (as_json)
@@ -145,7 +148,22 @@ class miniz_cpp_ext {
             + std::to_string(member.date_time.year) + "\",";
 
         out += R"("time":")" + std::to_string(member.date_time.hours) + ":"
-                + std::to_string(member.date_time.minutes) + "\"}";
+                + std::to_string(member.date_time.minutes) + "\"";
+
+        if (images_only
+            && helper::File::IsWordCompatibleImage(member.filename)) {
+          for (std::tuple<std::string, std::string>
+                file_attributes : media_attributes_json) {
+            auto file = std::get<0>(file_attributes);
+
+            if (helper::String::EndsWith(file, member.filename)) {
+              out += ",\"media-attributes\":" + std::get<1>(file_attributes);
+              break;
+            }
+          }
+        }
+
+        out += "}";
       } else {
         int amount_digits = helper::Numeric::GetAmountDigits(member.file_size);
 

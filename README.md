@@ -141,9 +141,6 @@ or ````docxbox ls foo.docx --images````
 
 To output as JSON:
 
-**Note:** JSON output of the ``lsi`` command does not yet include the images' 
-media attributes.
-
 ````docxbox lsij foo.docx````  
 or ````docxbox lsi foo.docx -j````  
 or ````docxbox ls foo.docx -ij````  
