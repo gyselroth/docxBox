@@ -11,7 +11,7 @@ CMD="docxbox lsmj"
 PATH_DOCX="test/tmp/cp_table_unordered_list_images.docx"
 ERR_LOG="test/tmp/err.log"
 
-PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
+PATTERN_CREATED="\"created\": \"\d{4,4}-\d{2,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}Z\""
 
 @test "${BATS_TEST_NUMBER}: Exit code of \"${CMD} filename.docx\" is zero" {
   run "${DOCXBOX_BINARY}" lsmj "${PATH_DOCX}"
@@ -39,25 +39,25 @@ PATTERN_CREATED="\"created\": \"2020-06-18T10:30:11Z\""
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox lsm filename.docx --json\" displays creation time/date information" {
-  ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" --json | grep --count "${PATTERN_CREATED}"
+  ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" --json | grep --count --perl-regexp "${PATTERN_CREATED}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox lsm filename.docx -j\" displays creation time/date information" {
-  ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" -j | grep --count "${PATTERN_CREATED}"
+  ${DOCXBOX_BINARY} lsm "${PATH_DOCX}" -j | grep --count --perl-regexp "${PATTERN_CREATED}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx --meta --json\" displays creation time/date information" {
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --meta --json | grep --count "${PATTERN_CREATED}"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" --meta --json | grep --count --perl-regexp "${PATTERN_CREATED}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
 @test "${BATS_TEST_NUMBER}: \"docxbox ls filename.docx -mj\" displays creation time/date information" {
-  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -mj | grep --count "${PATTERN_CREATED}"
+  ${DOCXBOX_BINARY} ls "${PATH_DOCX}" -mj | grep --count --perl-regexp "${PATTERN_CREATED}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 }
