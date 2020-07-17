@@ -28,9 +28,6 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
   source ./test/functional/_check_for_valgrind_errors.sh
 }
 
-# TODO(Lucas): Add testcase batch {1:mm,2:rpt}
-# TODO(Lucas): Add testcase batch {1:mm,2:rmt}
-
 @test "$BATS_TEST_NUMBER: \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, meta attribute title gets changed" {
   local batch="{\"1\":{\"mm\":[\"title\",\"foo\"]}}"
   run "${DOCXBOX_BINARY}" batch "${PATH_DOCX}" "${batch}"
@@ -70,9 +67,7 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
   (( wc_before_batch > wc_after_batch ))
 }
 
-title_sfv="Case 6: With \"${BASE_COMMAND} batch_sequence_as_JSON\" ${APPENDIX} \
-and a mergefield can be replaced with the \"sfv\" command"
-@test "${title_sfv}" {
+@test "$BATS_TEST_NUMBER: With \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, mergefield gets replaced with the \"sfv\" command" {
   mergefield="MERGEFIELD  Mergefield_One"
   batch="{\"1\":{\"sfv\":[\"MERGEFIELD  Mergefield_One\",\"FooBar\"]}}"
 
@@ -81,4 +76,34 @@ and a mergefield can be replaced with the \"sfv\" command"
   source ./test/functional/_check_for_valgrind_errors.sh
 
   ${DOCXBOX_BINARY} txt "${PATH_DOCX_MERGEFIELD}" | grep --count "FooBar"
+}
+
+@test "$BATS_TEST_NUMBER: With \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, using \"mm\" and \"rpt\" command" {
+  local batch="{\"1\":{\"rpt\":[\"text\",\"FooBar\"]},\"2\":{\"mm\":[\"title\",\"foo\"]}}"
+
+  local bytes_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --bytes)
+
+  run "${DOCXBOX_BINARY}" batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
+
+  source ./test/functional/_check_for_valgrind_errors.sh
+
+  ${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | grep --count "FooBar"
+
+  local bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --bytes)
+
+  (( bytes_before_batch < bytes_after_batch ))
+}
+
+@test "$BATS_TEST_NUMBER: With \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, using \"mm\" and \"rmt\" command" {
+  local batch="{\"1\":{\"rmt\":[\"THIS\",\"TITLE\"]},\"2\":{\"mm\":[\"title\",\"foo\"]}}"
+
+  local bytes_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
+
+  run "${DOCXBOX_BINARY}" batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
+
+  source ./test/functional/_check_for_valgrind_errors.sh
+
+  local bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --words)
+
+  (( bytes_before_batch > bytes_after_batch ))
 }
