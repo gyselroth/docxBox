@@ -33,14 +33,16 @@ ERR_LOG="test/tmp/err.log"
   local path_docx="test/tmp/cp_table_unordered_list_images.docx"
   local pattern="Culpa ad eiusmod"
 
-  local before_lorem=$(${DOCXBOX_BINARY} txt "${path_docx}" | grep --count "Culpa ad eiusmod")
+  local before_lorem
+  before_lorem=$(${DOCXBOX_BINARY} txt "${path_docx}" | grep --count "Culpa ad eiusmod")
 
   run "${DOCXBOX_BINARY}" lorem "${path_docx}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  local after_lorem=$(${DOCXBOX_BINARY} txt "${path_docx}" | grep --count "Culpa ad eiusmod")
+  local after_lorem
+  after_lorem=$(${DOCXBOX_BINARY} txt "${path_docx}" | grep --count "Culpa ad eiusmod")
 
   (( before_lorem > after_lorem ))
 }

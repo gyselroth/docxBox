@@ -118,16 +118,16 @@ String or regular expression to be located"
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"[]\" must match" {
   local amount_opening amount_closing
-  local amount_opening=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\[")
-  local amount_closing=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\]")
+  amount_opening=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\[")
+  amount_closing=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\]")
 
   (( amount_opening = amount_closing ))
 }
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
   local amount_opening amount_closing
-  local amount_opening=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\{")
-  local amount_closing=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\}")
+  amount_opening=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\{")
+  amount_closing=$(${DOCXBOX_BINARY} lslj "${PATH_DOCX}" fonts | grep --count "\}")
 
   (( amount_opening = amount_closing ))
 }

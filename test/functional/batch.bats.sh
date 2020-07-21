@@ -89,7 +89,8 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 
   ${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | grep --count "FooBar"
 
-  local bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --bytes)
+  local bytes_after_batch
+  bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --bytes)
 
   (( bytes_before_batch < bytes_after_batch ))
 }
@@ -97,13 +98,15 @@ PATH_DOCX_MERGEFIELD="test/tmp/cp_mergefields.docx"
 @test "$BATS_TEST_NUMBER: With \"${CMD} batch_sequence_as_JSON\" executes a batch sequence, using \"mm\" and \"rmt\" command" {
   local batch="{\"1\":{\"rmt\":[\"THIS\",\"TITLE\"]},\"2\":{\"mm\":[\"title\",\"foo\"]}}"
 
-  local bytes_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
+  local bytes_before_batch
+  bytes_before_batch=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_PLAINTEXT}" | wc --words)
 
   run "${DOCXBOX_BINARY}" batch "${PATH_DOCX_PLAINTEXT}" "${batch}"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  local bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --words)
+  local bytes_after_batch
+  bytes_after_batch=$(${DOCXBOX_BINARY} txt ${PATH_DOCX_PLAINTEXT} | wc --words)
 
   (( bytes_before_batch > bytes_after_batch ))
 }

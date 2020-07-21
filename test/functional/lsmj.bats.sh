@@ -111,8 +111,8 @@ PATTERN_CREATED="\"created\": \"\d{4,4}-\d{2,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}Z
 
 @test "${BATS_TEST_NUMBER}: Amount opening and closing brackets \"{}\" must match" {
   local amount_opening amount_closing
-  local amount_opening=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\{")
-  local amount_closing=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\}")
+  amount_opening=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\{")
+  amount_closing=$(${DOCXBOX_BINARY} lsmj "${PATH_DOCX}" | grep --count "\}")
 
   (( amount_opening = amount_closing ))
 }

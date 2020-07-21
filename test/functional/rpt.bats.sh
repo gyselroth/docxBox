@@ -65,7 +65,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para1\"/>"
 
-  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia ${heading}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia "${heading}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -79,7 +79,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para2\"/>"
 
-  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia ${heading}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia "${heading}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -93,7 +93,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "<w:pStyle w:val=\"para3\"/>"
 
-  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia ${heading}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia "${heading}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh
@@ -122,7 +122,7 @@ DISPLAY_FILE="word/document.xml"
 
   ${DOCXBOX_BINARY} cat "${PATH_DOCX}" "${DISPLAY_FILE}" | grep --invert-match "</w:hyperlink>"
 
-  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia ${link}
+  run "${DOCXBOX_BINARY}" rpt "${PATH_DOCX}" Officia "${link}"
   [ "$status" -eq 0 ]
 
   source ./test/functional/_check_for_valgrind_errors.sh

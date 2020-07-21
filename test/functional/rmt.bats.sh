@@ -44,9 +44,9 @@ String right-hand-side of part to be removed"
 }
 
 @test "$BATS_TEST_NUMBER: \"$CMD filename.docx leftHandString rightHandString\" removes text between and including given strings" {
-  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Fugiat")
-
-  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "${pattern}")
+  local before_rmt
+# before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Fugiat")
+  before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "${pattern}")
 
   ${DOCXBOX_BINARY} lsl "${PATH_DOCX}" "${pattern}" | grep --count "word/document.xml"
 
@@ -55,20 +55,23 @@ String right-hand-side of part to be removed"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  local after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Fugiat")
+  local after_rmt
+  after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX}" | grep --count "Fugiat")
 
   (( before_rmt > after_rmt ))
   (( after_rmt == "0" ))
 }
 
 @test "$BATS_TEST_NUMBER: Removing strings at the beginning of a file" {
-  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IS A")
+  local before_rmt
+  before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IS A")
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "THIS" "TITLE"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  local after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IS A")
+  local after_rmt
+  after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | grep --count "IS A")
 
   (( before_rmt > after_rmt ))
 
@@ -114,13 +117,15 @@ String right-hand-side of part to be removed"
 @test "$BATS_TEST_NUMBER: Removing strings at the end of a file" {
   local pattern="Bold text passages are great"
 
-  local before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
+  local before_rmt
+  before_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
 
   ${DOCXBOX_BINARY} rmt "${PATH_DOCX_NEW}" "Bold" "great"
 
   source ./test/functional/_check_for_valgrind_errors.sh
 
-  local after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
+  local after_rmt
+  after_rmt=$(${DOCXBOX_BINARY} txt "${PATH_DOCX_NEW}" | wc --words)
 
   (( before_rmt > after_rmt ))
 }

@@ -103,7 +103,7 @@ ERR_LOG="test/tmp/err.log"
 
 @test "${BATS_TEST_NUMBER}: Modifying the meta attribute \"created\" does not change the meta attribute \"modified\"" {
   local created
-  local created=$(${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "created")
+  created=$(${DOCXBOX_BINARY} lsm "${PATH_DOCX}" | grep "created")
 
   run "${DOCXBOX_BINARY}" mm "${PATH_DOCX}" modified "2020-10-20T10:20:00Z"
   [ "$status" -eq 0 ]
