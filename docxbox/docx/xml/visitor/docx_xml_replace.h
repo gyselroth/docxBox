@@ -35,7 +35,7 @@ class docx_xml_replace:public docx_xml, public docx_renderer_delegate  {
 
  private:
   // Replacement can be (plain)textual or XML markup
-  bool is_replacement_xml_ = false;
+  bool is_replacement_json_ = false;
 
   // When replacing text by XML, the resp. parent nodes
   // (having child-nodes containing the text) must be replaced

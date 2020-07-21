@@ -34,9 +34,8 @@ bool docx_renderer_heading::InitFromJson() {
            it != json_inner.end();
            ++it) {
         const std::string &key = it.key();
-        const std::string &value = it.value();
 
-        if (key == "text") text_ = value;
+        if (key == "text") text_ = it.value();
         else if (key == "pre" || key == "post") ExtractPreOrPostfix(it);
       }
     }
@@ -65,6 +64,8 @@ std::string docx_renderer_heading::Render(int level) {
   wml_ =
       "<w:p>"
       "<w:pPr>"
+      // TODO(kay): use more "speaking" style identifier for headings
+      //            instead of para...
       "<w:pStyle w:val=\"para" + std::to_string(level_) + "\"/>"
                                                           "</w:pPr>"
           + RenderTextInRun(text_)

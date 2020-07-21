@@ -35,9 +35,9 @@ int docx_xml_replace::GetAmountReplaced() {
 bool docx_xml_replace::ReplaceInXmlIntoDoc(std::string xml,
                                            const std::string &search,
                                            const std::string &replacement) {
-  is_replacement_xml_ = helper::Json::IsJson(replacement);
+  is_replacement_json_ = helper::Json::IsJson(replacement);
 
-  if (is_replacement_xml_) {
+  if (is_replacement_json_) {
     // Replacement will be done in steps:
     // 1. Inject pre-rendered XML into document
     // 2. Locate nodes containing child-nodes containing text to be replaced
@@ -64,7 +64,7 @@ bool docx_xml_replace::ReplaceInXmlIntoDoc(std::string xml,
 
   amount_replaced_ = 0;
 
-  if (is_replacement_xml_)
+  if (is_replacement_json_)
     replacement_xml_element_ =
         doc_.FirstChildElement()->FirstChildElement(
             replacement_xml_root_tag_.c_str());
@@ -75,7 +75,7 @@ bool docx_xml_replace::ReplaceInXmlIntoDoc(std::string xml,
   // Replace text, if replacement is markup: locate runs to be replaced
   ReplaceOrLocateStringInXml(body, search, replacement);
 
-  if (is_replacement_xml_ && !runs_to_be_replaced_.empty())
+  if (is_replacement_json_ && !runs_to_be_replaced_.empty())
     ReplaceRunsByXmlElement();
 
   return amount_replaced_ > 0;
@@ -107,7 +107,7 @@ void docx_xml_replace::ReplaceOrLocateStringInXml(
 
         if (!text.empty()
             && helper::String::Contains(text, search)) {
-          if (is_replacement_xml_) {
+          if (is_replacement_json_) {
             runs_to_be_replaced_.push_back(current_run_);
           } else {
             amount_replaced_ +=
