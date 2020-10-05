@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/gyselroth/docxbox.svg?branch=master)](https://travis-ci.org/gyselroth/docxbox)
+[![CodeFactor](https://www.codefactor.io/repository/github/gyselroth/docxbox/badge)](https://www.codefactor.io/repository/github/gyselroth/docxbox)
 
 docxBox
 =======
